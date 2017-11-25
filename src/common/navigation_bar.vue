@@ -58,7 +58,7 @@ export default {
 
   #navigation-bar {
     background-color: #2d3e50;
-    height: calc(100vh - 50px);
+    height: 100%;
 
     #large-menu {
       padding-top: 35px;

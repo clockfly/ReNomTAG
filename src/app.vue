@@ -1,6 +1,6 @@
 <template>
   <div id='app' class='container'>
-    <div id='main-container' style='display:flex'>
+    <div id='main-container' style='display:flex; width:100%; height:100%;'>
       <navigation-bar style='flex-grow:0'></navigation-bar>
       <div style='flex-grow:1'>
         <app-header></app-header>
