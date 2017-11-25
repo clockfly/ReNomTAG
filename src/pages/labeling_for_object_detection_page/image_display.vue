@@ -56,7 +56,7 @@
     }
     #outer-panel {
       width: 100%;
-      height: 300px;
+      height: calc(100% - 30px);
       padding: 3px 3px 3px 3px;
       background-color: #ffffff;
       box-sizing:border-box;
