@@ -5,7 +5,10 @@
       <image-display></image-display>
       <tag-list></tag-list>
     </div>
+    <div style='display:flex;'>
       <recent-image-list></recent-image-list>
+      <div id='shortcut-description'></div>
+    </div>
   </div>
 </template>
 
@@ -32,4 +35,7 @@ export default {
 </script>
 
 <style lang='scss'>
+  #shortcut-description {
+    width: 200px;
+  }
 </style>

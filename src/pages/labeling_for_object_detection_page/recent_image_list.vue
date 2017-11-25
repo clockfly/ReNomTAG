@@ -20,6 +20,7 @@
           'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
           'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
           'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
+          'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
           'https://camo.qiitausercontent.com/7ddf8c55ae27d9ed6fe71b2af5b1213d517e023e/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3838392f39663662353338622d386332332d396263652d386433652d3739656363313837613164392e6a706567'
         ]
       }
@@ -30,8 +31,10 @@
 <style lang='scss'>
 
   #recent-image-list {
+    width: calc(100% - 200px);
     box-sizing: border-box;
     border: solid 1px #a3a3a3;
+
     #header {
       display: flex;
       height: 30px;
@@ -50,8 +53,8 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      margin-top: 5px;
-      margin-bottom: 5px;
+      padding-bottom: 10px;
+
       .img-panel {
         height: 100%;
         padding-left: 2px;
