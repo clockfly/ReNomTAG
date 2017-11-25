@@ -34,6 +34,7 @@
 
   #recent-image-list {
     width: calc(100% - 220px);
+    max-height: 150px;
     #inner-recent-image-list{
       box-sizing: border-box;
       border: solid 1px #a3a3a3;

@@ -12,8 +12,12 @@
     </div>
     <div id='outer-panel'>
       <img :src='imgData'> 
+      <div id='low-button'>
+        <input type='button' value='<<'>
+        <input type='button' value='save'>
+        <input type='button' value='>>'>
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -34,7 +38,7 @@
 <style lang='scss'>
   #image-display {
     width: 100%;
-    max-height: 700px;
+    max-height: 800px;
 
     #header {
       display: flex;
@@ -61,11 +65,24 @@
       background-color: #ffffff;
       box-sizing:border-box;
       border:solid 1px #a3a3a3;
+      #low-button {
+        height: 40px;
+        width: 400px;
+        display: flex;
+        align-items: center;
+        margin: auto;
+        justify-content: space-around;
+        input {
+          margin: 0 0 0 0;
+          padding: 3px 4px 3px 4px;
+        }
+      }
       img {
         width: 100%;
-        height: 100%;
+        height: calc(100% - 40px);
         object-fit: contain;
       }
     }
+
   }
 </style>
