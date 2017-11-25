@@ -1,11 +1,13 @@
 <template>
   <div id='recent-image-list'>
-    <div id='header'>
-      <tt>Resent Labeled Images</tt>
-    </div>
-    <div id='image-list'>
-      <div v-for='im in labeledImageList' class='img-panel'>
-        <img :src='im'/>
+    <div id='inner-recent-image-list'>
+      <div id='header'>
+        <tt>Resent Labeled Images</tt>
+      </div>
+      <div id='image-list'>
+        <div v-for='im in labeledImageList' class='img-panel'>
+          <img :src='im'/>
+        </div>
       </div>
     </div>
   </div>
@@ -31,38 +33,41 @@
 <style lang='scss'>
 
   #recent-image-list {
-    width: calc(100% - 200px);
-    box-sizing: border-box;
-    border: solid 1px #a3a3a3;
-
-    #header {
-      display: flex;
-      height: 30px;
-      width: 100%;
-      background-color: #a3a3a3;
-      align-items: center;
-      tt {
-        color: #3a3a3a;
-        font-weight: bold;
-      }
-    }
-
-    #image-list {
-      height: calc(100% - 30px);
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding-bottom: 10px;
-
-      .img-panel {
-        height: 100%;
-        padding-left: 2px;
-        padding-right: 2px;
+    width: calc(100% - 220px);
+    #inner-recent-image-list{
+      box-sizing: border-box;
+      border: solid 1px #a3a3a3;
+  
+      #header {
         display: flex;
+        height: 30px;
+        width: 100%;
+        background-color: #a3a3a3;
         align-items: center;
-        img {
-          object-fit: contain;
+        tt {
+          color: #3a3a3a;
+          font-weight: bold;
+        }
+      }
+  
+      #image-list {
+        height: calc(100% - 30px);
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+  
+        .img-panel {
+          height: 100%;
+          padding-left: 4px;
+          padding-right: 4px;
+          display: flex;
+          align-items: center;
+          img {
+            object-fit: contain;
+          }
         }
       }
     }

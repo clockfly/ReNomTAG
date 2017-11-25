@@ -34,7 +34,7 @@
 <style lang='scss'>
   #image-display {
     width: 100%;
-    max-height: 600px;
+    max-height: 700px;
 
     #header {
       display: flex;

@@ -1,12 +1,12 @@
 <template>
   <div id='labeling-for-object-detection-page'> 
-    <div style='display:flex;'>
-      <file-list></file-list>
-      <image-display></image-display>
-      <tag-list></tag-list>
+    <div style='display: flex;'>
+      <file-list class='row1'></file-list>
+      <image-display class='row1'></image-display>
+      <tag-list class='row1'></tag-list>
     </div>
     <div style='display:flex;'>
-      <recent-image-list></recent-image-list>
+      <recent-image-list class='row2'></recent-image-list>
       <div id='shortcut-description'></div>
     </div>
   </div>
@@ -35,6 +35,17 @@ export default {
 </script>
 
 <style lang='scss'>
+  #labeling-for-object-detection-page {
+    .row1 {
+      display: inline-block;
+      padding: 5px;
+    }
+    .row2 {
+      display: inline-block;
+      padding: 5px;
+    }
+  }
+
   #shortcut-description {
     width: 200px;
   }

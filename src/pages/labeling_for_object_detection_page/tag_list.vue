@@ -48,10 +48,7 @@
 </script>
 
 <style lang='scss'>
-
   #tag-list {
-    height: 100%;
-    max-width: 200px;
     #header {
       display: flex;
       align-items: center;
@@ -74,7 +71,8 @@
     }
 
     #main-tag-list {
-      position: relative;
+      height: 100%;
+      overflow: auto;
     }
   }
 
