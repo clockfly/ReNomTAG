@@ -1,5 +1,7 @@
 let state = {
-  file_list: []
+  file_list: [],
+  images_list: [],
+  images_count: 0
 }
 
 export default state

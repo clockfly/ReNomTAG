@@ -1,15 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from '../pages/main.vue'
+import LabelObjectDetectionPage from '../pages/labeling_for_object_detection_page/page.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: 'Main',
-      component: Main
-    }
+    {path: '/', name: 'ObjectDetectionLabeling', component: LabelObjectDetectionPage}
   ]
 })
