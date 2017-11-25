@@ -28,13 +28,11 @@ export default {
 
 <style lang='scss'>
   #file-list {
+    max-width: 200px;
     border: 1px solid #ccc;
-    width: 150px;
     overflow: auto;
     #search-box {
-      height: 100%;
       width: 95%;
-      // padding: 1px 3px 1px 3px;
       margin: 3px 3px 3px 3px;
       input {
         width: 100%;

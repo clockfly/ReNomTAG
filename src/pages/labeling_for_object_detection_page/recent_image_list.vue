@@ -4,7 +4,9 @@
       <tt>Resent Labeled Images</tt>
     </div>
     <div id='image-list'>
-      <img v-for='im in labeledImageList' :src='im'>
+      <div v-for='im in labeledImageList' class='img-panel'>
+        <img :src='im'/>
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +19,8 @@
         labeledImageList: [
           'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
           'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
-          'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg'
+          'http://moka-suyasuya.c.blog.so-net.ne.jp/_images/blog/_cd5/moka-suyasuya/gazou2044-fc29e.jpg',
+          'https://camo.qiitausercontent.com/7ddf8c55ae27d9ed6fe71b2af5b1213d517e023e/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3838392f39663662353338622d386332332d396263652d386433652d3739656363313837613164392e6a706567'
         ]
       }
     }
@@ -27,11 +30,8 @@
 <style lang='scss'>
 
   #recent-image-list {
-    width: 400px;
-    height: 180px;
     box-sizing: border-box;
     border: solid 1px #a3a3a3;
-
     #header {
       display: flex;
       height: 30px;
@@ -48,11 +48,19 @@
       height: calc(100% - 30px);
       width: 100%;
       display: flex;
+      justify-content: space-around;
       align-items: center;
-      img {
-        margin-left: 2px;
-        margin-right: 2px;
-        object-fit: contain;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      .img-panel {
+        height: 100%;
+        padding-left: 2px;
+        padding-right: 2px;
+        display: flex;
+        align-items: center;
+        img {
+          object-fit: contain;
+        }
       }
     }
   }

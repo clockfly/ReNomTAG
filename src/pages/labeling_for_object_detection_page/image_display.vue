@@ -33,8 +33,8 @@
 
 <style lang='scss'>
   #image-display {
-    width: 400px;
-    height: 400px;
+    width: 100%;
+    max-height: 600px;
 
     #header {
       display: flex;
