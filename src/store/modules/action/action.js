@@ -1,12 +1,10 @@
-// import client from '../../../client'
 import axios from 'axios'
 
 let action = {
   load_file_list (context) {
     let fd = new FormData()
-    // fd.append('root_dir', '/home/suwa/Documents/local_repositories/ObjDetector/img')
-    // fd.append('root_dir', '/Users/shotakikuchi/Screenshot')
-    fd.append('root_dir', 'img')
+    console.log('AD')
+    fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
     return axios.post('/api/get_file_list', fd).then(
       function (response) {
         let error = response.data.error
@@ -24,9 +22,6 @@ let action = {
     )
   },
   load_server_file (context) {
-    // let fd = new FormData()
-    // fd.append('root_dir', '/Users/shotakikuchi/Screenshot')
-
     return axios.post('/api/get_img').then(
       function (response) {
         let error = response.data.error

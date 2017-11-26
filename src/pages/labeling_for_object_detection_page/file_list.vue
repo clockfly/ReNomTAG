@@ -4,10 +4,7 @@
       <div id='search-box'>
         <input value="search" type="text"/>
       </div>
-      <file-item></file-item>
-      <file-item></file-item>
-      <file-item></file-item>
-      <file-item></file-item>
+      <file-item v-for='(fname, index) in imgNameList' :fileName='fname'></file-item>
     </div>
   </div>
 </template>
@@ -22,7 +19,17 @@ export default {
   },
   data: function () {
     return {
-      selected: null
+      selected: null,
+      imgDataList: [],
+      imgNameList: []
+    }
+  },
+  mounted () {
+    this.loadImgData()
+  },
+  methods: {
+    loadImgData: function () {
+      this.imgNameList = this.$store.file_list
     }
   }
 }

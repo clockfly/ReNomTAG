@@ -1,4 +1,7 @@
 let mutation = {
+  set_file_list (state, payload) {
+    state.file_list = payload.file_list
+  },
   reset_all_server_file (state) {
     state.images_list = []
   },

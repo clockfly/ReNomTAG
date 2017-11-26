@@ -30,6 +30,9 @@ export default {
     return {
       selected: null
     }
+  },
+  created () {
+    this.$store.dispatch('load_file_list')
   }
 }
 </script>
