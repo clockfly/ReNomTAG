@@ -11,7 +11,7 @@
       </div>
     </div>
     <div id='outer-panel'>
-      <img :src='rawImg'> 
+      <img :src='rawImg'>
       <div id='low-button'>
         <input type='button' value='<<'>
         <input type='button' value='save'>
@@ -32,15 +32,15 @@
         imgData: ''
       }
     },
-		created () {
-			this.$store.dispatch('load_next_raw_img')
-		},
-		computed: {
-			rawImg: function () {
-				this.imgData = 'data:image/png;base64,'+this.$store.getters.get_raw_img
-				return this.imgData
-			}
-		}
+    created () {
+      this.$store.dispatch('load_next_raw_img')
+    },
+    computed: {
+      rawImg: function () {
+        this.imgData = 'data:image/png;base64,' + this.$store.getters.get_raw_img
+        return this.imgData
+      }
+    }
   }
 </script>
 
@@ -55,13 +55,13 @@
       justify-content: space-between;
       width: 100%;
       height: 30px;
-      background-color: #b5b5b5; 
-      #file-text{
+      background-color: #b5b5b5;
+      #file-text {
         color: #3a3a3a;
         font-weight: bold;
       }
       #icon {
-        tt{
+        tt {
           font-size: 1.2rem;
           margin-right: 10px;
         }
@@ -72,8 +72,8 @@
       height: calc(100% - 30px);
       padding: 3px 3px 3px 3px;
       background-color: #ffffff;
-      box-sizing:border-box;
-      border:solid 1px #a3a3a3;
+      box-sizing: border-box;
+      border: solid 1px #a3a3a3;
       #low-button {
         height: 40px;
         width: 400px;

@@ -11,32 +11,32 @@
 </template>
 
 <script>
-import AppHeader from './common/header.vue'
-import NavigationBar from './common/navigation_bar.vue'
+  import AppHeader from './common/header.vue'
+  import NavigationBar from './common/navigation_bar.vue'
 
-export default {
-  name: 'App',
-  components: {
-    'app-header': AppHeader,
-    'navigation-bar': NavigationBar
-  },
-  data: function () {
-    return {
-      showNavigationBarFlag: true
-    }
-  },
-  methods: {
-    setShowNavigationBarFlag: function (flag) {
-      this.showNavigationBarFlag = flag
+  export default {
+    name: 'App',
+    components: {
+      'app-header': AppHeader,
+      'navigation-bar': NavigationBar
+    },
+    data: function () {
+      return {
+        showNavigationBarFlag: true
+      }
+    },
+    methods: {
+      setShowNavigationBarFlag: function (flag) {
+        this.showNavigationBarFlag = flag
 
-      // ///////////////
-      // Darty code. Be careful when you change components order.
-      this.$children[0].setShowFlag(flag)
-      // //////////////
-      this.$forceUpdate()
+        // ///////////////
+        // Darty code. Be careful when you change components order.
+        this.$children[0].setShowFlag(flag)
+        // //////////////
+        this.$forceUpdate()
+      }
     }
   }
-}
 </script>
 
 <style lang='scss'>

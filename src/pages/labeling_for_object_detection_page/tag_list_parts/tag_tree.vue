@@ -4,9 +4,9 @@
       <tt :style='indent'>{{ label }}</tt>
     </div>
     <tag-tree-item v-if='showChildrenFlag'
-      v-for='(node, index) in nodes'
-      :key='index' :nodes='node.nodes'
-      :label='node.label' :depth='depth + 1'>
+                   v-for='(node, index) in nodes'
+                   :key='index' :nodes='node.nodes'
+                   :label='node.label' :depth='depth + 1'>
     </tag-tree-item>
   </div>
 </template>

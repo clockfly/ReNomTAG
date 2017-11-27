@@ -15,7 +15,7 @@
           </tt>
         </button>
       </div>
-  
+
       <div id='small-menu' v-else key='small'>
         <button class='bar-button'>
           <tt>
@@ -34,24 +34,24 @@
 
 <script>
 
-export default {
-  name: 'NavigationBar',
-  data: function () {
-    return {
-      showAllFlag: true
-    }
-  },
-  computed: {
-    isShowAll: function () {
-      return this.showAllFlag
-    }
-  },
-  methods: {
-    setShowFlag: function (flag) {
-      this.showAllFlag = flag
+  export default {
+    name: 'NavigationBar',
+    data: function () {
+      return {
+        showAllFlag: true
+      }
+    },
+    computed: {
+      isShowAll: function () {
+        return this.showAllFlag
+      }
+    },
+    methods: {
+      setShowFlag: function (flag) {
+        this.showAllFlag = flag
+      }
     }
   }
-}
 </script>
 
 <style lang='scss'>
@@ -62,14 +62,14 @@ export default {
 
     #large-menu {
       padding-top: 35px;
-      width: 200px;  
+      width: 200px;
     }
     #small-menu {
       tt {
         font-size: 1rem;
       }
       padding-top: 35px;
-      width: 40px; 
+      width: 40px;
     }
 
     .bar-button {
@@ -80,7 +80,7 @@ export default {
       background-color: #2d3e50;
       color: #b7b7b7;
     }
-  
+
     .bar-button:hover {
       color: #ffffff;
       background-color: #374b60;

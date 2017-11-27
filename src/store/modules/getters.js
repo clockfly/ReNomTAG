@@ -5,9 +5,9 @@ let getters = {
   get_filename_list (state) {
     return state.filename_list
   },
-	get_raw_img (state) {
-		return state.raw_img
-	}
+  get_raw_img (state) {
+    return state.raw_img
+  }
 }
 
 export default getters

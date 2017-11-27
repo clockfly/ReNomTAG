@@ -34,16 +34,16 @@
     margin: 0;
     padding: 0;
     background-color: #00ff5a;
-    font-family:'Arial Black';
+    font-family: 'Arial Black';
 
     #soft-symbol {
       margin: 0px 0px 0px 0px;
       padding-left: 10px;
-      text-align: left; 
+      text-align: left;
       color: #2d3e50;
-      font-size: 1.5rem; 
+      font-size: 1.5rem;
       font-weight: bold;
-  
+
       #menu-toggle {
         margin-right: 20px;
       }
