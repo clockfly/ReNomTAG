@@ -4,16 +4,25 @@ let mutation = {
     state.thumbnail_image_list = payload.thumbnail_image_list
   },
   set_next_raw_img (state, payload) {
-    if (state.raw_img_list.length > 2)
+    if (state.raw_img_list.length > 0)
       state.raw_img_list.shift()
-    state.raw_img_list.push(payload.raw_img)
-    state.raw_image_index += payload.shift_index
+    state.raw_img_list.push({
+      "img":payload.raw_img,
+      "filename":payload.filename
+    })
+    state.filename_list_index ++
   },
   set_prior_raw_img (state, payload) {
-    if (state.raw_img_list.length > 2)
+    if (state.raw_img_list.length > 0)
       state.raw_img_list.pop()
-    state.raw_img_list.unshift(payload.raw_img)
-    state.raw_image_index += payload.shift_index
+    state.raw_img_list.unshift({
+      "img":payload.raw_img,
+      "filename":payload.filename
+    })
+    state.filename_list_index --
+  },
+  set_raw_image_list_index (state, payload) {
+    state.raw_image_list_index = payload.raw_image_list_index
   },
   // Menu Mutations
   close_menu (state) {

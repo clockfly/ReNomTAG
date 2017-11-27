@@ -11,7 +11,9 @@
       </div>
     </div>
     <div id='outer-panel'>
-      <image-canvas></image-canvas>
+      <transition>
+        <image-canvas></image-canvas>
+      </transition>
       <div id='low-button'>
         <input type='button' value='<<' @click='priorRawImg'>
         <input type='button' value='save'>
@@ -37,30 +39,37 @@
       }
     },
     methods: {
-      nextRawImg: function () {
+      nextRawImg: function () {        
         self = this
-        let img = new Image();
-        img.onload = function(){
-          self.$children[0].setImgSrc(img) 
-        }
-        this.imgData = self.$store.getters.get_raw_img_list
-        if (this.imgData.length > 1) {
-          img.src = 'data:image/png;base64,' + this.imgData[1]
-        } else if (this.imgData.length > 0) {
-          img.src = 'data:image/png;base64,' + this.imgData[0]
-        }
-        this.$store.dispatch('load_next_raw_img')
+        this.$store.dispatch('load_next_raw_img').then(function (){
+          let img = new Image();
+          let img_data
+          let img_filename
+          img.onload = function(){
+            self.$children[0].setImgSrc(img) 
+          }
+          self.imgData = self.$store.getters.get_raw_img
+          img_data = 'data:image/png;base64,' + self.imgData['img']
+          img_filename = self.imgData['filename']
+          img.src = img_data
+          self.fileName = img_filename
+        })
       },
       priorRawImg: function () {
-        let img = new Image();
-        img.onload = function(){
-          self.$children[0].setImgSrc(img) 
-        }
-        this.imgData = this.$store.getters.get_raw_img_list
-        if (this.imgData.length > 0) {
-          img.src = 'data:image/png;base64,' + this.imgData[0]
-        }
-        this.$store.dispatch('load_prior_raw_img')
+        self = this
+        this.$store.dispatch('load_prior_raw_img').then(function(){
+          let img = new Image();
+          let img_data
+          let img_filename
+          img.onload = function(){
+            self.$children[0].setImgSrc(img) 
+          }
+          self.imgData = self.$store.getters.get_raw_img
+          img_data = 'data:image/png;base64,' + self.imgData['img']
+          img_filename = self.imgData['filename']
+          img.src = img_data
+          self.fileName = img_filename
+        })
       }
     }
   }
@@ -108,7 +117,12 @@
           padding: 3px 4px 3px 4px;
         }
       }
+      .v-enter-active, .v-leave-active {
+        transition: opacity .5s
+      }
+      .v-enter, .v-leave-to {
+        opacity: 0;
+      }
     }
-
   }
 </style>

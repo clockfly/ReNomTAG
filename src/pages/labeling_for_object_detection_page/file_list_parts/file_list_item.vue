@@ -1,5 +1,5 @@
 <template>
-  <div id='file-item'>
+  <div id='file-item' v-bind:class='{selected: isSelected}'>
     <div id='img-box'>
       <img :src='imgData'>
     </div>
@@ -13,7 +13,15 @@
     props: [
       'fileName',
       'imgData'
-    ]
+    ],
+    methods: {
+      isSelected: function () {
+        let filename = this.$store.getters.get_raw_img['filename']
+        return filename === this.fileName
+      },
+      selectFile: function () { 
+      }
+    }
   }
 </script>
 
@@ -55,5 +63,9 @@
       margin: auto;
       align: left;
     }
+  }
+
+  #file-item .selected {
+    background-color: #343434;
   }
 </style>

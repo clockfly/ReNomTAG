@@ -8,7 +8,7 @@
       @mouseup='onMouseUp'
       @mousemove='onMouseMove'
       @mouseleave='onMouseUp'
-    >
+      v-show='showFlag'> 
       <box v-for='(sbox, index) in boxList'></box>
     </div>
   </div>
@@ -31,13 +31,17 @@ export default {
       imgWidth:0,
       imgHeight:0,
       padTop:0,
-      padLeft:0
+      padLeft:0,
+      showFlag:true // This is for transition images.
     }
   },
   created: function () {
     window.addEventListener('resize', this.onResizeWindow)
   },
   methods: {
+    setShowFlag: function (flag) {
+      this.showFlag = flag
+    },
     setImgSrc: function (img) {
       this.imgSrc = img.src
       this.imgWidth = img.width

@@ -20,7 +20,7 @@ let action = {
   },
   load_next_raw_img (context) {
     let fd = new FormData()
-    let index = context.getters.get_raw_image_index
+    let index = context.getters.get_filename_list_index
     let filename_list = context.getters.get_filename_list
 
     if (filename_list.length <= index+1) {
@@ -38,21 +38,21 @@ let action = {
         }
         context.commit('set_next_raw_img', {
           raw_img: response.data.raw_img,
-          shift_index: 1,
+          filename: filename_list[index],
         })
       }
     )
   },
   load_prior_raw_img (context) {
     let fd = new FormData()
-    let index = context.state.raw_image_index
-    let filename_list = context.state.filename_list
+    let index = context.getters.get_filename_list_index - 1
+    let filename_list = context.getters.get_filename_list
     if (0 > index) {
       alert("List out of bounds.")
       return
     }
     fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-    fd.append('filename', filename_list[index-2])
+    fd.append('filename', filename_list[index])
 
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
@@ -63,7 +63,7 @@ let action = {
         }
         context.commit('set_prior_raw_img', {
           raw_img: response.data.raw_img,
-          shift_index: -1,
+          filename: filename_list[index],
         })
       }
     )

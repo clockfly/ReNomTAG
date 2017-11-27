@@ -24,7 +24,7 @@
       return {
         selected: null,
         imgDataList: [],
-        imgNameList: []
+        imgNameList: [],
       }
     },
     created () {
@@ -35,7 +35,7 @@
         this.imgNameList = this.$store.getters.get_filename_list
         this.imgDataList = this.$store.getters.get_thumbnail_img_list
         return this.imgNameList
-      }
+      },
     },
     methods: {}
   }
