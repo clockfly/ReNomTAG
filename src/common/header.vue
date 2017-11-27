@@ -14,13 +14,13 @@
     name: 'AppHeader',
     data: function () {
       return {
-        menuTogle: true
+        menuToggle: true
       }
     },
     methods: {
       toggleMenu: function () {
-        this.menuTogle = !this.menuTogle
-        this.$parent.setShowNavigationBarFlag(this.menuTogle)
+        this.menuToggle = !this.menuToggle
+        this.$parent.setShowNavigationBarFlag(this.menuToggle)
       }
     }
   }
