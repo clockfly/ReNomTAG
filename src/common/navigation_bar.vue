@@ -1,6 +1,5 @@
 <template>
   <div id='navigation-bar' v-bind:class='{ open: isMenuShow }'>
-
     <button class='bar-button'>
       <i class="fa fa-object-group" aria-hidden="true"></i>
       <span class='menu-text'>Detection Label</span>
@@ -32,14 +31,14 @@
 
   #navigation-bar {
     background-color: #2d3e50;
-
     position: absolute;
     top: 0;
     left: 0;
     z-index: 100;
-    width: 300px;
+    width: 180px;
     height: 100%;
     transition: all 0.5s;
+    padding-top: 100px;
 
     visibility: visible;
     -webkit-transform: translate3d(-100%, 0, 0);

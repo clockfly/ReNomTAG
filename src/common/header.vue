@@ -33,14 +33,14 @@
     height: 35px;
     margin: 0;
     padding: 0;
-    background-color: #00ff5a;
+    background-color: #2d3e50;
     font-family: 'Arial Black';
 
     #soft-symbol {
       margin: 0px 0px 0px 0px;
       padding-left: 10px;
       text-align: left;
-      color: #2d3e50;
+      color: #ffffff;
       font-size: 1.5rem;
       font-weight: bold;
 
@@ -48,7 +48,7 @@
         margin-right: 20px;
       }
       #menu-toggle:hover {
-        color: #ffffff;
+        color: #a3a3a3;
       }
     }
   }
