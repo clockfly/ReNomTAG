@@ -1,5 +1,5 @@
 <template>
-  <div id='navigation-bar' v-bind:class='{ open: isShowAll }'>
+  <div id='navigation-bar' v-bind:class='{ open: isMenuShow }'>
 
     <button class='bar-button'>
       <i class="fa fa-object-group" aria-hidden="true"></i>
@@ -15,19 +15,14 @@
 <script>
   export default {
     name: 'NavigationBar',
-    data: function () {
-      return {
-        showAllFlag: false
-      }
-    },
     computed: {
-      isShowAll: function () {
-        return this.showAllFlag
+      isMenuShow: function () {
+        return this.$store.getters.get_is_menu_show
       }
     },
     methods: {
-      setShowFlag: function (flag) {
-        this.showAllFlag = flag
+      toggleMenu: function () {
+        this.$store.dispatch('toggle_menu_action')
       }
     }
   }

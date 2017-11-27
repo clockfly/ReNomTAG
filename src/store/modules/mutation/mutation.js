@@ -5,6 +5,16 @@ let mutation = {
   },
   set_raw_img (state, payload) {
     state.raw_img = payload.raw_img
+  },
+  // Menu Mutations
+  close_menu (state) {
+    state.isMenuShow = false
+  },
+  open_menu (state) {
+    state.isMenuShow = true
+  },
+  toggle_menu (state) {
+    state.isMenuShow = !state.isMenuShow
   }
 }
 

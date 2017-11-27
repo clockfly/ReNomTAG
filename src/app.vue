@@ -1,8 +1,8 @@
 <template>
   <div id='app' class='container'>
     <navigation-bar style='flex-grow:0'></navigation-bar>
-    <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isShowMenu }'>
-      <div id="pusher"></div>
+    <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isMenuShow }'>
+      <div id="pusher" @click='closeMenu()'></div>
       <app-header></app-header>
       <router-view></router-view>
     </div>
@@ -19,25 +19,17 @@
       'app-header': AppHeader,
       'navigation-bar': NavigationBar
     },
-    data: function () {
-      return {
-        showNavigationBarFlag: false
-      }
-    },
     computed: {
-      isShowMenu: function () {
-        return this.showNavigationBarFlag
+      isMenuShow: function () {
+        return this.$store.getters.get_is_menu_show
       }
     },
     methods: {
-      setShowNavigationBarFlag: function (flag) {
-        this.showNavigationBarFlag = flag
-
-        // ///////////////
-        // Darty code. Be careful when you change components order.
-        this.$children[0].setShowFlag(flag)
-        // //////////////
-        this.$forceUpdate()
+      toggleMenu: function () {
+        this.$store.dispatch('toggle_menu_action')
+      },
+      closeMenu: function () {
+        this.$store.dispatch('close_menu_action')
       }
     }
   }
@@ -73,7 +65,7 @@
       transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
     }
 
-    &.open  #pusher{
+    &.open #pusher {
       width: 100%;
       height: 100%;
       opacity: 1;

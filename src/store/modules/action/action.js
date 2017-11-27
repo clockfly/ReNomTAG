@@ -34,6 +34,17 @@ let action = {
         })
       }
     )
-  }
+  },
+  // Menu Actions
+  toggle_menu_action (context) {
+    context.commit('toggle_menu')
+  },
+  close_menu_action (context) {
+    context.commit('close_menu')
+  },
+  open_menu_action (context) {
+    context.commit('open_menu')
+  },
+
 }
 export default action

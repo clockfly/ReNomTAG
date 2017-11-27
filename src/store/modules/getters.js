@@ -7,6 +7,9 @@ let getters = {
   },
   get_raw_img (state) {
     return state.raw_img
+  },
+  get_is_menu_show (state) {
+    return state.isMenuShow
   }
 }
 

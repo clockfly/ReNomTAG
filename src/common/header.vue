@@ -2,7 +2,7 @@
   <header>
     <div class='header-title'>
       <p id='soft-symbol'>
-        <i id='menu-toggle' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: menuToggle }'></i>
+        <i id='menu-toggle' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: isMenuShow }'></i>
         ReNom
       </p>
     </div>
@@ -13,15 +13,14 @@
 <script>
   export default {
     name: 'AppHeader',
-    data: function () {
-      return {
-        menuToggle: true
+    computed: {
+      isMenuShow: function () {
+        return this.$store.getters.get_is_menu_show
       }
     },
     methods: {
       toggleMenu: function () {
-        this.menuToggle = !this.menuToggle
-        this.$parent.setShowNavigationBarFlag(this.menuToggle)
+        this.$store.dispatch('toggle_menu_action')
       }
     }
   }
