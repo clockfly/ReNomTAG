@@ -10,7 +10,6 @@
       <span class='menu-text'>Settings</span>
     </button>
   </div>
-
 </template>
 
 <script>
@@ -69,6 +68,7 @@
       margin: 0;
       background-color: $bg_color;
       color: #b7b7b7;
+      outline: none;
 
       position: relative;
 
@@ -77,9 +77,6 @@
         background-color: lighten($bg_color, 15%);
       }
 
-      .menu-text {
-        position: absolute;
-      }
     }
   }
 
