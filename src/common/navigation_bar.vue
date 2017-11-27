@@ -1,31 +1,16 @@
 <template>
-  <div id='navigation-bar'>
-    <div id='left-side-menu' v-bind:class='{ open: isShowAll }'>
+  <div id='navigation-bar' v-bind:class='{ open: isShowAll }'>
 
-      <div v-if='isShowAll' id='left-large-menu' class='left-menu'>
-        <button class='bar-button'>
-          <i class="fa fa-object-group" aria-hidden="true"></i>
-          Detection Label
-        </button>
-        <button class='bar-button'>
-
-          <i class="fa fa-cog" aria-hidden="true"></i>
-          Settings
-        </button>
-      </div>
-
-      <div v-else id='left-small-menu' class='left-menu'>
-        <button class='bar-button'>
-
-          <i class="fa fa-object-group" aria-hidden="true"></i>
-
-        </button>
-        <button class='bar-button'>
-          <i class="fa fa-cog" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
+    <button class='bar-button'>
+      <i class="fa fa-object-group" aria-hidden="true"></i>
+      <span class='menu-text'>Detection Label</span>
+    </button>
+    <button class='bar-button'>
+      <i class="fa fa-cog" aria-hidden="true"></i>
+      <span class='menu-text'>Settings</span>
+    </button>
   </div>
+
 </template>
 
 <script>
@@ -33,7 +18,7 @@
     name: 'NavigationBar',
     data: function () {
       return {
-        showAllFlag: true
+        showAllFlag: false
       }
     },
     computed: {
@@ -53,39 +38,50 @@
 
   #navigation-bar {
     background-color: #2d3e50;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 300px;
     height: 100%;
+    transition: all 0.5s;
 
-    #left-side-menu {
-      padding-top: 35px;
-      width: 40px;
+    visibility: visible;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
 
-      transition: 200ms;
-      &.open {
-        width: 200px;
+    &.open {
+      visibility: visible;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+    &:after {
+      display: none;
+    }
+
+    .bar-button {
+      $bg_color: #2d3e50;
+
+      text-align: left;
+      width: 100%;
+      height: 45px;
+      margin: 0;
+      background-color: $bg_color;
+      color: #b7b7b7;
+
+      position: relative;
+
+      &:hover {
+        color: #fff;
+        background-color: lighten($bg_color, 15%);
       }
 
-      #left-large-menu {
-
-      }
-
-      #left-small-menu {
-
-      }
-
-      .bar-button {
-        text-align: left;
-        width: 100%;
-        height: 45px;
-        margin: 2px 0 0 0;
-        background-color: #2d3e50;
-        color: #b7b7b7;
-      }
-
-      .bar-button:hover {
-        color: #ffffff;
-        background-color: #374b60;
+      .menu-text {
+        position: absolute;
       }
     }
   }
+
 
 </style>

@@ -1,11 +1,9 @@
 <template>
   <div id='app' class='container'>
-    <div id='main-container' style='display:flex; width:100%; height:100%;'>
-      <navigation-bar style='flex-grow:0'></navigation-bar>
-      <div style='flex-grow:1'>
-        <app-header></app-header>
-        <router-view></router-view>
-      </div>
+    <navigation-bar style='flex-grow:0'></navigation-bar>
+    <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isShowMenu }'>
+      <app-header></app-header>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -22,7 +20,12 @@
     },
     data: function () {
       return {
-        showNavigationBarFlag: true
+        showNavigationBarFlag: false
+      }
+    },
+    computed: {
+      isShowMenu: function () {
+        return this.showNavigationBarFlag
       }
     },
     methods: {
@@ -40,10 +43,25 @@
 </script>
 
 <style lang='scss'>
+  #app {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+  }
+
+  #main-container {
+
+  }
+
   .container {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+
+
   }
 </style>
