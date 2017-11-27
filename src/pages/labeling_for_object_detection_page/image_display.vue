@@ -11,7 +11,7 @@
       </div>
     </div>
     <div id='outer-panel'>
-      <img :src='rawImg'> 
+      <image-canvas :img-src='rawImg'></image-canvas>
       <div id='low-button'>
         <input type='button' value='<<'>
         <input type='button' value='save'>
@@ -22,8 +22,13 @@
 </template>
 
 <script>
+  import ImageCanvas from './image_display_parts/image_canvas.vue'
+
   export default {
     name: 'ImageDisplay',
+    components: {
+      'image-canvas': ImageCanvas
+    },
     data: function () {
       return {
         fileName: 'test2.png',
@@ -85,11 +90,6 @@
           margin: 0 0 0 0;
           padding: 3px 4px 3px 4px;
         }
-      }
-      img {
-        width: 100%;
-        height: calc(100% - 40px);
-        object-fit: contain;
       }
     }
 
