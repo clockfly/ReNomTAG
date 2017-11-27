@@ -2,12 +2,13 @@
   <header>
     <div class='header-title'>
       <p id='soft-symbol'>
-        <i id='menu-toggle' class='fa fa-bars' aria-hidden='true' @click='toggleMenu'></i>
+        <i id='menu-toggle' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: menuToggle }'></i>
         ReNom
       </p>
     </div>
   </header>
 </template>
+
 
 <script>
   export default {
