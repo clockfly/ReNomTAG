@@ -23,14 +23,14 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     background-color: #e6e6e6;
     margin-bottom: 2px;
 
 		p {
 			padding: 0 0 0 0;
 			margin: 0 0 0 0;
-			font-size: 0.8rem;
+			font-size: 0.7rem;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;

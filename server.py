@@ -3,11 +3,12 @@
 import json
 from PIL import Image
 import os
-import cStringIO
 import pkg_resources
 from bottle import HTTPResponse, route, run, static_file, request, response, Bottle, hook, get
 import base64
 import glob2
+
+from io import BytesIO as IO
 
 app = Bottle()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -57,9 +58,9 @@ def get_raw_img():
     root_dir = request.params.root_dir
     filename = request.params.filename
     file_path = os.path.join(root_dir, filename)
-    print(file_path)
     with open(file_path, "rb") as image_reader:
         encoded_img = base64.b64encode(image_reader.read())
+       	encoded_img = encoded_img.decode('utf8')
 
     ret = json.dumps({
         "raw_img": encoded_img
@@ -77,9 +78,9 @@ def get_thumbnail_img_and_filename_list():
     for f in file_paths:
         img = Image.open(f, 'r')
         img.thumbnail((40, 40), Image.ANTIALIAS)
-        buffer = cStringIO.StringIO()
-        img.save(buffer, format='PNG')
-        encoded_img = base64.b64encode(buffer.getvalue())
+        buffered = IO()
+        img.save(buffered, format='PNG')
+        encoded_img = base64.b64encode(buffered.getvalue())
        	encoded_img = encoded_img.decode('utf8')
         image_list.append(encoded_img)
         filename_list.append(f.split("/")[-1])

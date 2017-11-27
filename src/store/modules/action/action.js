@@ -18,7 +18,7 @@ let action = {
       }
     )
   },
-  load_raw_img (context) {
+  load_next_raw_img (context) {
     let fd = new FormData()
     fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
 		fd.append('filename', '2012_001839.jpg')

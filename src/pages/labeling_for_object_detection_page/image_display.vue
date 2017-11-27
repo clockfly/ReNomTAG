@@ -33,7 +33,7 @@
       }
     },
 		created () {
-			this.$store.dispatch('load_raw_img')
+			this.$store.dispatch('load_next_raw_img')
 		},
 		computed: {
 			rawImg: function () {
