@@ -21,7 +21,7 @@ let action = {
   load_next_raw_img (context) {
     let fd = new FormData()
     fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-		fd.append('filename', '2012_001839.jpg')
+    fd.append('filename', '2012_001839.jpg')
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
         let error = response.data.error
@@ -34,6 +34,17 @@ let action = {
         })
       }
     )
-  }
+  },
+  // Menu Actions
+  toggle_menu_action (context) {
+    context.commit('toggle_menu')
+  },
+  close_menu_action (context) {
+    context.commit('close_menu')
+  },
+  open_menu_action (context) {
+    context.commit('open_menu')
+  },
+
 }
 export default action

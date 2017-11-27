@@ -1,91 +1,78 @@
 <template>
-  <div id='navigation-bar'>
-    <transition>
-      <div id='large-menu' v-if='isShowAll' key='large'>
-        <button class='bar-button'>
-          <tt>
-            <i class="fa fa-object-group" aria-hidden="true"></i>
-            Detection Label
-          </tt>
-        </button>
-        <button class='bar-button'>
-          <tt>
-            <i class="fa fa-cog" aria-hidden="true"></i>
-            Settings
-          </tt>
-        </button>
-      </div>
-  
-      <div id='small-menu' v-else key='small'>
-        <button class='bar-button'>
-          <tt>
-            <i class="fa fa-object-group" aria-hidden="true"></i>
-          </tt>
-        </button>
-        <button class='bar-button'>
-          <tt>
-            <i class="fa fa-cog" aria-hidden="true"></i>
-          </tt>
-        </button>
-      </div>
-    </transition>
+  <div id='navigation-bar' v-bind:class='{ open: isMenuShow }'>
+    <button class='bar-button'>
+      <i class="fa fa-object-group" aria-hidden="true"></i>
+      <span class='menu-text'>Detection Label</span>
+    </button>
+    <button class='bar-button'>
+      <i class="fa fa-cog" aria-hidden="true"></i>
+      <span class='menu-text'>Settings</span>
+    </button>
   </div>
 </template>
 
 <script>
-
-export default {
-  name: 'NavigationBar',
-  data: function () {
-    return {
-      showAllFlag: true
-    }
-  },
-  computed: {
-    isShowAll: function () {
-      return this.showAllFlag
-    }
-  },
-  methods: {
-    setShowFlag: function (flag) {
-      this.showAllFlag = flag
+  export default {
+    name: 'NavigationBar',
+    computed: {
+      isMenuShow: function () {
+        return this.$store.getters.get_is_menu_show
+      }
+    },
+    methods: {
+      toggleMenu: function () {
+        this.$store.dispatch('toggle_menu_action')
+      }
     }
   }
-}
 </script>
 
 <style lang='scss'>
 
   #navigation-bar {
     background-color: #2d3e50;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 180px;
     height: 100%;
+    transition: all 0.5s;
+    padding-top: 100px;
 
-    #large-menu {
-      padding-top: 35px;
-      width: 200px;  
+    visibility: visible;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+
+    &.open {
+      visibility: visible;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
-    #small-menu {
-      tt {
-        font-size: 1rem;
-      }
-      padding-top: 35px;
-      width: 40px; 
+    &:after {
+      display: none;
     }
 
     .bar-button {
+      $bg_color: #2d3e50;
+
       text-align: left;
       width: 100%;
       height: 45px;
-      margin: 2px 0px 0px 0px;
-      background-color: #2d3e50;
+      margin: 0;
+      background-color: $bg_color;
       color: #b7b7b7;
-    }
-  
-    .bar-button:hover {
-      color: #ffffff;
-      background-color: #374b60;
-    }
+      outline: none;
 
+      position: relative;
+
+      &:hover {
+        color: #fff;
+        background-color: lighten($bg_color, 15%);
+      }
+
+    }
   }
+
 
 </style>
