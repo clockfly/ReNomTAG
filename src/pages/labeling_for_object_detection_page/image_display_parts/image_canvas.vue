@@ -1,15 +1,13 @@
 <template>
   <div id='image-canvas'>
-    <img id='main-image' :src='imgSrc'
-      @mousedown='disabled'
+    <div id='mask'
+      v-bind:style='{"background-image": "url("+imgSrc+")"}'
+      @click='onClick'
+      @mousedown='onMouseDown'
+      @mouseup='onMouseUp'
+      @mousemove='onMouseMove'
     >
     <box v-for='(sbox, index) in boxList'></box>
-    <div id='mask'
-      @click='onClick'
-      @mousedown.capture.stop='onMouseDown'
-      @mouseup='onMouseUp'
-      @mousemove.capture.stop='onMouseMove'
-    >
     </div>
   </div>
 </template>
@@ -27,7 +25,7 @@ export default {
   ],
   beforeUpdate () {
     let mask = document.getElementById('mask')
-    mask.style.top = this.$el.style.top
+    console.log(mask)
   },
   data() {
     return {
@@ -100,14 +98,11 @@ export default {
     position: relative;
     justify-content: center;
     align-items: center;
-    img {
-      pointer-events: none;
-      object-fit: contain;
-      max-width: 100%;
-      max-height: 100%;
-    }
     #mask {
-      position: absolute;
+      position: relative;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center center;
       width: 100%;
       height: 100%;
     }

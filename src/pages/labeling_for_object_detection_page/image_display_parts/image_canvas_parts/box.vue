@@ -1,9 +1,14 @@
 <template>
-  <div id='bbox' v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
-    <div id='left-top' class='small-box'></div>
-    <div id='left-bottom' class='small-box'></div>
-    <div id='right-top' class='small-box'></div>
-    <div id='right-bottom' class='small-box'></div>
+  <div id='bbox'
+    v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
+    <div id='left-top' class='small-box'
+      v-bind:style='{top: y+"%", left: x-5+"%"}'></div>
+    <div id='left-bottom' class='small-box'
+      v-bind:style='{top: y+"%", left: x+"%"}'></div>
+    <div id='right-top' class='small-box'
+      v-bind:style='{top: y+"%", left: x+"%"}'></div>
+    <div id='right-bottom' class='small-box'
+      v-bind:style='{top: y+"%", left: x+"%"}'></div>
   </div>
 </template>
 
@@ -88,6 +93,7 @@
       width:10px;
       height: 10px;
     }
+    z-index: 2;
   }
 
 </style>
