@@ -1,13 +1,13 @@
 let getters = {
-  file_list (state) {
-    return state.file_list
+  get_thumbnail_img_list (state) {
+    return state.thumbnail_image_list
   },
-  images_list (state) {
-    return state.images_list
+  get_filename_list (state) {
+    return state.filename_list
   },
-  images_count (state) {
-    return state.images_count
-  }
+	get_raw_img (state) {
+		return state.raw_img
+	}
 }
 
 export default getters

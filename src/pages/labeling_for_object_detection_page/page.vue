@@ -1,13 +1,13 @@
 <template>
   <div id='labeling-for-object-detection-page'> 
-    <div style='display: flex;'>
+    <div id='row1'>
       <file-list class='row1'></file-list>
       <image-display class='row1'></image-display>
       <tag-list class='row1'></tag-list>
     </div>
-    <div style='display:flex;'>
+    <div id='row2'>
       <recent-image-list class='row2'></recent-image-list>
-      <div id='shortcut-description'></div>
+      <div id='shortcut-description' class='row2'></div>
     </div>
   </div>
 </template>
@@ -31,22 +31,35 @@ export default {
       selected: null
     }
   },
-  created () {
-    this.$store.dispatch('load_file_list')
-  }
 }
 </script>
 
 <style lang='scss'>
   #labeling-for-object-detection-page {
-    .row1 {
-      display: inline-block;
-      padding: 5px;
-    }
-    .row2 {
-      display: inline-block;
-      padding: 5px;
-    }
+		height: calc(100% - 35px);
+		#row1 {
+			display: flex;
+			height: calc(100% - 200px);
+			padding-left: 5px;
+			.row1 {
+				height: calc(100% - 10px);
+  	   	display: inline-block;
+				padding-right: 5px;
+     	 	padding-top: 5px;
+     	 	padding-bottom: 5px;
+    	}
+		}
+		#row2 {
+			display: flex;
+			height: 200px;
+			padding-left: 5px;
+			.row2 {
+				padding-right: 5px;
+				height: calc(100% - 5px);
+  	  	display: inline-block;
+    	 	padding-bottom: 5px;
+   	 }
+		}
   }
 
   #shortcut-description {

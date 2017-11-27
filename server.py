@@ -1,7 +1,9 @@
 # coding: utf-8
 
 import json
+from PIL import Image
 import os
+import cStringIO
 import pkg_resources
 from bottle import HTTPResponse, route, run, static_file, request, response, Bottle, hook, get
 import base64
@@ -50,34 +52,40 @@ def fonts(file_name):
     return pkg_resources.resource_string(__name__, "static/fonts/" + file_name)
 
 
-@route("/api/get_file_list", method="POST")
-def get_file_list():
+@route("/api/get_raw_img", method="POST")
+def get_raw_img():
     root_dir = request.params.root_dir
-    files = os.listdir(root_dir)
+    filename = request.params.filename
+    file_path = os.path.join(root_dir, filename)
+    print(file_path)
+    with open(file_path, "rb") as image_reader:
+        encoded_img = base64.b64encode(image_reader.read())
+
     ret = json.dumps({
-        "file_list": sorted(list(files))
+        "raw_img": encoded_img
     })
     ret = set_json_body(ret)
     return ret
 
 
-@route("/api/get_img", method="POST")
-def get_img_list():
-    file_paths = get_img_path()
-    images_list = []
+@route("/api/get_thumbnail_img_and_filename_list", method="POST")
+def get_thumbnail_img_and_filename_list():
+    root_dir = request.params.root_dir
+    file_paths = get_img_path(root_dir)
+    image_list = []
+    filename_list = []
     for f in file_paths:
-        with open(f, "rb") as image_file:
-            result = base64.b64encode(image_file.read())
-            result = result.decode('utf8')
-            temp_dict = {
-                "file_path": f,
-                "encoded": result,
-                "file_name": f.split("/")[-1]
-            }
-            images_list.append(temp_dict)
-
+        img = Image.open(f, 'r')
+        img.thumbnail((40, 40), Image.ANTIALIAS)
+        buffer = cStringIO.StringIO()
+        img.save(buffer, format='PNG')
+        encoded_img = base64.b64encode(buffer.getvalue())
+       	encoded_img = encoded_img.decode('utf8')
+        image_list.append(encoded_img)
+        filename_list.append(f.split("/")[-1])
     body = json.dumps({
-        "images_list": images_list
+        "thumbnail_image_list": image_list,
+				"filename_list": filename_list
     })
     ret = set_json_body(body)
     return ret

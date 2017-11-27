@@ -1,7 +1,7 @@
 <template>
   <div id='file-item'>
     <div id='img-box'>
-      <img :src='a'>
+      <img :src='imgData'>
     </div>
     <p> {{ fileName }} </p>
   </div>
@@ -11,7 +11,8 @@
   export default {
     name: 'FileItem',
     props: [
-      'fileName'
+      'fileName',
+			'imgData'
     ]
   }
 </script>
@@ -26,9 +27,18 @@
     background-color: #e6e6e6;
     margin-bottom: 2px;
 
+		p {
+			padding: 0 0 0 0;
+			margin: 0 0 0 0;
+			font-size: 0.8rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
     #img-box {
       height: 100%;
-      width: 35%;
+      width: 30%;
       position: relative;
     }
 

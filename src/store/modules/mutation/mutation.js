@@ -1,26 +1,11 @@
 let mutation = {
-  set_file_list (state, payload) {
-    state.file_list = payload.file_list
+  set_thumbnail_img_and_filename_list (state, payload) {
+    state.filename_list = payload.filename_list
+    state.thumbnail_image_list = payload.thumbnail_image_list
   },
-  reset_all_server_file (state) {
-    state.images_list = []
-  },
-  set_server_file (state, payload) {
-    state.images_list = payload.images_list
-  },
-  plus_images_count (state) {
-    state.images_count += 1
-    console.log(state.images_count)
-  },
-  minus_images_count (state) {
-    state.images_count -= 1
-  },
-  reset_images_count (state) {
-    state.images_count = 0
-  },
-  maximize_images_count (state) {
-    state.images_count = state.images_list.length - 1
-  }
+	set_raw_img (state, payload) {
+		state.raw_img = payload.raw_img
+	}
 }
 
 export default mutation

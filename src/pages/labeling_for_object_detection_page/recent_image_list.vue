@@ -33,9 +33,10 @@
 <style lang='scss'>
 
   #recent-image-list {
-    width: calc(100% - 220px);
-    max-height: 150px;
+    width: calc(100% - 205px);
+    height: 100%;
     #inner-recent-image-list{
+    	height: 100%;
       box-sizing: border-box;
       border: solid 1px #a3a3a3;
   
@@ -57,16 +58,17 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        padding-top: 5px;
-        padding-bottom: 5px;
   
         .img-panel {
           height: 100%;
+					width: 100%;
           padding-left: 4px;
           padding-right: 4px;
           display: flex;
           align-items: center;
           img {
+						width: 100%;
+						height: 100%;
             object-fit: contain;
           }
         }

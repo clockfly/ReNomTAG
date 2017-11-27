@@ -4,7 +4,10 @@
       <div id='search-box'>
         <input value="search" type="text"/>
       </div>
-      <file-item v-for='(fname, index) in imgNameList' :fileName='fname'></file-item>
+      <file-item v-for='(fname, index) in imgData'
+				:fileName='fname' :key='index'
+				:img-data='"data:image/png;base64,"+imgDataList[index]'>
+			</file-item>
     </div>
   </div>
 </template>
@@ -24,13 +27,18 @@ export default {
       imgNameList: []
     }
   },
-  mounted () {
-    this.loadImgData()
+  created () {
+    // this.$store.dispatch('load_file_list')
+    this.$store.dispatch('load_thumbnail_img_and_filename_list')
   },
-  methods: {
-    loadImgData: function () {
-      this.imgNameList = this.$store.file_list
+	computed: {
+    imgData: function () {
+			this.imgNameList = this.$store.getters.get_filename_list
+			this.imgDataList = this.$store.getters.get_thumbnail_img_list
+			return this.imgNameList
     }
+	},
+  methods: {
   }
 }
 </script>
