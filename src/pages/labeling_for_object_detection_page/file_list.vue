@@ -28,7 +28,6 @@
       }
     },
     created () {
-      // this.$store.dispatch('load_file_list')
       this.$store.dispatch('load_thumbnail_img_and_filename_list')
     },
     computed: {

@@ -32,13 +32,13 @@
   #navigation-bar {
     background-color: #2d3e50;
     position: absolute;
-    top: 0;
+    top: 35px;
     left: 0;
     z-index: 100;
-    width: 180px;
+    width: 170px;
     height: 100%;
     transition: all 0.5s;
-    padding-top: 100px;
+    padding-top: 80px;
 
     visibility: visible;
     -webkit-transform: translate3d(-100%, 0, 0);

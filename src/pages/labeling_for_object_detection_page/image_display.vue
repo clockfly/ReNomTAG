@@ -11,11 +11,11 @@
       </div>
     </div>
     <div id='outer-panel'>
-      <image-canvas :img-src='rawImg'></image-canvas>
+      <image-canvas></image-canvas>
       <div id='low-button'>
-        <input type='button' value='<<'>
+        <input type='button' value='<<' @click='priorRawImg'>
         <input type='button' value='save'>
-        <input type='button' value='>>'>
+        <input type='button' value='>>' @click='nextRawImg'>
       </div>
     </div>
   </div>
@@ -34,16 +34,33 @@
         fileName: 'test2.png',
         nthImg: '10',
         totalImg: '100',
-        imgData: ''
       }
     },
-    created () {
-      this.$store.dispatch('load_next_raw_img')
-    },
-    computed: {
-      rawImg: function () {
-        this.imgData = 'data:image/png;base64,' + this.$store.getters.get_raw_img
-        return this.imgData
+    methods: {
+      nextRawImg: function () {
+        self = this
+        let img = new Image();
+        img.onload = function(){
+          self.$children[0].setImgSrc(img) 
+        }
+        this.imgData = self.$store.getters.get_raw_img_list
+        if (this.imgData.length > 1) {
+          img.src = 'data:image/png;base64,' + this.imgData[1]
+        } else if (this.imgData.length > 0) {
+          img.src = 'data:image/png;base64,' + this.imgData[0]
+        }
+        this.$store.dispatch('load_next_raw_img')
+      },
+      priorRawImg: function () {
+        let img = new Image();
+        img.onload = function(){
+          self.$children[0].setImgSrc(img) 
+        }
+        this.imgData = this.$store.getters.get_raw_img_list
+        if (this.imgData.length > 0) {
+          img.src = 'data:image/png;base64,' + this.imgData[0]
+        }
+        this.$store.dispatch('load_prior_raw_img')
       }
     }
   }

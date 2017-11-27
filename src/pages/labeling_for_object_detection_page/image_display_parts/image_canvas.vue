@@ -1,13 +1,15 @@
 <template>
   <div id='image-canvas'>
     <div id='mask'
-      v-bind:style='{"background-image": "url("+imgSrc+")"}'
-      @click='onClick'
+      v-bind:style='{"background-image": "url("+imgSrc+")",
+                      "padding-top": padTop+"%",
+                      "padding-left": padLeft+"%"}'
       @mousedown='onMouseDown'
       @mouseup='onMouseUp'
       @mousemove='onMouseMove'
+      @mouseleave='onMouseUp'
     >
-    <box v-for='(sbox, index) in boxList'></box>
+      <box v-for='(sbox, index) in boxList'></box>
     </div>
   </div>
 </template>
@@ -20,23 +22,42 @@ export default {
   components: {
     'box': Bbox
   },
-  props: [
-    'imgSrc'
-  ],
-  beforeUpdate () {
-    let mask = document.getElementById('mask')
-    console.log(mask)
-  },
   data() {
     return {
       boxList: [],
       mouseDownFlag:false,
-      currentBbox: null
+      currentBbox: null,
+      imgSrc:'',
+      imgWidth:0,
+      imgHeight:0,
+      padTop:0,
+      padLeft:0
     }
   },
+  created: function () {
+    window.addEventListener('resize', this.onResizeWindow)
+  },
   methods: {
-    onClick: function (event) {
-
+    setImgSrc: function (img) {
+      this.imgSrc = img.src
+      this.imgWidth = img.width
+      this.imgHeight = img.height
+      this.onResizeWindow()
+    },
+    onResizeWindow: function () {
+      let parentBox = document.getElementById('image-canvas').getBoundingClientRect()
+      let parentWidth = parentBox.width
+      let parentHeight = parentBox.height
+      let childAspectRatio = this.imgWidth/this.imgHeight
+      let parentAspectRatio = parentWidth/parentHeight
+      
+      if (childAspectRatio < parentAspectRatio) {
+        this.padTop=100
+        this.padLeft=100*this.imgWidth/parentWidth*parentHeight/this.imgHeight
+      } else {
+        this.padTop=100*this.imgHeight/parentHeight*parentWidth/this.imgWidth
+        this.padLeft=100
+      }
     },
     onMouseDown: function (event) {
       let [x, y] = this.transformCurrentCorrdinate(event)
@@ -67,13 +88,12 @@ export default {
       if (!this.currentBbox) {
         this.currentBbox = this.$children[this.boxList.length-1]
         this.currentBbox.initializeBox(x, y)
-        // console.log(x, y, event.target)
       }else{
         this.currentBbox.handleClickEvent(x, y, event.target)
       } 
     },
     transformCurrentCorrdinate: function (event) {
-      let box = document.getElementById('image-canvas').getBoundingClientRect()
+      let box = document.getElementById('mask').getBoundingClientRect()
       let rectX = box.left
       let rectY = box.top
       let width = box.width
@@ -95,7 +115,6 @@ export default {
     width: 100%;
     height: calc(100% - 40px);
     display: flex;
-    position: relative;
     justify-content: center;
     align-items: center;
     #mask {
@@ -103,8 +122,8 @@ export default {
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
-      width: 100%;
-      height: 100%;
+      width: 0;
+      height: 0;
     }
   }
 </style>

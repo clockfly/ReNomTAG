@@ -30,7 +30,7 @@ def get_img_path(img_dir=IMG_DIR):
             res = glob2.glob(path)
         else:
             res.extend(glob2.glob(path))
-    return res
+    return sorted(res)
 
 
 @route("/")

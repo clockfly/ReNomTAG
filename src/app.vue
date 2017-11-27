@@ -2,7 +2,7 @@
   <div id='app' class='container'>
     <navigation-bar style='flex-grow:0'></navigation-bar>
     <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isMenuShow }'>
-      <div id="pusher" @click='closeMenu()'></div>
+      <div id="pusher" @click='closeMenu()' @mousedown.capture='closeMenu()'></div>
       <app-header></app-header>
       <router-view></router-view>
     </div>
@@ -30,6 +30,7 @@
       },
       closeMenu: function () {
         this.$store.dispatch('close_menu_action')
+        console.log("SSS")
       }
     }
   }

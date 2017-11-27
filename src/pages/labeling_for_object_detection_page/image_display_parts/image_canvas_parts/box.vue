@@ -1,19 +1,14 @@
 <template>
   <div id='bbox'
     v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
-    <div id='left-top' class='small-box'
-      v-bind:style='{top: y+"%", left: x-5+"%"}'></div>
-    <div id='left-bottom' class='small-box'
-      v-bind:style='{top: y+"%", left: x+"%"}'></div>
-    <div id='right-top' class='small-box'
-      v-bind:style='{top: y+"%", left: x+"%"}'></div>
-    <div id='right-bottom' class='small-box'
-      v-bind:style='{top: y+"%", left: x+"%"}'></div>
+    <div id='left-top' class='small-box'></div>
+    <div id='left-bottom' class='small-box'></div>
+    <div id='right-top' class='small-box'></div>
+    <div id='right-bottom' class='small-box'></div>
   </div>
 </template>
 
 <script>
-
   export default {
     name: 'Bbox',
     data () {
@@ -83,17 +78,32 @@
 
 </script>
 
-<style>
-
+<style lang='scss'>
   #bbox {
     position: absolute;
     background-color: rgba(0, 0, 255, 0.5);
     .small-box {
+      position: absolute;
       background-color: rgba(0, 0, 255, 0.8);
-      width:10px;
+      width: 10px;
       height: 10px;
     }
-    z-index: 2;
+    #left-top {
+      top: -5px;
+      left: -5px;
+    }
+    #left-bottom {
+      top: calc(100%-5px);
+      left: -5px;
+    }
+    #right-top {
+      top: -5px;
+      left: calc(100%-5px);
+    }
+    #right-bottom {
+      top: calc(100%-5px);
+      left: calc(100%-5px);
+    }
   }
 
 </style>
