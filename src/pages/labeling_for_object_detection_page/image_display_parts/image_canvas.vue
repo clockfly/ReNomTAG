@@ -5,12 +5,14 @@
       @mouseup='onMouseUp'
       @mousemove='onMouseMove'
       @keyup.delete='onKeyDelete'>
-    <div id='mask'
-      v-bind:style='{"background-image": "url("+imgSrc+")",
-                      "padding-top": padTop+"%",
-                      "padding-left": padLeft+"%"}'
-      v-show='showFlag'> 
-      <box v-for='(sbox, index) in boxList' :key='index'></box>
+    <div id='inner-canvas'>
+      <div id='mask'
+        v-bind:style='{"background-image": "url("+imgSrc+")",
+                        "padding-top": padTop+"%",
+                        "padding-left": padLeft+"%"}'
+        v-show='showFlag'> 
+        <box v-for='(sbox, index) in boxList' :key='index'></box>
+      </div>
     </div>
   </div>
 </template>
@@ -60,7 +62,7 @@ export default {
       this.onResizeWindow()
     },
     onResizeWindow: function () {
-      let parentBox = document.getElementById('image-canvas').getBoundingClientRect()
+      let parentBox = document.getElementById('inner-canvas').getBoundingClientRect()
       let parentWidth = parentBox.width
       let parentHeight = parentBox.height
       let childAspectRatio = this.imgWidth/this.imgHeight
@@ -182,13 +184,20 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    #mask {
-      position: relative;
-      background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center center;
-      width: 0;
-      height: 0;
+    #inner-canvas {
+      width: calc(100% - 80px);
+      height: calc(100% - 80px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      #mask {
+        position: relative;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center center;
+        width: 0;
+        height: 0;
+      }
     }
   }
 </style>
