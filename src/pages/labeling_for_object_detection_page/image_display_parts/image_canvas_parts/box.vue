@@ -141,6 +141,14 @@
       },
       createdScalingBox: function (x, y) {
         let px, py, pw, ph
+        if (x < 0)
+          x = 0 
+        if (y < 0)
+          y = 0 
+        if (x >= 100)
+          x = 100 
+        if (y >= 100)
+          y = 100
         let initX = this.initialX
         let initY = this.initialY
         var moveX = x
@@ -168,8 +176,18 @@
       },
       moveBox: function (x, y) {
         // Touched corrdinate must be kept here.
-        this.x = x - this.moveInitX 
-        this.y = y - this.moveInitY
+        let px = x - this.moveInitX
+        let py = y - this.moveInitY
+        let pw = px + this.w
+        let ph = py + this.h
+
+        if (px < 0) px = 0
+        if (py < 0) py = 0
+        if (pw > 100) px = 100 - this.w
+        if (ph > 100) py = 100 - this.h 
+
+        this.x = px 
+        this.y = py
       },
       initializeBox: function (x, y) {
         this.setSelectedFlag(true)

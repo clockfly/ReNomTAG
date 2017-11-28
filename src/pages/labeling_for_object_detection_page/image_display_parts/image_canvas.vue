@@ -185,8 +185,8 @@ export default {
     justify-content: center;
     align-items: center;
     #inner-canvas {
-      width: calc(100% - 80px);
-      height: calc(100% - 80px);
+      width: calc(100% - 100px);
+      height: calc(100% - 100px);
       display: flex;
       justify-content: center;
       align-items: center;
