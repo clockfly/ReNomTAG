@@ -1,8 +1,8 @@
 <template>
   <div id='app' class='container'>
     <navigation-bar style='flex-grow:0'></navigation-bar>
-    <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isMenuShow }'>
-      <div id="pusher" @click='closeMenu()' @mousedown.capture='closeMenu()'></div>
+    <div id='main-container' style='flex-grow:1' v-bind:class='{ open: isMenuShown }'>
+      <div id='pusher' @click='closeMenu'></div>
       <app-header></app-header>
       <router-view></router-view>
     </div>
@@ -20,16 +20,16 @@
       'navigation-bar': NavigationBar
     },
     computed: {
-      isMenuShow: function () {
-        return this.$store.getters.get_is_menu_show
+      isMenuShown: function () {
+        return this.$store.getters.get_is_menu_shown
       }
     },
     methods: {
       toggleMenu: function () {
-        this.$store.dispatch('toggle_menu_action')
+        this.$store.commit('toggle_menu')
       },
       closeMenu: function () {
-        this.$store.dispatch('close_menu_action')
+        this.$store.commit('close_menu')
       }
     }
   }
@@ -41,7 +41,6 @@
     display: flex;
     width: 100%;
     height: 100%;
-
     overflow: hidden;
   }
 
@@ -71,7 +70,6 @@
       opacity: 1;
       transition: opacity 0.5s;
     }
-
   }
 
   .container {

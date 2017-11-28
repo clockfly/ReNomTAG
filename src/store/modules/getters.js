@@ -14,8 +14,8 @@ let getters = {
   get_filename_list_index (state) {
     return state.filename_list_index
   },
-  get_is_menu_show (state) {
-    return state.isMenuShow
+  get_is_menu_shown (state) {
+    return state.isMenuShown
   },
   get_tag_list (state) {
     return state.tag_dict

@@ -1,5 +1,5 @@
 <template>
-  <div id='navigation-bar' v-bind:class='{ open: isMenuShow }'>
+  <div id='navigation-bar' v-bind:class='{ open: isMenuShown }'>
     <button class='bar-button'>
       <i class="fa fa-object-group" aria-hidden="true"></i>
       <span class='menu-text'>Detection Label</span>
@@ -15,8 +15,8 @@
   export default {
     name: 'NavigationBar',
     computed: {
-      isMenuShow: function () {
-        return this.$store.getters.get_is_menu_show
+      isMenuShown: function () {
+        return this.$store.getters.get_is_menu_shown
       }
     },
     methods: {

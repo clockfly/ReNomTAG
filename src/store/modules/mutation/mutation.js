@@ -26,13 +26,13 @@ let mutation = {
   },
   // Menu Mutations
   close_menu (state) {
-    state.isMenuShow = false
+    state.isMenuShown = false
   },
   open_menu (state) {
-    state.isMenuShow = true
+    state.isMenuShown = true
   },
   toggle_menu (state) {
-    state.isMenuShow = !state.isMenuShow
+    state.isMenuShown = !state.isMenuShown
   },
   add_tag (state, payload) {
     let parent_node = payload.parent_node
