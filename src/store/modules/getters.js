@@ -16,6 +16,9 @@ let getters = {
   },
   get_is_menu_show (state) {
     return state.isMenuShow
+  },
+  get_tag_list (state) {
+    return state.tag_dict
   }
 }
 

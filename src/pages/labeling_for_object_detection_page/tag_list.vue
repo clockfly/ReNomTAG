@@ -7,7 +7,7 @@
       <input value='search' type='text'/>
     </div>
     <div id='main-tag-list'>
-      <tag-tree :nodes='tree.nodes' :label='tree.label' :depth='0'>
+      <tag-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
       </tag-tree>
     </div>
   </div>
@@ -41,7 +41,13 @@
     },
     data: function () {
       return {
-        tree: tree_data
+        tree:[] //tree_data
+      }
+    },
+    computed: {
+      setTagTree: function () {
+        this.tree = this.$store.getters.get_tag_list
+        return this.tree[0]['nodes']
       }
     }
   }

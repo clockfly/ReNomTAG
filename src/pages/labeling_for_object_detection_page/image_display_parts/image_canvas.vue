@@ -1,9 +1,12 @@
 <template>
   <div id='image-canvas'
       tabindex='0'
+      @click='setLabelList'
       @mousedown='onMouseDown'
       @mouseup='onMouseUp'
       @mousemove='onMouseMove'
+      @keydown='onAnyKeyDown'
+      @keyup='onAnyKeyUp'
       @keyup.delete='onKeyDelete'>
     <div id='inner-canvas'>
       <div id='mask'
@@ -32,7 +35,8 @@ var boxEvent = {
 export default {
   name: 'ImageCanvas',
   components: {
-    'box': Bbox
+    'box': Bbox,
+    'labelList': []
   },
   data() {
     return {
@@ -45,6 +49,7 @@ export default {
       imgHeight:0,
       padTop:0,
       padLeft:0,
+      currentDownKey:'',
       showFlag:true // This is for transition images.
     }
   },
@@ -52,6 +57,19 @@ export default {
     window.addEventListener('resize', this.onResizeWindow)
   },
   methods: {
+    setLabelList(){
+      let tags = this.$store.getters.get_tag_list
+      let arr = []
+      let recursive = function (arr, nodes) {
+        for (let n of nodes) {
+          let key = n["shortcut"]
+          arr.push({key: [n['label'], n['id']]})
+          recursive(arr, n['nodes'])
+        }
+      }
+      recursive(arr, tags)
+      this.labelList = arr
+    },
     setShowFlag: function (flag) {
       this.showFlag = flag
     },
@@ -168,6 +186,20 @@ export default {
       let x = (event.pageX - rectX)/width*100
       let y = (event.pageY - rectY)/height*100
       return [x, y]
+    },
+    onAnyKeyDown: function (event) {
+      let box = this.$el.querySelector('.selected')
+      this.currentDownKey = event.key
+      if (box) {
+        let key_index = this.labelList.indexOf(this.currentDownKey)
+        console.log(key_index, this.labelList)
+        if (key_index >= 0){
+          console.log(this.labelList[key_index])
+        }
+      }
+    },
+    onAnyKeyUp: function (event) {
+      this.currentDownKey = ''
     },
     disabled: function () {
       return false

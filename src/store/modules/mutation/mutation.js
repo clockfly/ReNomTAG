@@ -33,6 +33,28 @@ let mutation = {
   },
   toggle_menu (state) {
     state.isMenuShow = !state.isMenuShow
+  },
+  add_tag (state, payload) {
+    let parent_node = payload.parent_node
+    let label = payload.label
+    let id = payload.id
+    let shortcut = payload.shortcut
+
+    var recursive_search = function (node) {
+      for (let n of node) {
+        if (parent_node === n['label']){
+          n['nodes'].unshift({
+            label:label,
+            id:id,
+            shortcut:shortcut,
+            nodes:[]
+          })
+        } else {
+          recursive_search(n['nodes'])
+        }
+      }
+    }
+    recursive_search(state.tag_dict)
   }
 }
 

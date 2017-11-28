@@ -4,7 +4,13 @@ let state = {
   filename_list_index:0,
   raw_image_list_index:0,
   thumbnail_image_list: [],
-  isMenuShow: false
+  isMenuShow: false,
+  tag_dict: [{
+    label: 'Labels',
+    id: -1,
+    shortcut: '',
+    nodes: []
+  }]
 }
 
 export default state
