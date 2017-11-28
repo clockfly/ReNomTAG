@@ -4,6 +4,7 @@
       v-bind:style='{"background-image": "url("+imgSrc+")",
                       "padding-top": padTop+"%",
                       "padding-left": padLeft+"%"}'
+      @keyup.delete='onKeyDelete'
       @mousedown='onMouseDown'
       @mouseup='onMouseUp'
       @mousemove='onMouseMove'
@@ -17,6 +18,15 @@
 <script>
 import Bbox from './image_canvas_parts/box.vue'
 
+var boxEvent = {
+    "create":0,
+    "move":1,
+    "rescale-left-top":2,
+    "rescale-left-bottom":3,
+    "rescale-right-top":4,
+    "rescale-right-bottom":5
+  }
+
 export default {
   name: 'ImageCanvas',
   components: {
@@ -27,6 +37,7 @@ export default {
       boxList: [],
       mouseDownFlag:false,
       currentBbox: null,
+      boxEventType: null,
       imgSrc:'',
       imgWidth:0,
       imgHeight:0,
@@ -63,19 +74,58 @@ export default {
         this.padLeft=100
       }
     },
+    onKeyDelete: function (event) {
+      console.log("ADD")
+      // for (let box of this.$children) {
+      //   if (box.$el.classList.indexOf('selected'))
+      //     this.$delete(box)
+      // }
+    },
     onMouseDown: function (event) {
       let [x, y] = this.transformCurrentCorrdinate(event)
-      this.mouseDownFlag = true      
       let select_flag = true
+      let target = event.target
+
+      this.mouseDownFlag = true      
+      this.currentBbox = null
+
       for (let box of this.$children) {
-        if (false) {
+        let query_list = []
+        query_list.push(box.$el.querySelector('#left-top'))
+        query_list.push(box.$el.querySelector('#left-bottom'))
+        query_list.push(box.$el.querySelector('#right-top'))
+        query_list.push(box.$el.querySelector('#right-bottom'))
+        query_list.push(box.$el.querySelector('#bbox'))
+        if (query_list.indexOf(target) >= 0) {
           select_flag = false
+
+          this.currentBbox = box
+          this.currentBbox.setSelectedFlag(true)
+
+          if (target === box.$el.querySelector('#left-top')) {
+            this.boxEventType = boxEvent['rescale-left-top']
+            this.currentBbox.setScaleInitCoordinate()
+          } else if (target === box.$el.querySelector('#left-bottom')) {
+            this.boxEventType = boxEvent['rescale-left-bottom']
+            this.currentBbox.setScaleInitCoordinate()
+          } else if (target === box.$el.querySelector('#right-top')) {
+            this.boxEventType = boxEvent['rescale-right-top']
+            this.currentBbox.setScaleInitCoordinate()
+          } else if (target === box.$el.querySelector('#right-bottom')) {
+            this.boxEventType = boxEvent['rescale-right-bottom']
+            this.currentBbox.setScaleInitCoordinate()
+          } else {
+            this.currentBbox.setMoveInitCoordinate(x - box.x, y - box.y)
+            this.boxEventType = boxEvent['move']
+          }
+        } else {
+          box.setSelectedFlag(false)
         }
       }
       if (select_flag) {
         this.boxList.push(0)
+        this.boxEventType = boxEvent['create']
       }
-      return false
     },
     onMouseUp: function (event) {
       this.mouseDownFlag = false
@@ -93,7 +143,21 @@ export default {
         this.currentBbox = this.$children[this.boxList.length-1]
         this.currentBbox.initializeBox(x, y)
       }else{
-        this.currentBbox.handleClickEvent(x, y, event.target)
+        if (this.boxEventType === boxEvent['create']) {
+          this.currentBbox.createdScalingBox(x, y)
+        } else if (this.boxEventType === boxEvent['move']) {
+          this.currentBbox.moveBox(x, y, event.target)
+        } else if (this.boxEventType === boxEvent['rescale-left-top']) {
+          this.currentBbox.scaleByLeftTop(x, y)
+        } else if (this.boxEventType === boxEvent['rescale-left-bottom']) {
+          this.currentBbox.scaleByLeftBottom(x, y)
+        } else if (this.boxEventType === boxEvent['rescale-right-top']) {
+          this.currentBbox.scaleByRightTop(x, y)
+        } else if (this.boxEventType === boxEvent['rescale-right-bottom']) {
+          this.currentBbox.scaleByRightBottom(x, y)
+        } else {
+        
+        }
       } 
     },
     transformCurrentCorrdinate: function (event) {

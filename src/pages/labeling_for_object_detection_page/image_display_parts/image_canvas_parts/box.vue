@@ -1,10 +1,12 @@
 <template>
-  <div id='bbox'
-    v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
-    <div id='left-top' class='small-box'></div>
-    <div id='left-bottom' class='small-box'></div>
-    <div id='right-top' class='small-box'></div>
-    <div id='right-bottom' class='small-box'></div>
+  <div id='outer-box'>
+    <div id='bbox' v-bind:class='{selected: isSelected}'
+      v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
+      <div id='left-top' class='small-box'></div>
+      <div id='left-bottom' class='small-box'></div>
+      <div id='right-top' class='small-box'></div>
+      <div id='right-bottom' class='small-box'></div>
+    </div>
   </div>
 </template>
 
@@ -15,52 +17,142 @@
       return {
         initialX:0,
         initialY:0,
+        moveInitX:0,
+        moveInitY:0,
+        scaleInitX:0,
+        scaleInitY:0,
+        scaleInitW:0,
+        scaleInitH:0,
         x:0,
         y:0,
         w:0,
-        h:0
+        h:0,
+        selectedFlag:false
       }
     },
+    computed: {
+      isSelected: function () {
+        return this.selectedFlag
+      }
+    }, 
     methods: {
-      handleClickEvent: function (x, y, target) {
-        if (target === document.getElementById('left-top')){
+      scaleByLeftTop: function (x, y, dx=0, dy=0) {
+        let px, py, pw, ph
+        let scale_initial_x = this.scaleInitX + dx
+        let scale_initial_y = this.scaleInitY + dy
 
-        } else if (target === document.getElementById('left-bottom')){
+        px = x
+        py = y
+        pw = this.scaleInitW + scale_initial_x - x
+        ph = this.scaleInitH + scale_initial_y - y
 
-        } else if (target === document.getElementById('right-top')){
-
-        } else if (target === document.getElementById('right-bottom')){
-
-        } else {
-          let px, py, pw, ph
-          let initX = this.initialX
-          let initY = this.initialY
-          var moveX = x
-          var moveY = y
-          var w = (moveX - initX)
-          var h = (moveY - initY)
-
-          if (w >= 0) {
-            px = initX
-            pw = w
-          } else {
-            px = moveX
-            pw = -w
-          }
-          if (h >= 0) {
-            py = initY
-            ph = h
-          } else {
-            py = moveY
-            ph = -h
-          }
+        if (pw < 0){
+          this.scaleByRightTop(x, y, this.scaleInitW, dy)
+        }else if (ph < 0){
+          this.scaleByLeftBottom(x, y, dx, this.scaleInitH)
+       } else{
           this.x = px
           this.y = py
           this.w = pw
           this.h = ph
         }
       },
+      scaleByLeftBottom: function (x, y, dx=0, dy=0) {
+        let px, py, pw, ph
+        let scale_initial_x = this.scaleInitX + dx
+        let scale_initial_y = this.scaleInitY + dy
+
+        px = x
+        py = scale_initial_y
+        pw = this.scaleInitW + scale_initial_x - x
+        ph = y - scale_initial_y
+
+        if (pw < 0) {
+          this.scaleByRightBottom(x, y, this.scaleInitW, dy)
+        } else if (ph < 0) {
+          this.scaleByLeftTop(x, y, dx, -this.scaleInitH)
+        } else {
+          this.x = px
+          this.y = py
+          this.w = pw
+          this.h = ph
+        }
+      },
+      scaleByRightTop: function (x, y, dx=0, dy=0) {
+        let px, py, pw, ph
+        let scale_initial_x = this.scaleInitX + dx
+        let scale_initial_y = this.scaleInitY + dy
+
+        px = scale_initial_x
+        py = y
+        pw = x - scale_initial_x
+        ph = this.scaleInitH + scale_initial_y - y
+
+        if (pw < 0) {
+          this.scaleByLeftTop(x, y, -this.scaleInitW, dy)
+        } else if (ph < 0) {
+          this.scaleByRightBottom(x, y, dx, this.scaleInitH)
+        } else{
+          this.x = px
+          this.y = py
+          this.w = pw
+          this.h = ph
+        }
+      },
+      scaleByRightBottom: function (x, y, dx=0, dy=0) {
+        let px, py, pw, ph
+        let scale_initial_x = this.scaleInitX + dx
+        let scale_initial_y = this.scaleInitY + dy
+
+        px = scale_initial_x
+        py = scale_initial_y
+        pw = x - scale_initial_x
+        ph = y - scale_initial_y
+        if (pw < 0) {
+          this.scaleByLeftBottom(x, y, -this.scaleInitW, dy)
+        } else if (ph < 0) {
+          this.scaleByRightTop(x, y, dx, -this.scaleInitH)
+        } else {
+          this.x = px
+          this.y = py
+          this.w = pw
+          this.h = ph
+        }
+      },
+      createdScalingBox: function (x, y) {
+        let px, py, pw, ph
+        let initX = this.initialX
+        let initY = this.initialY
+        var moveX = x
+        var moveY = y
+        var w = (moveX - initX)
+        var h = (moveY - initY)
+        if (w >= 0) {
+          px = initX
+          pw = w
+        } else {
+          px = moveX
+          pw = -w
+        }
+        if (h >= 0) {
+          py = initY
+          ph = h
+        } else {
+          py = moveY
+          ph = -h
+        }
+        this.x = px
+        this.y = py
+        this.w = pw
+        this.h = ph
+      },
+      moveBox: function (x, y) {
+        // Touched corrdinate must be kept here.
+        this.x = x - this.moveInitX 
+        this.y = y - this.moveInitY
+      },
       initializeBox: function (x, y) {
+        this.setSelectedFlag(true)
         this.initialX = x
         this.initialY = y
         this.x = x
@@ -72,6 +164,19 @@
         } else {
           return false
         }
+      },
+      setSelectedFlag: function (flag) {
+        this.selectedFlag = flag
+      },
+      setMoveInitCoordinate: function (x, y) {
+        this.moveInitX = x
+        this.moveInitY = y
+      },
+      setScaleInitCoordinate: function () {
+        this.scaleInitX = this.x
+        this.scaleInitY = this.y
+        this.scaleInitW = this.w
+        this.scaleInitH = this.h
       }
     }
   }
@@ -79,31 +184,39 @@
 </script>
 
 <style lang='scss'>
-  #bbox {
-    position: absolute;
-    background-color: rgba(0, 0, 255, 0.5);
-    .small-box {
+  #outer-box {
+    z-index: 5;
+    #bbox {
       position: absolute;
-      background-color: rgba(0, 0, 255, 0.8);
-      width: 10px;
-      height: 10px;
+      background-color: rgba(0, 0, 255, 0.3);
+      .small-box {
+        position: absolute;
+        background-color: rgba(0, 0, 255, 0.6);
+        width: 14px;
+        height: 14px;
+      }
+      #left-top {
+        top: -7px;
+        left: -7px;
+      }
+      #left-bottom {
+        bottom: -7px;
+        left: -7px;
+      }
+      #right-top {
+        top: -7px;
+        right: -7px;
+      }
+      #right-bottom {
+        bottom: -7px;
+        right: -7px;
+      }
     }
-    #left-top {
-      top: -5px;
-      left: -5px;
-    }
-    #left-bottom {
-      top: calc(100%-5px);
-      left: -5px;
-    }
-    #right-top {
-      top: -5px;
-      left: calc(100%-5px);
-    }
-    #right-bottom {
-      top: calc(100%-5px);
-      left: calc(100%-5px);
+    .selected {
+      background-color: rgba(255, 0, 0, 0.4) !important; 
+      .small-box {
+        background-color: rgba(255, 0, 0, 0.7) !important; 
+      }
     }
   }
-
 </style>
