@@ -1,16 +1,16 @@
 <template>
-  <div id='image-canvas'>
+  <div id='image-canvas'
+      tabindex='0'
+      @mousedown='onMouseDown'
+      @mouseup='onMouseUp'
+      @mousemove='onMouseMove'
+      @keyup.delete='onKeyDelete'>
     <div id='mask'
       v-bind:style='{"background-image": "url("+imgSrc+")",
                       "padding-top": padTop+"%",
                       "padding-left": padLeft+"%"}'
-      @keyup.delete='onKeyDelete'
-      @mousedown='onMouseDown'
-      @mouseup='onMouseUp'
-      @mousemove='onMouseMove'
-      @mouseleave='onMouseUp'
       v-show='showFlag'> 
-      <box v-for='(sbox, index) in boxList'></box>
+      <box v-for='(sbox, index) in boxList' :key='index'></box>
     </div>
   </div>
 </template>
@@ -75,11 +75,11 @@ export default {
       }
     },
     onKeyDelete: function (event) {
-      console.log("ADD")
-      // for (let box of this.$children) {
-      //   if (box.$el.classList.indexOf('selected'))
-      //     this.$delete(box)
-      // }
+      let bbox = this.$el.querySelector('.selected')
+      if (bbox){
+        let parent = bbox.parentNode
+        parent.parentNode.removeChild(parent)
+      }
     },
     onMouseDown: function (event) {
       let [x, y] = this.transformCurrentCorrdinate(event)
@@ -130,9 +130,6 @@ export default {
     onMouseUp: function (event) {
       this.mouseDownFlag = false
       if(this.currentBbox) {
-        if (!this.currentBbox.isBoxCreated()) {
-          this.boxList.pop()
-        }
         this.currentBbox = null
       }
     },

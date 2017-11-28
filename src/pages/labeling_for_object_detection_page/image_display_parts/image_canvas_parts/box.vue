@@ -41,16 +41,21 @@
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
+        if (x < 0)
+          x = 0 
+        if (y < 0)
+          y = 0 
+
         px = x
         py = y
         pw = this.scaleInitW + scale_initial_x - x
         ph = this.scaleInitH + scale_initial_y - y
 
-        if (pw < 0){
+        if (pw < 0) {
           this.scaleByRightTop(x, y, this.scaleInitW, dy)
-        }else if (ph < 0){
+        } else if (ph < 0){
           this.scaleByLeftBottom(x, y, dx, this.scaleInitH)
-       } else{
+        } else{
           this.x = px
           this.y = py
           this.w = pw
@@ -61,6 +66,11 @@
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
+
+        if (x < 0)
+          x = 0 
+        if (y >= 100)
+          y = 100
 
         px = x
         py = scale_initial_y
@@ -83,6 +93,11 @@
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
+        if (x >= 100)
+          x = 100 
+        if (y < 0)
+          y = 0
+
         px = scale_initial_x
         py = y
         pw = x - scale_initial_x
@@ -103,6 +118,11 @@
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
+
+        if (x >= 100)
+          x = 100 
+        if (y >= 100)
+          y = 100
 
         px = scale_initial_x
         py = scale_initial_y
@@ -159,6 +179,7 @@
         this.y = y
       },
       isBoxCreated: function () {
+        console.log(this.w, this.h)
         if ( this.w != 0 || this.h != 0 ){
           return true
         } else {

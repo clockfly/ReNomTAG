@@ -30,7 +30,6 @@
       },
       closeMenu: function () {
         this.$store.dispatch('close_menu_action')
-        console.log("SSS")
       }
     }
   }
@@ -48,13 +47,13 @@
 
   #main-container {
     left: 0;
-    z-index: 99;
+    z-index: 10;
     position: relative;
     height: 100%;
     transition: transform 0.5s;
 
     #pusher {
-
+      z-index: 20;
       position: absolute;
       top: 0;
       right: 0;
