@@ -2,7 +2,7 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <tt style='margin-right:20px;'>{{ nthImg }} / {{ totalImg }}</tt>
+        <tt style='margin-right: 20px; margin-left: 20px;'>{{ nthImg }} / {{ totalImg }}</tt>
         <tt>{{ fileName }}</tt>
       </div>
       <div id='icon'>
@@ -33,14 +33,16 @@
     },
     data: function () {
       return {
-        fileName: 'test2.png',
-        nthImg: '10',
-        totalImg: '100',
+        fileName: '',
+        nthImg: '',
+        totalImg: ''
       }
     },
     methods: {
-      nextRawImg: function () {        
+      nextRawImg: function () {
         self = this
+        this.nthImg = this.$store.getters.get_filename_list_index
+        this.totalImg = this.$store.getters.get_filename_list.length
         this.$store.dispatch('load_next_raw_img').then(function (){
           let img = new Image();
           let img_data

@@ -2,7 +2,7 @@
   <header>
     <div class='header-title'>
       <p id='soft-symbol'>
-        <i id='menu-toggle' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: isMenuShown }'></i>
+        <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: isMenuShown }'></i>
         ReNom
       </p>
     </div>
@@ -37,17 +37,17 @@
     font-family: 'Arial Black';
 
     #soft-symbol {
-      margin: 0px 0px 0px 0px;
+      margin: 0 0 0 0;
       padding-left: 10px;
-      text-align: left;
       color: #ffffff;
       font-size: 1.5rem;
       font-weight: bold;
+      text-align: left;
 
-      #menu-toggle {
+      #toggle-menu {
         margin-right: 20px;
       }
-      #menu-toggle:hover {
+      #toggle-menu:hover {
         color: #a3a3a3;
       }
     }

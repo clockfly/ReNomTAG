@@ -15,25 +15,7 @@
 
 <script>
   import TagTreeItem from './tag_list_parts/tag_tree.vue'
-  let tree_data = {
-    label: 'root',
-    nodes: [
-      {
-        label: 'animal',
-        nodes: [
-          {
-            label: 'dog'
-          },
-          {
-            label: 'cat'
-          }
-        ]
-      },
-      {
-        label: 'vehicle'
-      }
-    ]
-  }
+
   export default {
     name: 'TagList',
     components: {
@@ -41,7 +23,7 @@
     },
     data: function () {
       return {
-        tree:[] //tree_data
+        tree:[]
       }
     },
     computed: {

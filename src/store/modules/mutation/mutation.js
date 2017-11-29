@@ -36,22 +36,30 @@ let mutation = {
   },
   add_tag (state, payload) {
     let parent_node = payload.parent_node
+    let shortcut = payload.shortcut
     let label = payload.label
     let id = payload.id
-    let shortcut = payload.shortcut
+
+    state.shortcut_label_dict_list = []
+    state.label_id_dict_listi = []
 
     var recursive_search = function (node) {
       for (let n of node) {
-        if (parent_node === n['label']){
+        let sc = n['shortcut']
+        let id = n['id']
+        let lb = n['label']
+        if (sc)
+          state.shortcut_label_dict_list.push({sc: lb})
+        state.label_id_dict_list.push({lb: id})
+        if (parent_node === lb){
           n['nodes'].unshift({
             label:label,
             id:id,
             shortcut:shortcut,
             nodes:[]
           })
-        } else {
-          recursive_search(n['nodes'])
         }
+        recursive_search(n['nodes'])
       }
     }
     recursive_search(state.tag_dict)

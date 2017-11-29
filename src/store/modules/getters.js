@@ -8,9 +8,6 @@ let getters = {
   get_raw_img (state) {
     return state.raw_img_list[0]
   },
-  get_raw_image_index (state) {
-    return state.raw_image_list_index
-  },
   get_filename_list_index (state) {
     return state.filename_list_index
   },
@@ -19,6 +16,12 @@ let getters = {
   },
   get_tag_list (state) {
     return state.tag_dict
+  },
+  get_shortcut_label_dict_list () {
+    return state.shortcut_label_dict_list
+  },
+  get_label_id_dict_list () {
+    return state.label_id_dict_list
   }
 }
 

@@ -1,11 +1,11 @@
 <template>
   <div id='navigation-bar' v-bind:class='{ open: isMenuShown }'>
     <button class='bar-button'>
-      <i class="fa fa-object-group" aria-hidden="true"></i>
+      <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
       <span class='menu-text'>Detection Label</span>
     </button>
     <button class='bar-button'>
-      <i class="fa fa-cog" aria-hidden="true"></i>
+      <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
       <span class='menu-text'>Settings</span>
     </button>
   </div>
@@ -18,11 +18,6 @@
       isMenuShown: function () {
         return this.$store.getters.get_is_menu_shown
       }
-    },
-    methods: {
-      toggleMenu: function () {
-        this.$store.dispatch('toggle_menu_action')
-      }
     }
   }
 </script>
@@ -34,11 +29,11 @@
     position: absolute;
     top: 35px;
     left: 0;
-    z-index: 100;
     width: 170px;
     height: 100%;
     transition: all 0.5s;
     padding-top: 80px;
+    z-index: 100;
 
     visibility: visible;
     -webkit-transform: translate3d(-100%, 0, 0);
@@ -49,28 +44,26 @@
       -webkit-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
     }
+
     &:after {
       display: none;
     }
 
     .bar-button {
-      $bg_color: #2d3e50;
-
-      text-align: left;
       width: 100%;
       height: 45px;
-      margin: 0;
-      background-color: $bg_color;
-      color: #b7b7b7;
-      outline: none;
-
       position: relative;
+      $bg_color: #2d3e50;
+      text-align: left;
+      margin: 0;
+      color: #b7b7b7;
+      background-color: $bg_color;
+      outline: none;
 
       &:hover {
         color: #fff;
         background-color: lighten($bg_color, 15%);
       }
-
     }
   }
 
