@@ -2,17 +2,18 @@
   <div id='image-canvas'
       tabindex='0'
       @click='setLabelList'
-      @mousedown='onMouseDown'
-      @mouseup='onMouseUp'
       @mousemove='onMouseMove'
+      @mouseup='onMouseUp'
       @keydown='onAnyKeyDown'
       @keyup='onAnyKeyUp'
       @keyup.delete='onKeyDelete'>
     <div id='inner-canvas'>
       <div id='mask'
+        @mousedown='onMouseDown'
+        @mouseup='onMouseUp'
         v-bind:style='{"background-image": "url("+imgSrc+")",
-                        "padding-top": padTop+"%",
-                        "padding-left": padLeft+"%"}'
+                        "height": padTop+"%",
+                        "width": padLeft+"%"}'
         v-show='showFlag'> 
         <box v-for='(sbox, index) in boxList' :key='index'></box>
       </div>
@@ -227,8 +228,6 @@ export default {
         background-repeat: no-repeat;
         background-size: contain;
         background-position: center center;
-        width: 0;
-        height: 0;
       }
     }
   }
