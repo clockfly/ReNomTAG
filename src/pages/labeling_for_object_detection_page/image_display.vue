@@ -15,9 +15,9 @@
         <image-canvas></image-canvas>
       </transition>
       <div id='low-button'>
-        <input type='button' value='<<' @click='priorRawImg'>
+        <input type='button' value='<<' @click='nextRawImg(-1)'>
         <input type='button' value='save'>
-        <input type='button' value='>>' @click='nextRawImg'>
+        <input type='button' value='>>' @click='nextRawImg(1)'>
       </div>
     </div>
   </div>
@@ -38,28 +38,23 @@
         totalImg: ''
       }
     },
+    created () {
+      self = this
+      if (this.$store.getters.get_filename_list.length ===0 ) {
+        let ret = this.$store.dispatch('load_thumbnail_img_and_filename_list')
+        ret.then(function () {
+          self.nextRawImg(0)
+        })
+      } else {
+        self.nextRawImg(0)
+      }
+    },
     methods: {
-      nextRawImg: function () {
+      nextRawImg: function (increment) {
         self = this
         this.nthImg = this.$store.getters.get_filename_list_index
         this.totalImg = this.$store.getters.get_filename_list.length
-        this.$store.dispatch('load_next_raw_img').then(function (){
-          let img = new Image();
-          let img_data
-          let img_filename
-          img.onload = function(){
-            self.$children[0].setImgSrc(img) 
-          }
-          self.imgData = self.$store.getters.get_raw_img
-          img_data = 'data:image/png;base64,' + self.imgData['img']
-          img_filename = self.imgData['filename']
-          img.src = img_data
-          self.fileName = img_filename
-        })
-      },
-      priorRawImg: function () {
-        self = this
-        this.$store.dispatch('load_prior_raw_img').then(function(){
+        this.$store.dispatch('load_raw_img', { increment: increment}).then(function (){
           let img = new Image();
           let img_data
           let img_filename

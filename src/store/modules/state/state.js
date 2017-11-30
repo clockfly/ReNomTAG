@@ -1,7 +1,7 @@
 let state = {
-  raw_img_list: [], // List of Dict
+  raw_img:{},
   filename_list: [],
-  filename_list_index:0,
+  filename_list_index: 0,
   thumbnail_image_list: [],
   isMenuShown: false,
   shortcut_label_dict_list:[], // Key: shortcut key, Value: label

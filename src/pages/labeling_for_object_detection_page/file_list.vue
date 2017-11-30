@@ -27,9 +27,6 @@
         imgNameList: [],
       }
     },
-    created () {
-      this.$store.dispatch('load_thumbnail_img_and_filename_list')
-    },
     computed: {
       getFileNameList: function () {
         this.imgNameList = this.$store.getters.get_filename_list

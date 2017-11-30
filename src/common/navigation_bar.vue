@@ -1,10 +1,10 @@
 <template>
   <div id='navigation-bar' v-bind:class='{ open: isMenuShown }'>
-    <button class='bar-button'>
+    <button class='bar-button' @click='goToDetectPage'>
       <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
       <span class='menu-text'>Detection Label</span>
     </button>
-    <button class='bar-button'>
+    <button class='bar-button' @click='goToSettingPage'>
       <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
       <span class='menu-text'>Settings</span>
     </button>
@@ -17,6 +17,16 @@
     computed: {
       isMenuShown: function () {
         return this.$store.getters.get_is_menu_shown
+      }
+    },
+    methods: {
+      goToDetectPage: function () {
+        this.$router.push({path: '/'})
+        this.$store.commit('toggle_menu')
+      },
+      goToSettingPage: function () {
+        this.$router.push({path: '/setting'})
+        this.$store.commit('toggle_menu')
       }
     }
   }

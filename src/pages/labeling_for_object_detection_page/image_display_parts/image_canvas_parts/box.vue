@@ -1,6 +1,7 @@
 <template>
   <div id='outer-box'>
     <div id='bbox' v-bind:class='{selected: isSelected}'
+      draggable='false'
       v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
       <div id='left-top' class='small-box'></div>
       <div id='left-bottom' class='small-box'></div>

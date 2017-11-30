@@ -6,7 +6,7 @@ let getters = {
     return state.filename_list
   },
   get_raw_img (state) {
-    return state.raw_img_list[0]
+    return state.raw_img
   },
   get_filename_list_index (state) {
     return state.filename_list_index
