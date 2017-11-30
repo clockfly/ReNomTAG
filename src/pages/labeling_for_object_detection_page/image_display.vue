@@ -2,12 +2,12 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <tt style='margin-right: 20px; margin-left: 20px;'>{{ nthImg }} / {{ totalImg }}</tt>
-        <tt>{{ fileName }}</tt>
+        <span style='margin-right: 20px; margin-left: 20px;'>{{ nthImg }} / {{ totalImg }}</span>
+        <span>{{ fileName }}</span>
       </div>
       <div id='icon'>
-        <tt><i class="fa fa-search-plus" aria-hidden="true"></i></tt>
-        <tt><i class="fa fa-search-minus" aria-hidden="true"></i></tt>
+        <span><i class="fa fa-search-plus" aria-hidden="true"></i></span>
+        <span><i class="fa fa-search-minus" aria-hidden="true"></i></span>
       </div>
     </div>
     <div id='outer-panel'>
@@ -48,7 +48,7 @@
           let img_data
           let img_filename
           img.onload = function(){
-            self.$children[0].setImgSrc(img) 
+            self.$children[0].setImgSrc(img)
           }
           self.imgData = self.$store.getters.get_raw_img
           img_data = 'data:image/png;base64,' + self.imgData['img']
@@ -64,7 +64,7 @@
           let img_data
           let img_filename
           img.onload = function(){
-            self.$children[0].setImgSrc(img) 
+            self.$children[0].setImgSrc(img)
           }
           self.imgData = self.$store.getters.get_raw_img
           img_data = 'data:image/png;base64,' + self.imgData['img']
