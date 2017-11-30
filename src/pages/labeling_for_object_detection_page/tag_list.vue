@@ -1,7 +1,7 @@
 <template>
   <div id='tag-list'>
     <div id='header'>
-      <tt>Tags</tt>
+      <span>Tags</span>
     </div>
     <div id='search-box'>
       <input value='search' type='text'/>
