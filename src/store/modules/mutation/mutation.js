@@ -9,8 +9,8 @@ let mutation = {
       "filename":payload.filename
     }
   },
-  increment_filename_list_index(state, payload){
-    state.filename_list_index += payload.increment
+  set_filename_list_index(state, payload){
+    state.filename_list_index = payload.index
   },
   // Menu Mutations
   close_menu (state) {

@@ -22,18 +22,20 @@ let action = {
     let fd = new FormData()
     let increment = payload.increment
     let filename_list = context.getters.get_filename_list
+    let index = context.getters.get_filename_list_index + increment
 
-    context.commit('increment_filename_list_index', {
-      increment: increment
-    })
-    let index = context.getters.get_filename_list_index
-    if (filename_list.length <= index+1) {
+    if (filename_list.length <= index || index < 0) {
       alert("List out of bounds.")
       return
     }
 
+    context.commit('set_filename_list_index', {
+      index: index
+    })
+
     fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
     fd.append('filename', filename_list[index])
+
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
         let error = response.data.error
