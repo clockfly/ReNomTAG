@@ -25,18 +25,6 @@
       'image-display': ImageDisplay,
       'recent-image-list': RecentImageList,
       'tag-list': TagList
-    },
-    data: function () {
-      return {
-        selected: null
-      }
-    },
-    created () {
-      var self = this
-      let ret = this.$store.dispatch('load_thumbnail_img_and_filename_list')
-      ret.then(function () {
-        self.$store.dispatch('load_next_raw_img')
-      })
     }
   }
 </script>

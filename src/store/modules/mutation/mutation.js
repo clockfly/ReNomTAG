@@ -1,25 +1,31 @@
+import axios from 'axios'
+
 let mutation = {
-  set_thumbnail_img_and_filename_list (state, payload) {
+  set_filename_list (state, payload) {
     state.filename_list = payload.filename_list
-    state.thumbnail_image_list = payload.thumbnail_image_list
   },
+  set_sidebar_thumbnail_and_filename_list (state, payload) {
+    state.sidebar_thumbnail_list = payload.sidebar_thumbnail_list
+    state.sidebar_filename_list = payload.sidebar_filename_list
+  },
+
   set_next_raw_img (state, payload) {
     if (state.raw_img_list.length > 0)
       state.raw_img_list.shift()
     state.raw_img_list.push({
-      "img":payload.raw_img,
-      "filename":payload.filename
+      "img": payload.raw_img,
+      "filename": payload.filename
     })
-    state.filename_list_index ++
+    state.filename_list_index++
   },
   set_prior_raw_img (state, payload) {
     if (state.raw_img_list.length > 0)
       state.raw_img_list.pop()
     state.raw_img_list.unshift({
-      "img":payload.raw_img,
-      "filename":payload.filename
+      "img": payload.raw_img,
+      "filename": payload.filename
     })
-    state.filename_list_index --
+    state.filename_list_index--
   },
   set_raw_image_list_index (state, payload) {
     state.raw_image_list_index = payload.raw_image_list_index
@@ -51,12 +57,12 @@ let mutation = {
         if (sc)
           state.shortcut_label_dict_list.push({sc: lb})
         state.label_id_dict_list.push({lb: id})
-        if (parent_node === lb){
+        if (parent_node === lb) {
           n['nodes'].unshift({
-            label:label,
-            id:id,
-            shortcut:shortcut,
-            nodes:[]
+            label: label,
+            id: id,
+            shortcut: shortcut,
+            nodes: []
           })
         }
         recursive_search(n['nodes'])

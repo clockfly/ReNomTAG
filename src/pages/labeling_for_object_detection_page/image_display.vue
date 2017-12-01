@@ -2,7 +2,7 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ nthImg }} / {{ totalImg }}</span>
+        <span style='margin-right: 20px; margin-left: 20px;'>{{ this.nthImg }} / {{ this.totalImg }}</span>
         <span>{{ fileName }}</span>
       </div>
       <div id='icon'>
@@ -33,21 +33,25 @@
     },
     data: function () {
       return {
-        fileName: '',
-        nthImg: '',
-        totalImg: ''
+        fileName: ''
+      }
+    },
+    computed: {
+      totalImg: function () {
+        return this.$store.getters.get_filename_list.length
+      },
+      nthImg: function () {
+        return this.$store.getters.get_filename_list_index
       }
     },
     methods: {
       nextRawImg: function () {
-        self = this
-        this.nthImg = this.$store.getters.get_filename_list_index
-        this.totalImg = this.$store.getters.get_filename_list.length
-        this.$store.dispatch('load_next_raw_img').then(function (){
-          let img = new Image();
+        const self = this
+        this.$store.dispatch('load_next_raw_img').then(function () {
+          let img = new Image()
           let img_data
           let img_filename
-          img.onload = function(){
+          img.onload = function () {
             self.$children[0].setImgSrc(img)
           }
           self.imgData = self.$store.getters.get_raw_img
@@ -58,12 +62,12 @@
         })
       },
       priorRawImg: function () {
-        self = this
-        this.$store.dispatch('load_prior_raw_img').then(function(){
-          let img = new Image();
+        const self = this
+        this.$store.dispatch('load_prior_raw_img').then(function () {
+          let img = new Image()
           let img_data
           let img_filename
-          img.onload = function(){
+          img.onload = function () {
             self.$children[0].setImgSrc(img)
           }
           self.imgData = self.$store.getters.get_raw_img

@@ -1,6 +1,9 @@
 let getters = {
-  get_thumbnail_img_list (state) {
-    return state.thumbnail_image_list
+  get_sidebar_thumbnail_list (state) {
+    return state.sidebar_thumbnail_list
+  },
+  get_sidebar_filename_list (state) {
+    return state.sidebar_filename_list
   },
   get_filename_list (state) {
     return state.filename_list
@@ -17,10 +20,10 @@ let getters = {
   get_tag_list (state) {
     return state.tag_dict
   },
-  get_shortcut_label_dict_list () {
+  get_shortcut_label_dict_list (state) {
     return state.shortcut_label_dict_list
   },
-  get_label_id_dict_list () {
+  get_label_id_dict_list (state) {
     return state.label_id_dict_list
   }
 }

@@ -57,10 +57,11 @@ def fonts(file_name):
 def get_raw_img():
     root_dir = request.params.root_dir
     filename = request.params.filename
-    file_path = os.path.join(root_dir, filename)
-    with open(file_path, "rb") as image_reader:
+    # file_path = os.path.join(root_dir, filename)
+
+    with open(filename, "rb") as image_reader:
         encoded_img = base64.b64encode(image_reader.read())
-       	encoded_img = encoded_img.decode('utf8')
+        encoded_img = encoded_img.decode('utf8')
 
     ret = json.dumps({
         "raw_img": encoded_img
@@ -68,25 +69,50 @@ def get_raw_img():
     ret = set_json_body(ret)
     return ret
 
-
-@route("/api/get_thumbnail_img_and_filename_list", method="POST")
-def get_thumbnail_img_and_filename_list():
+@route("/api/get_filename_list", method="POST")
+def get_filename_list():
     root_dir = request.params.root_dir
     file_paths = get_img_path(root_dir)
+
+    # filename_list = [f.split("/")[-1] for f in file_paths]
+
+    body = json.dumps({
+			"filename_list": file_paths,
+    })
+    ret = set_json_body(body)
+    return ret
+
+@route("/api/get_sidebar_thumbnail_and_filename_list", method="POST")
+def get_sidebar_thumbnail_and_filename_list():
+
+    file_paths = request.params.filename_list.split(",")
+
+    # current page. start: 1
+    current_page = int(request.params.current_page)
+
+    # number of images to show. ex: 100
+    page_step = int(request.params.page_step)
+
+    start_page = (current_page - 1) * page_step
+    end_page = current_page * page_step
+
     image_list = []
-    filename_list = []
+    # get page file paths
+    file_paths = file_paths[start_page:end_page]
+
     for f in file_paths:
         img = Image.open(f, 'r')
         img.thumbnail((40, 40), Image.ANTIALIAS)
         buffered = IO()
         img.save(buffered, format='PNG')
         encoded_img = base64.b64encode(buffered.getvalue())
-       	encoded_img = encoded_img.decode('utf8')
+        encoded_img = encoded_img.decode('utf8')
         image_list.append(encoded_img)
-        filename_list.append(f.split("/")[-1])
+
+
     body = json.dumps({
-        "thumbnail_image_list": image_list,
-				"filename_list": filename_list
+        "sidebar_thumbnail_list": image_list,
+        "sidebar_filename_list": [f.split("/")[-1] for f in file_paths]
     })
     ret = set_json_body(body)
     return ret
