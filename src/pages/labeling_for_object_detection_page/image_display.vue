@@ -2,9 +2,9 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ this.current_file_index
-          }} / {{ this.filename_list_length }}</span>
-        <span>{{ this.current_file_name }}</span>
+        <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
+          }} / {{ filename_list_length }}</span>
+        <span>{{ current_file_name }}</span>
       </div>
       <div id='icon'>
         <span><i class="fa fa-search-plus" aria-hidden="true"></i></span>
@@ -16,9 +16,9 @@
         <image-canvas></image-canvas>
       </transition>
       <div id='low-button'>
-        <input type='button' value='<<' @click='load_raw_img(-1)'>
+        <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save'>
-        <input type='button' value='>>' @click='load_raw_img(1)'>
+        <input type='button' value='>>' @click='load_next_raw_img()'>
       </div>
     </div>
   </div>
@@ -66,9 +66,10 @@
       }
     },
     methods: {
-      load_raw_img: function (increment) {
+      // Defined index
+      load_raw_img: function (index) {
         const self = this
-        this.$store.dispatch('load_raw_img', {increment: increment}).then(function () {
+        this.$store.dispatch('load_raw_img', {index: index}).then(function () {
           let img = new Image()
           let img_data
           img.onload = function () {
@@ -77,6 +78,13 @@
           img_data = 'data:image/png;base64,' + self.current_raw_img
           img.src = img_data
         })
+      },
+      load_next_raw_img: function () {
+        this.load_raw_img(this.current_file_index + 1)
+      },
+
+      load_prev_raw_img: function () {
+        this.load_raw_img(this.current_file_index - 1)
       }
     }
   }

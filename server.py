@@ -57,6 +57,7 @@ def fonts(file_name):
 def get_raw_img():
     # root_dir = request.params.root_dir
     filename = request.params.filename
+    print(filename)
 
     # file_path = os.path.join(root_dir, filename)
     with open(filename, "rb") as image_reader:

@@ -2,7 +2,7 @@ let state = {
   filename_list: [],
 
   current_raw_img: '',
-  current_file_index: 1,
+  current_file_index: 0,
   current_file_name: '',
 
   sidebar_thumbnail_list: [],
