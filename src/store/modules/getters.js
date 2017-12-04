@@ -5,6 +5,9 @@ let getters = {
   get_sidebar_filename_list (state) {
     return state.sidebar_filename_list
   },
+  get_sidebar_filename_list_index (state) {
+    return state.sidebar_filename_list_index
+  },
   get_filename_list (state) {
     return state.filename_list
   },

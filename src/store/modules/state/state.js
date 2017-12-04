@@ -7,6 +7,7 @@ let state = {
 
   sidebar_thumbnail_list: [],
   sidebar_filename_list: [],
+  sidebar_filename_list_index: [],
   isMenuShown: false,
   shortcut_label_dict_list: [], // Key: shortcut key, Value: label
   label_id_dict_list: [], // Key: label, Value: id

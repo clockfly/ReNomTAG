@@ -7,6 +7,7 @@ let mutation = {
   set_sidebar_thumbnail_and_filename_list (state, payload) {
     state.sidebar_thumbnail_list = payload.sidebar_thumbnail_list
     state.sidebar_filename_list = payload.sidebar_filename_list
+    state.sidebar_filename_list_index = payload.sidebar_filename_list_index
   },
   set_current_file_index (state, payload) {
     state.current_file_index = payload.current_file_index

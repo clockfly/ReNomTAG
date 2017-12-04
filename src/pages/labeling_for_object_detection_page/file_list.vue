@@ -39,13 +39,9 @@
       const self = this
       this.$store.dispatch('load_filename_list').then(function () {
         self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          filename_list: self.filename_list,
           current_page: self.current_page,
           page_step: self.page_step
         })
-      }).then(function () {
-        console.log('fafa')
-        // self.$store.dispatch('load_next_raw_img')
       })
     },
     computed: {
@@ -57,20 +53,23 @@
       },
       sidebar_filename_list: function () {
         return this.$store.getters.get_sidebar_filename_list
+      },
+      sidebar_filename_list_index: function () {
+        return this.$store.getters.get_sidebar_filename_list_index
       }
     },
     methods: {
       change_page: function (n) {
         this.current_page = n
         this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          filename_list: this.filename_list,
           current_page: this.current_page,
           page_step: this.page_step
         })
       },
       click_action (index) {
         this.selected_index = index
-      }
+        this.$store.dispatch('load_raw_img', {index: this.sidebar_filename_list_index[index - 1]})
+      },
     }
   }
 </script>
