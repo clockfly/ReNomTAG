@@ -2,11 +2,15 @@
   <div id='file-list'>
     <div id='inner-file-list'>
       <div id='search-box'>
-        <input value="search" type="text"/>
+        <input placeholder="search" type="text"/>
       </div>
       <file-item v-for='(fname, index) in sidebar_filename_list'
-                 :file-name='fname' :key='index'
-                 :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
+                 :file-name='fname'
+                 :key='index'
+                 :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'
+                 @click_action="click_action(index)"
+                 :class="{selected: index===selected_index}"
+      >
       </file-item>
     </div>
     <ul id="file-list-page-nation">
@@ -14,7 +18,6 @@
     </ul>
   </div>
 </template>
-
 <script>
   import FileItem from './file_list_parts/file_list_item.vue'
 
@@ -27,7 +30,8 @@
       return {
         selected: null,
         current_page: 1,
-        page_step: 100
+        page_step: 100,
+        selected_index: 0
       }
     },
 
@@ -45,11 +49,6 @@
       })
     },
     computed: {
-//      getFileNameList: function () {
-//        this.imgNameList = this.$store.getters.get_filename_list
-//        this.imgDataList = this.$store.getters.get_thumbnail_img_list
-//        return this.imgNameList
-//      },
       filename_list: function () {
         return this.$store.getters.get_filename_list
       },
@@ -68,6 +67,9 @@
           current_page: this.current_page,
           page_step: this.page_step
         })
+      },
+      click_action (index) {
+        this.selected_index = index
       }
     }
   }
@@ -84,10 +86,12 @@
       #search-box {
         width: 95%;
         margin: 3px 3px 3px 3px;
+
         input {
           width: 100%;
-          padding: 0 0 0 0;
-          margin: 0 0 0 0;
+          padding: 0;
+          margin: 0;
+          outline: none;
         }
       }
     }
@@ -99,6 +103,7 @@
       margin: 0;
       padding: 0;
       height: 10%;
+
       li {
         padding: 2px 8px;
         border: 1px solid #0c0c0c;
