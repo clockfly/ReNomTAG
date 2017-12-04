@@ -2,7 +2,7 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ nthImg }} / {{ totalImg }}</span>
+        <span style='margin-right: 20px; margin-left: 20px;'>{{ this.nthImg }} / {{ this.totalImg }}</span>
         <span>{{ fileName }}</span>
       </div>
       <div id='icon'>
@@ -33,9 +33,7 @@
     },
     data: function () {
       return {
-        fileName: '',
-        nthImg: '',
-        totalImg: ''
+        fileName: ''
       }
     },
     created () {
@@ -58,7 +56,7 @@
           let img = new Image();
           let img_data
           let img_filename
-          img.onload = function(){
+          img.onload = function () {
             self.$children[0].setImgSrc(img)
           }
           self.imgData = self.$store.getters.get_raw_img
