@@ -1,7 +1,10 @@
 let state = {
-  raw_img:{},
   filename_list: [],
-  filename_list_index: 0,
+
+  current_raw_img: '',
+  current_file_index: 1,
+  current_file_name: '',
+
   sidebar_thumbnail_list: [],
   sidebar_filename_list: [],
   isMenuShown: false,

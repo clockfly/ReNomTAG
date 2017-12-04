@@ -38,14 +38,14 @@
     created () {
       const self = this
       this.$store.dispatch('load_filename_list').then(function () {
-
         self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
           filename_list: self.filename_list,
           current_page: self.current_page,
           page_step: self.page_step
         })
       }).then(function () {
-        self.$store.dispatch('load_next_raw_img')
+        console.log('fafa')
+        // self.$store.dispatch('load_next_raw_img')
       })
     },
     computed: {

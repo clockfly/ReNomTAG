@@ -55,10 +55,10 @@ def fonts(file_name):
 
 @route("/api/get_raw_img", method="POST")
 def get_raw_img():
-    root_dir = request.params.root_dir
+    # root_dir = request.params.root_dir
     filename = request.params.filename
-    # file_path = os.path.join(root_dir, filename)
 
+    # file_path = os.path.join(root_dir, filename)
     with open(filename, "rb") as image_reader:
         encoded_img = base64.b64encode(image_reader.read())
         encoded_img = encoded_img.decode('utf8')

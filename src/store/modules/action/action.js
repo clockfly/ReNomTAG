@@ -38,23 +38,22 @@ let action = {
     )
   },
 
-  load_next_raw_img (context) {
+  load_raw_img (context, payload) {
     let fd = new FormData()
     let increment = payload.increment
-    let filename_list = context.getters.get_filename_list
-    let index = context.getters.get_filename_list_index + increment
 
-    if (filename_list.length <= index || index < 0) {
-      alert("List out of bounds.")
+    let filename_list = context.getters.get_filename_list
+    let current_file_index = context.getters.get_current_file_index + increment
+    let current_filename = filename_list[current_file_index]
+
+    if (filename_list.length <= current_file_index || current_file_index < 0) {
+      alert('List out of bounds.')
       return
     }
 
-    context.commit('set_filename_list_index', {
-      index: index
-    })
-
     fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-    fd.append('filename', filename_list[index])
+    fd.append('filename', current_filename)
+
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
         let error = response.data.error
@@ -62,16 +61,18 @@ let action = {
           alert('File not found. Please try again.')
           return
         }
-        context.commit('set_next_raw_img', {
-          raw_img: response.data.raw_img,
-          filename: filename_list[index]
+
+        context.commit('set_raw_img', {
+          current_raw_img: response.data.raw_img,
+          current_index: current_file_index,
+          current_filename: current_filename
         })
       }
     )
   },
   load_prior_raw_img (context) {
     let fd = new FormData()
-    let index = context.getters.get_filename_list_index - 1
+    let index = context.getters.get_current_file_index - 1
     let filename_list = context.getters.get_filename_list
     if (0 > index) {
       alert("List out of bounds.")

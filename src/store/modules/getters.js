@@ -8,11 +8,14 @@ let getters = {
   get_filename_list (state) {
     return state.filename_list
   },
-  get_raw_img (state) {
-    return state.raw_img
+  get_current_raw_img (state) {
+    return state.current_raw_img
   },
-  get_filename_list_index (state) {
-    return state.filename_list_index
+  get_current_file_name (state) {
+    return state.current_file_name
+  },
+  get_current_file_index (state) {
+    return state.current_file_index
   },
   get_is_menu_shown (state) {
     return state.isMenuShown

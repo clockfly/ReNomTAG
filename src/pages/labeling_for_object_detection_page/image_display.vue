@@ -2,8 +2,9 @@
   <div id='image-display'>
     <div id='header'>
       <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ this.nthImg }} / {{ this.totalImg }}</span>
-        <span>{{ fileName }}</span>
+        <span style='margin-right: 20px; margin-left: 20px;'>{{ this.current_file_index
+          }} / {{ this.filename_list_length }}</span>
+        <span>{{ this.current_file_name }}</span>
       </div>
       <div id='icon'>
         <span><i class="fa fa-search-plus" aria-hidden="true"></i></span>
@@ -15,9 +16,9 @@
         <image-canvas></image-canvas>
       </transition>
       <div id='low-button'>
-        <input type='button' value='<<' @click='nextRawImg(-1)'>
+        <input type='button' value='<<' @click='load_raw_img(-1)'>
         <input type='button' value='save'>
-        <input type='button' value='>>' @click='nextRawImg(1)'>
+        <input type='button' value='>>' @click='load_raw_img(1)'>
       </div>
     </div>
   </div>
@@ -33,37 +34,48 @@
     },
     data: function () {
       return {
-        fileName: ''
+        imgData: ''
+      }
+    },
+    computed: {
+      filename_list: function () {
+        return this.$store.getters.get_filename_list
+      },
+      filename_list_length: function () {
+        return this.filename_list.length
+      },
+      current_file_index: function () {
+        return this.$store.getters.get_current_file_index
+      },
+      current_file_name: function () {
+        return this.$store.getters.get_current_file_name
+      },
+      current_raw_img: function () {
+        return this.$store.getters.get_current_raw_img
       }
     },
     created () {
-      self = this
-      if (this.$store.getters.get_filename_list.length ===0 ) {
-        let ret = this.$store.dispatch('load_thumbnail_img_and_filename_list')
+      const self = this
+      if (this.$store.getters.get_filename_list.length === 0) {
+        let ret = this.$store.dispatch('load_filename_list')
         ret.then(function () {
-          self.nextRawImg(0)
+          self.load_raw_img(0)
         })
       } else {
-        self.nextRawImg(0)
+        self.load_raw_img(0)
       }
     },
     methods: {
-      nextRawImg: function (increment) {
-        self = this
-        this.nthImg = this.$store.getters.get_filename_list_index
-        this.totalImg = this.$store.getters.get_filename_list.length
-        this.$store.dispatch('load_raw_img', { increment: increment}).then(function (){
-          let img = new Image();
+      load_raw_img: function (increment) {
+        const self = this
+        this.$store.dispatch('load_raw_img', {increment: increment}).then(function () {
+          let img = new Image()
           let img_data
-          let img_filename
           img.onload = function () {
             self.$children[0].setImgSrc(img)
           }
-          self.imgData = self.$store.getters.get_raw_img
-          img_data = 'data:image/png;base64,' + self.imgData['img']
-          img_filename = self.imgData['filename']
+          img_data = 'data:image/png;base64,' + self.current_raw_img
           img.src = img_data
-          self.fileName = img_filename
         })
       }
     }
