@@ -13,12 +13,14 @@
            @mouseup='onMouseUp'
            v-bind:style='{"background-image": "url("+imgSrc+")",
                         "height": padTop+"%",
-                        "width": padLeft+"%"}'
+                        "width": padLeft+"%"
+           }'
            v-show='showFlag'>
-        <box v-for='(sbox, index) in boxList' :key='index'></box>
+
+          <box v-for='(sbox, index) in boxList' :key='index'></box>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -58,7 +60,7 @@
       window.addEventListener('resize', this.onResizeWindow)
     },
     methods: {
-      setLabelList(){
+      setLabelList (){
         let tags = this.$store.getters.get_tag_list
         let arr = []
         let recursive = function (arr, nodes) {
@@ -205,9 +207,13 @@
       disabled: function () {
         return false
       }
+    },
+    computed: {
+      current_raw_img_src: function () {
+        return 'data:image/png;base64,' + this.$store.getters.get_current_raw_img
+      }
     }
   }
-
 </script>
 
 <style lang='scss'>

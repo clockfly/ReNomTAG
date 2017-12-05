@@ -11,7 +11,7 @@
                  :key='index'
                  :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'
                  @click_action="click_action(index)"
-                 :class="{selected: index===selected_index}"
+                 :class="{selected: index===sidebar_current_file_index}"
       >
       </file-item>
     </div>
@@ -32,8 +32,7 @@
       return {
         selected: null,
         current_page: 1,
-        page_step: 100,
-        selected_index: 0
+        page_step: 100
       }
     },
 
@@ -58,6 +57,12 @@
       },
       sidebar_filename_list_index: function () {
         return this.$store.getters.get_sidebar_filename_list_index
+      },
+      current_file_index: function () {
+        return this.$store.getters.get_current_file_index
+      },
+      sidebar_current_file_index: function () {
+        return this.current_file_index - ((this.current_page - 1) * this.page_step)
       }
     },
     methods: {
@@ -69,8 +74,7 @@
         })
       },
       click_action (index) {
-        this.selected_index = index
-        this.$store.dispatch('load_raw_img', {index: this.sidebar_filename_list_index[index] - 1})
+        this.$store.dispatch('load_raw_img', {index: ((this.current_page - 1) * this.page_step) + index})
       },
     }
   }
