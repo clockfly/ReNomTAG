@@ -8,8 +8,17 @@ let getters = {
   get_sidebar_filename_list_index (state) {
     return state.sidebar_filename_list_index
   },
+  get_sidebar_current_page (state) {
+    return state.sidebar_current_page
+  },
+  get_sidebar_page_step (state) {
+    return state.sidebar_page_step
+  },
   get_filename_list (state) {
     return state.filename_list
+  },
+  get_filename_list_length (state) {
+    return state.filename_list.length
   },
   get_current_raw_img (state) {
     return state.current_raw_img

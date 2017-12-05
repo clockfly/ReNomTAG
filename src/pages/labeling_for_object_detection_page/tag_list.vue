@@ -37,6 +37,7 @@
 
 <style lang='scss'>
   #tag-list {
+    width: 200px;
     #header {
       display: flex;
       align-items: center;
