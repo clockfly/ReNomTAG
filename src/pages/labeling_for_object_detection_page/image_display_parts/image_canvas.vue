@@ -11,16 +11,16 @@
       <div id='mask'
            @mousedown='onMouseDown'
            @mouseup='onMouseUp'
-           v-bind:style='{"background-image": "url("+imgSrc+")",
+           v-bind:style='{"background-image": "url("+current_raw_img_src+")",
                         "height": padTop+"%",
                         "width": padLeft+"%"
            }'
            v-show='showFlag'>
 
-          <box v-for='(sbox, index) in boxList' :key='index'></box>
-        </div>
+        <box v-for='(sbox, index) in boxList' :key='index'></box>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -54,6 +54,20 @@
         padLeft: 0,
         currentDownKey: '',
         showFlag: true // This is for transition images.
+      }
+    },
+    watch: {
+      // この関数は current_raw_img_src が変わるごとに実行されます。
+      current_raw_img_src: function (newImg) {
+        const self = this
+        let img = new Image()
+        let img_data
+        // let img_data
+        img.onload = function () {
+          self.setImgSrc(img)
+        }
+        img_data = this.current_raw_img_src
+        img.src = img_data
       }
     },
     created: function () {

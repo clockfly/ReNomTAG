@@ -68,18 +68,7 @@
     methods: {
       // Defined index
       load_raw_img: function (index) {
-        const self = this
-
-        this.$store.dispatch('load_raw_img', {index: index}).then(function () {
-          let img = new Image()
-          let img_data
-          // let img_data
-          img.onload = function () {
-            self.$children[0].setImgSrc(img)
-          }
-          img_data = 'data:image/png;base64,' + self.current_raw_img
-          img.src = img_data
-        })
+        this.$store.dispatch('load_raw_img', {index: index})
       },
       load_next_raw_img: function () {
         this.load_raw_img(this.current_file_index + 1)
