@@ -1,15 +1,17 @@
 <template>
   <div id='file-list'>
+    <div id='search-box'>
+      <input placeholder="search" type="text"/>
+    </div>
+
     <div id='inner-file-list'>
-      <div id='search-box'>
-        <input placeholder="search" type="text"/>
-      </div>
+
       <file-item v-for='(fname, index) in sidebar_filename_list'
                  :file-name='fname'
                  :key='index'
                  :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'
                  @click_action="click_action(index)"
-                 :class="{selected: index===selected_index}"
+                 :class="{selected: index===sidebar_current_file_index}"
       >
       </file-item>
     </div>
@@ -30,22 +32,17 @@
       return {
         selected: null,
         current_page: 1,
-        page_step: 100,
-        selected_index: 0
+        page_step: 100
       }
     },
 
     created () {
       const self = this
       this.$store.dispatch('load_filename_list').then(function () {
-
         self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          filename_list: self.filename_list,
           current_page: self.current_page,
           page_step: self.page_step
         })
-      }).then(function () {
-        self.$store.dispatch('load_next_raw_img')
       })
     },
     computed: {
@@ -57,20 +54,28 @@
       },
       sidebar_filename_list: function () {
         return this.$store.getters.get_sidebar_filename_list
+      },
+      sidebar_filename_list_index: function () {
+        return this.$store.getters.get_sidebar_filename_list_index
+      },
+      current_file_index: function () {
+        return this.$store.getters.get_current_file_index
+      },
+      sidebar_current_file_index: function () {
+        return this.current_file_index - ((this.current_page - 1) * this.page_step)
       }
     },
     methods: {
       change_page: function (n) {
         this.current_page = n
         this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          filename_list: this.filename_list,
           current_page: this.current_page,
           page_step: this.page_step
         })
       },
       click_action (index) {
-        this.selected_index = index
-      }
+        this.$store.dispatch('load_raw_img', {index: ((this.current_page - 1) * this.page_step) + index})
+      },
     }
   }
 </script>
@@ -79,22 +84,25 @@
 
   #file-list {
     #inner-file-list {
-      height: 90%;
+      height: calc(100% - 80px);
       box-sizing: border-box;
       border: 1px solid #ccc;
       overflow: auto;
-      #search-box {
-        width: 95%;
-        margin: 3px 3px 3px 3px;
+    }
+    #search-box {
+      width: 100%;
+      margin: 3px 0;
+      box-sizing: border-box;
 
-        input {
-          width: 100%;
-          padding: 0;
-          margin: 0;
-          outline: none;
-        }
+      input {
+        width: 100%;
+        margin: 0;
+        outline: none;
+        padding: 1px 5px;
+        box-sizing: border-box;
       }
     }
+
     #file-list-page-nation {
       list-style: none;
       display: flex;

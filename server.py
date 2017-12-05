@@ -55,10 +55,11 @@ def fonts(file_name):
 
 @route("/api/get_raw_img", method="POST")
 def get_raw_img():
-    root_dir = request.params.root_dir
+    # root_dir = request.params.root_dir
     filename = request.params.filename
-    # file_path = os.path.join(root_dir, filename)
+    print(filename)
 
+    # file_path = os.path.join(root_dir, filename)
     with open(filename, "rb") as image_reader:
         encoded_img = base64.b64encode(image_reader.read())
         encoded_img = encoded_img.decode('utf8')
@@ -99,6 +100,7 @@ def get_sidebar_thumbnail_and_filename_list():
     image_list = []
     # get page file paths
     file_paths = file_paths[start_page:end_page]
+    indices = list(range(start_page + 1, start_page + end_page + 1))
 
     for f in file_paths:
         img = Image.open(f, 'r')
@@ -112,7 +114,8 @@ def get_sidebar_thumbnail_and_filename_list():
 
     body = json.dumps({
         "sidebar_thumbnail_list": image_list,
-        "sidebar_filename_list": [f.split("/")[-1] for f in file_paths]
+        "sidebar_filename_list": [f.split("/")[-1] for f in file_paths],
+        "sidebar_filename_list_index": indices
     })
     ret = set_json_body(body)
     return ret
