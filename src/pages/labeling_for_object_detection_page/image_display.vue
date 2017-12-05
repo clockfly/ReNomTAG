@@ -3,7 +3,7 @@
     <div id='header'>
       <div id='file-text'>
         <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
-          }} / {{ filename_list_length }}</span>
+        + 1 }} / {{ filename_list_length }}</span>
         <span>{{ current_file_name }}</span>
       </div>
       <div id='icon'>
@@ -62,16 +62,18 @@
           self.load_raw_img(0)
         })
       } else {
-        self.load_raw_img(0)
+        self.load_raw_img(-1)
       }
     },
     methods: {
       // Defined index
       load_raw_img: function (index) {
         const self = this
+
         this.$store.dispatch('load_raw_img', {index: index}).then(function () {
           let img = new Image()
           let img_data
+          // let img_data
           img.onload = function () {
             self.$children[0].setImgSrc(img)
           }

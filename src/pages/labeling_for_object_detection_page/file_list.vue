@@ -1,9 +1,11 @@
 <template>
   <div id='file-list'>
+    <div id='search-box'>
+      <input placeholder="search" type="text"/>
+    </div>
+
     <div id='inner-file-list'>
-      <div id='search-box'>
-        <input placeholder="search" type="text"/>
-      </div>
+
       <file-item v-for='(fname, index) in sidebar_filename_list'
                  :file-name='fname'
                  :key='index'
@@ -68,7 +70,7 @@
       },
       click_action (index) {
         this.selected_index = index
-        this.$store.dispatch('load_raw_img', {index: this.sidebar_filename_list_index[index - 1]})
+        this.$store.dispatch('load_raw_img', {index: this.sidebar_filename_list_index[index] - 1})
       },
     }
   }
@@ -78,22 +80,25 @@
 
   #file-list {
     #inner-file-list {
-      height: 90%;
+      height: calc(100% - 80px);
       box-sizing: border-box;
       border: 1px solid #ccc;
       overflow: auto;
-      #search-box {
-        width: 95%;
-        margin: 3px 3px 3px 3px;
+    }
+    #search-box {
+      width: 100%;
+      margin: 3px 0;
+      box-sizing: border-box;
 
-        input {
-          width: 100%;
-          padding: 0;
-          margin: 0;
-          outline: none;
-        }
+      input {
+        width: 100%;
+        margin: 0;
+        outline: none;
+        padding: 1px 5px;
+        box-sizing: border-box;
       }
     }
+
     #file-list-page-nation {
       list-style: none;
       display: flex;

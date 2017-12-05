@@ -17,17 +17,6 @@ let mutation = {
     state.current_file_index = payload.current_file_index
     state.current_file_name = payload.current_file_name
   },
-  set_prior_raw_img (state, payload) {
-    // if (state.raw_img.length > 0) {
-    //   state.raw_img.pop()
-    // }
-    // state.raw_img.unshift({
-    //   'img': payload.raw_img,
-    //   'filename': payload.filename
-    // })
-    state.raw_img = payload.raw_img
-    state.current_file_index--
-  },
   // Menu Mutations
   close_menu (state) {
     state.isMenuShown = false
