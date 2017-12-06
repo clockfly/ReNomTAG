@@ -33,7 +33,9 @@ let action = {
         context.commit('set_sidebar_thumbnail_and_filename_list', {
           sidebar_thumbnail_list: response.data.sidebar_thumbnail_list,
           sidebar_filename_list: response.data.sidebar_filename_list,
-          sidebar_filename_list_index: response.data.sidebar_filename_list_index
+          sidebar_filename_list_index: response.data.sidebar_filename_list_index,
+          sidebar_current_page: current_page,
+          sidebar_page_step: page_step
         })
       }
     )
@@ -46,7 +48,7 @@ let action = {
 
     if (current_file_index < 0) {
       current_file_index = filename_list.length - 1
-    } else if (current_file_index > filename_list.length) {
+    } else if (current_file_index > filename_list.length - 1) {
       current_file_index = 0
     }
 
@@ -68,8 +70,21 @@ let action = {
           current_file_index: current_file_index,
           current_file_name: current_file_name
         })
+        // Change page nation if new page !== current page
+        // index is start by 0, so +1(avoid 0 divide)
+        let new_page = Math.ceil((context.getters.get_current_file_index + 1) / (context.getters.get_sidebar_page_step))
+        if (new_page !== context.getters.get_sidebar_current_page) {
+          context.commit('set_sidebar_current_page', {
+            sidebar_current_page: new_page
+          })
+        }
       }
     )
   },
+  change_sidebar_page_step (context, payload) {
+    context.commit('set_sidebar_page_step', {
+      sidebar_page_step: payload.sidebar_page_step
+    })
+  }
 }
 export default action

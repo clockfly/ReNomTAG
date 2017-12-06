@@ -3,7 +3,16 @@
     <div id='search-box'>
       <input placeholder="search" type="text"/>
     </div>
-
+    <div>
+      <select name="select_page_step"
+              id="select_page_step"
+              @change="change_page_step(select_page_step)"
+              v-model="select_page_step">
+        <option>50</option>
+        <option selected="selected">100</option>
+        <option>200</option>
+      </select>
+    </div>
     <div id='inner-file-list'>
 
       <file-item v-for='(fname, index) in sidebar_filename_list'
@@ -16,7 +25,8 @@
       </file-item>
     </div>
     <ul id="file-list-page-nation">
-      <li v-for="n in 5" @click="change_page(n)" :class="{active: n===current_page}">{{ n }}</li>
+      <li v-for="n in sidebar_page_number" @click="change_page(n)" :class="{active: n===sidebar_current_page}">{{ n }}
+      </li>
     </ul>
   </div>
 </template>
@@ -30,25 +40,17 @@
     },
     data: function () {
       return {
-        selected: null,
-        current_page: 1,
-        page_step: 100
+        // current_page: 1,
+        'select_page_step': 100
       }
     },
-
     created () {
       const self = this
       this.$store.dispatch('load_filename_list').then(function () {
-        self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          current_page: self.current_page,
-          page_step: self.page_step
-        })
+        self.change_page(self.sidebar_current_page)
       })
     },
     computed: {
-      filename_list: function () {
-        return this.$store.getters.get_filename_list
-      },
       sidebar_thumbnail_list: function () {
         return this.$store.getters.get_sidebar_thumbnail_list
       },
@@ -58,24 +60,39 @@
       sidebar_filename_list_index: function () {
         return this.$store.getters.get_sidebar_filename_list_index
       },
+      sidebar_current_file_index: function () {
+        return this.current_file_index - ((this.sidebar_current_page - 1) * this.sidebar_page_step)
+      },
+      sidebar_page_number: function () {
+        // divide file number by page step then plus1
+        return parseInt(this.$store.getters.get_filename_list_length / this.sidebar_page_step) + 1
+      },
+      sidebar_current_page: function () {
+        return this.$store.getters.get_sidebar_current_page
+      },
+      sidebar_page_step: function () {
+        return this.$store.getters.get_sidebar_page_step
+      },
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
-      sidebar_current_file_index: function () {
-        return this.current_file_index - ((this.current_page - 1) * this.page_step)
+      filename_list: function () {
+        return this.$store.getters.get_filename_list
       }
     },
     methods: {
-      change_page: function (n) {
-        this.current_page = n
+      change_page: function (new_page) {
         this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          current_page: this.current_page,
-          page_step: this.page_step
+          current_page: new_page,
+          page_step: this.sidebar_page_step
         })
       },
-      click_action (index) {
-        this.$store.dispatch('load_raw_img', {index: ((this.current_page - 1) * this.page_step) + index})
+      change_page_step: function (page_step) {
+        this.$store.dispatch('change_sidebar_page_step', {sidebar_page_step: page_step})
       },
+      click_action (index) {
+        this.$store.dispatch('load_raw_img', {index: ((this.sidebar_current_page - 1) * this.sidebar_page_step) + index})
+      }
     }
   }
 </script>
@@ -83,8 +100,9 @@
 <style lang='scss'>
 
   #file-list {
+    width: 200px;
     #inner-file-list {
-      height: calc(100% - 80px);
+      height: calc(100% - 120px);
       box-sizing: border-box;
       border: 1px solid #ccc;
       overflow: auto;
@@ -101,6 +119,13 @@
         padding: 1px 5px;
         box-sizing: border-box;
       }
+    }
+
+    #select_page_step {
+      width: 100%;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin: 0 0 5px 0;
     }
 
     #file-list-page-nation {

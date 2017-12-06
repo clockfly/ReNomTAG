@@ -8,6 +8,10 @@ let state = {
   sidebar_thumbnail_list: [],
   sidebar_filename_list: [],
   sidebar_filename_list_index: [],
+
+  sidebar_current_page: 1,
+  sidebar_page_step: 100,
+
   isMenuShown: false,
   shortcut_label_dict_list: [], // Key: shortcut key, Value: label
   label_id_dict_list: [], // Key: label, Value: id

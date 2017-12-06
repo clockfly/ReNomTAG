@@ -8,9 +8,17 @@ let mutation = {
     state.sidebar_thumbnail_list = payload.sidebar_thumbnail_list
     state.sidebar_filename_list = payload.sidebar_filename_list
     state.sidebar_filename_list_index = payload.sidebar_filename_list_index
+    state.sidebar_page_step = payload.sidebar_page_step
+    state.sidebar_current_page = payload.sidebar_current_page
   },
   set_current_file_index (state, payload) {
     state.current_file_index = payload.current_file_index
+  },
+  set_sidebar_current_page (state, payload) {
+    state.sidebar_current_page = payload.sidebar_current_page
+  },
+  set_sidebar_page_step (state, payload) {
+    state.sidebar_page_step = payload.sidebar_page_step
   },
   set_raw_img (state, payload) {
     state.current_raw_img = payload.current_raw_img
