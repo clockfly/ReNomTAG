@@ -237,6 +237,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: none;
     #inner-canvas {
       width: calc(100% - 100px);
       height: calc(100% - 100px);
