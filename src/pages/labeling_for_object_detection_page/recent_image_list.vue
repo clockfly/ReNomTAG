@@ -2,7 +2,7 @@
   <div id='recent-image-list'>
     <div id='inner-recent-image-list'>
       <div id='header'>
-        <span>Resent Labeled Images</span>
+        <span>Recent Labeled Images</span>
       </div>
       <div id='image-list'>
         <div v-for='im in labeledImageList' class='img-panel'>
