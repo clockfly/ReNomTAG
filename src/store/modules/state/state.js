@@ -13,7 +13,7 @@ let state = {
   sidebar_page_step: 100,
 
   isMenuShown: false,
-  shortcut_label_dict_list: [], // Key: shortcut key, Value: label
+  shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
   tag_dict: [{
     label: 'Labels',

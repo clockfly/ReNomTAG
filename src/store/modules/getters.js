@@ -35,8 +35,8 @@ let getters = {
   get_tag_list (state) {
     return state.tag_dict
   },
-  get_shortcut_label_dict_list (state) {
-    return state.shortcut_label_dict_list
+  get_shortcut_label_dict (state) {
+    return state.shortcut_label_dict
   },
   get_label_id_dict_list (state) {
     return state.label_id_dict_list
