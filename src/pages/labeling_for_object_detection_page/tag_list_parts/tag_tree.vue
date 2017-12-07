@@ -4,28 +4,28 @@
       <div class='list-item'>
         <p :style='indent' v-if='label'>
           <i v-if='showChildrenFlag' class="fa fa-compress fa-fw"
-            @click='toggleChildren' aria-hidden="true"></i>
+             @click='toggleChildren' aria-hidden="true"></i>
           <i v-else class="fa fa-expand fa-fw"
-            @click='toggleChildren' aria-hidden="true"></i>
+             @click='toggleChildren' aria-hidden="true"></i>
           {{ label }}
         </p>
-        <tt v-if='shortcut'>{{ shortcut }}</tt>
+        <span v-if='shortcut'>{{ shortcut }}</span>
         <div id='add-child' @click='setAddTagFlag(!addingTagFlag)'>
           <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </div>
       </div>
       <div id='tag-input-form' v-if='addingTagFlag'>
         <input id='new-label-form' type='text' v-model='newLabelText'
-          @keyup.enter='addNewTag'>
-        <input id='shortcut-form' type='text' :value='newLabelShortcut'
-          @keyup.enter.stop='addNewTag' @keyup='setShortcutKey'>
+               @keyup.enter='addNewTag'>
+        <input id='shortcut-form' type='text' v-model='newLabelShortcut'
+               @keyup.enter.stop='addNewTag' @keyup='setShortcutKey'>
       </div>
     </div>
     <tag-tree-item v-if='showChildrenFlag'
-      v-for='(node, index) in nodes'
-      :shortcut='node.shortcut'
-      :key='index' :nodes='node.nodes'
-      :label='node.label' :depth='depth + 1'>
+                   v-for='(node, index) in nodes'
+                   :shortcut='node.shortcut'
+                   :key='index' :nodes='node.nodes'
+                   :label='node.label' :depth='depth + 1'>
     </tag-tree-item>
   </div>
 </template>
@@ -41,16 +41,20 @@
     ],
     data () {
       return {
-        newLabelText:'',
-        newLabelShortcut:'',
+        newLabelText: '',
+        newLabelShortcut: '',
         showChildrenFlag: false,
-        addingTagFlag: false
+        addingTagFlag: false,
+        tag_id: 0
       }
     },
     computed: {
       indent () {
         return {paddingLeft: `${this.depth * 10}px`}
-      }
+      },
+      shortcut_label_dict () {
+        return this.$store.getters.get_shortcut_label_dict
+      },
     },
     methods: {
       toggleChildren () {
@@ -61,20 +65,29 @@
       },
       addNewTag () {
         this.setAddTagFlag(false)
-        if (!this.newLabelText){
-          this.newLabelText = ''
-          this.newLabelShortcut = ''
+        if (!this.newLabelText) {
+          alert('Please set label')
+//          this.newLabelText = ''
+//          this.newLabelShortcut = ''
+          return
+        } else if (!this.newLabelShortcut) {
+          alert('Please set shortcut')
+          return
+        } else if (this.shortcut_label_dict[this.newLabelShortcut]) {
+          alert('Shortcut is already exists.')
           return
         }
+
         this.$store.commit('add_tag', {
           parent_node: this.label,
           label: this.newLabelText,
-          id: 0,
+          id: this.tag_id,
           shortcut: this.newLabelShortcut
         })
-        this.newLabelText = null
-        this.newLabelShortcut = null
+        this.newLabelText = ''
+        this.newLabelShortcut = ''
         this.showChildrenFlag = true
+        this.tag_id += 1
       },
       setShortcutKey (event) {
         this.newLabelShortcut = event.key
@@ -105,7 +118,7 @@
           padding: 0 0 0 0;
           margin: 0 5px 0 5px;
         }
-        tt {
+        span {
           text-align: center;
           padding-right: 3px;
           font-size: 0.7rem;

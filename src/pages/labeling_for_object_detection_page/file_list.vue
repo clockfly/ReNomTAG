@@ -109,7 +109,7 @@
     }
     #search-box {
       width: 100%;
-      margin: 3px 0;
+      margin-bottom: 3px;
       box-sizing: border-box;
 
       input {

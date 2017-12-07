@@ -25,6 +25,9 @@ let mutation = {
     state.current_file_index = payload.current_file_index
     state.current_file_name = payload.current_file_name
   },
+  set_recent_raw_images (state, payload) {
+    state.recent_raw_images = payload.recent_raw_images
+  },
   // Menu Mutations
   close_menu (state) {
     state.isMenuShown = false
@@ -39,23 +42,24 @@ let mutation = {
     let parent_node = payload.parent_node
     let shortcut = payload.shortcut
     let label = payload.label
-    let id = payload.id
+    let payload_id = payload.id
 
-    state.shortcut_label_dict_list = []
-    state.label_id_dict_listi = []
+    state.shortcut_label_dict[shortcut] = {'label': label, 'id': payload_id}
 
-    var recursive_search = function (node) {
+    function recursive_search (node) {
       for (let n of node) {
-        let sc = n['shortcut']
-        let id = n['id']
+        // let sc = n['shortcut']
+        // let id = n['id']
         let lb = n['label']
-        if (sc)
-          state.shortcut_label_dict_list.push({sc: lb})
-        state.label_id_dict_list.push({lb: id})
+        // if (sc) {
+        //   state.shortcut_label_dict[sc] = {'label': lb, 'id': id}
+        // }
+        // state.label_id_dict_list.push({[lb]: id})
+
         if (parent_node === lb) {
           n['nodes'].unshift({
             label: label,
-            id: id,
+            id: payload_id,
             shortcut: shortcut,
             nodes: []
           })
@@ -63,8 +67,9 @@ let mutation = {
         recursive_search(n['nodes'])
       }
     }
+
     recursive_search(state.tag_dict)
-  }
+  },
 }
 
 export default mutation

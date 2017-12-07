@@ -1,8 +1,8 @@
 <template>
   <div id='outer-box'>
     <div id='bbox' v-bind:class='{selected: isSelected}'
-      draggable='false'
-      v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
+         draggable='false'
+         v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
       <div id='left-top' class='small-box'></div>
       <div id='left-bottom' class='small-box'></div>
       <div id='right-top' class='small-box'></div>
@@ -16,36 +16,36 @@
     name: 'Bbox',
     data () {
       return {
-        initialX:0,
-        initialY:0,
-        moveInitX:0,
-        moveInitY:0,
-        scaleInitX:0,
-        scaleInitY:0,
-        scaleInitW:0,
-        scaleInitH:0,
-        x:0,
-        y:0,
-        w:0,
-        h:0,
-        selectedFlag:false
+        initialX: 0,
+        initialY: 0,
+        moveInitX: 0,
+        moveInitY: 0,
+        scaleInitX: 0,
+        scaleInitY: 0,
+        scaleInitW: 0,
+        scaleInitH: 0,
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0,
+        selectedFlag: false
       }
     },
     computed: {
       isSelected: function () {
         return this.selectedFlag
       }
-    }, 
+    },
     methods: {
-      scaleByLeftTop: function (x, y, dx=0, dy=0) {
+      scaleByLeftTop: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
         if (x < 0)
-          x = 0 
+          x = 0
         if (y < 0)
-          y = 0 
+          y = 0
 
         px = x
         py = y
@@ -54,22 +54,22 @@
 
         if (pw < 0) {
           this.scaleByRightTop(x, y, this.scaleInitW, dy)
-        } else if (ph < 0){
+        } else if (ph < 0) {
           this.scaleByLeftBottom(x, y, dx, this.scaleInitH)
-        } else{
+        } else {
           this.x = px
           this.y = py
           this.w = pw
           this.h = ph
         }
       },
-      scaleByLeftBottom: function (x, y, dx=0, dy=0) {
+      scaleByLeftBottom: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
         if (x < 0)
-          x = 0 
+          x = 0
         if (y >= 100)
           y = 100
 
@@ -89,13 +89,13 @@
           this.h = ph
         }
       },
-      scaleByRightTop: function (x, y, dx=0, dy=0) {
+      scaleByRightTop: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
         if (x >= 100)
-          x = 100 
+          x = 100
         if (y < 0)
           y = 0
 
@@ -108,20 +108,20 @@
           this.scaleByLeftTop(x, y, -this.scaleInitW, dy)
         } else if (ph < 0) {
           this.scaleByRightBottom(x, y, dx, this.scaleInitH)
-        } else{
+        } else {
           this.x = px
           this.y = py
           this.w = pw
           this.h = ph
         }
       },
-      scaleByRightBottom: function (x, y, dx=0, dy=0) {
+      scaleByRightBottom: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
         let scale_initial_x = this.scaleInitX + dx
         let scale_initial_y = this.scaleInitY + dy
 
         if (x >= 100)
-          x = 100 
+          x = 100
         if (y >= 100)
           y = 100
 
@@ -143,11 +143,11 @@
       createdScalingBox: function (x, y) {
         let px, py, pw, ph
         if (x < 0)
-          x = 0 
+          x = 0
         if (y < 0)
-          y = 0 
+          y = 0
         if (x >= 100)
-          x = 100 
+          x = 100
         if (y >= 100)
           y = 100
         let initX = this.initialX
@@ -185,9 +185,9 @@
         if (px < 0) px = 0
         if (py < 0) py = 0
         if (pw > 100) px = 100 - this.w
-        if (ph > 100) py = 100 - this.h 
+        if (ph > 100) py = 100 - this.h
 
-        this.x = px 
+        this.x = px
         this.y = py
       },
       initializeBox: function (x, y) {
@@ -199,7 +199,7 @@
       },
       isBoxCreated: function () {
         console.log(this.w, this.h)
-        if ( this.w != 0 || this.h != 0 ){
+        if (this.w !== 0 || this.h !== 0) {
           return true
         } else {
           return false
@@ -253,9 +253,9 @@
       }
     }
     .selected {
-      background-color: rgba(255, 0, 0, 0.4) !important; 
+      background-color: rgba(255, 0, 0, 0.4) !important;
       .small-box {
-        background-color: rgba(255, 0, 0, 0.7) !important; 
+        background-color: rgba(255, 0, 0, 0.7) !important;
       }
     }
   }
