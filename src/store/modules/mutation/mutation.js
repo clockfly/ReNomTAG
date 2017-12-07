@@ -25,6 +25,9 @@ let mutation = {
     state.current_file_index = payload.current_file_index
     state.current_file_name = payload.current_file_name
   },
+  set_recent_raw_images (state, payload) {
+    state.recent_raw_images = payload.recent_raw_images
+  },
   // Menu Mutations
   close_menu (state) {
     state.isMenuShown = false
@@ -64,8 +67,9 @@ let mutation = {
         recursive_search(n['nodes'])
       }
     }
+
     recursive_search(state.tag_dict)
-  }
+  },
 }
 
 export default mutation

@@ -29,6 +29,9 @@ let getters = {
   get_current_file_index (state) {
     return state.current_file_index
   },
+  get_recent_raw_images (state) {
+    return state.recent_raw_images
+  },
   get_is_menu_shown (state) {
     return state.isMenuShown
   },
@@ -40,6 +43,9 @@ let getters = {
   },
   get_label_id_dict_list (state) {
     return state.label_id_dict_list
+  },
+  get_recent_labeled_images_id_arr (state) {
+    return state.recent_labeled_images_id_arr
   }
 }
 

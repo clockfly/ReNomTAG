@@ -1,12 +1,12 @@
 <template>
   <div id='image-canvas'
        tabindex='0'
-       @click='setLabelList'
        @mousemove='onMouseMove'
        @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
+
     <div id='inner-canvas'>
       <div id='mask'
            @mousedown='onMouseDown'
@@ -15,11 +15,13 @@
                         "height": padTop+"%",
                         "width": padLeft+"%"
            }'
-           v-show='showFlag'>
+           v-show='showFlag'
+           @click='add_recent_labeled_images_id(current_file_index)'>
 
         <box v-for='(sbox, index) in boxList' :key='index'></box>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -41,7 +43,7 @@
       'box': Bbox,
       'labelList': []
     },
-    data() {
+    data () {
       return {
         boxList: [],
         mouseDownFlag: false,
@@ -53,7 +55,7 @@
         padTop: 0,
         padLeft: 0,
         currentDownKey: '',
-        showFlag: true // This is for transition images.
+        showFlag: true, // This is for transition images.
       }
     },
     watch: {
@@ -73,20 +75,35 @@
     created: function () {
       window.addEventListener('resize', this.onResizeWindow)
     },
-    methods: {
-      setLabelList (){
-        let tags = this.$store.getters.get_tag_list
-        let arr = []
-        let recursive = function (arr, nodes) {
-          for (let n of nodes) {
-            let key = n["shortcut"]
-            arr.push({key: [n['label'], n['id']]})
-            recursive(arr, n['nodes'])
-          }
-        }
-        recursive(arr, tags)
-        this.labelList = arr
+    computed: {
+      shortcut_label_dict () {
+        return this.$store.getters.get_shortcut_label_dict
       },
+      current_raw_img_src: function () {
+        return 'data:image/png;base64,' + this.$store.getters.get_current_raw_img
+      },
+      current_file_index: function () {
+        return this.$store.getters.get_current_file_index
+      },
+      recent_labeled_images_id_arr: function () {
+        return this.$store.getters.get_recent_labeled_images_id_arr
+      }
+
+    },
+    methods: {
+//      setLabelList (){
+//        let tags = this.$store.getters.get_tag_list
+//        let arr = []
+//        let recursive = function (arr, nodes) {
+//          for (let n of nodes) {
+//            let key = n["shortcut"]
+//            arr.push({key: [n['label'], n['id']]})
+//            recursive(arr, n['nodes'])
+//          }
+//        }
+//        recursive(arr, tags)
+//        this.labelList = arr
+//      },
       setShowFlag: function (flag) {
         this.showFlag = flag
       },
@@ -123,9 +140,10 @@
         let select_flag = true
         let target = event.target
 
+        // console.log(target)
+
         this.mouseDownFlag = true
         this.currentBbox = null
-
         for (let box of this.$children) {
           let query_list = []
           query_list.push(box.$el.querySelector('#left-top'))
@@ -133,6 +151,7 @@
           query_list.push(box.$el.querySelector('#right-top'))
           query_list.push(box.$el.querySelector('#right-bottom'))
           query_list.push(box.$el.querySelector('#bbox'))
+          console.log(query_list)
           if (query_list.indexOf(target) >= 0) {
             select_flag = false
 
@@ -208,10 +227,15 @@
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
         if (box) {
-          let key_index = this.labelList.indexOf(this.currentDownKey)
-          console.log(key_index, this.labelList)
-          if (key_index >= 0) {
-            console.log(this.labelList[key_index])
+          // let key_index = this.labelList.indexOf(this.currentDownKey)
+          // console.log(key_index, this.labelList)
+          console.log('label')
+          console.log(this.currentDownKey)
+          console.log(box)
+          let label = this.shortcut_label_dict[this.currentDownKey]
+          if (label) {
+            console.log(label)
+
           }
         }
       },
@@ -220,13 +244,18 @@
       },
       disabled: function () {
         return false
+      },
+      add_recent_labeled_images_id: function (add_file_index) {
+        const self = this
+        this.$store.dispatch('add_recent_labeled_images_id_arr', {
+          add_file_index: add_file_index
+        }).then(
+          this.$store.dispatch('load_recent_images', {
+            file_indices: self.$store.getters.get_recent_labeled_images_id_arr
+          })
+        )
       }
     },
-    computed: {
-      current_raw_img_src: function () {
-        return 'data:image/png;base64,' + this.$store.getters.get_current_raw_img
-      }
-    }
   }
 </script>
 

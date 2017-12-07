@@ -12,6 +12,7 @@ let state = {
   sidebar_current_page: 1,
   sidebar_page_step: 100,
 
+  recent_raw_images: [],
   isMenuShown: false,
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
@@ -20,7 +21,8 @@ let state = {
     id: -1,
     shortcut: '',
     nodes: []
-  }]
+  }],
+  recent_labeled_images_id_arr: []
 }
 
 export default state

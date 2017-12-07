@@ -12,7 +12,7 @@
     <div id='main-tag-list'>
       <tag-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
       </tag-tree>
-      {{ shortcut_label_dict_list }}
+      {{ Object.keys(shortcut_label_dict) }}
     </div>
   </div>
 </template>
