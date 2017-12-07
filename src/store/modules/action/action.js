@@ -115,13 +115,13 @@ let action = {
     let index = context.getters.get_recent_labeled_images_id_arr.indexOf(payload.add_file_index)
     if (index >= 0) {
       context.state.recent_labeled_images_id_arr.splice(index, 1)
-      context.state.recent_labeled_images_id_arr.push(payload.add_file_index)
+      context.state.recent_labeled_images_id_arr.unshift(payload.add_file_index)
     } else {
       if (context.getters.get_recent_labeled_images_id_arr.length >= 10) {
         context.state.recent_labeled_images_id_arr.shift()
       }
-      context.state.recent_labeled_images_id_arr.push(payload.add_file_index)
+      context.state.recent_labeled_images_id_arr.unshift(payload.add_file_index)
     }
-  },
+  }
 }
 export default action
