@@ -5,12 +5,10 @@
         <span>Recent Labeled Images</span>
       </div>
       <div id='image-list'>
-        <!--<div v-for='im in labeledImageList' class='img-panel'>-->
-        <!--<img :src='im'/>-->
-        <!--</div>-->
-
-        <!--{{im}}-->
-        <img v-for='im in recent_raw_images' :src="'data:image/png;base64,' + im"/>
+        <img v-for='(im, index) in recent_raw_images'
+             :src="'data:image/png;base64,' + im"
+             @click="load_raw_img(recent_labeled_images_id_arr[index])"
+        />
 
       </div>
     </div>
@@ -31,7 +29,10 @@
         this.$store.dispatch('load_recent_images', {
           file_indices: self.recent_labeled_images_id_arr
         })
-      }
+      },
+      load_raw_img: function (index) {
+        this.$store.dispatch('load_raw_img', {index: index})
+      },
     },
     computed: {
       recent_labeled_images_id_arr: function () {
@@ -77,6 +78,7 @@
           width: auto;
           height: 100%;
           object-fit: contain;
+          cursor: pointer;
         }
 
       }
