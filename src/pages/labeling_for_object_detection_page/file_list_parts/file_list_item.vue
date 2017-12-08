@@ -1,9 +1,6 @@
 <template>
-  <div class='file-item' @click="child_click_action">
-    <div class='img-box'>
-      <img :src='imgData'>
-    </div>
-    <p> {{ fileName }} </p>
+  <div class='img-box'>
+    <img :src='imgData'>
   </div>
 </template>
 
@@ -13,53 +10,28 @@
     props: [
       'fileName',
       'imgData',
-      'click_action'
     ],
     data: function () {
       return {
-        selected_index: 0
+        selected_index: 0,
+        scroll_top: 0
       }
     },
-    methods: {
-      child_click_action () {
-        this.$emit('click_action')
+    methods: {},
+    computed: {
+      current_file_index: function () {
+        return this.$store.getters.get_current_file_index
       }
-    },
+    }
   }
 </script>
 
 <style lang='scss'>
-  .file-item {
-    height: 40px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #e6e6e6;
-    padding-right: 10px;
-    box-sizing: border-box;
-    margin-bottom: 2px;
 
-    cursor: pointer;
-
-    &.selected {
-      border: 2px solid #2d3e50;
-    }
-
-    p {
-      padding: 0 0 0 0;
-      margin: 0 0 0 0;
-      font-size: 0.7rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .img-box {
-      height: 100%;
-      width: 30%;
-      position: relative;
-    }
+  .img-box {
+    height: 100%;
+    width: 30%;
+    position: relative;
 
     img {
       width: auto;
@@ -75,4 +47,5 @@
       text-align: left;
     }
   }
+
 </style>

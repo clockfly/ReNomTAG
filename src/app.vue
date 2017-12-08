@@ -49,7 +49,7 @@
     z-index: 10;
     position: relative;
     height: 100%;
-    transition: transform 0.5s;
+    transition: transform 0.3s;
 
     #pusher {
       z-index: 20;
@@ -61,14 +61,14 @@
       background: rgba(0, 0, 0, 0.3);
       content: '';
       opacity: 0;
-      transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
+      transition: opacity 0.3s, width 0.1s 0.3s, height 0.1s 0.3s;
     }
 
     &.open #pusher {
       width: 100%;
       height: 100%;
       opacity: 1;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s;
     }
   }
 

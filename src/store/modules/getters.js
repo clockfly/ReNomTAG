@@ -46,7 +46,23 @@ let getters = {
   },
   get_recent_labeled_images_id_arr (state) {
     return state.recent_labeled_images_id_arr
+  },
+  get_sidebar_selected_item_offset_top (state) {
+    return state.sidebar_selected_item_offset_top
+  },
+  get_sidebar_selected_item_offset_height (state) {
+    return state.sidebar_selected_item_offset_height
+  },
+  get_inner_file_list_offset_top (state) {
+    return state.sidebar_inner_file_list_offset_top
+  },
+  get_inner_file_list_offset_height (state) {
+    return state.sidebar_inner_file_list_offset_height
+  },
+  get_sidebar_file_list_scroll_position (state) {
+    return state.sidebar_file_list_scroll_position
   }
+
 }
 
 export default getters

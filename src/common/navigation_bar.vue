@@ -41,7 +41,7 @@
     left: 0;
     width: 170px;
     height: 100%;
-    transition: all 0.5s;
+    transition: all 0.3s;
     padding-top: 80px;
     z-index: 100;
 

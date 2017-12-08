@@ -13,20 +13,28 @@
         <option>200</option>
       </select>
     </div>
+    <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
+    <p>st :{{ sidebar_selected_item_offset_top }} sh: {{ sidebar_selected_item_offset_height}} </p>
+    <p>file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>
+
     <div id='inner-file-list'>
 
-      <file-item v-for='(fname, index) in sidebar_filename_list'
-                 :file-name='fname'
-                 :key='index'
-                 :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'
-                 @click_action="click_action(index)"
-                 :class="{selected: index===sidebar_current_file_index}"
-      >
-      </file-item>
+      <div class="file-item" v-for='(fname, index) in sidebar_filename_list'
+           :key='index' @click="click_action(index)"
+           :class="{selected: index===sidebar_current_file_index}">
+        <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
+        </file-item>
+        {{ fname }}
+      </div>
+
     </div>
     <ul id="file-list-page-nation">
-      <li v-for="n in sidebar_page_number" @click="change_page(n)" :class="{active: n===sidebar_current_page}">{{ n }}
+      <li @click="change_page(1)" class="arrow"><</li>
+      <li v-for="n in this.sidebar_page_nation" @click="change_page(n)"
+          :class="{active: n===sidebar_current_page}">{{ n
+        }}
       </li>
+      <li @click="change_page(sidebar_page_number)" class="arrow">></li>
     </ul>
   </div>
 </template>
@@ -41,7 +49,10 @@
     data: function () {
       return {
         // current_page: 1,
-        'select_page_step': 100
+        'select_page_step': 100,
+        'max_page': 5, // ページネーションの表示数
+        'inner_file_list_offset_top': 0,
+        'inner_file_list_offset_height': 0
       }
     },
     created () {
@@ -67,12 +78,66 @@
         // divide file number by page step then plus1
         return parseInt(this.$store.getters.get_filename_list_length / this.sidebar_page_step) + 1
       },
+      sidebar_page_nation: function () {
+        // divide file number by page step then plus1
+        let page_number = this.sidebar_page_number
+
+        // ページが6ページ以上ある場合
+        if (page_number > this.max_page) {
+          let temp_page_nation = []
+
+          // カレントページから最終ページまで6ページ以下である場合
+          if (page_number - this.sidebar_current_page < this.max_page - 1) {
+            for (let i = page_number - this.max_page + 1; i < page_number + 1; i++) {
+              temp_page_nation.push(i)
+            }
+            // カレントページから最終ページまで6ページ以上である場合
+          } else {
+            // カレントページが1ページ目である場合
+            if (this.sidebar_current_page === 1) {
+              for (let i = 1; i < this.max_page + 1; i++) {
+                temp_page_nation.push(i)
+              }
+              // カレントページが2ページ目である場合
+            } else if (this.sidebar_current_page === 2) {
+              console.log('2')
+              for (let i = this.sidebar_current_page - 1; i < this.sidebar_current_page + this.max_page - 1; i++) {
+                temp_page_nation.push(i)
+              }
+            } else if (this.sidebar_current_page === page_number - 1) {
+              for (let i = this.sidebar_current_page - (this.max_page - 2); i < page_number; i++) {
+                temp_page_nation.push(i)
+              }
+            } else {
+              for (let i = this.sidebar_current_page - 2; i < this.sidebar_current_page + this.max_page - 2; i++) {
+                temp_page_nation.push(i)
+              }
+              return temp_page_nation
+            }
+            // 最終ページ番号
+            // temp_page_nation.push(page_number)
+          }
+          return temp_page_nation
+        } else {
+          return page_number
+        }
+      },
       sidebar_current_page: function () {
         return this.$store.getters.get_sidebar_current_page
       },
       sidebar_page_step: function () {
         return this.$store.getters.get_sidebar_page_step
       },
+      sidebar_selected_item_offset_top: function () {
+        return this.$store.getters.get_sidebar_selected_item_offset_top
+      },
+      sidebar_selected_item_offset_height: function () {
+        return this.$store.getters.get_sidebar_selected_item_offset_height
+      },
+      sidebar_file_list_scroll_position: function () {
+        return this.$store.getters.get_sidebar_file_list_scroll_position
+      },
+
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
@@ -92,6 +157,35 @@
       },
       click_action (index) {
         this.$store.dispatch('load_raw_img', {index: ((this.sidebar_current_page - 1) * this.sidebar_page_step) + index})
+      },
+      reload_sidebar_current_position_top () {
+        let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
+        this.$store.dispatch('set_sidebar_selected_item_offset', {
+          sidebar_selected_item_offset_top: selected_item[0].offsetTop,
+          sidebar_selected_item_offset_height: selected_item[0].offsetHeight
+        })
+      }
+    },
+    mounted: function () {
+      let self = this
+      this.$nextTick(function () {
+        let inner_file_list = document.getElementById('inner-file-list')
+        self.$store.dispatch('set_sidebar_inner_file_list_offset', {
+          sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
+          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight,
+        })
+      })
+    },
+    watch: {
+      // この関数は current_file_index が変わるごとに実行されます。
+      current_file_index: function () {
+        let self = this
+        this.$nextTick(function () {
+          self.reload_sidebar_current_position_top()
+        })
+      },
+      sidebar_file_list_scroll_position: function () {
+        document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
       }
     }
   }
@@ -106,6 +200,26 @@
       box-sizing: border-box;
       border: 1px solid #ccc;
       overflow: auto;
+
+      .file-item {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #e6e6e6;
+        padding-right: 10px;
+        box-sizing: border-box;
+        margin-bottom: 2px;
+
+        cursor: pointer;
+
+        font-size: 12px;
+
+        &.selected {
+          border: 2px solid #2d3e50;
+        }
+      }
     }
     #search-box {
       width: 100%;
@@ -138,17 +252,25 @@
       height: 10%;
 
       li {
-        padding: 2px 8px;
+        padding: 2px 0;
+        width: 25px;
+        text-align: center;
         border: 1px solid #0c0c0c;
         box-sizing: border-box;
         margin: 0 4px;
+        transition: 150ms;
 
         &.active {
-          background: #0c0c0c;
+          background: #2d3e50;
           color: #fff;
         }
         &:hover {
           cursor: pointer;
+          background: #2d3e50;
+          color: #fff;
+        }
+        &.arrow {
+          letter-spacing: -1px;
         }
       }
     }
