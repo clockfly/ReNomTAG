@@ -70,6 +70,17 @@ let mutation = {
 
     recursive_search(state.tag_dict)
   },
+  set_sidebar_selected_item_offset (state, payload) {
+    state.sidebar_selected_item_offset_top = payload.sidebar_selected_item_offset_top
+    state.sidebar_selected_item_offset_height = payload.sidebar_selected_item_offset_height
+  },
+  set_sidebar_inner_file_list_offset (state, payload) {
+    state.sidebar_inner_file_list_offset_top = payload.sidebar_inner_file_list_offset_top
+    state.sidebar_inner_file_list_offset_height = payload.sidebar_inner_file_list_offset_height
+  },
+  set_sidebar_file_list_scroll_position (state, payload) {
+    state.sidebar_file_list_scroll_position = payload.sidebar_file_list_scroll_position
+  }
 }
 
 export default mutation

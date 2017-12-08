@@ -1,15 +1,14 @@
 <template>
   <div id='recent-image-list'>
     <div id='inner-recent-image-list'>
-      <div id='header'>
+      <div class='recent-image-list-header'>
         <span>Recent Labeled Images</span>
       </div>
-      <div id='image-list'>
+      <div id='recent-image-list-contents'>
         <img v-for='(im, index) in recent_raw_images'
              :src="'data:image/png;base64,' + im"
              @click="load_raw_img(recent_labeled_images_id_arr[index])"
         />
-
       </div>
     </div>
   </div>
@@ -55,7 +54,7 @@
       box-sizing: border-box;
       border: solid 1px #a3a3a3;
 
-      #header {
+      .recent-image-list-header {
         display: flex;
         height: 30px;
         width: 100%;
@@ -67,7 +66,7 @@
         }
       }
 
-      #image-list {
+      #recent-image-list-contents {
         height: calc(100% - 30px);
         width: 100%;
         display: flex;

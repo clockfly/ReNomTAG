@@ -11,7 +11,11 @@ let state = {
 
   sidebar_current_page: 1,
   sidebar_page_step: 100,
-
+  sidebar_selected_item_offset_top: 0,
+  sidebar_selected_item_offset_height: 0,
+  sidebar_inner_file_list_offset_top: 0,
+  sidebar_inner_file_list_offset_height: 0,
+  sidebar_file_list_scroll_position: 0,
   recent_raw_images: [],
   isMenuShown: false,
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}

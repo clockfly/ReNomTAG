@@ -122,6 +122,33 @@ let action = {
       }
       context.state.recent_labeled_images_id_arr.unshift(payload.add_file_index)
     }
+  },
+  set_sidebar_selected_item_offset (context, payload) {
+    context.commit('set_sidebar_selected_item_offset', {
+      sidebar_selected_item_offset_top: payload.sidebar_selected_item_offset_top,
+      sidebar_selected_item_offset_height: payload.sidebar_selected_item_offset_height
+    })
+  },
+  set_sidebar_inner_file_list_offset (context, payload) {
+    context.commit('set_sidebar_inner_file_list_offset', {
+      sidebar_inner_file_list_offset_top: payload.sidebar_inner_file_list_offset_top,
+      sidebar_inner_file_list_offset_height: payload.sidebar_inner_file_list_offset_height
+    })
+  },
+  calc_and_set_sidebar_file_list_scroll_position (context, payload) {
+    let calc = context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_top + 40)
+    let result = 0
+    // 次へボタンを押して、下にスクロールし、selectedが下に行ってしまう時
+    if (calc < context.getters.get_sidebar_selected_item_offset_height) {
+      result = context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_height - context.getters.get_sidebar_selected_item_offset_height * 1.5
+      console.log('fafa')
+    } else {
+      // scroll positionが下にあり、selectedがscroll position 上にある時
+      result = 0
+    }
+    context.commit('set_sidebar_file_list_scroll_position', {
+      sidebar_file_list_scroll_position: result
+    })
   }
 }
 export default action

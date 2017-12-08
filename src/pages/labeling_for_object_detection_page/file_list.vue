@@ -13,24 +13,28 @@
         <option>200</option>
       </select>
     </div>
+    <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
+    <p>st :{{ sidebar_selected_item_offset_top }} sh: {{ sidebar_selected_item_offset_height}} </p>
+    <p>file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>
+
     <div id='inner-file-list'>
 
-      <file-item v-for='(fname, index) in sidebar_filename_list'
-                 :file-name='fname'
-                 :key='index'
-                 :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'
-                 @click_action="click_action(index)"
-                 :class="{selected: index===sidebar_current_file_index}"
-      >
-      </file-item>
+      <div class="file-item" v-for='(fname, index) in sidebar_filename_list'
+           :key='index' @click="click_action(index)"
+           :class="{selected: index===sidebar_current_file_index}">
+        <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
+        </file-item>
+        {{ fname }}
+      </div>
+
     </div>
-    {{ sidebar_page_nation }}
     <ul id="file-list-page-nation">
-      <li @click="change_page(1)" class="arrow"><<</li>
-      <li v-for="n in this.sidebar_page_nation" @click="change_page(n)" :class="{active: n===sidebar_current_page}">{{ n
+      <li @click="change_page(1)" class="arrow"><</li>
+      <li v-for="n in this.sidebar_page_nation" @click="change_page(n)"
+          :class="{active: n===sidebar_current_page}">{{ n
         }}
       </li>
-      <li @click="change_page(sidebar_page_number)" class="arrow">>></li>
+      <li @click="change_page(sidebar_page_number)" class="arrow">></li>
     </ul>
   </div>
 </template>
@@ -46,7 +50,9 @@
       return {
         // current_page: 1,
         'select_page_step': 100,
-        'max_page': 5 // ページネーションの表示数
+        'max_page': 5, // ページネーションの表示数
+        'inner_file_list_offset_top': 0,
+        'inner_file_list_offset_height': 0
       }
     },
     created () {
@@ -122,6 +128,16 @@
       sidebar_page_step: function () {
         return this.$store.getters.get_sidebar_page_step
       },
+      sidebar_selected_item_offset_top: function () {
+        return this.$store.getters.get_sidebar_selected_item_offset_top
+      },
+      sidebar_selected_item_offset_height: function () {
+        return this.$store.getters.get_sidebar_selected_item_offset_height
+      },
+      sidebar_file_list_scroll_position: function () {
+        return this.$store.getters.get_sidebar_file_list_scroll_position
+      },
+
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
@@ -141,6 +157,35 @@
       },
       click_action (index) {
         this.$store.dispatch('load_raw_img', {index: ((this.sidebar_current_page - 1) * this.sidebar_page_step) + index})
+      },
+      reload_sidebar_current_position_top () {
+        let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
+        this.$store.dispatch('set_sidebar_selected_item_offset', {
+          sidebar_selected_item_offset_top: selected_item[0].offsetTop,
+          sidebar_selected_item_offset_height: selected_item[0].offsetHeight
+        })
+      }
+    },
+    mounted: function () {
+      let self = this
+      this.$nextTick(function () {
+        let inner_file_list = document.getElementById('inner-file-list')
+        self.$store.dispatch('set_sidebar_inner_file_list_offset', {
+          sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
+          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight,
+        })
+      })
+    },
+    watch: {
+      // この関数は current_file_index が変わるごとに実行されます。
+      current_file_index: function () {
+        let self = this
+        this.$nextTick(function () {
+          self.reload_sidebar_current_position_top()
+        })
+      },
+      sidebar_file_list_scroll_position: function () {
+        document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
       }
     }
   }
@@ -155,6 +200,26 @@
       box-sizing: border-box;
       border: 1px solid #ccc;
       overflow: auto;
+
+      .file-item {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #e6e6e6;
+        padding-right: 10px;
+        box-sizing: border-box;
+        margin-bottom: 2px;
+
+        cursor: pointer;
+
+        font-size: 12px;
+
+        &.selected {
+          border: 2px solid #2d3e50;
+        }
+      }
     }
     #search-box {
       width: 100%;
@@ -193,13 +258,16 @@
         border: 1px solid #0c0c0c;
         box-sizing: border-box;
         margin: 0 4px;
+        transition: 150ms;
 
         &.active {
-          background: #0c0c0c;
+          background: #2d3e50;
           color: #fff;
         }
         &:hover {
           cursor: pointer;
+          background: #2d3e50;
+          color: #fff;
         }
         &.arrow {
           letter-spacing: -1px;
