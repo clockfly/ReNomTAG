@@ -42,16 +42,21 @@ let action = {
   },
 
   load_raw_img (context, payload) {
+    // Arguments : index
+
     let fd = new FormData()
     let current_file_index = payload.index
     let filename_list = context.getters.get_filename_list
 
+    // Reset current_file_index to filename_list.length - 1
     if (current_file_index < 0) {
       current_file_index = filename_list.length - 1
+      // Reset current_file_index to 0
     } else if (current_file_index > filename_list.length - 1) {
       current_file_index = 0
     }
 
+    // Get file name from file_name list
     let current_file_name = filename_list[current_file_index]
 
     // fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
@@ -70,16 +75,21 @@ let action = {
           current_file_index: current_file_index,
           current_file_name: current_file_name
         })
-        // Change page nation if new page !== current page
-        // index is start by 0, so +1(avoid 0 divide)
-        let new_page = Math.ceil((context.getters.get_current_file_index + 1) / (context.getters.get_sidebar_page_step))
-        if (new_page !== context.getters.get_sidebar_current_page) {
-          context.commit('set_sidebar_current_page', {
-            sidebar_current_page: new_page
-          })
-        }
+
+        // check sidebar current page
+        context.dispatch('check_sidebar_current_page')
       }
     )
+  },
+  check_sidebar_current_page (context, payload) {
+    // Change page nation if new page !== current page
+    // index is start by 0, so +1(avoid 0 divide)
+    let new_page = Math.ceil((context.getters.get_current_file_index + 1) / (context.getters.get_sidebar_page_step))
+    if (new_page !== context.getters.get_sidebar_current_page) {
+      context.commit('set_sidebar_current_page', {
+        sidebar_current_page: new_page
+      })
+    }
   },
   load_recent_images (context, payload) {
     let fd = new FormData()
@@ -136,18 +146,28 @@ let action = {
     })
   },
   calc_and_set_sidebar_file_list_scroll_position (context, payload) {
-    let calc = context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_top + 40)
+    let calc = context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_top)
+    console.log("==================")
+    console.log('sidebar_selected_item_offset_top : ' + context.getters.get_sidebar_selected_item_offset_top)
+    console.log('get_inner_file_list_offset_top : ' + context.getters.get_inner_file_list_offset_top)
+    console.log('get_inner_file_list_offset_height : ' + context.getters.get_inner_file_list_offset_height)
     let result = 0
     // 次へボタンを押して、下にスクロールし、selectedが下に行ってしまう時
+
     if (calc < context.getters.get_sidebar_selected_item_offset_height) {
-      result = context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_height - context.getters.get_sidebar_selected_item_offset_height * 1.5
-      console.log('fafa')
+      result = context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_height * 1.5) + 1
     } else {
       // scroll positionが下にあり、selectedがscroll position 上にある時
       result = 0
     }
+
     context.commit('set_sidebar_file_list_scroll_position', {
       sidebar_file_list_scroll_position: result
+    })
+  },
+  set_sidebar_file_list_scroll_position_flag (context, payload) {
+    context.commit('set_sidebar_file_list_scroll_position_flag', {
+      flag: payload.flag
     })
   }
 }

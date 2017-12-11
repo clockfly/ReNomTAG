@@ -68,22 +68,23 @@
     methods: {
       // Defined index
       load_raw_img: function (index) {
-        let self = this
-        this.$store.dispatch('load_raw_img', {index: index}).then(
-          self.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
-        )
+        this.$store.dispatch('load_raw_img', {index: index})
       },
       load_next_raw_img: function () {
-        this.load_raw_img(this.current_file_index + 1)
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
+          this.$store.dispatch('load_raw_img', {index: this.current_file_index + 1})
+        )
       },
 
       load_prev_raw_img: function () {
-        this.load_raw_img(this.current_file_index - 1)
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
+          this.$store.dispatch('load_raw_img', {index: this.current_file_index - 1})
+        )
       },
-      calc_and_set_sidebar_file_list_scroll_position: function () {
-        this.$nextTick(function () {
-          this.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
-        })
+      set_sidebar_file_list_scroll_position_flag: function (flag) {
+        this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
       }
     }
   }
