@@ -186,8 +186,13 @@
 
         self.$store.dispatch('set_sidebar_inner_file_list_offset', {
           sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
-          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight,
-        })
+          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight
+        }).then(
+          self.$store.dispatch('set_sidebar_file_list_scroll_window_position', {
+            start_position: 0,
+            end_position: inner_file_list.offsetHeight
+          })
+        )
       })
     },
     watch: {

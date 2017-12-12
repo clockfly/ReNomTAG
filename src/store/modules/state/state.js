@@ -17,6 +17,8 @@ let state = {
   sidebar_inner_file_list_offset_top: 0,
   sidebar_inner_file_list_offset_height: 0,
   sidebar_file_list_scroll_position: 0,
+  sidebar_file_list_scroll_window_start_position: 0,
+  sidebar_file_list_scroll_window_end_position: 0,
   sidebar_file_list_scroll_position_flag: false,
 
   // Recent images

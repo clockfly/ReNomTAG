@@ -146,28 +146,56 @@ let action = {
     })
   },
   calc_and_set_sidebar_file_list_scroll_position (context, payload) {
-    let calc = context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_top)
-    console.log("==================")
-    console.log('sidebar_selected_item_offset_top : ' + context.getters.get_sidebar_selected_item_offset_top)
-    console.log('get_inner_file_list_offset_top : ' + context.getters.get_inner_file_list_offset_top)
-    console.log('get_inner_file_list_offset_height : ' + context.getters.get_inner_file_list_offset_height)
-    let result = 0
-    // 次へボタンを押して、下にスクロールし、selectedが下に行ってしまう時
+    let sidebar_selected_item_offset_top = context.getters.get_sidebar_selected_item_offset_top
+    let sidebar_selected_item_offset_height = context.getters.get_sidebar_selected_item_offset_height
+    let inner_file_list_offset_top = context.getters.get_inner_file_list_offset_top
+    let inner_file_list_offset_height = context.getters.get_inner_file_list_offset_height
+    let sidebar_file_list_scroll_window_start_position = context.getters.get_sidebar_file_list_scroll_window_start_position
+    let sidebar_file_list_scroll_window_end_position = context.getters.get_sidebar_file_list_scroll_window_end_position
 
-    if (calc < context.getters.get_sidebar_selected_item_offset_height) {
-      result = context.getters.get_sidebar_selected_item_offset_top - context.getters.get_inner_file_list_offset_height - (context.getters.get_sidebar_selected_item_offset_height * 1.5) + 1
-    } else {
-      // scroll positionが下にあり、selectedがscroll position 上にある時
-      result = 0
+    // scroll windowからのselected_itemの位置
+    let real_sidebar_selected_item_offset_top = sidebar_selected_item_offset_top - inner_file_list_offset_top
+    let real_sidebar_selected_item_offset_bottom = real_sidebar_selected_item_offset_top + sidebar_selected_item_offset_height
+
+    let scroll_position = context.getters.get_sidebar_file_list_scroll_position
+    // 上にはみ出る時
+    if (real_sidebar_selected_item_offset_top < sidebar_file_list_scroll_window_start_position) {
+      scroll_position = real_sidebar_selected_item_offset_top - 1
+
+      let scroll_window_start_position = real_sidebar_selected_item_offset_top
+      let scroll_window_end_position = real_sidebar_selected_item_offset_top + inner_file_list_offset_height
+
+      context.commit('set_sidebar_file_list_scroll_window_position', {
+        start_position: scroll_window_start_position,
+        end_position: scroll_window_end_position
+      })
+      // 下にはみ出る時
+    } else if (sidebar_selected_item_offset_top > sidebar_file_list_scroll_window_end_position) {
+      console.log('lower')
+      scroll_position = real_sidebar_selected_item_offset_bottom - inner_file_list_offset_height + 1
+
+      let scroll_window_start_position = real_sidebar_selected_item_offset_bottom - inner_file_list_offset_height
+      let scroll_window_end_position = sidebar_selected_item_offset_top
+
+      context.commit('set_sidebar_file_list_scroll_window_position', {
+        start_position: scroll_window_start_position,
+        end_position: scroll_window_end_position
+      })
     }
 
     context.commit('set_sidebar_file_list_scroll_position', {
-      sidebar_file_list_scroll_position: result
+      sidebar_file_list_scroll_position: scroll_position
     })
   },
   set_sidebar_file_list_scroll_position_flag (context, payload) {
     context.commit('set_sidebar_file_list_scroll_position_flag', {
       flag: payload.flag
+    })
+  },
+  set_sidebar_file_list_scroll_window_position (context, payload) {
+    context.commit('set_sidebar_file_list_scroll_window_position', {
+      start_position: payload.start_position,
+      end_position: payload.end_position
     })
   }
 }
