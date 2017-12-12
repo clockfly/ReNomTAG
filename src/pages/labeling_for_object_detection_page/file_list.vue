@@ -181,9 +181,7 @@
     mounted: function () {
       let self = this
       this.$nextTick(function () {
-
         let inner_file_list = document.getElementById('inner-file-list')
-
         self.$store.dispatch('set_sidebar_inner_file_list_offset', {
           sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
           sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight
@@ -206,6 +204,11 @@
           self.reload_sidebar_current_position_top()
           self.calc_and_set_sidebar_file_list_scroll_position()
           document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
+        })
+      },
+      sidebar_current_page: function () {
+        this.$nextTick(function () {
+          this.change_page(this.sidebar_current_page)
         })
       }
     }
