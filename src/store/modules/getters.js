@@ -61,8 +61,16 @@ let getters = {
   },
   get_sidebar_file_list_scroll_position (state) {
     return state.sidebar_file_list_scroll_position
+  },
+  get_sidebar_file_list_scroll_window_start_position (state) {
+    return state.sidebar_file_list_scroll_window_start_position
+  },
+  get_sidebar_file_list_scroll_window_end_position (state) {
+    return state.sidebar_file_list_scroll_window_end_position
+  },
+  get_sidebar_file_list_scroll_position_flag (state) {
+    return state.sidebar_file_list_scroll_position_flag
   }
-
 }
 
 export default getters

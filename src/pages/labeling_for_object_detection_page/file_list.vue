@@ -14,8 +14,10 @@
       </select>
     </div>
     <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
-    <p>st :{{ sidebar_selected_item_offset_top }} sh: {{ sidebar_selected_item_offset_height}} </p>
-    <p>file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>
+
+    <!--<p style="font-size: 10px; line-height: 0.8; margin: 5px;">sidebar_selected_item_offset_top :{{ sidebar_selected_item_offset_top-->
+    <!--}} <br />sidebar_selected_item_offset_height: {{ sidebar_selected_item_offset_height}} </p>-->
+    <!--<p style="font-size: 10px; line-height: 0.5; margin: 5px;">file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>-->
 
     <div id='inner-file-list'>
 
@@ -143,6 +145,9 @@
       },
       filename_list: function () {
         return this.$store.getters.get_filename_list
+      },
+      sidebar_file_list_scroll_position_flag: function () {
+        return this.$store.getters.get_sidebar_file_list_scroll_position_flag
       }
     },
     methods: {
@@ -156,7 +161,10 @@
         this.$store.dispatch('change_sidebar_page_step', {sidebar_page_step: page_step})
       },
       click_action (index) {
-        this.$store.dispatch('load_raw_img', {index: ((this.sidebar_current_page - 1) * this.sidebar_page_step) + index})
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: false}).then(
+          self.$store.dispatch('load_raw_img', {index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index})
+        )
       },
       reload_sidebar_current_position_top () {
         let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
@@ -164,28 +172,41 @@
           sidebar_selected_item_offset_top: selected_item[0].offsetTop,
           sidebar_selected_item_offset_height: selected_item[0].offsetHeight
         })
+      },
+      calc_and_set_sidebar_file_list_scroll_position: function () {
+//        console.log('sidebar_selected_item_offset_top : ' + this.sidebar_selected_item_offset_top)
+        this.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
       }
     },
     mounted: function () {
       let self = this
       this.$nextTick(function () {
+
         let inner_file_list = document.getElementById('inner-file-list')
+
         self.$store.dispatch('set_sidebar_inner_file_list_offset', {
           sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
-          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight,
-        })
+          sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight
+        }).then(
+          self.$store.dispatch('set_sidebar_file_list_scroll_window_position', {
+            start_position: 0,
+            end_position: inner_file_list.offsetHeight
+          })
+        )
       })
     },
     watch: {
-      // この関数は current_file_index が変わるごとに実行されます。
-      current_file_index: function () {
+      // この関数は sidebar_current_file_index が変わるごとに実行されます。
+      sidebar_current_file_index: function () {
+        if (!this.sidebar_file_list_scroll_position_flag) {
+          return
+        }
         let self = this
         this.$nextTick(function () {
           self.reload_sidebar_current_position_top()
+          self.calc_and_set_sidebar_file_list_scroll_position()
+          document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
         })
-      },
-      sidebar_file_list_scroll_position: function () {
-        document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
       }
     }
   }

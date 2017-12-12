@@ -80,6 +80,13 @@ let mutation = {
   },
   set_sidebar_file_list_scroll_position (state, payload) {
     state.sidebar_file_list_scroll_position = payload.sidebar_file_list_scroll_position
+  },
+  set_sidebar_file_list_scroll_position_flag (state, payload) {
+    state.sidebar_file_list_scroll_position_flag = payload.flag
+  },
+  set_sidebar_file_list_scroll_window_position (state, payload) {
+    state.sidebar_file_list_scroll_window_start_position = payload.start_position
+    state.sidebar_file_list_scroll_window_end_position = payload.end_position
   }
 }
 
