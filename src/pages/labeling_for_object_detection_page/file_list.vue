@@ -207,7 +207,9 @@
         })
       },
       sidebar_current_page: function () {
-        this.change_page(this.sidebar_current_page)
+        this.$nextTick(function () {
+          this.change_page(this.sidebar_current_page)
+        })
       }
     }
   }
