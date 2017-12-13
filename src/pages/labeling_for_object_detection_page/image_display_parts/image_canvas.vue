@@ -146,28 +146,27 @@
         this.currentBbox = null
         for (let box of this.$children) {
           let query_list = []
-          query_list.push(box.$el.querySelector('#left-top'))
-          query_list.push(box.$el.querySelector('#left-bottom'))
-          query_list.push(box.$el.querySelector('#right-top'))
-          query_list.push(box.$el.querySelector('#right-bottom'))
-          query_list.push(box.$el.querySelector('#bbox'))
-          console.log(query_list)
+          query_list.push(box.$el.querySelector('.left-top'))
+          query_list.push(box.$el.querySelector('.left-bottom'))
+          query_list.push(box.$el.querySelector('.right-top'))
+          query_list.push(box.$el.querySelector('.right-bottom'))
+          query_list.push(box.$el.querySelector('.bbox'))
           if (query_list.indexOf(target) >= 0) {
             select_flag = false
 
             this.currentBbox = box
             this.currentBbox.setSelectedFlag(true)
 
-            if (target === box.$el.querySelector('#left-top')) {
+            if (target === box.$el.querySelector('.left-top')) {
               this.boxEventType = boxEvent['rescale-left-top']
               this.currentBbox.setScaleInitCoordinate()
-            } else if (target === box.$el.querySelector('#left-bottom')) {
+            } else if (target === box.$el.querySelector('.left-bottom')) {
               this.boxEventType = boxEvent['rescale-left-bottom']
               this.currentBbox.setScaleInitCoordinate()
-            } else if (target === box.$el.querySelector('#right-top')) {
+            } else if (target === box.$el.querySelector('.right-top')) {
               this.boxEventType = boxEvent['rescale-right-top']
               this.currentBbox.setScaleInitCoordinate()
-            } else if (target === box.$el.querySelector('#right-bottom')) {
+            } else if (target === box.$el.querySelector('.right-bottom')) {
               this.boxEventType = boxEvent['rescale-right-bottom']
               this.currentBbox.setScaleInitCoordinate()
             } else {
@@ -235,7 +234,6 @@
           let label = this.shortcut_label_dict[this.currentDownKey]
           if (label) {
             console.log(label)
-
           }
         }
       },
