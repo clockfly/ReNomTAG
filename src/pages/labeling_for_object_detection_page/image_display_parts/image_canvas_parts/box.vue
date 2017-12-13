@@ -1,12 +1,12 @@
 <template>
-  <div id='outer-box'>
-    <div id='bbox' v-bind:class='{selected: isSelected}'
+  <div class='outer-box'>
+    <div class='bbox' v-bind:class='{selected: isSelected}'
          draggable='false'
          v-bind:style='{top: y+"%", left: x+"%", width: w+"%", height: h+"%"}'>
-      <div id='left-top' class='small-box'></div>
-      <div id='left-bottom' class='small-box'></div>
-      <div id='right-top' class='small-box'></div>
-      <div id='right-bottom' class='small-box'></div>
+      <div class='left-top small-box'></div>
+      <div class='left-bottom small-box'></div>
+      <div class='right-top small-box'></div>
+      <div class='right-bottom small-box'></div>
     </div>
   </div>
 </template>
@@ -224,9 +224,9 @@
 </script>
 
 <style lang='scss'>
-  #outer-box {
+  .outer-box {
     z-index: 5;
-    #bbox {
+    .bbox {
       position: absolute;
       background-color: rgba(0, 0, 255, 0.3);
       .small-box {
@@ -235,19 +235,19 @@
         width: 14px;
         height: 14px;
       }
-      #left-top {
+      .left-top {
         top: -7px;
         left: -7px;
       }
-      #left-bottom {
+      .left-bottom {
         bottom: -7px;
         left: -7px;
       }
-      #right-top {
+      .right-top {
         top: -7px;
         right: -7px;
       }
-      #right-bottom {
+      .right-bottom {
         bottom: -7px;
         right: -7px;
       }
