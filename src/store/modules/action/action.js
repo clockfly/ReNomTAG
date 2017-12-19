@@ -197,6 +197,48 @@ let action = {
       start_position: payload.start_position,
       end_position: payload.end_position
     })
+  },
+  save_xml_from_dict (context, payload) {
+    let fd = new FormData()
+
+    // console.log(payload.file_name)
+    fd.append('save_xml_file_path', payload.save_xml_file_path)
+    // convert dict to json
+    console.log(payload.tag_dict_data)
+    fd.append('dict_data', JSON.stringify(payload.tag_dict_data))
+
+    let headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    axios.defaults.headers.post['Content-Type'] = 'application/json'
+
+    return axios.post('/api/save_xml_from_dict', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('Error is occured.')
+          return
+        }
+        // context.commit('set_json_data', {
+        //   xml_data: response.data.xml_data
+        // })
+      }
+    )
+  },
+  load_dict_from_xml (context, payload) {
+    let fd = new FormData()
+    fd.append('file_name', payload.file_name)
+    return axios.post('/api/load_dict_from_xml', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('Error is occured')
+          return
+        }
+        context.commit('set_current_json', {
+          json_data: response.data.json_data
+        })
+      }
+    )
   }
 }
 export default action

@@ -7,8 +7,8 @@
         <span>{{ current_file_name }}</span>
       </div>
       <div id='icon'>
-        <span><i class="fa fa-search-plus" aria-hidden="true"></i></span>
-        <span><i class="fa fa-search-minus" aria-hidden="true"></i></span>
+        <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
+        <span><i class='fa fa-search-minus' aria-hidden='true'></i></span>
       </div>
     </div>
     <div id='outer-panel'>
@@ -19,6 +19,7 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
+        <input type='button' value='save' @click='save_xml_from_dict()'>
       </div>
     </div>
   </div>
@@ -34,7 +35,8 @@
     },
     data: function () {
       return {
-        imgData: ''
+        imgData: '',
+
       }
     },
     computed: {
@@ -52,7 +54,11 @@
       },
       current_raw_img: function () {
         return this.$store.getters.get_current_raw_img
+      },
+      current_tag_dict: function () {
+        return this.$store.getters.get_current_dict_data
       }
+
     },
     created () {
       const self = this
@@ -85,6 +91,14 @@
       },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
+      },
+      save_xml_from_dict: function () {
+        let self = this
+
+        this.$store.dispatch('save_xml_from_dict', {
+          save_xml_file_path: 'sample.xml',
+          tag_dict_data: self.current_tag_dict
+        })
       }
     }
   }

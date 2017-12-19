@@ -87,6 +87,15 @@ let mutation = {
   set_sidebar_file_list_scroll_window_position (state, payload) {
     state.sidebar_file_list_scroll_window_start_position = payload.start_position
     state.sidebar_file_list_scroll_window_end_position = payload.end_position
+  },
+  set_current_json (state, payload) {
+    state.current_json = payload.json_data
+  },
+  set_current_dict (state, payload) {
+    state.current_dict = payload.dict_data
+  },
+  set_working_dict (state, payload) {
+    state.working_dict = payload.dict_data
   }
 }
 

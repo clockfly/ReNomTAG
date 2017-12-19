@@ -70,6 +70,9 @@ let getters = {
   },
   get_sidebar_file_list_scroll_position_flag (state) {
     return state.sidebar_file_list_scroll_position_flag
+  },
+  get_current_dict_data (state) {
+    return state.current_tag_dict_data
   }
 }
 

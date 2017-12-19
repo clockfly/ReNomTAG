@@ -4,6 +4,9 @@ let state = {
   current_raw_img: '',
   current_file_index: 0,
   current_file_name: '',
+  current_json: '',
+  current_dict: {},
+  working_dict: {},
 
   // Left_side_bar
   sidebar_thumbnail_list: [],
@@ -33,7 +36,34 @@ let state = {
     shortcut: '',
     nodes: []
   }],
-  recent_labeled_images_id_arr: []
+  recent_labeled_images_id_arr: [],
+  current_tag_dict_data: {
+    'anotation': {
+      'path': 'sample.png',
+      source: {
+        database: 'Unknown'
+      },
+      size: {
+        width: 200,
+        height: 300,
+        depth: 3
+      },
+      segments: 0,
+      object: {
+        name: 'dog',
+        pose: 'Unspecified',
+        truncated: 0,
+        difficult: 0,
+        bndbox: {
+          xmin: 429,
+          ymin: 425,
+          xmax: 1400,
+          ymax: 1254
+        }
+      }
+    }
+  }
+
 }
 
 export default state
