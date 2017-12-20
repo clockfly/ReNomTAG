@@ -17,9 +17,8 @@
       </transition>
       <div id='low-button'>
         <input type='button' value='<<' @click='load_prev_raw_img()'>
-        <input type='button' value='save'>
-        <input type='button' value='>>' @click='load_next_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
+        <input type='button' value='>>' @click='load_next_raw_img()'>
       </div>
     </div>
   </div>
@@ -57,8 +56,13 @@
       },
       current_tag_dict: function () {
         return this.$store.getters.get_current_dict_data
+      },
+      current_img_width: function () {
+        return this.$store.getters.get_current_img_width
+      },
+      current_img_height: function () {
+        return this.$store.getters.get_current_img_height
       }
-
     },
     created () {
       const self = this
@@ -95,7 +99,12 @@
       save_xml_from_dict: function () {
         let self = this
 
-        this.$store.dispatch('save_xml_from_dict', {
+        self.$store.dispatch('set_tag_dict', {
+          file_path: self.filename_list[self.current_file_index],
+          size_height: self.current_img_height,
+          size_width: self.current_img_width
+        })
+        self.$store.dispatch('save_xml_from_dict', {
           save_xml_file_path: 'sample.xml',
           tag_dict_data: self.current_tag_dict
         })

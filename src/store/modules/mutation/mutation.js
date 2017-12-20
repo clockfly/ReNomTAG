@@ -25,6 +25,10 @@ let mutation = {
     state.current_file_index = payload.current_file_index
     state.current_file_name = payload.current_file_name
   },
+  set_current_img_width_and_height (state, payload) {
+    state.current_img_width = payload.img_width
+    state.current_img_height = payload.img_height
+  },
   set_recent_raw_images (state, payload) {
     state.recent_raw_images = payload.recent_raw_images
   },
@@ -96,6 +100,14 @@ let mutation = {
   },
   set_working_dict (state, payload) {
     state.working_dict = payload.dict_data
+  },
+  set_tag_dict (state, payload) {
+    state.current_tag_dict_data['anotation']['path'] = payload.file_path
+    state.current_tag_dict_data['anotation']['size']['width'] = payload.size_width
+    state.current_tag_dict_data['anotation']['size']['height'] = payload.size_height
+  },
+  update_current_tag_objects (state, payload) {
+    state.current_tag_dict_data['anotation']['objects'] = payload.tag_objects
   }
 }
 

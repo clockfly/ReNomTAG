@@ -73,6 +73,12 @@ let getters = {
   },
   get_current_dict_data (state) {
     return state.current_tag_dict_data
+  },
+  get_current_img_width (state) {
+    return state.current_img_width
+  },
+  get_current_img_height (state) {
+    return state.current_img_height
   }
 }
 

@@ -2,6 +2,8 @@ let state = {
   // Global
   filename_list: [],
   current_raw_img: '',
+  current_img_width: 0,
+  current_img_height: 0,
   current_file_index: 0,
   current_file_name: '',
   current_json: '',
@@ -37,9 +39,10 @@ let state = {
     nodes: []
   }],
   recent_labeled_images_id_arr: [],
+
   current_tag_dict_data: {
     'anotation': {
-      'path': 'sample.png',
+      path: 'sample.png',
       source: {
         database: 'Unknown'
       },
@@ -49,21 +52,53 @@ let state = {
         depth: 3
       },
       segments: 0,
-      object: {
-        name: 'dog',
-        pose: 'Unspecified',
-        truncated: 0,
-        difficult: 0,
-        bndbox: {
-          xmin: 429,
-          ymin: 425,
-          xmax: 1400,
-          ymax: 1254
-        }
-      }
+      objects: [
+        {
+          object: {
+            name: 'dog',
+            pose: 'Unspecified',
+            truncated: 0,
+            difficult: 0,
+            bndbox: {
+              xmin: 3,
+              ymin: 20,
+              xmax: 200,
+              ymax: 40
+            }
+          }
+        },
+        {
+          object: {
+            name: 'cat',
+            pose: 'Unspecified',
+            truncated: 0,
+            difficult: 0,
+            bndbox: {
+              xmin: 3,
+              ymin: 20,
+              xmax: 200,
+              ymax: 40
+            }
+          }
+        },
+        {
+          object: {
+            name: 'bird',
+            pose: 'Unspecified',
+            truncated: 0,
+            difficult: 0,
+            bndbox: {
+              xmin: 3,
+              ymin: 20,
+              xmax: 200,
+              ymax: 40
+            }
+          }
+        },
+
+      ]
     }
   }
-
 }
 
 export default state

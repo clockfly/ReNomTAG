@@ -81,6 +81,17 @@ let action = {
       }
     )
   },
+  set_current_img_width_and_height (context, payload) {
+    context.commit('set_current_img_width_and_height', {
+      img_width: payload.img_width,
+      img_height: payload.img_height
+    })
+  },
+  update_current_tag_objects (context, payload) {
+    context.commit('update_current_tag_objects', {
+      tag_objects: payload.tag_objects
+    })
+  },
   check_sidebar_current_page (context, payload) {
     // Change page nation if new page !== current page
     // index is start by 0, so +1(avoid 0 divide)
@@ -171,7 +182,6 @@ let action = {
       })
       // 下にはみ出る時
     } else if (sidebar_selected_item_offset_top > sidebar_file_list_scroll_window_end_position) {
-      console.log('lower')
       scroll_position = real_sidebar_selected_item_offset_bottom - inner_file_list_offset_height + 1
 
       let scroll_window_start_position = real_sidebar_selected_item_offset_bottom - inner_file_list_offset_height
@@ -198,13 +208,19 @@ let action = {
       end_position: payload.end_position
     })
   },
+  set_tag_dict (context, payload) {
+    context.commit('set_tag_dict', {
+      file_path: payload.file_path,
+      size_height: payload.size_height,
+      size_width: payload.size_width
+    })
+  },
   save_xml_from_dict (context, payload) {
     let fd = new FormData()
 
     // console.log(payload.file_name)
     fd.append('save_xml_file_path', payload.save_xml_file_path)
     // convert dict to json
-    console.log(payload.tag_dict_data)
     fd.append('dict_data', JSON.stringify(payload.tag_dict_data))
 
     let headers = new Headers()
