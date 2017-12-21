@@ -103,11 +103,12 @@
           file_path: self.filename_list[self.current_file_index],
           size_height: self.current_img_height,
           size_width: self.current_img_width
-        })
-        self.$store.dispatch('save_xml_from_dict', {
-          save_xml_file_path: 'sample.xml',
-          tag_dict_data: self.current_tag_dict
-        })
+        }).then(
+          self.$store.dispatch('save_xml_from_dict', {
+            save_xml_file_path: 'sample.xml',
+            tag_dict_data: self.current_tag_dict
+          })
+        )
       }
     }
   }

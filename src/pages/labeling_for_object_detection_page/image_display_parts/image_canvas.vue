@@ -18,7 +18,7 @@
            v-show='showFlag'
            @click='add_recent_labeled_images_id(current_file_index)'>
 
-        <box v-for='(sbox, index) in boxList' :key='index' :index=index></box>
+        <box v-for='(box_id, index) in boxIdList' :key='box_id' :box_id='box_id'></box>
       </div>
     </div>
 
@@ -28,7 +28,7 @@
 <script>
   import Bbox from './image_canvas_parts/box.vue'
 
-  var boxEvent = {
+  let boxEvent = {
     "create": 0,
     "move": 1,
     "rescale-left-top": 2,
@@ -45,7 +45,8 @@
     },
     data () {
       return {
-        boxList: [],
+        boxIdList: [],
+        boxId: 0,
         mouseDownFlag: false,
         currentBbox: null,
         boxEventType: null,
@@ -55,7 +56,7 @@
         padTop: 0,
         padLeft: 0,
         currentDownKey: '',
-        showFlag: true, // This is for transition images.
+        showFlag: true // This is for transition images.
       }
     },
     watch: {
@@ -87,6 +88,9 @@
       },
       recent_labeled_images_id_arr: function () {
         return this.$store.getters.get_recent_labeled_images_id_arr
+      },
+      selected_box_id: function () {
+        return this.$store.getters.get_selected_box_id
       }
 
     },
@@ -115,7 +119,7 @@
           img_width: img.width,
           img_height: img.height
         })
-//        console.log('width: ' + img.width)
+
         this.onResizeWindow()
       },
       onResizeWindow: function () {
@@ -133,21 +137,46 @@
           this.padLeft = 100
         }
       },
-      onKeyDelete: function (event, index) {
-        let bbox = this.$el.querySelector('.selected')
-        if (bbox) {
-          let parent = bbox.parentNode
-          parent.parentNode.removeChild(parent)
-        }
+      onKeyDelete: function (event) {
 
-        console.log(this.$children)
+//        let objects = []
+//        for (let box of this.$children) {
+//          let o = {
+//            'object': {
+//              'name': 'cat',
+//              'pose': 'Unspecified',
+//              'truncated': 0,
+//              'difficult': 0,
+//              'bndbox': {
+//                'xmin': box['x'],
+//                'xmax': box['w'],
+//                'ymin': box['y'],
+//                'ymax': box['h']
+//              }
+//            }
+//          }
+//          objects.push(o)
+//        }
+//        this.$store.dispatch('update_current_tag_objects', {
+//          tag_objects: objects
+//        })
+
+//        let bbox = this.$el.querySelector('.selected')
+//        if (bbox) {
+//          let parent = bbox.parentNode
+//          parent.parentNode.removeChild(parent)
+//        }
+
+        this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
+
+//        this.$store.dispatch('set_selected_box_id', {
+//          selected_box_id: this.boxList[this.boxList.length - 1]
+//        })
       },
       onMouseDown: function (event) {
         let [x, y] = this.transformCurrentCorrdinate(event)
         let select_flag = true
         let target = event.target
-
-        // console.log(target)
 
         this.mouseDownFlag = true
         this.currentBbox = null
@@ -163,6 +192,10 @@
 
             this.currentBbox = box
             this.currentBbox.setSelectedFlag(true)
+
+            this.$store.dispatch('set_selected_box_id', {
+              selected_box_id: box['box_id']
+            })
 
             if (target === box.$el.querySelector('.left-top')) {
               this.boxEventType = boxEvent['rescale-left-top']
@@ -184,8 +217,10 @@
             box.setSelectedFlag(false)
           }
         }
+
         if (select_flag) {
-          this.boxList.push(0)
+          this.boxIdList.push(String(this.boxId))
+          this.boxId += 1
           this.boxEventType = boxEvent['create']
         }
       },
@@ -216,13 +251,12 @@
         this.$store.dispatch('update_current_tag_objects', {
           tag_objects: objects
         })
-
       },
       onMouseMove: function (event) {
         if (!this.mouseDownFlag) return
         let [x, y] = this.transformCurrentCorrdinate(event)
         if (!this.currentBbox) {
-          this.currentBbox = this.$children[this.boxList.length - 1]
+          this.currentBbox = this.$children[this.boxIdList.length - 1]
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
@@ -256,8 +290,7 @@
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
         if (box) {
-          // let key_index = this.labelList.indexOf(this.currentDownKey)
-          // console.log(key_index, this.labelList)
+
           let label = this.shortcut_label_dict[this.currentDownKey]
           if (label) {
             console.log(label)

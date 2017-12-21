@@ -79,6 +79,9 @@ let getters = {
   },
   get_current_img_height (state) {
     return state.current_img_height
+  },
+  get_selected_box_id (state) {
+    return state.selected_box_id
   }
 }
 

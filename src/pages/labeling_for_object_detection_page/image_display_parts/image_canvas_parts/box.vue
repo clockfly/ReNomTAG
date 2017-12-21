@@ -36,6 +36,7 @@
         return this.selectedFlag
       }
     },
+    props: ['box_id'],
     methods: {
       scaleByLeftTop: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
@@ -196,9 +197,11 @@
         this.initialY = y
         this.x = x
         this.y = y
+        this.$store.dispatch('set_selected_box_id', {
+          selected_box_id: this.box_id
+        })
       },
       isBoxCreated: function () {
-        console.log(this.w, this.h)
         if (this.w !== 0 || this.h !== 0) {
           return true
         } else {
@@ -217,10 +220,9 @@
         this.scaleInitY = this.y
         this.scaleInitW = this.w
         this.scaleInitH = this.h
-      }
+      },
     }
   }
-
 </script>
 
 <style lang='scss'>

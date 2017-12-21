@@ -108,6 +108,9 @@ let mutation = {
   },
   update_current_tag_objects (state, payload) {
     state.current_tag_dict_data['anotation']['objects'] = payload.tag_objects
+  },
+  set_selected_box_id (state, payload) {
+    state.selected_box_id = payload.selected_box_id
   }
 }
 

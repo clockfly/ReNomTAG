@@ -255,6 +255,11 @@ let action = {
         })
       }
     )
+  },
+  set_selected_box_id (context, payload) {
+    context.commit('set_selected_box_id', {
+      selected_box_id: payload.selected_box_id
+    })
   }
 }
 export default action

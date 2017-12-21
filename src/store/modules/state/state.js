@@ -26,6 +26,8 @@ let state = {
   sidebar_file_list_scroll_window_end_position: 0,
   sidebar_file_list_scroll_position_flag: false,
 
+  selected_box_id: null,
+
   // Recent images
   recent_raw_images: [],
 
