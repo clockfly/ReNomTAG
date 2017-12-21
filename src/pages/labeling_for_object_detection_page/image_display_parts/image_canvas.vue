@@ -138,40 +138,7 @@
         }
       },
       onKeyDelete: function (event) {
-
-//        let objects = []
-//        for (let box of this.$children) {
-//          let o = {
-//            'object': {
-//              'name': 'cat',
-//              'pose': 'Unspecified',
-//              'truncated': 0,
-//              'difficult': 0,
-//              'bndbox': {
-//                'xmin': box['x'],
-//                'xmax': box['w'],
-//                'ymin': box['y'],
-//                'ymax': box['h']
-//              }
-//            }
-//          }
-//          objects.push(o)
-//        }
-//        this.$store.dispatch('update_current_tag_objects', {
-//          tag_objects: objects
-//        })
-
-//        let bbox = this.$el.querySelector('.selected')
-//        if (bbox) {
-//          let parent = bbox.parentNode
-//          parent.parentNode.removeChild(parent)
-//        }
-
         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
-
-//        this.$store.dispatch('set_selected_box_id', {
-//          selected_box_id: this.boxList[this.boxList.length - 1]
-//        })
       },
       onMouseDown: function (event) {
         let [x, y] = this.transformCurrentCorrdinate(event)
@@ -230,27 +197,7 @@
           this.currentBbox = null
         }
 
-        let objects = []
-        for (let box of this.$children) {
-          let o = {
-            'object': {
-              'name': 'cat',
-              'pose': 'Unspecified',
-              'truncated': 0,
-              'difficult': 0,
-              'bndbox': {
-                'xmin': box['x'],
-                'xmax': box['w'],
-                'ymin': box['y'],
-                'ymax': box['h']
-              }
-            }
-          }
-          objects.push(o)
-        }
-        this.$store.dispatch('update_current_tag_objects', {
-          tag_objects: objects
-        })
+        this.updateBoxes()
       },
       onMouseMove: function (event) {
         if (!this.mouseDownFlag) return
@@ -288,12 +235,14 @@
       },
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
+
         this.currentDownKey = event.key
         if (box) {
-
           let label = this.shortcut_label_dict[this.currentDownKey]
           if (label) {
-            console.log(label)
+            this.$children[this.selected_box_id]['object_name'] = label['label']
+            this.updateBoxes()
+            console.log()
           }
         }
       },
@@ -302,6 +251,31 @@
       },
       disabled: function () {
         return false
+      },
+      updateBoxes: function () {
+        let objects = []
+        for (let box of this.$children) {
+
+          let o = {
+            'object': {
+              'name': box['object_name'],
+              'pose': 'Unspecified',
+              'truncated': 0,
+              'difficult': 0,
+              'bndbox': {
+                'xmin': box['x'],
+                'xmax': box['w'],
+                'ymin': box['y'],
+                'ymax': box['h']
+              }
+            }
+          }
+          objects.push(o)
+        }
+
+        this.$store.dispatch('update_current_tag_objects', {
+          tag_objects: objects
+        })
       },
       add_recent_labeled_images_id: function (add_file_index) {
         const self = this

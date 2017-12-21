@@ -98,6 +98,8 @@
       },
       save_xml_from_dict: function () {
         let self = this
+        let file_path_split = self.filename_list[self.current_file_index].split('/')
+        let save_xml_file_name = file_path_split[file_path_split.length - 1].split('.')[0] + '.xml'
 
         self.$store.dispatch('set_tag_dict', {
           file_path: self.filename_list[self.current_file_index],
@@ -105,7 +107,7 @@
           size_width: self.current_img_width
         }).then(
           self.$store.dispatch('save_xml_from_dict', {
-            save_xml_file_path: 'sample.xml',
+            save_xml_file_path: save_xml_file_name,
             tag_dict_data: self.current_tag_dict
           })
         )

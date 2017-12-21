@@ -91,6 +91,7 @@ let action = {
     context.commit('update_current_tag_objects', {
       tag_objects: payload.tag_objects
     })
+    console.log(payload.tag_objects)
   },
   check_sidebar_current_page (context, payload) {
     // Change page nation if new page !== current page

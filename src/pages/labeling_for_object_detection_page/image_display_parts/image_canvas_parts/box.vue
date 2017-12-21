@@ -7,7 +7,9 @@
       <div class='left-bottom small-box'></div>
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
+      <div class="object_name" v-if="object_name">{{ object_name }}</div>
     </div>
+
   </div>
 </template>
 
@@ -28,7 +30,8 @@
         y: 0,
         w: 0,
         h: 0,
-        selectedFlag: false
+        selectedFlag: false,
+        object_name: ''
       }
     },
     computed: {
@@ -248,10 +251,25 @@
       .right-top {
         top: -7px;
         right: -7px;
+        z-index: 4;
       }
       .right-bottom {
         bottom: -7px;
         right: -7px;
+      }
+      .object_name {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: #000;
+        font-size: 14px;
+        padding: 0 10px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #fff;
+        z-index: 3;
       }
     }
     .selected {

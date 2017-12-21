@@ -103,6 +103,7 @@ let mutation = {
   },
   set_tag_dict (state, payload) {
     state.current_tag_dict_data['anotation']['path'] = payload.file_path
+    state.current_tag_dict_data['anotation']['name'] = payload.file_path
     state.current_tag_dict_data['anotation']['size']['width'] = payload.size_width
     state.current_tag_dict_data['anotation']['size']['height'] = payload.size_height
   },
