@@ -179,10 +179,10 @@ def save_xml_from_dict():
   :return:
   """
 
+
+
   tag_dict_data = json.loads(request.params.dict_data)
   save_xml_file_path = request.params.save_xml_file_path
-
-  print(save_xml_file_path)
 
   tag_dict_data_split = tag_dict_data['anotation']['path'].split('/')
   if len(tag_dict_data_split) > 1:
@@ -202,17 +202,6 @@ def save_xml_from_dict():
     ftpr.write(xml_data)
 
   print('%s is saved' % (save_xml_file_path))
-
-  # convert xml to json
-
-  # print(tag_dict_data)
-
-  # body = json.dumps({
-  #   "xml_data": xml_data
-  # })
-  # print(xml_data)
-  # ret = set_json_body(body)
-  # return ret
 
 
 @route("/api/load_json_from_xml", method="POST")
