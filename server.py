@@ -7,6 +7,7 @@ import pkg_resources
 from bottle import HTTPResponse, route, run, static_file, request, response, Bottle, hook, get
 import base64
 import glob2
+import bs4
 
 from io import BytesIO as IO
 
@@ -179,8 +180,6 @@ def save_xml_from_dict():
   :return:
   """
 
-
-
   tag_dict_data = json.loads(request.params.dict_data)
   save_xml_file_path = request.params.save_xml_file_path
 
@@ -197,9 +196,15 @@ def save_xml_from_dict():
 
   # convert dict to xml
   xml_data = json2xml(tag_dict_data)
+  # extract objects
+  xml_soup = bs4.BeautifulSoup(xml_data, 'lxml')
+
+  if(xml_soup.find('object')):
+    xml_soup.find('object').parent.unwrap()
+
 
   with open(save_xml_file_path, 'w') as ftpr:
-    ftpr.write(xml_data)
+    ftpr.write(xml_soup.find('anotation').prettify())
 
   print('%s is saved' % (save_xml_file_path))
 
