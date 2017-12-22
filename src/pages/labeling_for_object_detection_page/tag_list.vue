@@ -12,8 +12,10 @@
     <div id='main-tag-list'>
       <tag-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
       </tag-tree>
-      {{ Object.keys(shortcut_label_dict) }}
+      {{ tag_candidates_dict }}
     </div>
+    <button @click="save_tag_dict">Save Tag Dict</button>
+    <button @click="load_tag_dict">Load Tag</button>
   </div>
 </template>
 
@@ -32,7 +34,7 @@
     },
     computed: {
       setTagTree: function () {
-        this.tree = this.$store.getters.get_tag_list
+        this.tree = this.tag_candidates_dict
         return this.tree[0]['nodes']
       },
       shortcut_label_dict () {
@@ -40,6 +42,22 @@
       },
       label_id_dict_list () {
         return this.$store.getters.get_label_id_dict_list
+      },
+      tag_candidates_dict () {
+        return this.$store.getters.get_tag_candidates_dict
+      }
+    },
+    methods: {
+      save_tag_dict () {
+        this.$store.dispatch('save_tag_dict', {
+          save_json_file_path: 'tag_candidates.json',
+          tag_candidates_dict: this.tag_candidates_dict
+        })
+      },
+      load_tag_dict () {
+        this.$store.dispatch('load_tag_candidates_dict', {
+          load_json_file_path: 'tag_candidates.json'
+        })
       }
     }
   }

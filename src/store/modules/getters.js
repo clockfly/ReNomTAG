@@ -35,8 +35,8 @@ let getters = {
   get_is_menu_shown (state) {
     return state.isMenuShown
   },
-  get_tag_list (state) {
-    return state.tag_dict
+  get_tag_candidates_dict (state) {
+    return state.tag_candidates_dict
   },
   get_shortcut_label_dict (state) {
     return state.shortcut_label_dict
@@ -82,7 +82,8 @@ let getters = {
   },
   get_selected_box_id (state) {
     return state.selected_box_id
-  }
+  },
+
 }
 
 export default getters

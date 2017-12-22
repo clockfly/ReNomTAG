@@ -199,9 +199,8 @@ def save_xml_from_dict():
   # extract objects
   xml_soup = bs4.BeautifulSoup(xml_data, 'lxml')
 
-  if(xml_soup.find('object')):
+  if (xml_soup.find('object')):
     xml_soup.find('object').parent.unwrap()
-
 
   with open(save_xml_file_path, 'w') as ftpr:
     ftpr.write(xml_soup.find('anotation').prettify())
@@ -215,6 +214,31 @@ def load_json_from_xml():
   body = json.dumps({
     'json_data': json_data
   })
+  ret = set_json_body(body)
+  return ret
+
+
+@route("/api/save_tag_dict", method="POST")
+def save_tag_dict():
+  json_data = request.params.tag_dict
+  save_json_file_path = request.params.save_json_file_path
+
+  with open(save_json_file_path, 'w') as ftpr:
+    ftpr.write(json_data)
+
+
+@route("/api/load_tag_candidates_dict", method="POST")
+def save_tag_dict():
+  load_json_file_path = request.params.load_json_file_path
+  file_path = load_json_file_path
+
+  with open(file_path, 'r') as ftpr:
+    json_data = json.load(ftpr)
+
+  body = json.dumps({
+    'json_data': json_data
+  })
+
   ret = set_json_body(body)
   return ret
 

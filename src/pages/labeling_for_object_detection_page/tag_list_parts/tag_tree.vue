@@ -27,6 +27,7 @@
                    :key='index' :nodes='node.nodes'
                    :label='node.label' :depth='depth + 1'>
     </tag-tree-item>
+
   </div>
 </template>
 
@@ -54,7 +55,7 @@
       },
       shortcut_label_dict () {
         return this.$store.getters.get_shortcut_label_dict
-      },
+      }
     },
     methods: {
       toggleChildren () {
