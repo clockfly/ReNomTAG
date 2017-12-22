@@ -35,7 +35,7 @@ let state = {
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
 
-  tag_candidates_dict: [{
+  label_candidates_dict: [{
     label: 'Labels',
     id: -1,
     shortcut: '',

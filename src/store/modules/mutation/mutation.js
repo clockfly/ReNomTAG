@@ -42,7 +42,7 @@ let mutation = {
   toggle_menu (state) {
     state.isMenuShown = !state.isMenuShown
   },
-  add_tag (state, payload) {
+  add_new_label (state, payload) {
     let parent_node = payload.parent_node
     let shortcut = payload.shortcut
     let label = payload.label
@@ -65,7 +65,7 @@ let mutation = {
         recursive_search(n['nodes'])
       }
     }
-    recursive_search(state.tag_candidates_dict)
+    recursive_search(state.label_candidates_dict)
   },
   set_sidebar_selected_item_offset (state, payload) {
     state.sidebar_selected_item_offset_top = payload.sidebar_selected_item_offset_top

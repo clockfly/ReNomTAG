@@ -3,7 +3,7 @@
     <div id='row1'>
       <file-list class='row1'></file-list>
       <image-display class='row1'></image-display>
-      <tag-list class='row1'></tag-list>
+      <label-list class='row1'></label-list>
     </div>
     <div id='row2'>
       <recent-image-list class='row2'></recent-image-list>
@@ -16,7 +16,7 @@
   import FileList from './file_list.vue'
   import ImageDisplay from './image_display.vue'
   import RecentImageList from './recent_image_list.vue'
-  import TagList from './tag_list.vue'
+  import LabelList from './label_list.vue'
 
   export default {
     name: 'LabelObjectDetectionPage',
@@ -24,7 +24,7 @@
       'file-list': FileList,
       'image-display': ImageDisplay,
       'recent-image-list': RecentImageList,
-      'tag-list': TagList
+      'label-list': LabelList
     }
   }
 </script>

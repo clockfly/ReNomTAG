@@ -35,8 +35,8 @@ let getters = {
   get_is_menu_shown (state) {
     return state.isMenuShown
   },
-  get_tag_candidates_dict (state) {
-    return state.tag_candidates_dict
+  get_label_candidates_dict (state) {
+    return state.label_candidates_dict
   },
   get_shortcut_label_dict (state) {
     return state.shortcut_label_dict

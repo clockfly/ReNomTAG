@@ -1,8 +1,6 @@
 <template>
   <div id='tag-list'>
     <!--{{ shortcut_label_dict_list }}-->
-
-
     <div id='header'>
       <span>Labels</span>
     </div>
@@ -10,22 +8,21 @@
       <input value='search' type='text'/>
     </div>
     <div id='main-tag-list'>
-      <tag-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
-      </tag-tree>
-      {{ tag_candidates_dict }}
+      <label-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
+      </label-tree>
     </div>
-    <button @click="save_tag_dict">Save Tag Dict</button>
-    <button @click="load_tag_dict">Load Tag</button>
+    <button @click="save_label_dict">Save Tag Dict</button>
+    <button @click="load_label_dict">Load Tag</button>
   </div>
 </template>
 
 <script>
-  import TagTreeItem from './tag_list_parts/tag_tree.vue'
+  import LabelTreeItem from './label_list_parts/label_tree.vue'
 
   export default {
-    name: 'TagList',
+    name: 'LabelList',
     components: {
-      'tag-tree': TagTreeItem
+      'label-tree': LabelTreeItem
     },
     data: function () {
       return {
@@ -34,7 +31,7 @@
     },
     computed: {
       setTagTree: function () {
-        this.tree = this.tag_candidates_dict
+        this.tree = this.label_candidates_dict
         return this.tree[0]['nodes']
       },
       shortcut_label_dict () {
@@ -43,20 +40,20 @@
       label_id_dict_list () {
         return this.$store.getters.get_label_id_dict_list
       },
-      tag_candidates_dict () {
-        return this.$store.getters.get_tag_candidates_dict
+      label_candidates_dict () {
+        return this.$store.getters.get_label_candidates_dict
       }
     },
     methods: {
-      save_tag_dict () {
-        this.$store.dispatch('save_tag_dict', {
-          save_json_file_path: 'tag_candidates.json',
-          tag_candidates_dict: this.tag_candidates_dict
+      save_label_dict () {
+        this.$store.dispatch('save_label_dict', {
+          save_json_file_path: 'label_candidates.json',
+          label_candidates_dict: this.label_candidates_dict
         })
       },
-      load_tag_dict () {
-        this.$store.dispatch('load_tag_candidates_dict', {
-          load_json_file_path: 'tag_candidates.json'
+      load_label_dict () {
+        this.$store.dispatch('load_label_candidates_dict', {
+          load_json_file_path: 'label_candidates.json'
         })
       }
     }
