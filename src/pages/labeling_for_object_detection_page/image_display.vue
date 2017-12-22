@@ -7,8 +7,8 @@
         <span>{{ current_file_name }}</span>
       </div>
       <div id='icon'>
-        <span><i class="fa fa-search-plus" aria-hidden="true"></i></span>
-        <span><i class="fa fa-search-minus" aria-hidden="true"></i></span>
+        <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
+        <span><i class='fa fa-search-minus' aria-hidden='true'></i></span>
       </div>
     </div>
     <div id='outer-panel'>
@@ -17,7 +17,7 @@
       </transition>
       <div id='low-button'>
         <input type='button' value='<<' @click='load_prev_raw_img()'>
-        <input type='button' value='save'>
+        <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
       </div>
     </div>
@@ -34,7 +34,8 @@
     },
     data: function () {
       return {
-        imgData: ''
+        imgData: '',
+
       }
     },
     computed: {
@@ -52,6 +53,15 @@
       },
       current_raw_img: function () {
         return this.$store.getters.get_current_raw_img
+      },
+      current_tag_dict: function () {
+        return this.$store.getters.get_current_dict_data
+      },
+      current_img_width: function () {
+        return this.$store.getters.get_current_img_width
+      },
+      current_img_height: function () {
+        return this.$store.getters.get_current_img_height
       }
     },
     created () {
@@ -85,6 +95,22 @@
       },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
+      },
+      save_xml_from_dict: function () {
+        let self = this
+        let file_path_split = self.filename_list[self.current_file_index].split('/')
+        let save_xml_file_name = file_path_split[file_path_split.length - 1].split('.')[0] + '.xml'
+
+        self.$store.dispatch('set_tag_dict', {
+          file_path: self.filename_list[self.current_file_index],
+          size_height: self.current_img_height,
+          size_width: self.current_img_width
+        }).then(
+          self.$store.dispatch('save_xml_from_dict', {
+            save_xml_file_path: save_xml_file_name,
+            tag_dict_data: self.current_tag_dict
+          })
+        )
       }
     }
   }

@@ -25,6 +25,10 @@ let mutation = {
     state.current_file_index = payload.current_file_index
     state.current_file_name = payload.current_file_name
   },
+  set_current_img_width_and_height (state, payload) {
+    state.current_img_width = payload.img_width
+    state.current_img_height = payload.img_height
+  },
   set_recent_raw_images (state, payload) {
     state.recent_raw_images = payload.recent_raw_images
   },
@@ -87,6 +91,27 @@ let mutation = {
   set_sidebar_file_list_scroll_window_position (state, payload) {
     state.sidebar_file_list_scroll_window_start_position = payload.start_position
     state.sidebar_file_list_scroll_window_end_position = payload.end_position
+  },
+  set_current_json (state, payload) {
+    state.current_json = payload.json_data
+  },
+  set_current_dict (state, payload) {
+    state.current_dict = payload.dict_data
+  },
+  set_working_dict (state, payload) {
+    state.working_dict = payload.dict_data
+  },
+  set_tag_dict (state, payload) {
+    state.current_tag_dict_data['anotation']['path'] = payload.file_path
+    state.current_tag_dict_data['anotation']['name'] = payload.file_path
+    state.current_tag_dict_data['anotation']['size']['width'] = payload.size_width
+    state.current_tag_dict_data['anotation']['size']['height'] = payload.size_height
+  },
+  update_current_tag_objects (state, payload) {
+    state.current_tag_dict_data['anotation']['objects'] = payload.tag_objects
+  },
+  set_selected_box_id (state, payload) {
+    state.selected_box_id = payload.selected_box_id
   }
 }
 
