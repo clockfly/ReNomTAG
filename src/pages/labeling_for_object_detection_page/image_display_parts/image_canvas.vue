@@ -273,7 +273,7 @@
           objects.push(o)
         }
 
-        this.$store.dispatch('update_current_tag_objects', {
+        this.$store.dispatch('update_current_label_objects', {
           label_objects: objects
         })
       },
