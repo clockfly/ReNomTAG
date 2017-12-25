@@ -262,14 +262,15 @@
         position: absolute;
         right: 0;
         top: 0;
-        color: #000;
+        color: #fff;
         font-size: 14px;
         padding: 0 10px;
-        height: 20px;
+        height: 16px;
+        padding-bottom: 4px;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #fff;
+        background: red;
         z-index: 3;
       }
     }
