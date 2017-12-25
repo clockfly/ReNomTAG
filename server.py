@@ -8,6 +8,7 @@ from bottle import HTTPResponse, route, run, static_file, request, response, Bot
 import base64
 import glob2
 import bs4
+import os, sys
 
 from io import BytesIO as IO
 
@@ -181,7 +182,12 @@ def save_xml_from_dict():
   """
 
   tag_dict_data = json.loads(request.params.dict_data)
-  save_xml_file_path = request.params.save_xml_file_path
+  save_xml_file_name = request.params.save_xml_file_name
+  save_xml_dir = request.params.save_xml_dir
+  if not os.path.exists(save_xml_dir):
+    os.makedirs(save_xml_dir)
+
+  save_xml_file_path = os.path.join(save_xml_dir, save_xml_file_name + '.xml')
 
   tag_dict_data_split = tag_dict_data['anotation']['path'].split('/')
   if len(tag_dict_data_split) > 1:
@@ -190,7 +196,6 @@ def save_xml_from_dict():
     folder = '.'
 
   file_name = tag_dict_data_split[-1]
-
   tag_dict_data['anotation']['folder'] = folder
   tag_dict_data['anotation']['file_name'] = file_name
 

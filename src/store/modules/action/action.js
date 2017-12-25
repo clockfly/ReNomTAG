@@ -219,8 +219,9 @@ let action = {
   save_xml_from_dict (context, payload) {
     let fd = new FormData()
 
-    // console.log(payload.file_name)
-    fd.append('save_xml_file_path', payload.save_xml_file_path)
+    fd.append('save_xml_file_name', payload.save_xml_file_name)
+    fd.append('save_xml_dir', payload.save_xml_dir)
+
     // convert dict to json
     fd.append('dict_data', JSON.stringify(payload.tag_dict_data))
 
