@@ -59,8 +59,8 @@
       current_raw_img: function () {
         return this.$store.getters.get_current_raw_img
       },
-      current_tag_dict: function () {
-        return this.$store.getters.get_current_dict_data
+      current_label_dict: function () {
+        return this.$store.getters.get_current_label_dict
       },
       current_img_width: function () {
         return this.$store.getters.get_current_img_width
@@ -114,10 +114,10 @@
           size_height: self.current_img_height,
           size_width: self.current_img_width
         }).then(
-          self.$store.dispatch('save_xml_from_dict', {
+          self.$store.dispatch('save_xml_from_label_dict', {
             save_xml_file_name: self.save_xml_file_name,
             save_xml_dir: self.save_xml_dir,
-            tag_dict_data: self.current_tag_dict
+            label_dict: self.current_label_dict
           })
         )
       }

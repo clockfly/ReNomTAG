@@ -274,7 +274,7 @@
         }
 
         this.$store.dispatch('update_current_tag_objects', {
-          tag_objects: objects
+          label_objects: objects
         })
       },
       add_recent_labeled_images_id: function (add_file_index) {

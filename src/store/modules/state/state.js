@@ -43,7 +43,7 @@ let state = {
   }],
   recent_labeled_images_id_arr: [],
 
-  current_tag_dict_data: {
+  current_label_dict: {
     'anotation': {
       path: 'sample.png',
       source: {

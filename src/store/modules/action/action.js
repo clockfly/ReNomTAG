@@ -87,11 +87,11 @@ let action = {
       img_height: payload.img_height
     })
   },
-  update_current_tag_objects (context, payload) {
-    context.commit('update_current_tag_objects', {
-      tag_objects: payload.tag_objects
+  update_current_label_objects (context, payload) {
+    context.commit('update_current_label_objects', {
+      label_objects: payload.label_objects
     })
-    console.log(payload.tag_objects)
+    console.log(payload.label_objects)
   },
   check_sidebar_current_page (context, payload) {
     // Change page nation if new page !== current page
@@ -216,20 +216,20 @@ let action = {
       size_width: payload.size_width
     })
   },
-  save_xml_from_dict (context, payload) {
+  save_xml_from_label_dict (context, payload) {
     let fd = new FormData()
 
     fd.append('save_xml_file_name', payload.save_xml_file_name)
     fd.append('save_xml_dir', payload.save_xml_dir)
 
     // convert dict to json
-    fd.append('dict_data', JSON.stringify(payload.tag_dict_data))
+    fd.append('label_dict', JSON.stringify(payload.label_dict))
 
     let headers = new Headers()
     headers.append('Content-Type', 'application/json')
     axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-    return axios.post('/api/save_xml_from_dict', fd).then(
+    return axios.post('/api/save_xml_from_label_dict', fd).then(
       function (response) {
         let error = response.data.error
         if (error) {

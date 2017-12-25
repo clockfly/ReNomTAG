@@ -174,14 +174,14 @@ def get_sidebar_thumbnail_and_filename_list():
   return ret
 
 
-@route("/api/save_xml_from_dict", method="POST")
-def save_xml_from_dict():
+@route("/api/save_xml_from_label_dict", method="POST")
+def save_xml_from_label_dict():
   """save xml file from dictionary
 
   :return:
   """
 
-  tag_dict_data = json.loads(request.params.dict_data)
+  label_dict = json.loads(request.params.label_dict)
   save_xml_file_name = request.params.save_xml_file_name
   save_xml_dir = request.params.save_xml_dir
   if not os.path.exists(save_xml_dir):
@@ -189,18 +189,18 @@ def save_xml_from_dict():
 
   save_xml_file_path = os.path.join(save_xml_dir, save_xml_file_name + '.xml')
 
-  tag_dict_data_split = tag_dict_data['anotation']['path'].split('/')
-  if len(tag_dict_data_split) > 1:
-    folder = tag_dict_data_split[-2]
+  label_dict_split = label_dict['anotation']['path'].split('/')
+  if len(label_dict_split) > 1:
+    folder = label_dict_split[-2]
   else:
     folder = '.'
 
-  file_name = tag_dict_data_split[-1]
-  tag_dict_data['anotation']['folder'] = folder
-  tag_dict_data['anotation']['file_name'] = file_name
+  file_name = label_dict_split[-1]
+  label_dict['anotation']['folder'] = folder
+  label_dict['anotation']['file_name'] = file_name
 
   # convert dict to xml
-  xml_data = json2xml(tag_dict_data)
+  xml_data = json2xml(label_dict)
   # extract objects
   xml_soup = bs4.BeautifulSoup(xml_data, 'lxml')
 

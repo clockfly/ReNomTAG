@@ -10,9 +10,11 @@
     <div id='main-tag-list'>
       <label-tree :nodes='setTagTree' :label='tree[0].label' :depth='0'>
       </label-tree>
+      {{ shortcut_label_dict }}
     </div>
     <button @click="save_label_dict">Save Tag Dict</button>
     <button @click="load_label_dict">Load Tag</button>
+
   </div>
 </template>
 
