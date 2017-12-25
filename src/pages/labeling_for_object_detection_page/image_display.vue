@@ -19,7 +19,12 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
+        <div class="">save as <input type="text" v-model="save_xml_dir" class="save_xml_dir_input">/<input type="text"
+                                                                                                           v-model="save_xml_file_name"
+                                                                                                           class="save_xml_file_name_input">.xml
+        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -35,7 +40,7 @@
     data: function () {
       return {
         imgData: '',
-
+        save_xml_dir: 'xml'
       }
     },
     computed: {
@@ -62,6 +67,11 @@
       },
       current_img_height: function () {
         return this.$store.getters.get_current_img_height
+      },
+      save_xml_file_name: function () {
+        let file_path_split = this.filename_list[this.current_file_index].split('/')
+        let save_xml_file_name = file_path_split[file_path_split.length - 1].split('.')[0]
+        return save_xml_file_name
       }
     },
     created () {
@@ -98,8 +108,6 @@
       },
       save_xml_from_dict: function () {
         let self = this
-        let file_path_split = self.filename_list[self.current_file_index].split('/')
-        let save_xml_file_name = file_path_split[file_path_split.length - 1].split('.')[0] + '.xml'
 
         self.$store.dispatch('set_tag_dict', {
           file_path: self.filename_list[self.current_file_index],
@@ -107,7 +115,8 @@
           size_width: self.current_img_width
         }).then(
           self.$store.dispatch('save_xml_from_dict', {
-            save_xml_file_path: save_xml_file_name,
+            save_xml_file_name: self.save_xml_file_name,
+            save_xml_dir: self.save_xml_dir,
             tag_dict_data: self.current_tag_dict
           })
         )
@@ -157,6 +166,17 @@
         input {
           margin: 0 0 0 0;
           padding: 3px 4px 3px 4px;
+        }
+        .save_xml_file_name_input, .save_xml_dir_input {
+          :focus {
+            outline: none;
+          }
+        }
+        .save_xml_file_name_input {
+          width: 150px;
+        }
+        .save_xml_dir_input {
+          width: 40px;
         }
       }
       .v-enter-active, .v-leave-active {

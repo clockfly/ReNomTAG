@@ -42,7 +42,7 @@ let mutation = {
   toggle_menu (state) {
     state.isMenuShown = !state.isMenuShown
   },
-  add_tag (state, payload) {
+  add_new_label (state, payload) {
     let parent_node = payload.parent_node
     let shortcut = payload.shortcut
     let label = payload.label
@@ -52,13 +52,7 @@ let mutation = {
 
     function recursive_search (node) {
       for (let n of node) {
-        // let sc = n['shortcut']
-        // let id = n['id']
         let lb = n['label']
-        // if (sc) {
-        //   state.shortcut_label_dict[sc] = {'label': lb, 'id': id}
-        // }
-        // state.label_id_dict_list.push({[lb]: id})
 
         if (parent_node === lb) {
           n['nodes'].unshift({
@@ -71,8 +65,7 @@ let mutation = {
         recursive_search(n['nodes'])
       }
     }
-
-    recursive_search(state.tag_dict)
+    recursive_search(state.label_candidates_dict)
   },
   set_sidebar_selected_item_offset (state, payload) {
     state.sidebar_selected_item_offset_top = payload.sidebar_selected_item_offset_top
@@ -112,6 +105,9 @@ let mutation = {
   },
   set_selected_box_id (state, payload) {
     state.selected_box_id = payload.selected_box_id
+  },
+  set_tag_candidates_dict (state, payload) {
+    state.tag_candidates_dict = payload.tag_candidates_dict
   }
 }
 

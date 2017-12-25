@@ -10,29 +10,30 @@
           {{ label }}
         </p>
         <span v-if='shortcut'>{{ shortcut }}</span>
-        <div id='add-child' @click='setAddTagFlag(!addingTagFlag)'>
+        <div id='add-child' @click='setAddLabelFlag(!addingLabelFlag)'>
           <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </div>
       </div>
-      <div id='tag-input-form' v-if='addingTagFlag'>
+      <div id='tag-input-form' v-if='addingLabelFlag'>
         <input id='new-label-form' type='text' v-model='newLabelText'
-               @keyup.enter='addNewTag'>
+               @keyup.enter='addNewLabel'>
         <input id='shortcut-form' type='text' v-model='newLabelShortcut'
-               @keyup.enter.stop='addNewTag' @keyup='setShortcutKey'>
+               @keyup.enter.stop='addNewLabel' @keyup='setShortcutKey'>
       </div>
     </div>
-    <tag-tree-item v-if='showChildrenFlag'
+    <label-tree-item v-if='showChildrenFlag'
                    v-for='(node, index) in nodes'
                    :shortcut='node.shortcut'
                    :key='index' :nodes='node.nodes'
                    :label='node.label' :depth='depth + 1'>
-    </tag-tree-item>
+    </label-tree-item>
+
   </div>
 </template>
 
 <script>
   export default {
-    name: 'TagTreeItem',
+    name: 'LabelTreeItem',
     props: [
       'label',
       'nodes',
@@ -44,8 +45,8 @@
         newLabelText: '',
         newLabelShortcut: '',
         showChildrenFlag: false,
-        addingTagFlag: false,
-        tag_id: 0
+        addingLabelFlag: false,
+        label_id: 0
       }
     },
     computed: {
@@ -54,21 +55,19 @@
       },
       shortcut_label_dict () {
         return this.$store.getters.get_shortcut_label_dict
-      },
+      }
     },
     methods: {
       toggleChildren () {
         this.showChildrenFlag = !this.showChildrenFlag
       },
-      setAddTagFlag (flag) {
-        this.addingTagFlag = flag
+      setAddLabelFlag (flag) {
+        this.addingLabelFlag = flag
       },
-      addNewTag () {
-        this.setAddTagFlag(false)
+      addNewLabel () {
+        this.setAddLabelFlag(false)
         if (!this.newLabelText) {
           alert('Please set label')
-//          this.newLabelText = ''
-//          this.newLabelShortcut = ''
           return
         } else if (!this.newLabelShortcut) {
           alert('Please set shortcut')
@@ -78,16 +77,16 @@
           return
         }
 
-        this.$store.commit('add_tag', {
+        this.$store.commit('add_new_label', {
           parent_node: this.label,
           label: this.newLabelText,
-          id: this.tag_id,
+          id: this.label_id,
           shortcut: this.newLabelShortcut
         })
         this.newLabelText = ''
         this.newLabelShortcut = ''
         this.showChildrenFlag = true
-        this.tag_id += 1
+        this.label_id += 1
       },
       setShortcutKey (event) {
         this.newLabelShortcut = event.key

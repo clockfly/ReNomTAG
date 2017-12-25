@@ -219,8 +219,9 @@ let action = {
   save_xml_from_dict (context, payload) {
     let fd = new FormData()
 
-    // console.log(payload.file_name)
-    fd.append('save_xml_file_path', payload.save_xml_file_path)
+    fd.append('save_xml_file_name', payload.save_xml_file_name)
+    fd.append('save_xml_dir', payload.save_xml_dir)
+
     // convert dict to json
     fd.append('dict_data', JSON.stringify(payload.tag_dict_data))
 
@@ -261,6 +262,48 @@ let action = {
     context.commit('set_selected_box_id', {
       selected_box_id: payload.selected_box_id
     })
+  },
+  save_tag_dict (context, payload) {
+    let fd = new FormData()
+    // console.log(payload.file_name)
+    fd.append('save_json_file_path', payload.save_json_file_path)
+    // convert dict to json
+    fd.append('tag_dict', JSON.stringify(payload.tag_candidates_dict))
+
+    let headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    axios.defaults.headers.post['Content-Type'] = 'application/json'
+
+
+    return axios.post('/api/save_tag_dict', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('Error is occured.')
+          return
+        }
+        // context.commit('set_json_data', {
+        //   xml_data: response.data.xml_data
+        // })
+      }
+    )
+  },
+  load_tag_candidates_dict (context, payload) {
+    let fd = new FormData()
+    fd.append('load_json_file_path', payload.load_json_file_path)
+    return axios.post('/api/load_tag_candidates_dict', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('Error is occured')
+          return
+        }
+        context.commit('set_tag_candidates_dict', {
+          tag_candidates_dict: response.data.json_data
+        })
+      }
+    )
   }
+
 }
 export default action
