@@ -233,10 +233,11 @@
     z-index: 5;
     .bbox {
       position: absolute;
-      background-color: rgba(0, 0, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 3px solid rgba(115, 221, 0, 0.93);
       .small-box {
         position: absolute;
-        background-color: rgba(0, 0, 255, 0.6);
+        background-color: rgba(0, 0, 255, 0);
         width: 14px;
         height: 14px;
       }
@@ -273,9 +274,9 @@
       }
     }
     .selected {
-      background-color: rgba(255, 0, 0, 0.4) !important;
+      border: 3px solid red;
       .small-box {
-        background-color: rgba(255, 0, 0, 0.7) !important;
+        /*background-color: rgba(255, 0, 0, 0.7) !important;*/
       }
     }
   }

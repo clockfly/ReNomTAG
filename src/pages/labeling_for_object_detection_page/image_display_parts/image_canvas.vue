@@ -233,16 +233,16 @@
         let y = (event.pageY - rectY) / height * 100
         return [x, y]
       },
+
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
-
         this.currentDownKey = event.key
         if (box) {
           let label = this.shortcut_label_dict[this.currentDownKey]
+
           if (label) {
             this.$children[this.selected_box_id]['object_name'] = label['label']
             this.updateBoxes()
-            console.log()
           }
         }
       },
