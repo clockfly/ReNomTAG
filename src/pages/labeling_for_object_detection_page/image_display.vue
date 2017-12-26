@@ -19,12 +19,11 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save as <input type="text" v-model="save_xml_dir" class="save_xml_dir_input">/<input type="text"
-                                                                                                           v-model="save_xml_file_name"
-                                                                                                           class="save_xml_file_name_input">.xml
+        <div class="">save as <input type="text" v-model="save_xml_dir"
+                                     class="save_xml_dir_input">/
+          <input type="text" v-model="this.save_xml_file_name" class="save_xml_file_name_input">.xml
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -40,6 +39,7 @@
     data: function () {
       return {
         imgData: '',
+        save_xml_file_name: '',
         save_xml_dir: 'xml'
       }
     },
@@ -68,10 +68,9 @@
       current_img_height: function () {
         return this.$store.getters.get_current_img_height
       },
-      save_xml_file_name: function () {
+      save_xml_file_name_computed: function () {
         let file_path_split = this.filename_list[this.current_file_index].split('/')
-        let save_xml_file_name = file_path_split[file_path_split.length - 1].split('.')[0]
-        return save_xml_file_name
+        return file_path_split[file_path_split.length - 1].split('.')[0]
       }
     },
     created () {
@@ -80,6 +79,7 @@
         let ret = this.$store.dispatch('load_filename_list')
         ret.then(function () {
           self.load_raw_img(0)
+          self.save_xml_file_name = self.save_xml_file_name_computed
         })
       } else {
         self.load_raw_img(-1)

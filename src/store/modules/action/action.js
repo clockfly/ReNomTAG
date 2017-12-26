@@ -91,7 +91,7 @@ let action = {
     context.commit('update_current_label_objects', {
       label_objects: payload.label_objects
     })
-    console.log(payload.label_objects)
+    // console.log(payload.label_objects)
   },
   check_sidebar_current_page (context, payload) {
     // Change page nation if new page !== current page
@@ -263,19 +263,18 @@ let action = {
       selected_box_id: payload.selected_box_id
     })
   },
-  save_tag_dict (context, payload) {
+  save_label_candidates_dict (context, payload) {
     let fd = new FormData()
     // console.log(payload.file_name)
     fd.append('save_json_file_path', payload.save_json_file_path)
     // convert dict to json
-    fd.append('tag_dict', JSON.stringify(payload.tag_candidates_dict))
+    fd.append('json_data', JSON.stringify(payload.label_candidates_dict))
 
     let headers = new Headers()
     headers.append('Content-Type', 'application/json')
     axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-
-    return axios.post('/api/save_tag_dict', fd).then(
+    return axios.post('/api/save_label_candidates_dict', fd).then(
       function (response) {
         let error = response.data.error
         if (error) {
@@ -288,18 +287,18 @@ let action = {
       }
     )
   },
-  load_tag_candidates_dict (context, payload) {
+  load_label_candidates_dict (context, payload) {
     let fd = new FormData()
     fd.append('load_json_file_path', payload.load_json_file_path)
-    return axios.post('/api/load_tag_candidates_dict', fd).then(
+    return axios.post('/api/load_label_candidates_dict', fd).then(
       function (response) {
         let error = response.data.error
         if (error) {
           alert('Error is occured')
           return
         }
-        context.commit('set_tag_candidates_dict', {
-          tag_candidates_dict: response.data.json_data
+        context.commit('set_label_candidates_dict', {
+          label_candidates_dict: response.data.json_data
         })
       }
     )

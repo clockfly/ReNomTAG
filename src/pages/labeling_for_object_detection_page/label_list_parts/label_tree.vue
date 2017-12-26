@@ -1,61 +1,37 @@
 <template>
-  <div class='tag-tree'>
-    <div class='tag-list'>
-      <div class='list-item'>
-        <p :style='indent' v-if='label'>
-          <i v-if='showChildrenFlag' class="fa fa-compress fa-fw"
-             @click='toggleChildren' aria-hidden="true"></i>
-          <i v-else class="fa fa-expand fa-fw"
-             @click='toggleChildren' aria-hidden="true"></i>
-          {{ label }}
-        </p>
-        <span v-if='shortcut'>{{ shortcut }}</span>
-        <div id='add-child' @click='setAddLabelFlag(!addingLabelFlag)'>
-          <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-        </div>
-      </div>
-      <div id='tag-input-form' v-if='addingLabelFlag'>
-        <input id='new-label-form' type='text' v-model='newLabelText'
-               @keyup.enter='addNewLabel'>
-        <input id='shortcut-form' type='text' v-model='newLabelShortcut'
-               @keyup.enter.stop='addNewLabel' @keyup='setShortcutKey'>
-      </div>
-    </div>
-    <label-tree-item v-if='showChildrenFlag'
-                   v-for='(node, index) in nodes'
-                   :shortcut='node.shortcut'
-                   :key='index' :nodes='node.nodes'
-                   :label='node.label' :depth='depth + 1'>
-    </label-tree-item>
 
-  </div>
+  <li class="tag-list-item">
+    <input type="text"
+           v-model="label"
+           class="label-text"
+    >
+    <input type="text" v-model="shortcut" class="label-shortcut">
+  </li>
 </template>
 
 <script>
   export default {
     name: 'LabelTreeItem',
     props: [
-      'label',
-      'nodes',
-      'depth',
-      'shortcut'
+      'shortcut',
+      'label'
     ],
     data () {
       return {
         newLabelText: '',
         newLabelShortcut: '',
-        showChildrenFlag: false,
         addingLabelFlag: false,
         label_id: 0
       }
     },
     computed: {
-      indent () {
-        return {paddingLeft: `${this.depth * 10}px`}
-      },
-      shortcut_label_dict () {
-        return this.$store.getters.get_shortcut_label_dict
-      }
+//      indent () {
+//        return {paddingLeft: `${this.depth * 10}px`}
+//      },
+
+//      shortcut_label_dict () {
+//        return this.$store.getters.get_shortcut_label_dict
+//      },
     },
     methods: {
       toggleChildren () {
@@ -78,8 +54,8 @@
         }
 
         this.$store.commit('add_new_label', {
-          parent_node: this.label,
-          label: this.newLabelText,
+//          parent_node: this.label,
+          label_text: this.newLabelText,
           id: this.label_id,
           shortcut: this.newLabelShortcut
         })
@@ -96,58 +72,57 @@
 </script>
 
 <style lang='scss'>
-  .tag-tree {
-    left: 0px;
-    width: 200px;
-    .tag-list {
-      width: 100%;
-      height: 100%;
-      font-size: 1.0rem;
-      font-weight: bold;
-      box-sizing: border-box;
-      border: solid 1px #a3a3a3;
-      .list-item {
-        width: 100%;
-        height: 25px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        p {
-          width: 70%;
-          padding: 0 0 0 0;
-          margin: 0 5px 0 5px;
-        }
-        span {
-          text-align: center;
-          padding-right: 3px;
-          font-size: 0.7rem;
-        }
-        #add-child {
-          text-align: center;
-          font-size: 1.1rem;
-          padding-right: 10px;
-        }
+
+  .tag-list-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .label-text, .label-shortcut {
+      padding: 0;
+      margin: 0;
+      outline: none;
+      color: rgba(0, 0, 0, 0.9)
+    }
+    .label-text {
+      flex: 1;
+      width: 1px;
+      &::-webkit-input-placeholder, &:-ms-input-placeholder, &::-moz-placeholder {
+        color: #ccc;
       }
-      #tag-input-form {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        #new-label-form {
-          height: 25px;
-          width: 70%;
-          padding: 0 0 0 0;
-          margin: 0 0 0 0;
-        }
-        #shortcut-form {
-          height: 25px;
-          width: 30%;
-          padding: 0 0 0 0;
-          margin: 0 0 0 0;
-          text-align: center;
-          font-size: 0.7rem;
-        }
-      }
+    }
+    .label-shortcut {
+      width: 50px;
+      text-align: center;
+    }
+
+    #add-child {
+      text-align: center;
+      font-size: 1.1rem;
+      padding-right: 10px;
+    }
+  }
+
+  #tag-input-form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    #new-label-form {
+      height: 25px;
+      width: 70%;
+      padding: 0 0 0 0;
+      margin: 0 0 0 0;
+    }
+    #shortcut-form {
+      height: 25px;
+      width: 30%;
+      padding: 0 0 0 0;
+      margin: 0 0 0 0;
+      text-align: center;
+      font-size: 0.7rem;
     }
   }
 </style>

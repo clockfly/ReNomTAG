@@ -43,29 +43,14 @@ let mutation = {
     state.isMenuShown = !state.isMenuShown
   },
   add_new_label (state, payload) {
-    let parent_node = payload.parent_node
+    // let parent_node = payload.parent_node
+
     let shortcut = payload.shortcut
-    let label = payload.label
-    let payload_id = payload.id
+    let label_text = payload.label_text
+    let id = payload.id
 
-    state.shortcut_label_dict[shortcut] = {'label': label, 'id': payload_id}
-
-    function recursive_search (node) {
-      for (let n of node) {
-        let lb = n['label']
-
-        if (parent_node === lb) {
-          n['nodes'].unshift({
-            label: label,
-            id: payload_id,
-            shortcut: shortcut,
-            nodes: []
-          })
-        }
-        recursive_search(n['nodes'])
-      }
-    }
-    recursive_search(state.label_candidates_dict)
+    // state.shortcut_label_dict[shortcut] = {'label': label_text, 'id': payload_id}
+    state.label_candidates_dict[shortcut] = {'label': label_text, 'id': id}
   },
   set_sidebar_selected_item_offset (state, payload) {
     state.sidebar_selected_item_offset_top = payload.sidebar_selected_item_offset_top
@@ -88,26 +73,14 @@ let mutation = {
   set_current_json (state, payload) {
     state.current_json = payload.json_data
   },
-  set_current_dict (state, payload) {
-    state.current_dict = payload.dict_data
-  },
-  set_working_dict (state, payload) {
-    state.working_dict = payload.dict_data
-  },
-  set_tag_dict (state, payload) {
-    state.current_label_dict['anotation']['path'] = payload.file_path
-    state.current_label_dict['anotation']['name'] = payload.file_path
-    state.current_label_dict['anotation']['size']['width'] = payload.size_width
-    state.current_label_dict['anotation']['size']['height'] = payload.size_height
-  },
   update_current_label_objects (state, payload) {
     state.current_label_dict['anotation']['objects'] = payload.label_objects
   },
   set_selected_box_id (state, payload) {
     state.selected_box_id = payload.selected_box_id
   },
-  set_tag_candidates_dict (state, payload) {
-    state.tag_candidates_dict = payload.tag_candidates_dict
+  set_label_candidates_dict (state, payload) {
+    state.label_candidates_dict = payload.label_candidates_dict
   }
 }
 

@@ -223,21 +223,20 @@ def load_json_from_xml():
   return ret
 
 
-@route("/api/save_tag_dict", method="POST")
-def save_tag_dict():
-  json_data = request.params.tag_dict
+@route("/api/save_label_candidates_dict", method="POST")
+def save_label_candidates_dict():
+  json_data = request.params.json_data
   save_json_file_path = request.params.save_json_file_path
 
   with open(save_json_file_path, 'w') as ftpr:
     ftpr.write(json_data)
 
 
-@route("/api/load_tag_candidates_dict", method="POST")
-def save_tag_dict():
+@route("/api/load_label_candidates_dict", method="POST")
+def load_label_candidates_dict():
   load_json_file_path = request.params.load_json_file_path
-  file_path = load_json_file_path
 
-  with open(file_path, 'r') as ftpr:
+  with open(load_json_file_path, 'r') as ftpr:
     json_data = json.load(ftpr)
 
   body = json.dumps({

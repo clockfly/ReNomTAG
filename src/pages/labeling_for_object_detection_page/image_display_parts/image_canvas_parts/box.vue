@@ -264,20 +264,20 @@
         top: 0;
         color: #fff;
         font-size: 14px;
-        padding: 0 10px;
+        padding: 0 2px 4px 5px;
         height: 16px;
-        padding-bottom: 4px;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: red;
+        background: #73DD00;
+
         z-index: 3;
       }
     }
     .selected {
       border: 3px solid red;
-      .small-box {
-        /*background-color: rgba(255, 0, 0, 0.7) !important;*/
+      .object_name {
+        background: red;
       }
     }
   }
