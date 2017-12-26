@@ -71,8 +71,8 @@ let getters = {
   get_sidebar_file_list_scroll_position_flag (state) {
     return state.sidebar_file_list_scroll_position_flag
   },
-  get_current_dict_data (state) {
-    return state.current_tag_dict_data
+  get_current_label_dict (state) {
+    return state.current_label_dict
   },
   get_current_img_width (state) {
     return state.current_img_width

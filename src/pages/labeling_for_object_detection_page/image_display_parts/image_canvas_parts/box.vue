@@ -233,10 +233,11 @@
     z-index: 5;
     .bbox {
       position: absolute;
-      background-color: rgba(0, 0, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.7);
+      border: 3px solid rgba(115, 221, 0, 0.93);
       .small-box {
         position: absolute;
-        background-color: rgba(0, 0, 255, 0.6);
+        background-color: rgba(0, 0, 255, 0);
         width: 14px;
         height: 14px;
       }
@@ -261,21 +262,22 @@
         position: absolute;
         right: 0;
         top: 0;
-        color: #000;
+        color: #fff;
         font-size: 14px;
-        padding: 0 10px;
-        height: 20px;
+        padding: 0 2px 4px 5px;
+        height: 16px;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #fff;
+        background: #73DD00;
+
         z-index: 3;
       }
     }
     .selected {
-      background-color: rgba(255, 0, 0, 0.4) !important;
-      .small-box {
-        background-color: rgba(255, 0, 0, 0.7) !important;
+      border: 3px solid red;
+      .object_name {
+        background: red;
       }
     }
   }

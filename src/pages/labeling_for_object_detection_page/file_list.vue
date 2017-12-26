@@ -241,7 +241,8 @@
         font-size: 12px;
 
         &.selected {
-          border: 2px solid #2d3e50;
+          background: #2d3e50;
+          color: #fff;
         }
       }
     }

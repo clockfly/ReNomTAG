@@ -77,8 +77,8 @@
       window.addEventListener('resize', this.onResizeWindow)
     },
     computed: {
-      shortcut_label_dict () {
-        return this.$store.getters.get_shortcut_label_dict
+      label_candidates_dict () {
+        return this.$store.getters.get_label_candidates_dict
       },
       current_raw_img_src: function () {
         return 'data:image/png;base64,' + this.$store.getters.get_current_raw_img
@@ -233,16 +233,17 @@
         let y = (event.pageY - rectY) / height * 100
         return [x, y]
       },
+
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
-
         this.currentDownKey = event.key
         if (box) {
-          let label = this.shortcut_label_dict[this.currentDownKey]
+          let label = this.label_candidates_dict[this.currentDownKey]
+          console.log(label)
+
           if (label) {
             this.$children[this.selected_box_id]['object_name'] = label['label']
             this.updateBoxes()
-            console.log()
           }
         }
       },
@@ -273,8 +274,8 @@
           objects.push(o)
         }
 
-        this.$store.dispatch('update_current_tag_objects', {
-          tag_objects: objects
+        this.$store.dispatch('update_current_label_objects', {
+          label_objects: objects
         })
       },
       add_recent_labeled_images_id: function (add_file_index) {

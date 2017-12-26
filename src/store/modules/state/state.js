@@ -35,70 +35,30 @@ let state = {
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
 
-  label_candidates_dict: [{
-    label: 'Labels',
-    id: -1,
-    shortcut: '',
-    nodes: []
-  }],
+  label_candidates_dict: {
+    's': {
+      'label': 'sample',
+      'id': -1
+    }
+  },
   recent_labeled_images_id_arr: [],
 
-  current_tag_dict_data: {
+  current_label_dict: {
     'anotation': {
-      path: 'sample.png',
+      path: '',
       source: {
         database: 'Unknown'
       },
       size: {
-        width: 200,
-        height: 300,
+        width: null,
+        height: null,
         depth: 3
       },
       segments: 0,
       objects: [
         {
-          object: {
-            name: 'dog',
-            pose: 'Unspecified',
-            truncated: 0,
-            difficult: 0,
-            bndbox: {
-              xmin: 3,
-              ymin: 20,
-              xmax: 200,
-              ymax: 40
-            }
-          }
-        },
-        {
-          object: {
-            name: 'cat',
-            pose: 'Unspecified',
-            truncated: 0,
-            difficult: 0,
-            bndbox: {
-              xmin: 3,
-              ymin: 20,
-              xmax: 200,
-              ymax: 40
-            }
-          }
-        },
-        {
-          object: {
-            name: 'bird',
-            pose: 'Unspecified',
-            truncated: 0,
-            difficult: 0,
-            bndbox: {
-              xmin: 3,
-              ymin: 20,
-              xmax: 200,
-              ymax: 40
-            }
-          }
-        },
-
+          object: {}
+        }
       ]
     }
   }
