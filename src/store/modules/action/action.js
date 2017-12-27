@@ -209,8 +209,8 @@ let action = {
       end_position: payload.end_position
     })
   },
-  set_tag_dict (context, payload) {
-    context.commit('set_tag_dict', {
+  set_current_label_dict (context, payload) {
+    context.commit('set_current_label_dict', {
       file_path: payload.file_path,
       size_height: payload.size_height,
       size_width: payload.size_width
@@ -302,7 +302,18 @@ let action = {
         })
       }
     )
+  },
+  update_label_candidates_dict_shortcut (context, payload) {
+    context.commit('update_label_candidates_dict_shortcut', {
+      old_shortcut: payload.old_shortcut,
+      new_shortcut: payload.new_shortcut,
+    })
+  },
+  update_label_candidates_dict_label (context, payload) {
+    context.commit('update_label_candidates_dict_label', {
+      shortcut: payload.shortcut,
+      new_label: payload.new_label
+    })
   }
-
 }
 export default action

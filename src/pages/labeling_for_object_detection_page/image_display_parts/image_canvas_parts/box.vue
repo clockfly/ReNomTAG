@@ -235,6 +235,7 @@
       position: absolute;
       background-color: rgba(255, 255, 255, 0.7);
       border: 3px solid rgba(115, 221, 0, 0.93);
+      box-sizing: border-box;
       .small-box {
         position: absolute;
         background-color: rgba(0, 0, 255, 0);

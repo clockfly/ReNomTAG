@@ -12,8 +12,8 @@
            @mousedown='onMouseDown'
            @mouseup='onMouseUp'
            v-bind:style='{"background-image": "url("+current_raw_img_src+")",
-                        "height": padTop+"%",
-                        "width": padLeft+"%"
+                        "height": maskHeight+"%",
+                        "width": maskWidth+"%"
            }'
            v-show='showFlag'
            @click='add_recent_labeled_images_id(current_file_index)'>
@@ -53,8 +53,8 @@
         imgSrc: '',
         imgWidth: 0,
         imgHeight: 0,
-        padTop: 0,
-        padLeft: 0,
+        maskHeight: 0,
+        maskWidth: 0,
         currentDownKey: '',
         showFlag: true // This is for transition images.
       }
@@ -126,15 +126,22 @@
         let parentBox = document.getElementById('inner-canvas').getBoundingClientRect()
         let parentWidth = parentBox.width
         let parentHeight = parentBox.height
+
         let childAspectRatio = this.imgWidth / this.imgHeight
+        console.log(childAspectRatio)
+
         let parentAspectRatio = parentWidth / parentHeight
 
+        console.log(parentAspectRatio)
+
         if (childAspectRatio < parentAspectRatio) {
-          this.padTop = 100
-          this.padLeft = 100 * this.imgWidth / parentWidth * parentHeight / this.imgHeight
+          console.log(1)
+          this.maskHeight = 100
+          this.maskWidth = 100 * this.imgWidth / parentWidth * parentHeight / this.imgHeight
         } else {
-          this.padTop = 100 * this.imgHeight / parentHeight * parentWidth / this.imgWidth
-          this.padLeft = 100
+          console.log(2)
+          this.maskHeight = 100 * this.imgHeight / parentHeight * parentWidth / this.imgWidth
+          this.maskWidth = 100
         }
       },
       onKeyDelete: function (event) {
@@ -239,7 +246,6 @@
         this.currentDownKey = event.key
         if (box) {
           let label = this.label_candidates_dict[this.currentDownKey]
-          console.log(label)
 
           if (label) {
             this.$children[this.selected_box_id]['object_name'] = label['label']
@@ -256,6 +262,10 @@
       updateBoxes: function () {
         let objects = []
         for (let box of this.$children) {
+          let xmin = this.imgWidth * (box['x'] / 100.0)
+          let xmax = this.imgWidth * ((box['x'] + box['w']) / 100.0)
+          let ymin = this.imgHeight * (box['y'] / 100.0)
+          let ymax = this.imgHeight * ((box['y'] + box['h']) / 100.0)
 
           let o = {
             'object': {
@@ -264,10 +274,10 @@
               'truncated': 0,
               'difficult': 0,
               'bndbox': {
-                'xmin': box['x'],
-                'xmax': box['w'],
-                'ymin': box['y'],
-                'ymax': box['h']
+                'xmin': xmin,
+                'xmax': xmax,
+                'ymin': ymin,
+                'ymax': ymax
               }
             }
           }
