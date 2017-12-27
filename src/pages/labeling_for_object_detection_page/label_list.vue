@@ -1,36 +1,54 @@
 <template>
   <div id='tag-list'>
-    <div id='header'>
+    <div id='tag-list-header'>
       <span>Labels</span>
     </div>
-    <div id='search-box'>
+    <div id='tag-list-search-box'>
       <input value='search' type='text'/>
     </div>
+    <form id="add-new-label-form">
+
+      <p class="add-new-label-header">Add New Label</p>
+      <div class="add-new-label-input-area">
+        <input type="text"
+               class="label-text"
+               v-model='newLabelText'
+               @keyup.enter='addNewLabel'
+               placeholder="Input New Label">
+        <input type="text"
+               class="label-shortcut"
+               v-model='newLabelShortcut'
+               @keyup.enter.stop='addNewLabel'
+               @keyup='setShortcutKey'
+               placeholder="Input New Shortcut">
+      </div>
+
+      <button @click="addNewLabel" class="add-new-label-btn">Add New Label</button>
+
+    </form>
     <div id='main-tag-list'>
 
       <div class='tag-tree'>
-        <ul class='tag-list'>
+        <table class='tag-list'>
+          <tr>
+            <th>
+              Label
+            </th>
+            <th>
+              Shortcut
+            </th>
+          </tr>
           <label-tree v-for="key in Object.keys(label_candidates_dict)" :shortcut="key"
                       :label="label_candidates_dict[key]['label']"></label-tree>
 
-          <li class="tag-list-item">
-            <input type="text"
-                   class="label-text"
-                   v-model='newLabelText'
-                   @keyup.enter='addNewLabel'
-                   placeholder="+Add New Label">
-            <input type="text"
-                   class="label-shortcut"
-                   v-model='newLabelShortcut'
-                   @keyup.enter.stop='addNewLabel'
-                   @keyup='setShortcutKey'>
+        </table>
 
-          </li>
-        </ul>
-
-        <button @click="save_label_candidates_dict">Save Label</button>
-        <button @click="load_label_candidates_dict">Load label</button>
       </div>
+    </div>
+
+    <div class="save-load-label-btn">
+      <button @click="save_label_candidates_dict" class="save-label-btn">Save Label</button>
+      <button @click="load_label_candidates_dict" class="load-label-btn">Load label</button>
     </div>
 
   </div>
@@ -77,6 +95,7 @@
         })
       },
       load_label_candidates_dict () {
+        console.log(23445455665)
         this.$store.dispatch('load_label_candidates_dict', {
           load_json_file_path: 'label_candidates.json'
         })
@@ -117,7 +136,9 @@
 <style lang='scss'>
   #tag-list {
     width: 200px;
-    #header {
+    display: flex;
+    justify-content: flex-start;
+    #tag-list-header {
       display: flex;
       align-items: center;
       background-color: #a3a3a3;
@@ -129,7 +150,7 @@
         font-weight: bold;
       }
     }
-    #search-box {
+    #tag-list-search-box {
       width: 100%;
       margin: 5px 0;
       input {
@@ -140,9 +161,7 @@
     }
 
     #main-tag-list {
-      height: 100%;
-      overflow: auto;
-
+      overflow-y: scroll;
       .tag-tree {
         left: 0px;
         width: 200px;
@@ -158,14 +177,88 @@
         list-style: none;
         padding: 0;
         margin: 0;
+        th {
+          padding: 0;
+        }
 
-        .add-new-label-text {
-          &::-webkit-input-placeholder {
-            color: #dadada;
-            font-weight: normal;
-          }
+        tr {
+          padding: 0;
         }
       }
+    }
+
+    #add-new-label-form {
+      padding: 0;
+      margin: 0;
+      background: none;
+      border: none;
+
+      .add-new-label-header {
+        margin: 0;
+        padding: 10px 0 5px 0;
+      }
+      .add-new-label-input-area {
+
+        input {
+          margin: 0 0 5px 0;
+          padding: 2px 5px;
+          outline: none;
+
+        }
+        input.label-text {
+
+        }
+        input.label-shortcut {
+
+        }
+      }
+      .add-new-label-btn {
+        margin: 5px 0 10px 0;
+        width: 100%;
+        text-align: center;
+        padding: 5px 0;
+
+        cursor: pointer;
+        border: none;
+        border-radius: 0.1875rem;
+        background-color: tomato;
+        color: #fff;
+
+      }
+    }
+    .save-load-label-btn {
+
+      display: flex;
+      justify-content: space-between;
+
+      .save-label-btn, .load-label-btn {
+        font-size: 12px;
+        width: 45%;
+        cursor: pointer;
+        border: none;
+        border-radius: 0.1875rem;
+        outline: none;
+        transition: all 150ms ease-out;
+
+        &:focus, &:hover {
+
+          opacity: 0.8;
+        }
+
+      }
+      .save-label-btn {
+        margin-left: 0;
+        background-color: tomato;
+        color: #ffffff;
+
+      }
+      .load-label-btn {
+        margin-right: 0;
+
+        background-color: #12171a;
+        color: #fff;
+      }
+
     }
   }
 

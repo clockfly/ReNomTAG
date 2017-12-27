@@ -79,8 +79,18 @@ let mutation = {
   set_selected_box_id (state, payload) {
     state.selected_box_id = payload.selected_box_id
   },
-  set_label_candidates_dict (state, payload) {
-    state.label_candidates_dict = payload.label_candidates_dict
+  set_current_label_dict (state, payload) {
+    state.current_label_dict['anotation']['path'] = payload.file_path
+    state.current_label_dict['anotation']['size']['height'] = payload.size_height
+    state.current_label_dict['anotation']['size']['width'] = payload.size_width
+  },
+  update_label_candidates_dict_shortcut (state, payload) {
+    let temp_dict_data = state.label_candidates_dict[payload.old_shortcut]
+    delete state.label_candidates_dict[payload.old_shortcut]
+    state.label_candidates_dict[payload.new_shortcut] = temp_dict_data
+  },
+  update_label_candidates_dict_label (state, payload) {
+    state.label_candidates_dict[payload.shortcut]['label'] = payload.new_label
   }
 }
 

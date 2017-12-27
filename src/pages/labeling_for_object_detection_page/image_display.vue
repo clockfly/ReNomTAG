@@ -19,9 +19,9 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save as <input type="text" v-model="save_xml_dir"
+        <div class="">save at <input type="text" v-model="save_xml_dir"
                                      class="save_xml_dir_input">/
-          <input type="text" v-model="this.save_xml_file_name" class="save_xml_file_name_input">.xml
+          {{ save_xml_file_name_computed }}.xml
         </div>
       </div>
     </div>
@@ -39,7 +39,6 @@
     data: function () {
       return {
         imgData: '',
-        save_xml_file_name: '',
         save_xml_dir: 'xml'
       }
     },
@@ -79,7 +78,6 @@
         let ret = this.$store.dispatch('load_filename_list')
         ret.then(function () {
           self.load_raw_img(0)
-          self.save_xml_file_name = self.save_xml_file_name_computed
         })
       } else {
         self.load_raw_img(-1)
@@ -109,13 +107,13 @@
       save_xml_from_dict: function () {
         let self = this
 
-        self.$store.dispatch('set_tag_dict', {
+        self.$store.dispatch('set_current_label_dict', {
           file_path: self.filename_list[self.current_file_index],
           size_height: self.current_img_height,
           size_width: self.current_img_width
         }).then(
           self.$store.dispatch('save_xml_from_label_dict', {
-            save_xml_file_name: self.save_xml_file_name,
+            save_xml_file_name: self.save_xml_file_name_computed,
             save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
           })
