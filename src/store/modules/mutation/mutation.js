@@ -84,6 +84,10 @@ let mutation = {
     state.current_label_dict['anotation']['size']['height'] = payload.size_height
     state.current_label_dict['anotation']['size']['width'] = payload.size_width
   },
+
+  set_label_candidates_dict (state, payload) {
+    state.label_candidates_dict = payload.label_candidates_dict
+  },
   update_label_candidates_dict_shortcut (state, payload) {
     let temp_dict_data = state.label_candidates_dict[payload.old_shortcut]
     delete state.label_candidates_dict[payload.old_shortcut]

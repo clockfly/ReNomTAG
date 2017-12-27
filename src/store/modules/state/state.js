@@ -50,8 +50,8 @@ let state = {
         database: 'Unknown'
       },
       size: {
-        width: null,
-        height: null,
+        width: 0,
+        height: 0,
         depth: 3
       },
       segments: 0,

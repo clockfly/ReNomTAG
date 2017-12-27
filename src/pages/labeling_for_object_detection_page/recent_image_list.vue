@@ -47,7 +47,7 @@
 <style lang='scss'>
 
   #recent-image-list {
-    width: calc(100% - 205px);
+    width: calc(100% - 260px);
     height: 100%;
     #inner-recent-image-list {
       height: 100%;

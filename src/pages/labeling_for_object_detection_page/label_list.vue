@@ -95,7 +95,6 @@
         })
       },
       load_label_candidates_dict () {
-        console.log(23445455665)
         this.$store.dispatch('load_label_candidates_dict', {
           load_json_file_path: 'label_candidates.json'
         })
@@ -135,7 +134,7 @@
 
 <style lang='scss'>
   #tag-list {
-    width: 200px;
+    width: 250px;
     display: flex;
     justify-content: flex-start;
     #tag-list-header {
@@ -179,6 +178,7 @@
         margin: 0;
         th {
           padding: 0;
+          font-size: 12px;
         }
 
         tr {
