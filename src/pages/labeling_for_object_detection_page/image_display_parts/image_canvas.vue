@@ -128,18 +128,13 @@
         let parentHeight = parentBox.height
 
         let childAspectRatio = this.imgWidth / this.imgHeight
-        console.log(childAspectRatio)
 
         let parentAspectRatio = parentWidth / parentHeight
 
-        console.log(parentAspectRatio)
-
         if (childAspectRatio < parentAspectRatio) {
-          console.log(1)
           this.maskHeight = 100
           this.maskWidth = 100 * this.imgWidth / parentWidth * parentHeight / this.imgHeight
         } else {
-          console.log(2)
           this.maskHeight = 100 * this.imgHeight / parentHeight * parentWidth / this.imgWidth
           this.maskWidth = 100
         }
@@ -245,10 +240,12 @@
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
         if (box) {
-          let label = this.label_candidates_dict[this.currentDownKey]
+          let label = this.label_candidates_dict[this.currentDownKey]['label']
+          console.log(this.selected_box_id)
 
           if (label) {
-            this.$children[this.selected_box_id]['object_name'] = label['label']
+            console.log(this.$children)
+             this.$children[this.selected_box_id]['object_name'] = label
             this.updateBoxes()
           }
         }

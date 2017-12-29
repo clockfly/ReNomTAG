@@ -247,5 +247,20 @@ def load_label_candidates_dict():
   return ret
 
 
+@route("/api/get_bbox_list", method="POST")
+def get_bbox_list():
+  xml_file_path = request.params.xml_file_path
+
+  print(xml_file_path)
+  json_data = xml2json(xml_file_path)
+
+  body = json.dumps({
+    'json_data': json_data
+  })
+
+  ret = set_json_body(body)
+  return ret
+
+
 if __name__ == '__main__':
   run(host="0.0.0.0", port=8090)
