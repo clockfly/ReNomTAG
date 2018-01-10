@@ -19,9 +19,7 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save at <input type="text" v-model="save_xml_dir"
-                                     class="save_xml_dir_input">/
-          {{ save_xml_file_name_computed }}.xml
+        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name_computed }}.xml
         </div>
       </div>
     </div>
@@ -167,7 +165,7 @@
           margin: 0 0 0 0;
           padding: 3px 4px 3px 4px;
         }
-        .save_xml_file_name_input, .save_xml_dir_input {
+        .save_xml_file_name_input {
           :focus {
             outline: none;
           }

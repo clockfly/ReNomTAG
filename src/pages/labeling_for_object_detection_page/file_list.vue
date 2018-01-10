@@ -1,8 +1,5 @@
 <template>
   <div id='file-list'>
-    <div id='search-box'>
-      <input placeholder="search" type="text"/>
-    </div>
     <div>
       <select name="select_page_step"
               id="select_page_step"
@@ -244,19 +241,6 @@
           background: #2d3e50;
           color: #fff;
         }
-      }
-    }
-    #search-box {
-      width: 100%;
-      margin-bottom: 3px;
-      box-sizing: border-box;
-
-      input {
-        width: 100%;
-        margin: 0;
-        outline: none;
-        padding: 1px 5px;
-        box-sizing: border-box;
       }
     }
 

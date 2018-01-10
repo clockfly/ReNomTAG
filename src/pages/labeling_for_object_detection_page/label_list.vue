@@ -3,9 +3,6 @@
     <div id='tag-list-header'>
       <span>Labels</span>
     </div>
-    <div id='tag-list-search-box'>
-      <input value='search' type='text'/>
-    </div>
     <form id="add-new-label-form">
 
       <p class="add-new-label-header">Add New Label</p>
@@ -48,7 +45,7 @@
 
     <div class="save-load-label-btn">
       <!--<button @click="save_label_candidates_dict" class="save-label-btn">Save Label</button>-->
-      <button @click="load_label_candidates_dict" class="load-label-btn">Load label</button>
+      <!--<button @click="load_label_candidates_dict" class="load-label-btn">Load label</button>-->
     </div>
 
   </div>
@@ -124,6 +121,8 @@
         this.newLabelText = ''
         this.newLabelShortcut = ''
         this.label_id += 1
+
+        this.save_label_candidates_dict()
       },
       setShortcutKey (event) {
         this.newLabelShortcut = event.key
