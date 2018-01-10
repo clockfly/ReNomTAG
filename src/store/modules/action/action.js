@@ -314,6 +314,15 @@ let action = {
       shortcut: payload.shortcut,
       new_label: payload.new_label
     })
+  },
+  update_recent_images_bbox (context, payload) {
+    console.log('update!')
+    console.log(payload.xml_file_name)
+    console.log(context.getters.get_current_file_name)
+    console.log(context.getters.get_recent_labeled_images_id_arr)
+  },
+  toggle_update_bbox_flag (context, payload) {
+    context.commit('toggle_update_bbox_flag')
   }
 }
 export default action

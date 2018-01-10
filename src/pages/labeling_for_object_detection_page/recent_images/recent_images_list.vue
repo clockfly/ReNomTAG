@@ -13,6 +13,7 @@
           :parent_height="parentHeight"
           :file_name="recent_images_file_name(index)"
           :key="img_src"
+          :index="index"
         >
         </recentImagesListItem>
       </ul>
@@ -47,7 +48,7 @@
         let file_split = file_path.split('/')
 
         return file_split[file_split.length - 1].split('.')[0]
-      }
+      },
     },
     computed: {
       filename_list: function () {

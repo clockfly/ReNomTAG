@@ -117,6 +117,8 @@
             save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
           })
+        ).then(
+          self.$store.commit('toggle_update_bbox_flag')
         )
       }
     }

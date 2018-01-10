@@ -61,7 +61,8 @@ let state = {
         }
       ]
     }
-  }
+  },
+  update_bbox_flag: false
 }
 
 export default state

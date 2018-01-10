@@ -95,6 +95,10 @@ let mutation = {
   },
   update_label_candidates_dict_label (state, payload) {
     state.label_candidates_dict[payload.shortcut]['label'] = payload.new_label
+  },
+  toggle_update_bbox_flag (state, payload) {
+    state.update_bbox_flag = !state.update_bbox_flag
+    console.log(state.update_bbox_flag)
   }
 }
 

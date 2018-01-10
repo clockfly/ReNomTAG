@@ -241,11 +241,9 @@
         this.currentDownKey = event.key
         if (box) {
           let label = this.label_candidates_dict[this.currentDownKey]['label']
-          console.log(this.selected_box_id)
 
           if (label) {
-            console.log(this.$children)
-             this.$children[this.selected_box_id]['object_name'] = label
+            this.$children[this.selected_box_id]['object_name'] = label
             this.updateBoxes()
           }
         }

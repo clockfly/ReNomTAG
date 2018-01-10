@@ -83,6 +83,9 @@ let getters = {
   get_selected_box_id (state) {
     return state.selected_box_id
   },
+  get_update_bbox_flag (state) {
+    return state.update_bbox_flag
+  }
 
 }
 
