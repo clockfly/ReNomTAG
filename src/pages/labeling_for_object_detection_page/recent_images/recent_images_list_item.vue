@@ -3,12 +3,12 @@
 
     <img :src="'data:image/png;base64,' + this.img_src" alt="" class="recent-images-list-item-img">
     {{ index }}
-    <!--<recent-images-bbox-->
-    <!--v-for="(bbox, index) in bbox_list"-->
-    <!--:bbox="bbox"-->
-    <!--:aspectRatio="aspectRatio"-->
-    <!--:key="index">-->
-    <!--</recent-images-bbox>-->
+    <recent-images-bbox
+      v-for="(bbox, index) in bbox_list"
+      :bbox="bbox"
+      :aspectRatio="aspectRatio"
+      :key="index">
+    </recent-images-bbox>
   </li>
 </template>
 
@@ -106,6 +106,9 @@
     list-style: none;
     width: auto;
     height: 100%;
+    &:hover {
+      cursor: pointer;
+    }
 
     .recent-images-list-item-img {
       width: auto;

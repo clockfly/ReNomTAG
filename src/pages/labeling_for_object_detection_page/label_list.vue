@@ -47,7 +47,7 @@
     </div>
 
     <div class="save-load-label-btn">
-      <button @click="save_label_candidates_dict" class="save-label-btn">Save Label</button>
+      <!--<button @click="save_label_candidates_dict" class="save-label-btn">Save Label</button>-->
       <button @click="load_label_candidates_dict" class="load-label-btn">Load label</button>
     </div>
 
@@ -128,6 +128,9 @@
       setShortcutKey (event) {
         this.newLabelShortcut = event.key
       }
+    },
+    created: function () {
+      this.load_label_candidates_dict()
     }
   }
 </script>
