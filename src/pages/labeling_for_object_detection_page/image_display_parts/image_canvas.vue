@@ -27,6 +27,7 @@
 
 <script>
   import Bbox from './image_canvas_parts/box.vue'
+  import axios from 'axios'
 
   let boxEvent = {
     "create": 0,
@@ -56,7 +57,9 @@
         maskHeight: 0,
         maskWidth: 0,
         currentDownKey: '',
-        showFlag: true // This is for transition images.
+        showFlag: true, // This is for transition images.
+
+        bbox_list: []
       }
     },
     watch: {
@@ -71,6 +74,8 @@
         }
         img_data = this.current_raw_img_src
         img.src = img_data
+
+        this.loadBbox()
       }
     },
     created: function () {
@@ -86,11 +91,18 @@
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
+      current_file_name: function () {
+        return this.$store.getters.get_current_file_name
+      },
       recent_labeled_images_id_arr: function () {
         return this.$store.getters.get_recent_labeled_images_id_arr
       },
       selected_box_id: function () {
         return this.$store.getters.get_selected_box_id
+      },
+      xml_file_path: function () {
+        let file_name = this.$store.getters.get_current_file_name
+        return 'xml/' + file_name.split('.')[0] + '.xml'
       }
 
     },
@@ -108,6 +120,7 @@
 //        recursive(arr, tags)
 //        this.labelList = arr
 //      },
+
       setShowFlag: function (flag) {
         this.showFlag = flag
       },
@@ -292,8 +305,19 @@
             file_indices: self.$store.getters.get_recent_labeled_images_id_arr
           })
         )
+      },
+
+      loadBbox () {
+        let self = this
+        let fd = new FormData()
+        fd.append('xml_file_path', this.xml_file_path)
+        return axios.post('/api/get_bbox_list', fd).then(
+          function (response) {
+            self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+          }
+        )
       }
-    },
+    }
   }
 </script>
 

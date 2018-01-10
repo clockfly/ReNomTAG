@@ -57,10 +57,10 @@ let action = {
     }
 
     // Get file name from file_name list
-    let current_file_name = filename_list[current_file_index]
+    let current_file_path = filename_list[current_file_index]
 
     // fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-    fd.append('filename', current_file_name)
+    fd.append('filename', current_file_path)
 
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
@@ -73,7 +73,7 @@ let action = {
         context.commit('set_raw_img', {
           current_raw_img: response.data.raw_img,
           current_file_index: current_file_index,
-          current_file_name: current_file_name
+          current_file_path: current_file_path
         })
 
         // check sidebar current page
@@ -318,7 +318,7 @@ let action = {
   update_recent_images_bbox (context, payload) {
     console.log('update!')
     console.log(payload.xml_file_name)
-    console.log(context.getters.get_current_file_name)
+    console.log(context.getters.get_current_file_path)
     console.log(context.getters.get_recent_labeled_images_id_arr)
   },
   toggle_update_bbox_flag (context, payload) {

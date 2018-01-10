@@ -4,7 +4,7 @@
       <div id='file-text'>
         <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
         + 1 }} / {{ filename_list_length }}</span>
-        <span>{{ current_file_name }}</span>
+        <span>{{ current_file_path }}</span>
       </div>
       <div id='icon'>
         <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
@@ -50,8 +50,8 @@
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
-      current_file_name: function () {
-        return this.$store.getters.get_current_file_name
+      current_file_path: function () {
+        return this.$store.getters.get_current_file_path
       },
       current_raw_img: function () {
         return this.$store.getters.get_current_raw_img

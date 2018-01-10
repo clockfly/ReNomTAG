@@ -23,8 +23,12 @@ let getters = {
   get_current_raw_img (state) {
     return state.current_raw_img
   },
+  get_current_file_path (state) {
+    return state.current_file_path
+  },
   get_current_file_name (state) {
-    return state.current_file_name
+    let split_file_path = state.current_file_path.split('/')
+    return split_file_path[split_file_path.length - 1]
   },
   get_current_file_index (state) {
     return state.current_file_index

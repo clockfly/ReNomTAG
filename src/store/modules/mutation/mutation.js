@@ -23,7 +23,7 @@ let mutation = {
   set_raw_img (state, payload) {
     state.current_raw_img = payload.current_raw_img
     state.current_file_index = payload.current_file_index
-    state.current_file_name = payload.current_file_name
+    state.current_file_path = payload.current_file_path
   },
   set_current_img_width_and_height (state, payload) {
     state.current_img_width = payload.img_width

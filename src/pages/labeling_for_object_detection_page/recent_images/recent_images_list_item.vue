@@ -62,8 +62,8 @@
       xml_file_path () {
         return 'xml/' + this.file_name + '.xml'
       },
-      current_file_name () {
-        return this.$store.getters.get_current_file_name
+      current_file_path () {
+        return this.$store.getters.get_current_file_path
       },
       update_bbox_flag () {
         return this.$store.getters.get_update_bbox_flag
@@ -80,7 +80,6 @@
       img.src = 'data:image/png;base64,' + this.img_src
 
       this.update_bbox()
-      console.log(this.$store.getters.get_update_bbox_flag)
     },
     watch: {
       // この関数は sidebar_current_file_index が変わるごとに実行されます。

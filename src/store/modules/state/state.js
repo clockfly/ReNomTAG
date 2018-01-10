@@ -5,7 +5,9 @@ let state = {
   current_img_width: 0,
   current_img_height: 0,
   current_file_index: 0,
+  current_file_path: '',
   current_file_name: '',
+
   current_json: '',
   current_dict: {},
   working_dict: {},

@@ -6,7 +6,6 @@
       </div>
 
       <ul id='recent-images-list'>
-
         <recentImagesListItem
           v-for='(img_src, index) in recent_raw_images'
           :img_src="img_src"
