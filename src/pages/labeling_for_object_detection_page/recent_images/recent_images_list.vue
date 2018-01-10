@@ -13,7 +13,7 @@
           :parent_height="parentHeight"
           :file_name="recent_images_file_name(index)"
           :key="img_src"
-          :index="index"
+          :index="recent_labeled_images_id_arr[index]"
         >
         </recentImagesListItem>
       </ul>
