@@ -66,6 +66,9 @@
       current_file_path () {
         return this.$store.getters.get_current_file_path
       },
+      current_file_name () {
+        return this.$store.getters.get_current_file_name
+      },
       update_bbox_flag () {
         return this.$store.getters.get_update_bbox_flag
       }
@@ -85,12 +88,15 @@
     watch: {
       // この関数は sidebar_current_file_index が変わるごとに実行されます。
       update_bbox_flag: function () {
-        let temp_current_file_name = this.current_file_name
-        let temp_current_file_name_split = temp_current_file_name.split('/')
+        let split_file_name = this.file_name.split('.')[0]
+        let split_current_file_name = this.current_file_name.split('.')[0]
 
-        let current_file_name = temp_current_file_name_split[temp_current_file_name_split.length - 1].split('.')[0]
+//        let temp_current_file_name = this.current_file_name
+//        let temp_current_file_name_split = temp_current_file_name.split('/')
 
-        if (current_file_name === this.file_name) {
+//        let current_file_name = current_file_name_split[temp_current_file_name_split.length - 1].split('.')[0]
+
+        if (split_current_file_name === split_file_name) {
           this.update_bbox()
 //          this.$store.commit('toggle_update_bbox_flag')
         }
