@@ -9,7 +9,6 @@
       <div class='right-bottom small-box'></div>
       <div class="object_name" v-if="object_name">{{ object_name }}</div>
     </div>
-
   </div>
 </template>
 
@@ -39,7 +38,8 @@
         return this.selectedFlag
       }
     },
-    props: ['box_id'],
+    props: ['box_id', 'bndbox', 'current_img_width', 'current_img_height', 'prop_object_name'],
+
     methods: {
       scaleByLeftTop: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
@@ -224,6 +224,14 @@
         this.scaleInitW = this.w
         this.scaleInitH = this.h
       },
+    },
+
+    created: function () {
+      this.x = this.bndbox['xmin'] / this.current_img_width * 100
+      this.y = this.bndbox['ymin'] / this.current_img_height * 100
+      this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100
+      this.h = (this.bndbox['ymax'] - this.bndbox['ymin']) / this.current_img_height * 100
+      this.object_name = this.prop_object_name
     }
   }
 </script>

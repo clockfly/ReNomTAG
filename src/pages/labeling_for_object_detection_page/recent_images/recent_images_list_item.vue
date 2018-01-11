@@ -19,7 +19,6 @@
   export default {
     name: 'RecentImagesListItem',
     props: ['img_src', 'file_name', 'parent_height', 'index'],
-
     components: {
       'recent-images-bbox': RecentImagesBbox
     },
@@ -43,12 +42,14 @@
       update_bbox () {
         let self = this
         let fd = new FormData()
-        fd.append('xml_file_path', this.xml_file_path)
-        return axios.post('/api/get_bbox_list', fd).then(
-          function (response) {
-            self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
-          }
-        )
+        if (this.xml_file_path !== '') {
+          fd.append('xml_file_path', this.xml_file_path)
+          return axios.post('/api/get_bbox_list', fd).then(
+            function (response) {
+              self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+            }
+          )
+        }
       },
       click_action () {
         let self = this

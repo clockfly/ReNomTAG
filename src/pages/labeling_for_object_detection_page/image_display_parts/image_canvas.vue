@@ -18,7 +18,14 @@
            v-show='showFlag'
            @click='add_recent_labeled_images_id(current_file_index)'>
 
-        <box v-for='(box_id, index) in boxIdList' :key='box_id' :box_id='box_id'></box>
+        <box v-for='(bbox, index) in bbox_list'
+             :key='bbox'
+             :box_id='index'
+             :bndbox='bbox["bndbox"]'
+             :prop_object_name="bbox['name']"
+             :current_img_width="current_img_width"
+             :current_img_height="current_img_height"
+        ></box>
       </div>
     </div>
 
@@ -46,7 +53,6 @@
     },
     data () {
       return {
-        boxIdList: [],
         boxId: 0,
         mouseDownFlag: false,
         currentBbox: null,
@@ -80,6 +86,7 @@
     },
     created: function () {
       window.addEventListener('resize', this.onResizeWindow)
+      this.updateBoxes()
     },
     computed: {
       label_candidates_dict () {
@@ -100,30 +107,28 @@
       selected_box_id: function () {
         return this.$store.getters.get_selected_box_id
       },
+      parentHeight: function () {
+        return document.getElementById('mask').clientHeight
+      },
+      current_img_height: function () {
+        return this.$store.getters.get_current_img_height
+      },
+      current_img_width: function () {
+        return this.$store.getters.get_current_img_width
+      },
+      img_aspect_ratio: function () {
+        return this.parentHeight / this.current_img_height
+      },
       xml_file_path: function () {
         let file_name = this.$store.getters.get_current_file_name
         return 'xml/' + file_name.split('.')[0] + '.xml'
       }
-
     },
     methods: {
-//      setLabelList (){
-//        let tags = this.$store.getters.get_tag_list
-//        let arr = []
-//        let recursive = function (arr, nodes) {
-//          for (let n of nodes) {
-//            let key = n["shortcut"]
-//            arr.push({key: [n['label'], n['id']]})
-//            recursive(arr, n['nodes'])
-//          }
-//        }
-//        recursive(arr, tags)
-//        this.labelList = arr
-//      },
-
       setShowFlag: function (flag) {
         this.showFlag = flag
-      },
+      }
+      ,
       setImgSrc: function (img) {
         this.imgSrc = img.src
         this.imgWidth = img.width
@@ -153,7 +158,7 @@
         }
       },
       onKeyDelete: function (event) {
-        this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
+        // this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
         let [x, y] = this.transformCurrentCorrdinate(event)
@@ -201,8 +206,7 @@
         }
 
         if (select_flag) {
-          this.boxIdList.push(String(this.boxId))
-          this.boxId += 1
+          this.bbox_list.push({'bndbox': {'xmin': x, 'xmax': x, 'ymin': y, 'ymax': y}, 'name': ''})
           this.boxEventType = boxEvent['create']
         }
       },
@@ -218,7 +222,7 @@
         if (!this.mouseDownFlag) return
         let [x, y] = this.transformCurrentCorrdinate(event)
         if (!this.currentBbox) {
-          this.currentBbox = this.$children[this.boxIdList.length - 1]
+          this.currentBbox = this.$children[this.bbox_list.length - 1]
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
@@ -248,7 +252,6 @@
         let y = (event.pageY - rectY) / height * 100
         return [x, y]
       },
-
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
@@ -306,16 +309,17 @@
           })
         )
       },
-
-      loadBbox () {
+      loadBbox: function () {
         let self = this
-        let fd = new FormData()
-        fd.append('xml_file_path', this.xml_file_path)
-        return axios.post('/api/get_bbox_list', fd).then(
-          function (response) {
-            self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
-          }
-        )
+        if (this.xml_file_path !== '') {
+          let fd = new FormData()
+          fd.append('xml_file_path', this.xml_file_path)
+          return axios.post('/api/get_bbox_list', fd).then(
+            function (response) {
+              self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+            }
+          )
+        }
       }
     }
   }
