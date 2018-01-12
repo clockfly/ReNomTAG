@@ -15,20 +15,20 @@
                         "height": maskHeight+"%",
                         "width": maskWidth+"%"
            }'
-           v-show='showFlag'
-           @click='add_recent_labeled_images_id(current_file_index)'>
+           v-show='showFlag'>
 
-        <box v-for='(bbox, index) in bbox_list'
-             :key='bbox'
-             :box_id='index'
-             :bndbox='bbox["bndbox"]'
-             :prop_object_name="bbox['name']"
+        <box v-for='(bbox_id, index) in bbox_id_list'
+
+             :key='bbox_id'
+             :box_id='bbox_id'
+             :bndbox='bbox_list[index]["bndbox"]'
+             :prop_object_name="bbox_list[index]['name']"
+
              :current_img_width="current_img_width"
              :current_img_height="current_img_height"
         ></box>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -65,7 +65,9 @@
         currentDownKey: '',
         showFlag: true, // This is for transition images.
 
-        bbox_list: []
+        bbox_list: [],
+        bbox_id_list: [],
+        bbox_id_counter: 0
       }
     },
     watch: {
@@ -158,7 +160,13 @@
         }
       },
       onKeyDelete: function (event) {
-        // this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
+        let splice_index = this.bbox_id_list.indexOf(this.selected_box_id)
+        this.bbox_list.splice(splice_index, 1)
+        this.bbox_id_list.splice(splice_index, 1)
+
+        console.log(this.bbox_id_list)
+
+//         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
         let [x, y] = this.transformCurrentCorrdinate(event)
@@ -206,16 +214,16 @@
         }
 
         if (select_flag) {
-          this.bbox_list.push({'bndbox': {'xmin': x, 'xmax': x, 'ymin': y, 'ymax': y}, 'name': ''})
+          this.appendBbox(event)
           this.boxEventType = boxEvent['create']
         }
+        this.add_recent_labeled_images_id(this.current_file_index)
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
         if (this.currentBbox) {
           this.currentBbox = null
         }
-
         this.updateBoxes()
       },
       onMouseMove: function (event) {
@@ -255,13 +263,11 @@
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
-        if (box) {
-          let label = this.label_candidates_dict[this.currentDownKey]['label']
+        if (box && this.currentDownKey in this.label_candidates_dict) {
 
-          if (label) {
-            this.$children[this.selected_box_id]['object_name'] = label
-            this.updateBoxes()
-          }
+          let label = this.label_candidates_dict[this.currentDownKey]['label']
+          this.$children[this.selected_box_id]['object_name'] = label
+          this.updateBoxes()
         }
       },
       onAnyKeyUp: function (event) {
@@ -270,6 +276,7 @@
       disabled: function () {
         return false
       },
+
       updateBoxes: function () {
         let objects = []
         for (let box of this.$children) {
@@ -278,9 +285,17 @@
           let ymin = this.imgHeight * (box['y'] / 100.0)
           let ymax = this.imgHeight * ((box['y'] + box['h']) / 100.0)
 
+          let name = ''
+
+          if (typeof box['object_name'] === 'undefined') {
+            name = ''
+          } else {
+            name = box['object_name']
+          }
+
           let o = {
             'object': {
-              'name': box['object_name'],
+              'name': name,
               'pose': 'Unspecified',
               'truncated': 0,
               'difficult': 0,
@@ -294,6 +309,8 @@
           }
           objects.push(o)
         }
+
+        console.log(objects)
 
         this.$store.dispatch('update_current_label_objects', {
           label_objects: objects
@@ -309,14 +326,56 @@
           })
         )
       },
+      appendBbox: function (event) {
+        let object = {
+          'bndbox': {
+            'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0
+          },
+          'name': ''
+        }
+
+        this.bbox_list.push(object)
+
+        this.bbox_id_list.push(this.bbox_id_counter)
+        this.bbox_id_counter++
+
+      },
       loadBbox: function () {
         let self = this
-        if (this.xml_file_path !== '') {
+        if (this.xml_file_path) {
           let fd = new FormData()
+
           fd.append('xml_file_path', this.xml_file_path)
+
           return axios.post('/api/get_bbox_list', fd).then(
+
             function (response) {
-              self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+              if (response.data.json_data === '') {
+                self.bbox_id_counter = 0
+                self.bbox_id_list = []
+                self.bbox_list = []
+                return
+              }
+
+              let temp_bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+
+              if (typeof temp_bbox_list === 'undefined') {
+                self.bbox_id_counter = 0
+                self.bbox_id_list = []
+                self.bbox_list = []
+                return
+              }
+
+              self.bbox_id_counter = 0
+              self.bbox_id_list = []
+              self.bbox_list = []
+
+              for (let n in temp_bbox_list) {
+                self.bbox_id_list.push(self.bbox_id_counter)
+                self.bbox_id_counter++
+              }
+
+              self.bbox_list = temp_bbox_list
             }
           )
         }

@@ -92,12 +92,16 @@
       #recent-images-list {
         height: calc(100% - 30px);
         width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        overflow-x: scroll;
-        overflow-y: hidden;
         margin: 0;
         padding: 0;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        font-size: 0;
+        &::-webkit-scrollbar {
+          display: none;
+        }
 
       }
     }

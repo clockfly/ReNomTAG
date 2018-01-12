@@ -2,7 +2,6 @@
   <li class="recent-images-list-item" @click="click_action">
 
     <img :src="'data:image/png;base64,' + this.img_src" alt="" class="recent-images-list-item-img">
-    {{ index }}
     <recent-images-bbox
       v-for="(bbox, index) in bbox_list"
       :bbox="bbox"
@@ -112,6 +111,10 @@
     list-style: none;
     width: auto;
     height: 100%;
+
+    display: inline-block;
+    white-space: normal;
+
     &:hover {
       cursor: pointer;
     }

@@ -27,7 +27,6 @@ let getters = {
     return state.current_file_path
   },
   get_current_file_name (state) {
-    console.log(state)
     let split_file_path = state.current_file_path.split('/')
     return split_file_path[split_file_path.length - 1]
   },
