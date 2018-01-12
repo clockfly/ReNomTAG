@@ -19,7 +19,7 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name }}.xml</div>
+        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name_computed }}.xml</div>
       </div>
     </div>
   </div>
@@ -36,8 +36,7 @@
     data: function () {
       return {
         imgData: '',
-        save_xml_dir: 'xml',
-        save_xml_file_name: ''
+        save_xml_dir: 'xml'
       }
     },
     computed: {
@@ -85,9 +84,6 @@
         self.load_raw_img(-1)
       }
     },
-    mounted: function () {
-      this.save_xml_file_name = this.save_xml_file_name_computed
-    },
     methods: {
       // Defined index
       load_raw_img: function (index) {
@@ -125,6 +121,7 @@
         ).then(
           self.$store.commit('toggle_update_bbox_flag')
         )
+
       }
     }
   }

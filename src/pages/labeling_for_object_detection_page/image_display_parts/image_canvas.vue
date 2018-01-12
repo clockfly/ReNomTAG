@@ -23,7 +23,7 @@
              :key='bbox_id'
              :box_id='bbox_id'
              :bndbox='bbox_list[index]["bndbox"]'
-             :prop_object_name="bbox_list[index]['name']"
+             :prop_name="bbox_list[index]['name']"
 
              :current_img_width="current_img_width"
              :current_img_height="current_img_height"
@@ -162,10 +162,11 @@
         }
       },
       onKeyDelete: function (event) {
-        let splice_index = this.bbox_id_list.indexOf(this.selected_box_id)
-        this.bbox_list.splice(splice_index, 1)
-        this.bbox_id_list.splice(splice_index, 1)
+        let delete_index = this.bbox_id_list.indexOf(this.selected_box_id)
+        this.bbox_id_list.splice(delete_index, 1)
+        this.bbox_list.splice(delete_index, 1)
 
+        this.updateBoxes()
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
@@ -267,7 +268,9 @@
         if (box && this.currentDownKey in this.label_candidates_dict) {
 
           let label = this.label_candidates_dict[this.currentDownKey]['label']
-          this.$children[this.selected_box_id]['object_name'] = label
+          let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
+
+          this.$children[true_selected_box_id]['name'] = label
           this.updateBoxes()
         }
       },
@@ -284,7 +287,6 @@
         }
 
         let objects = []
-
         for (let box of this.$children) {
           let xmin = this.imgWidth * (box['x'] / 100.0)
           let xmax = this.imgWidth * ((box['x'] + box['w']) / 100.0)
@@ -293,10 +295,10 @@
 
           let name = ''
 
-          if (typeof box['object_name'] === 'undefined') {
+          if (typeof box['name'] === 'undefined') {
             name = ''
           } else {
-            name = box['object_name']
+            name = box['name']
           }
 
           let o = {
@@ -315,7 +317,6 @@
           }
           objects.push(o)
         }
-
         this.$store.dispatch('update_current_label_objects', {
           label_objects: objects
         })
@@ -332,12 +333,14 @@
       },
       appendBbox: function (event) {
         let object = {
-          'bndbox': {
-            'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0
-          },
-          'name': '',
-          'difficult': '',
-          'pose': ''
+          'object': {
+            'bndbox': {
+              'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0
+            },
+            'name': '',
+            'difficult': '',
+            'pose': ''
+          }
         }
 
         this.bbox_list.push(object)

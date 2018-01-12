@@ -7,7 +7,8 @@
       <div class='left-bottom small-box'></div>
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
-      <div class="object_name" v-if="object_name">{{ object_name }}</div>
+      <div class="object_name" v-if="name">{{ name }}</div>
+      {{ box_id }}
     </div>
   </div>
 </template>
@@ -30,7 +31,7 @@
         w: 0,
         h: 0,
         selectedFlag: false,
-        object_name: ''
+        name: ''
       }
     },
     computed: {
@@ -38,7 +39,7 @@
         return this.selectedFlag
       }
     },
-    props: ['box_id', 'bndbox', 'current_img_width', 'current_img_height', 'prop_object_name'],
+    props: ['box_id', 'bndbox', 'current_img_width', 'current_img_height', 'prop_name'],
 
     methods: {
       scaleByLeftTop: function (x, y, dx = 0, dy = 0) {
@@ -231,7 +232,7 @@
       this.y = this.bndbox['ymin'] / this.current_img_height * 100
       this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100
       this.h = (this.bndbox['ymax'] - this.bndbox['ymin']) / this.current_img_height * 100
-      this.object_name = this.prop_object_name
+      this.name = this.prop_name
     }
   }
 </script>
