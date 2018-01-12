@@ -19,8 +19,7 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name_computed }}.xml
-        </div>
+        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name }}.xml</div>
       </div>
     </div>
   </div>
@@ -37,7 +36,8 @@
     data: function () {
       return {
         imgData: '',
-        save_xml_dir: 'xml'
+        save_xml_dir: 'xml',
+        save_xml_file_name: ''
       }
     },
     computed: {
@@ -66,13 +66,17 @@
         return this.$store.getters.get_current_img_height
       },
       save_xml_file_name_computed: function () {
-        let file_path_split = this.filename_list[this.current_file_index].split('/')
-        return file_path_split[file_path_split.length - 1].split('.')[0]
+        if (this.filename_list.length < 1) {
+          return ''
+        } else {
+          let file_path_split = this.filename_list[this.current_file_index].split('/')
+          return file_path_split[file_path_split.length - 1].split('.')[0]
+        }
       }
     },
     created () {
       const self = this
-      if (this.$store.getters.get_filename_list.length === 0) {
+      if (this.filename_list.length === 0) {
         let ret = this.$store.dispatch('load_filename_list')
         ret.then(function () {
           self.load_raw_img(0)
@@ -80,6 +84,9 @@
       } else {
         self.load_raw_img(-1)
       }
+    },
+    mounted: function () {
+      this.save_xml_file_name = this.save_xml_file_name_computed
     },
     methods: {
       // Defined index

@@ -8,7 +8,6 @@
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
       <div class="object_name" v-if="object_name">{{ object_name }}</div>
-      {{ box_id }}
     </div>
   </div>
 </template>

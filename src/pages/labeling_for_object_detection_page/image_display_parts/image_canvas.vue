@@ -18,6 +18,7 @@
            v-show='showFlag'>
 
         <box v-for='(bbox_id, index) in bbox_id_list'
+             v-if="bbox_list.length > 0"
 
              :key='bbox_id'
              :box_id='bbox_id'
@@ -72,7 +73,8 @@
     },
     watch: {
       // この関数は current_raw_img_src が変わるごとに実行されます。
-      current_raw_img_src: function (newImg) {
+      xml_file_path: function (newImg) {
+
         const self = this
         let img = new Image()
         let img_data
@@ -164,8 +166,6 @@
         this.bbox_list.splice(splice_index, 1)
         this.bbox_id_list.splice(splice_index, 1)
 
-        console.log(this.bbox_id_list)
-
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
@@ -215,6 +215,7 @@
 
         if (select_flag) {
           this.appendBbox(event)
+
           this.boxEventType = boxEvent['create']
         }
         this.add_recent_labeled_images_id(this.current_file_index)
@@ -278,7 +279,12 @@
       },
 
       updateBoxes: function () {
+        if (this.$children.length < 1) {
+          return
+        }
+
         let objects = []
+
         for (let box of this.$children) {
           let xmin = this.imgWidth * (box['x'] / 100.0)
           let xmax = this.imgWidth * ((box['x'] + box['w']) / 100.0)
@@ -310,8 +316,6 @@
           objects.push(o)
         }
 
-        console.log(objects)
-
         this.$store.dispatch('update_current_label_objects', {
           label_objects: objects
         })
@@ -331,54 +335,46 @@
           'bndbox': {
             'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0
           },
-          'name': ''
+          'name': '',
+          'difficult': '',
+          'pose': ''
         }
 
         this.bbox_list.push(object)
-
         this.bbox_id_list.push(this.bbox_id_counter)
         this.bbox_id_counter++
 
       },
       loadBbox: function () {
         let self = this
-        if (this.xml_file_path) {
-          let fd = new FormData()
 
-          fd.append('xml_file_path', this.xml_file_path)
+        let fd = new FormData()
+        fd.append('xml_file_path', this.xml_file_path)
 
-          return axios.post('/api/get_bbox_list', fd).then(
-
-            function (response) {
-              if (response.data.json_data === '') {
-                self.bbox_id_counter = 0
-                self.bbox_id_list = []
-                self.bbox_list = []
-                return
-              }
-
-              let temp_bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
-
-              if (typeof temp_bbox_list === 'undefined') {
-                self.bbox_id_counter = 0
-                self.bbox_id_list = []
-                self.bbox_list = []
-                return
-              }
-
-              self.bbox_id_counter = 0
+        return axios.post('/api/get_bbox_list', fd).then(
+          function (response) {
+            if (response.data.json_data === '') {
               self.bbox_id_list = []
               self.bbox_list = []
-
-              for (let n in temp_bbox_list) {
-                self.bbox_id_list.push(self.bbox_id_counter)
-                self.bbox_id_counter++
-              }
-
-              self.bbox_list = temp_bbox_list
+              return
             }
-          )
-        }
+
+            let temp_bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+
+            self.bbox_id_list = []
+            self.bbox_list = []
+
+            if (typeof temp_bbox_list === 'undefined') {
+              return
+            }
+
+            for (let n in temp_bbox_list) {
+              self.bbox_id_list.push(self.bbox_id_counter)
+              self.bbox_id_counter++
+            }
+            self.bbox_list = temp_bbox_list
+          }
+        )
       }
     }
   }
