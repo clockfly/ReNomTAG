@@ -257,10 +257,20 @@ def get_bbox_list():
   else:
     json_data = xml2json(xml_file_path)
 
+    json_dict = json.loads(json_data)
+
+    # object dataが1つだけの場合、dictになってしまうのでlistに変換する
+    if isinstance(json_dict['anotation']['object'], dict):
+      temp = [json_dict['anotation']['object']]
+      json_dict['anotation']['object'] = temp
+
+      json_data = json.dumps(json_dict, indent=4)
+
   body = json.dumps({
     'json_data': json_data
   })
 
+  print(json_data)
   ret = set_json_body(body)
   return ret
 

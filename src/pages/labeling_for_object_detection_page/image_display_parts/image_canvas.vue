@@ -162,9 +162,13 @@
         }
       },
       onKeyDelete: function (event) {
+
         let delete_index = this.bbox_id_list.indexOf(this.selected_box_id)
+
         this.bbox_id_list.splice(delete_index, 1)
         this.bbox_list.splice(delete_index, 1)
+
+        console.log(this.bbox_list)
 
         this.updateBoxes()
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
