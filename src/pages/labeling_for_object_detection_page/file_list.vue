@@ -35,6 +35,7 @@
       </li>
       <li @click="change_page(sidebar_page_number)" class="arrow">></li>
     </ul>
+    <button @click="reload_filename_list">reload</button>
   </div>
 </template>
 <script>
@@ -172,6 +173,13 @@
       calc_and_set_sidebar_file_list_scroll_position: function () {
 //        console.log('sidebar_selected_item_offset_top : ' + this.sidebar_selected_item_offset_top)
         this.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
+      },
+
+      reload_filename_list () {
+        this.$store.dispatch('reload_sidebar_thumbnail_and_filename_list', {
+          current_page: this.sidebar_current_page,
+          page_step: this.sidebar_page_step
+        })
       }
     },
     mounted: function () {

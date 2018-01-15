@@ -71,7 +71,13 @@
           let file_path_split = this.filename_list[this.current_file_index].split('/')
           return file_path_split[file_path_split.length - 1].split('.')[0]
         }
-      }
+      },
+      sidebar_current_page: function () {
+        return this.$store.getters.get_sidebar_current_page
+      },
+      sidebar_page_step: function () {
+        return this.$store.getters.get_sidebar_page_step
+      },
     },
     created () {
       const self = this
@@ -94,6 +100,13 @@
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
           this.$store.dispatch('load_raw_img', {index: this.current_file_index + 1})
         )
+      },
+
+      reload_sidebar_thumbnail_and_filename_list () {
+        this.$store.dispatch('reload_sidebar_thumbnail_and_filename_list', {
+          current_page: this.sidebar_current_page,
+          page_step: this.sidebar_page_step
+        })
       },
 
       load_prev_raw_img: function () {
@@ -120,8 +133,9 @@
           })
         ).then(
           self.$store.commit('toggle_update_bbox_flag')
+        ).then(
+          self.reload_sidebar_thumbnail_and_filename_list()
         )
-
       }
     }
   }
