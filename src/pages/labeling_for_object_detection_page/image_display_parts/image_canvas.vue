@@ -2,7 +2,6 @@
   <div id='image-canvas'
        tabindex='0'
        @mousemove='onMouseMove'
-       @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
@@ -65,6 +64,7 @@
         maskWidth: 0,
         currentDownKey: '',
         showFlag: true, // This is for transition images.
+        showLabelFlag: false,
 
         bbox_list: [],
         bbox_id_list: [],
@@ -126,6 +126,9 @@
       xml_file_path: function () {
         let file_name = this.$store.getters.get_current_file_name
         return 'xml/' + file_name.split('.')[0] + '.xml'
+      },
+      current_label_dict: function () {
+        return this.$store.getters.get_current_label_dict
       }
     },
     methods: {
@@ -165,10 +168,9 @@
 
         let delete_index = this.bbox_id_list.indexOf(this.selected_box_id)
 
+        this.$children.splice(delete_index, 1)
         this.bbox_id_list.splice(delete_index, 1)
         this.bbox_list.splice(delete_index, 1)
-
-        console.log(this.bbox_list)
 
         this.updateBoxes()
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
@@ -187,6 +189,7 @@
           query_list.push(box.$el.querySelector('.right-top'))
           query_list.push(box.$el.querySelector('.right-bottom'))
           query_list.push(box.$el.querySelector('.bbox'))
+
           if (query_list.indexOf(target) >= 0) {
             select_flag = false
 
@@ -269,11 +272,11 @@
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
         if (box && this.currentDownKey in this.label_candidates_dict) {
-
           let label = this.label_candidates_dict[this.currentDownKey]['label']
           let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
 
           this.$children[true_selected_box_id]['name'] = label
+
           this.updateBoxes()
         }
       },
@@ -285,12 +288,11 @@
       },
 
       updateBoxes: function () {
-        if (this.$children.length < 1) {
-          return
-        }
 
         let objects = []
+
         for (let box of this.$children) {
+
           let xmin = this.imgWidth * (box['x'] / 100.0)
           let xmax = this.imgWidth * ((box['x'] + box['w']) / 100.0)
           let ymin = this.imgHeight * (box['y'] / 100.0)
@@ -320,7 +322,7 @@
           }
           objects.push(o)
         }
-        this.$store.dispatch('update_current_label_objects', {
+        this.$store.commit('update_current_label_objects', {
           label_objects: objects
         })
       },
