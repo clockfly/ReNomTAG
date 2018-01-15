@@ -99,7 +99,6 @@
               }
               // カレントページが2ページ目である場合
             } else if (this.sidebar_current_page === 2) {
-              console.log('2')
               for (let i = this.sidebar_current_page - 1; i < this.sidebar_current_page + this.max_page - 1; i++) {
                 temp_page_nation.push(i)
               }

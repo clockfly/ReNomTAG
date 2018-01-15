@@ -220,7 +220,6 @@
 
         if (select_flag) {
           this.appendBbox(event)
-
           this.boxEventType = boxEvent['create']
         }
         this.add_recent_labeled_images_id(this.current_file_index)
