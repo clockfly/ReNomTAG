@@ -89,6 +89,9 @@ let getters = {
   },
   get_update_bbox_flag (state) {
     return state.update_bbox_flag
+  },
+  get_bbox_labeled_flag (state) {
+    return state.bbox_labeled_flag
   }
 
 }

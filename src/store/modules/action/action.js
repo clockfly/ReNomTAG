@@ -347,6 +347,11 @@ let action = {
   },
   toggle_update_bbox_flag (context, payload) {
     context.commit('toggle_update_bbox_flag')
+  },
+  set_bbox_labeled_flag (context, payload) {
+    context.commit('set_bbox_labeled_flag', {
+      flag: payload.flag
+    })
   }
 }
 export default action

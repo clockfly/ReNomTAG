@@ -28,6 +28,7 @@
         </table>
       </div>
     </div>
+    {{ bbox_labeled_flag }}
   </div>
 </template>
 
@@ -58,6 +59,9 @@
       },
       label_candidates_dict () {
         return this.$store.getters.get_label_candidates_dict
+      },
+      bbox_labeled_flag () {
+        return this.$store.getters.get_bbox_labeled_flag
       }
 
     },
@@ -250,6 +254,9 @@
     },
 
     created: function () {
+      if (typeof this.bndbox === 'undefined') {
+        return
+      }
       this.x = this.bndbox['xmin'] / this.current_img_width * 100
       this.y = this.bndbox['ymin'] / this.current_img_height * 100
       this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100

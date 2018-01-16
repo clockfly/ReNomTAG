@@ -290,7 +290,7 @@ def get_bbox_list():
         json_dict['anotation']['object'] = temp
 
     except KeyError:
-      pass
+      json_dict['anotation']['object'] = ''
 
     json_data = json.dumps(json_dict, indent=4)
 

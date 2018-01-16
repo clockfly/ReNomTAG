@@ -46,6 +46,8 @@
           fd.append('xml_file_path', this.xml_file_path)
           return axios.post('/api/get_bbox_list', fd).then(
             function (response) {
+              console.log()
+              console.log(response.data.json_data)
               self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
             }
           )
@@ -100,7 +102,6 @@
 //        let current_file_name = current_file_name_split[temp_current_file_name_split.length - 1].split('.')[0]
 
         if (split_current_file_name === split_file_name) {
-          console.log('update_bbox')
           this.update_bbox()
 //          this.$store.commit('toggle_update_bbox_flag')
         }

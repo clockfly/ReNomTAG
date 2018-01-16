@@ -102,7 +102,9 @@ let mutation = {
   },
   toggle_update_bbox_flag (state, payload) {
     state.update_bbox_flag = !state.update_bbox_flag
-    console.log(state.update_bbox_flag)
+  },
+  set_bbox_labeled_flag (state, payload) {
+    state.bbox_labeled_flag = payload.flag
   }
 }
 

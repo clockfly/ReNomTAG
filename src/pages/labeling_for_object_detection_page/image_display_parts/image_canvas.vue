@@ -132,13 +132,20 @@
       },
       current_label_dict: function () {
         return this.$store.getters.get_current_label_dict
+      },
+      bbox_labeled_flag: function () {
+        return this.$store.getters.get_bbox_labeled_flag
       }
     },
     methods: {
       setShowFlag: function (flag) {
         this.showFlag = flag
-      }
-      ,
+      },
+      set_bbox_labeled_flag: function (flag) {
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: flag
+        })
+      },
       setImgSrc: function (img) {
         this.imgSrc = img.src
         this.imgWidth = img.width
@@ -176,9 +183,14 @@
         this.bbox_list.splice(delete_index, 1)
 
         this.updateBoxes()
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: true
+        })
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
+        console.log('mouse down')
+
         let [x, y] = this.transformCurrentCorrdinate(event)
         let select_flag = true
         let target = event.target
@@ -224,11 +236,22 @@
           }
         }
 
+        if (!this.bbox_labeled_flag) {
+          return
+        }
+
         if (select_flag) {
           this.appendBbox(event)
           this.boxEventType = boxEvent['create']
         }
         this.add_recent_labeled_file_path(this.current_file_path)
+
+
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: false
+        })
+
+
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
@@ -238,6 +261,7 @@
         this.updateBoxes()
       },
       onMouseMove: function (event) {
+        console.log('move')
         if (!this.mouseDownFlag) return
         let [x, y] = this.transformCurrentCorrdinate(event)
         if (!this.currentBbox) {
@@ -245,7 +269,9 @@
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
+
             this.currentBbox.createdScalingBox(x, y)
+
           } else if (this.boxEventType === boxEvent['move']) {
             this.currentBbox.moveBox(x, y, event.target)
           } else if (this.boxEventType === boxEvent['rescale-left-top']) {
@@ -279,6 +305,10 @@
           let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
 
           this.$children[true_selected_box_id]['name'] = label
+
+          this.$store.commit('set_bbox_labeled_flag', {
+            flag: true
+          })
 
           this.updateBoxes()
         }

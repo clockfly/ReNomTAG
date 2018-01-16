@@ -59,7 +59,10 @@ let state = {
       ]
     }
   },
-  update_bbox_flag: false
+  update_bbox_flag: false,
+
+  bbox_labeled_flag: true
+
 }
 
 export default state

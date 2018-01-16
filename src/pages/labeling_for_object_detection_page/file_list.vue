@@ -165,6 +165,9 @@
             index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index
           })
         )
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: true
+        })
       },
       reload_sidebar_current_position_top () {
         let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
