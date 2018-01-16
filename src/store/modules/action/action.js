@@ -81,6 +81,34 @@ let action = {
       }
     )
   },
+
+  load_raw_img_from_path (context, payload) {
+    // Arguments : index
+
+    let fd = new FormData()
+
+    // fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
+    fd.append('filename', payload.file_path)
+
+
+    return axios.post('/api/get_raw_img', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('File not found. Please try again.')
+          return
+        }
+        context.commit('set_raw_img_from_path', {
+          current_raw_img: response.data.raw_img,
+          current_file_path: payload.file_path
+        })
+
+        // check sidebar current page
+        context.dispatch('check_sidebar_current_page')
+      }
+    )
+  },
+
   set_current_img_width_and_height (context, payload) {
     context.commit('set_current_img_width_and_height', {
       img_width: payload.img_width,

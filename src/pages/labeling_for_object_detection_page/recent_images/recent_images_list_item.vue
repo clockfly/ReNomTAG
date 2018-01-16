@@ -44,7 +44,6 @@
         let fd = new FormData()
         if (this.xml_file_path !== '') {
           fd.append('xml_file_path', this.xml_file_path)
-          console.log(this.xml_file_path)
           return axios.post('/api/get_bbox_list', fd).then(
             function (response) {
               self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
@@ -54,9 +53,8 @@
       },
       click_action () {
         let self = this
-        self.$store.dispatch('load_raw_img', {
-          filename_list: self.filename_list,
-          index: self.index
+        self.$store.dispatch('load_raw_img_from_path', {
+          file_path: self.file_path,
         })
       }
     },
