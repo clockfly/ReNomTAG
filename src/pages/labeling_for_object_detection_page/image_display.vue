@@ -136,7 +136,7 @@
         let self = this
 
         self.$store.dispatch('set_current_label_dict', {
-          file_path: self.filename_list[self.current_file_index],
+          file_path: self.current_file_path,
           size_height: self.current_img_height,
           size_width: self.current_img_width
         }).then(
