@@ -46,7 +46,8 @@ let action = {
 
     let fd = new FormData()
     let current_file_index = payload.index
-    let filename_list = context.getters.get_filename_list
+    // let filename_list = context.getters.get_filename_list
+    let filename_list = payload.filename_list
 
     // Reset current_file_index to filename_list.length - 1
     if (current_file_index < 0) {
@@ -90,7 +91,6 @@ let action = {
     context.commit('update_current_label_objects', {
       label_objects: payload.label_objects
     })
-    // console.log(payload.label_objects)
   },
   check_sidebar_current_page (context, payload) {
     // Change page nation if new page !== current page
@@ -104,15 +104,17 @@ let action = {
   },
   load_recent_images (context, payload) {
     let fd = new FormData()
-    let file_indices = payload.file_indices
-    let filename_list = context.getters.get_filename_list
+    let file_paths = payload.file_paths
 
-    let fetch_filename_list = []
+    // let filename_list = context.getters.get_filename_list
 
-    for (let n of file_indices) {
-      fetch_filename_list.push(filename_list[n])
-    }
-    fd.append('filename_list', fetch_filename_list)
+    // let fetch_filename_list = []
+
+    // for (let n of file_paths) {
+    //   fetch_filename_list.push(filename_list[n])
+    // }
+
+    fd.append('filename_list', file_paths)
 
     return axios.post('/api/get_raw_images', fd).then(
       function (response) {
@@ -132,16 +134,18 @@ let action = {
       sidebar_page_step: payload.sidebar_page_step
     })
   },
-  add_recent_labeled_images_id_arr (context, payload) {
-    let index = context.getters.get_recent_labeled_images_id_arr.indexOf(payload.add_file_index)
+  add_recent_labeled_file_path (context, payload) {
+    let add_file_path = payload.add_file_path
+    let index = context.getters.get_recent_labeled_file_paths.indexOf(payload.add_file_path)
+
     if (index >= 0) {
-      context.state.recent_labeled_images_id_arr.splice(index, 1)
-      context.state.recent_labeled_images_id_arr.unshift(payload.add_file_index)
+      context.state.recent_labeled_file_paths.splice(index, 1)
+      context.state.recent_labeled_file_paths.unshift(add_file_path)
     } else {
-      if (context.getters.get_recent_labeled_images_id_arr.length >= 10) {
-        context.state.recent_labeled_images_id_arr.shift()
+      if (context.getters.get_recent_labeled_file_paths.length >= 10) {
+        context.state.recent_labeled_file_paths.shift()
       }
-      context.state.recent_labeled_images_id_arr.unshift(payload.add_file_index)
+      context.state.recent_labeled_file_paths.unshift(add_file_path)
     }
   },
   set_sidebar_selected_item_offset (context, payload) {
@@ -264,7 +268,6 @@ let action = {
   },
   save_label_candidates_dict (context, payload) {
     let fd = new FormData()
-    // console.log(payload.file_name)
     fd.append('save_json_file_path', payload.save_json_file_path)
     // convert dict to json
     fd.append('json_data', JSON.stringify(payload.label_candidates_dict))
@@ -313,12 +316,6 @@ let action = {
       shortcut: payload.shortcut,
       new_label: payload.new_label
     })
-  },
-  update_recent_images_bbox (context, payload) {
-    console.log('update!')
-    console.log(payload.xml_file_name)
-    console.log(context.getters.get_current_file_path)
-    console.log(context.getters.get_recent_labeled_images_id_arr)
   },
   toggle_update_bbox_flag (context, payload) {
     context.commit('toggle_update_bbox_flag')

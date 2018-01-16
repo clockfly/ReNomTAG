@@ -38,7 +38,7 @@ let state = {
   label_id_dict_list: [], // Key: label, Value: id
 
   label_candidates_dict: {},
-  recent_labeled_images_id_arr: [],
+  recent_labeled_file_paths: [],
 
   current_label_dict: {
     'anotation': {

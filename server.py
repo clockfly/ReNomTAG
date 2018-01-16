@@ -128,6 +128,7 @@ def get_raw_img():
 @route("/api/get_raw_images", method="POST")
 def get_raw_images():
   # root_dir = request.params.root_dir
+  # filename_list = request.params.filename_list.split(',')
   filename_list = request.params.filename_list.split(',')
 
   result = []
@@ -162,7 +163,6 @@ def get_filename_list():
 
 @route("/api/get_sidebar_thumbnail_and_filename_list", method="POST")
 def get_sidebar_thumbnail_and_filename_list():
-
   # file_paths = request.params.filename_list.split(",")
   file_paths = get_difference_set()
 
@@ -191,7 +191,7 @@ def get_sidebar_thumbnail_and_filename_list():
 
   body = json.dumps({
     "sidebar_thumbnail_list": image_list,
-    "sidebar_filename_list": [f.split("/")[-1] for f in file_paths],
+    "sidebar_filename_list": file_paths,
     "sidebar_filename_list_index": indices
   })
   ret = set_json_body(body)

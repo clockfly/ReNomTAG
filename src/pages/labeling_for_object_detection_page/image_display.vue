@@ -46,11 +46,18 @@
       filename_list_length: function () {
         return this.filename_list.length
       },
+      sidebar_filename_list: function () {
+        return this.$store.getters.get_sidebar_filename_list
+      },
+
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
       current_file_path: function () {
         return this.$store.getters.get_current_file_path
+      },
+      current_file_name: function () {
+        return this.$store.getters.get_current_file_name
       },
       current_raw_img: function () {
         return this.$store.getters.get_current_raw_img
@@ -68,8 +75,8 @@
         if (this.filename_list.length < 1) {
           return ''
         } else {
-          let file_path_split = this.filename_list[this.current_file_index].split('/')
-          return file_path_split[file_path_split.length - 1].split('.')[0]
+//          let file_path_split = this.filename_list[this.current_file_index].split('/')
+          return this.current_file_name.split('.')[0]
         }
       },
       sidebar_current_page: function () {
@@ -93,27 +100,34 @@
     methods: {
       // Defined index
       load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {index: index})
+        this.$store.dispatch('load_raw_img', {
+          filename_list: this.filename_list,
+          index: index
+        })
       },
       load_next_raw_img: function () {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {index: this.current_file_index + 1})
+          this.$store.dispatch('load_raw_img', {
+            filename_list: this.sidebar_filename_list,
+            index: this.current_file_index + 1
+          })
         )
       },
-
+      load_prev_raw_img: function () {
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
+          this.$store.dispatch('load_raw_img', {
+            filename_list: self.sidebar_filename_list,
+            index: this.current_file_index - 1
+          })
+        )
+      },
       load_sidebar_thumbnail_and_filename_list () {
         this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
           current_page: this.sidebar_current_page,
           page_step: this.sidebar_page_step
         })
-      },
-
-      load_prev_raw_img: function () {
-        let self = this
-        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {index: this.current_file_index - 1})
-        )
       },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})

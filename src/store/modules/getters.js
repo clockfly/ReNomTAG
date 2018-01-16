@@ -48,8 +48,8 @@ let getters = {
   get_label_id_dict_list (state) {
     return state.label_id_dict_list
   },
-  get_recent_labeled_images_id_arr (state) {
-    return state.recent_labeled_images_id_arr
+  get_recent_labeled_file_paths (state) {
+    return state.recent_labeled_file_paths
   },
   get_sidebar_selected_item_offset_top (state) {
     return state.sidebar_selected_item_offset_top

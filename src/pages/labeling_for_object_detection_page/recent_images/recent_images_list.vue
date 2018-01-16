@@ -5,17 +5,19 @@
         <span>Recent Labeled Images</span>
       </div>
 
+
       <ul id='recent-images-list'>
         <recentImagesListItem
           v-for='(img_src, index) in recent_raw_images'
           :img_src="img_src"
           :parent_height="parentHeight"
-          :file_name="recent_images_file_name(index)"
+          :file_path="recent_labeled_file_paths[index]"
           :key="img_src"
-          :index="recent_labeled_images_id_arr[index]"
+          :index="recent_labeled_file_paths[index]"
         >
         </recentImagesListItem>
       </ul>
+
     </div>
   </div>
 </template>
@@ -36,11 +38,14 @@
       load_recent_raw_images: function () {
         let self = this
         this.$store.dispatch('load_recent_images', {
-          file_indices: self.recent_labeled_images_id_arr
+          file_paths: self.recent_labeled_img_paths
         })
       },
       load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {index: index})
+        this.$store.dispatch('load_raw_img', {
+          filename_list: this.filename_list,
+          index: index
+        })
       },
       recent_images_file_name (index) {
         let file_path = this.filename_list[this.recent_labeled_images_id_arr[index]]
@@ -53,14 +58,17 @@
       filename_list: function () {
         return this.$store.getters.get_filename_list
       },
-      recent_labeled_images_id_arr: function () {
-        return this.$store.getters.get_recent_labeled_images_id_arr
+      recent_labeled_file_paths: function () {
+        return this.$store.getters.get_recent_labeled_file_paths
       },
       recent_raw_images: function () {
         return this.$store.getters.get_recent_raw_images
       },
       parentHeight () {
         return document.getElementById('recent-images-list').clientHeight
+      },
+      current_file_name () {
+        return this.$store.getters.get_current_file_name
       }
     }
   }

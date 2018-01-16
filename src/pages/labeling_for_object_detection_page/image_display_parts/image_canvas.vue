@@ -102,11 +102,14 @@
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
+      current_file_path (state) {
+        return this.$store.getters.get_current_file_path
+      },
       current_file_name: function () {
         return this.$store.getters.get_current_file_name
       },
-      recent_labeled_images_id_arr: function () {
-        return this.$store.getters.get_recent_labeled_images_id_arr
+      recent_labeled_images_file_paths: function () {
+        return this.$store.getters.get_recent_labeled_file_paths
       },
       selected_box_id: function () {
         return this.$store.getters.get_selected_box_id
@@ -225,7 +228,7 @@
           this.appendBbox(event)
           this.boxEventType = boxEvent['create']
         }
-        this.add_recent_labeled_images_id(this.current_file_index)
+        this.add_recent_labeled_file_path(this.current_file_path)
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
@@ -326,13 +329,13 @@
           label_objects: objects
         })
       },
-      add_recent_labeled_images_id: function (add_file_index) {
-        const self = this
-        this.$store.dispatch('add_recent_labeled_images_id_arr', {
-          add_file_index: add_file_index
+      add_recent_labeled_file_path: function (add_file_path) {
+        let self = this
+        this.$store.dispatch('add_recent_labeled_file_path', {
+          add_file_path: add_file_path
         }).then(
           this.$store.dispatch('load_recent_images', {
-            file_indices: self.$store.getters.get_recent_labeled_images_id_arr
+            file_paths: self.$store.getters.get_recent_labeled_file_paths
           })
         )
       },

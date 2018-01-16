@@ -23,7 +23,7 @@
            :class="{selected: index===sidebar_current_file_index}">
         <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
         </file-item>
-        {{ fname }}
+        {{ fname | filterFileName }}
       </div>
 
     </div>
@@ -160,7 +160,10 @@
       click_action (index) {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: false}).then(
-          self.$store.dispatch('load_raw_img', {index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index})
+          self.$store.dispatch('load_raw_img', {
+            filename_list: self.sidebar_filename_list,
+            index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index
+          })
         )
       },
       reload_sidebar_current_position_top () {
@@ -214,6 +217,13 @@
         this.$nextTick(function () {
           this.change_page(this.sidebar_current_page)
         })
+      }
+    },
+    filters: {
+      filterFileName: function (fname) {
+        // 適当なfilter処理
+        let fname_split = fname.split('/')
+        return fname_split[fname_split.length - 1]
       }
     }
   }
