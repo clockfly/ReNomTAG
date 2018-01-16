@@ -2,7 +2,6 @@
   <div id='image-canvas'
        tabindex='0'
        @mousemove='onMouseMove'
-       @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
@@ -15,18 +14,27 @@
                         "height": maskHeight+"%",
                         "width": maskWidth+"%"
            }'
-           v-show='showFlag'
-           @click='add_recent_labeled_images_id(current_file_index)'>
+           v-show='showFlag'>
 
-        <box v-for='(box_id, index) in boxIdList' :key='box_id' :box_id='box_id'></box>
+        <box v-for='(bbox_id, index) in bbox_id_list'
+             v-if="bbox_list.length > 0"
+
+             :key='bbox_id'
+             :box_id='bbox_id'
+             :bndbox='bbox_list[index]["bndbox"]'
+             :prop_name="bbox_list[index]['name']"
+
+             :current_img_width="current_img_width"
+             :current_img_height="current_img_height"
+        ></box>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
   import Bbox from './image_canvas_parts/box.vue'
+  import axios from 'axios'
 
   let boxEvent = {
     "create": 0,
@@ -45,7 +53,6 @@
     },
     data () {
       return {
-        boxIdList: [],
         boxId: 0,
         mouseDownFlag: false,
         currentBbox: null,
@@ -56,12 +63,18 @@
         maskHeight: 0,
         maskWidth: 0,
         currentDownKey: '',
-        showFlag: true // This is for transition images.
+        showFlag: true, // This is for transition images.
+        showLabelFlag: false,
+
+        bbox_list: [],
+        bbox_id_list: [],
+        bbox_id_counter: 0
       }
     },
     watch: {
       // この関数は current_raw_img_src が変わるごとに実行されます。
-      current_raw_img_src: function (newImg) {
+      xml_file_path: function (newImg) {
+
         const self = this
         let img = new Image()
         let img_data
@@ -71,10 +84,13 @@
         }
         img_data = this.current_raw_img_src
         img.src = img_data
+
+        this.loadBbox()
       }
     },
     created: function () {
       window.addEventListener('resize', this.onResizeWindow)
+      this.updateBoxes()
     },
     computed: {
       label_candidates_dict () {
@@ -86,30 +102,49 @@
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
-      recent_labeled_images_id_arr: function () {
-        return this.$store.getters.get_recent_labeled_images_id_arr
+      current_file_path (state) {
+        return this.$store.getters.get_current_file_path
+      },
+      current_file_name: function () {
+        return this.$store.getters.get_current_file_name
+      },
+      recent_labeled_images_file_paths: function () {
+        return this.$store.getters.get_recent_labeled_file_paths
       },
       selected_box_id: function () {
         return this.$store.getters.get_selected_box_id
+      },
+      parentHeight: function () {
+        return document.getElementById('mask').clientHeight
+      },
+      current_img_height: function () {
+        return this.$store.getters.get_current_img_height
+      },
+      current_img_width: function () {
+        return this.$store.getters.get_current_img_width
+      },
+      img_aspect_ratio: function () {
+        return this.parentHeight / this.current_img_height
+      },
+      xml_file_path: function () {
+        let file_name = this.$store.getters.get_current_file_name
+        return 'xml/' + file_name.split('.')[0] + '.xml'
+      },
+      current_label_dict: function () {
+        return this.$store.getters.get_current_label_dict
+      },
+      bbox_labeled_flag: function () {
+        return this.$store.getters.get_bbox_labeled_flag
       }
-
     },
     methods: {
-//      setLabelList (){
-//        let tags = this.$store.getters.get_tag_list
-//        let arr = []
-//        let recursive = function (arr, nodes) {
-//          for (let n of nodes) {
-//            let key = n["shortcut"]
-//            arr.push({key: [n['label'], n['id']]})
-//            recursive(arr, n['nodes'])
-//          }
-//        }
-//        recursive(arr, tags)
-//        this.labelList = arr
-//      },
       setShowFlag: function (flag) {
         this.showFlag = flag
+      },
+      set_bbox_labeled_flag: function (flag) {
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: flag
+        })
       },
       setImgSrc: function (img) {
         this.imgSrc = img.src
@@ -128,26 +163,34 @@
         let parentHeight = parentBox.height
 
         let childAspectRatio = this.imgWidth / this.imgHeight
-        console.log(childAspectRatio)
 
         let parentAspectRatio = parentWidth / parentHeight
 
-        console.log(parentAspectRatio)
-
         if (childAspectRatio < parentAspectRatio) {
-          console.log(1)
           this.maskHeight = 100
           this.maskWidth = 100 * this.imgWidth / parentWidth * parentHeight / this.imgHeight
         } else {
-          console.log(2)
           this.maskHeight = 100 * this.imgHeight / parentHeight * parentWidth / this.imgWidth
           this.maskWidth = 100
         }
       },
       onKeyDelete: function (event) {
-        this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
+
+        let delete_index = this.bbox_id_list.indexOf(this.selected_box_id)
+
+        this.$children.splice(delete_index, 1)
+        this.bbox_id_list.splice(delete_index, 1)
+        this.bbox_list.splice(delete_index, 1)
+
+        this.updateBoxes()
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: true
+        })
+//         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
+        console.log('mouse down')
+
         let [x, y] = this.transformCurrentCorrdinate(event)
         let select_flag = true
         let target = event.target
@@ -161,6 +204,7 @@
           query_list.push(box.$el.querySelector('.right-top'))
           query_list.push(box.$el.querySelector('.right-bottom'))
           query_list.push(box.$el.querySelector('.bbox'))
+
           if (query_list.indexOf(target) >= 0) {
             select_flag = false
 
@@ -192,29 +236,42 @@
           }
         }
 
+        if (!this.bbox_labeled_flag) {
+          return
+        }
+
         if (select_flag) {
-          this.boxIdList.push(String(this.boxId))
-          this.boxId += 1
+          this.appendBbox(event)
           this.boxEventType = boxEvent['create']
         }
+        this.add_recent_labeled_file_path(this.current_file_path)
+
+
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: false
+        })
+
+
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
         if (this.currentBbox) {
           this.currentBbox = null
         }
-
         this.updateBoxes()
       },
       onMouseMove: function (event) {
+        console.log('move')
         if (!this.mouseDownFlag) return
         let [x, y] = this.transformCurrentCorrdinate(event)
         if (!this.currentBbox) {
-          this.currentBbox = this.$children[this.boxIdList.length - 1]
+          this.currentBbox = this.$children[this.bbox_list.length - 1]
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
+
             this.currentBbox.createdScalingBox(x, y)
+
           } else if (this.boxEventType === boxEvent['move']) {
             this.currentBbox.moveBox(x, y, event.target)
           } else if (this.boxEventType === boxEvent['rescale-left-top']) {
@@ -240,17 +297,20 @@
         let y = (event.pageY - rectY) / height * 100
         return [x, y]
       },
-
       onAnyKeyDown: function (event) {
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
-        if (box) {
-          let label = this.label_candidates_dict[this.currentDownKey]
+        if (box && this.currentDownKey in this.label_candidates_dict) {
+          let label = this.label_candidates_dict[this.currentDownKey]['label']
+          let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
 
-          if (label) {
-            this.$children[this.selected_box_id]['object_name'] = label['label']
-            this.updateBoxes()
-          }
+          this.$children[true_selected_box_id]['name'] = label
+
+          this.$store.commit('set_bbox_labeled_flag', {
+            flag: true
+          })
+
+          this.updateBoxes()
         }
       },
       onAnyKeyUp: function (event) {
@@ -259,17 +319,29 @@
       disabled: function () {
         return false
       },
+
       updateBoxes: function () {
+
         let objects = []
+
         for (let box of this.$children) {
+
           let xmin = this.imgWidth * (box['x'] / 100.0)
           let xmax = this.imgWidth * ((box['x'] + box['w']) / 100.0)
           let ymin = this.imgHeight * (box['y'] / 100.0)
           let ymax = this.imgHeight * ((box['y'] + box['h']) / 100.0)
 
+          let name = ''
+
+          if (typeof box['name'] === 'undefined') {
+            name = ''
+          } else {
+            name = box['name']
+          }
+
           let o = {
             'object': {
-              'name': box['object_name'],
+              'name': name,
               'pose': 'Unspecified',
               'truncated': 0,
               'difficult': 0,
@@ -283,22 +355,69 @@
           }
           objects.push(o)
         }
-
-        this.$store.dispatch('update_current_label_objects', {
+        this.$store.commit('update_current_label_objects', {
           label_objects: objects
         })
       },
-      add_recent_labeled_images_id: function (add_file_index) {
-        const self = this
-        this.$store.dispatch('add_recent_labeled_images_id_arr', {
-          add_file_index: add_file_index
+      add_recent_labeled_file_path: function (add_file_path) {
+        let self = this
+        this.$store.dispatch('add_recent_labeled_file_path', {
+          add_file_path: add_file_path
         }).then(
           this.$store.dispatch('load_recent_images', {
-            file_indices: self.$store.getters.get_recent_labeled_images_id_arr
+            file_paths: self.$store.getters.get_recent_labeled_file_paths
           })
         )
+      },
+      appendBbox: function (event) {
+        let object = {
+          'object': {
+            'bndbox': {
+              'xmin': 0, 'xmax': 0, 'ymin': 0, 'ymax': 0
+            },
+            'name': '',
+            'difficult': '',
+            'pose': ''
+          }
+        }
+
+        this.bbox_list.push(object)
+        this.bbox_id_list.push(this.bbox_id_counter)
+        this.bbox_id_counter++
+
+      },
+      loadBbox: function () {
+        let self = this
+
+        let fd = new FormData()
+        fd.append('xml_file_path', this.xml_file_path)
+
+        return axios.post('/api/get_bbox_list', fd).then(
+          function (response) {
+            if (response.data.json_data === '') {
+              self.bbox_id_list = []
+              self.bbox_list = []
+              return
+            }
+
+            let temp_bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+
+            self.bbox_id_list = []
+            self.bbox_list = []
+
+            if (typeof temp_bbox_list === 'undefined') {
+              return
+            }
+
+            for (let n in temp_bbox_list) {
+              self.bbox_id_list.push(self.bbox_id_counter)
+              self.bbox_id_counter++
+            }
+            self.bbox_list = temp_bbox_list
+          }
+        )
       }
-    },
+    }
   }
 </script>
 

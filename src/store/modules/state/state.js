@@ -5,7 +5,9 @@ let state = {
   current_img_width: 0,
   current_img_height: 0,
   current_file_index: 0,
+  current_file_path: '',
   current_file_name: '',
+
   current_json: '',
   current_dict: {},
   working_dict: {},
@@ -35,13 +37,8 @@ let state = {
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
 
-  label_candidates_dict: {
-    's': {
-      'label': 'sample',
-      'id': -1
-    }
-  },
-  recent_labeled_images_id_arr: [],
+  label_candidates_dict: {},
+  recent_labeled_file_paths: [],
 
   current_label_dict: {
     'anotation': {
@@ -61,7 +58,11 @@ let state = {
         }
       ]
     }
-  }
+  },
+  update_bbox_flag: false,
+
+  bbox_labeled_flag: true
+
 }
 
 export default state

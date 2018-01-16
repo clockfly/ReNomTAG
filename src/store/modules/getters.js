@@ -23,8 +23,12 @@ let getters = {
   get_current_raw_img (state) {
     return state.current_raw_img
   },
+  get_current_file_path (state) {
+    return state.current_file_path
+  },
   get_current_file_name (state) {
-    return state.current_file_name
+    let split_file_path = state.current_file_path.split('/')
+    return split_file_path[split_file_path.length - 1]
   },
   get_current_file_index (state) {
     return state.current_file_index
@@ -44,8 +48,8 @@ let getters = {
   get_label_id_dict_list (state) {
     return state.label_id_dict_list
   },
-  get_recent_labeled_images_id_arr (state) {
-    return state.recent_labeled_images_id_arr
+  get_recent_labeled_file_paths (state) {
+    return state.recent_labeled_file_paths
   },
   get_sidebar_selected_item_offset_top (state) {
     return state.sidebar_selected_item_offset_top
@@ -83,6 +87,12 @@ let getters = {
   get_selected_box_id (state) {
     return state.selected_box_id
   },
+  get_update_bbox_flag (state) {
+    return state.update_bbox_flag
+  },
+  get_bbox_labeled_flag (state) {
+    return state.bbox_labeled_flag
+  }
 
 }
 

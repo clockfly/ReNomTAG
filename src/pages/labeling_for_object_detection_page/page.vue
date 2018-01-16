@@ -6,7 +6,7 @@
       <label-list class='row1'></label-list>
     </div>
     <div id='row2'>
-      <recent-image-list class='row2'></recent-image-list>
+      <recent-images-list class='row2'></recent-images-list>
       <div id='shortcut-description' class='row2'></div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 <script>
   import FileList from './file_list.vue'
   import ImageDisplay from './image_display.vue'
-  import RecentImageList from './recent_image_list.vue'
+  import RecentImagesList from './recent_images/recent_images_list.vue'
   import LabelList from './label_list.vue'
 
   export default {
@@ -23,7 +23,7 @@
     components: {
       'file-list': FileList,
       'image-display': ImageDisplay,
-      'recent-image-list': RecentImageList,
+      'recent-images-list': RecentImagesList,
       'label-list': LabelList
     }
   }

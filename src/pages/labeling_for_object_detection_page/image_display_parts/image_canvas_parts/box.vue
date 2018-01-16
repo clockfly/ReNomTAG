@@ -7,9 +7,28 @@
       <div class='left-bottom small-box'></div>
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
-      <div class="object_name" v-if="object_name">{{ object_name }}</div>
+      <div class="object_name" v-if="name">{{ name }}</div>
+      <div class="not_labeled" v-else>
+        <table class="bbox-label-list">
+          <tr>
+            <th>
+              Label
+            </th>
+            <th>
+              Shortcut
+            </th>
+          </tr>
+          <tr class="bbox-list-item" v-for="key in Object.keys(label_candidates_dict)"
+              :shortcut="key"
+              :label="label_candidates_dict[key]['label']"
+          >
+            <td class="label-text">{{ label_candidates_dict[key]['label'] }}</td>
+            <td class="label-shortcut">{{ key }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
-
+    {{ bbox_labeled_flag }}
   </div>
 </template>
 
@@ -31,15 +50,23 @@
         w: 0,
         h: 0,
         selectedFlag: false,
-        object_name: ''
+        name: ''
       }
     },
     computed: {
       isSelected: function () {
         return this.selectedFlag
+      },
+      label_candidates_dict () {
+        return this.$store.getters.get_label_candidates_dict
+      },
+      bbox_labeled_flag () {
+        return this.$store.getters.get_bbox_labeled_flag
       }
+
     },
-    props: ['box_id'],
+    props: ['box_id', 'bndbox', 'current_img_width', 'current_img_height', 'prop_name'],
+
     methods: {
       scaleByLeftTop: function (x, y, dx = 0, dy = 0) {
         let px, py, pw, ph
@@ -224,6 +251,17 @@
         this.scaleInitW = this.w
         this.scaleInitH = this.h
       },
+    },
+
+    created: function () {
+      if (typeof this.bndbox === 'undefined') {
+        return
+      }
+      this.x = this.bndbox['xmin'] / this.current_img_width * 100
+      this.y = this.bndbox['ymin'] / this.current_img_height * 100
+      this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100
+      this.h = (this.bndbox['ymax'] - this.bndbox['ymin']) / this.current_img_height * 100
+      this.name = this.prop_name
     }
   }
 </script>
@@ -273,6 +311,21 @@
         background: #73DD00;
 
         z-index: 3;
+      }
+      .not_labeled {
+        position: absolute;
+        right: -200px;
+        top: 0;
+        color: #000;
+
+        .bbox-label-list {
+          tr {
+            padding: 0;
+          }
+          th, td {
+            padding: 2px 5px;
+          }
+        }
       }
     }
     .selected {

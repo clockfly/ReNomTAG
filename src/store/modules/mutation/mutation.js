@@ -23,7 +23,11 @@ let mutation = {
   set_raw_img (state, payload) {
     state.current_raw_img = payload.current_raw_img
     state.current_file_index = payload.current_file_index
-    state.current_file_name = payload.current_file_name
+    state.current_file_path = payload.current_file_path
+  },
+  set_raw_img_from_path (state, payload) {
+    state.current_raw_img = payload.current_raw_img
+    state.current_file_path = payload.current_file_path
   },
   set_current_img_width_and_height (state, payload) {
     state.current_img_width = payload.img_width
@@ -95,6 +99,12 @@ let mutation = {
   },
   update_label_candidates_dict_label (state, payload) {
     state.label_candidates_dict[payload.shortcut]['label'] = payload.new_label
+  },
+  toggle_update_bbox_flag (state, payload) {
+    state.update_bbox_flag = !state.update_bbox_flag
+  },
+  set_bbox_labeled_flag (state, payload) {
+    state.bbox_labeled_flag = payload.flag
   }
 }
 

@@ -1,8 +1,5 @@
 <template>
   <div id='file-list'>
-    <div id='search-box'>
-      <input placeholder="search" type="text"/>
-    </div>
     <div>
       <select name="select_page_step"
               id="select_page_step"
@@ -26,7 +23,7 @@
            :class="{selected: index===sidebar_current_file_index}">
         <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
         </file-item>
-        {{ fname }}
+        {{ fname | filterFileName }}
       </div>
 
     </div>
@@ -38,6 +35,7 @@
       </li>
       <li @click="change_page(sidebar_page_number)" class="arrow">></li>
     </ul>
+    <button @click="reload_filename_list">reload</button>
   </div>
 </template>
 <script>
@@ -102,7 +100,6 @@
               }
               // カレントページが2ページ目である場合
             } else if (this.sidebar_current_page === 2) {
-              console.log('2')
               for (let i = this.sidebar_current_page - 1; i < this.sidebar_current_page + this.max_page - 1; i++) {
                 temp_page_nation.push(i)
               }
@@ -163,8 +160,14 @@
       click_action (index) {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: false}).then(
-          self.$store.dispatch('load_raw_img', {index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index})
+          self.$store.dispatch('load_raw_img', {
+            filename_list: self.sidebar_filename_list,
+            index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index
+          })
         )
+        this.$store.commit('set_bbox_labeled_flag', {
+          flag: true
+        })
       },
       reload_sidebar_current_position_top () {
         let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
@@ -176,6 +179,13 @@
       calc_and_set_sidebar_file_list_scroll_position: function () {
 //        console.log('sidebar_selected_item_offset_top : ' + this.sidebar_selected_item_offset_top)
         this.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
+      },
+
+      reload_filename_list () {
+        this.$store.dispatch('reload_sidebar_thumbnail_and_filename_list', {
+          current_page: this.sidebar_current_page,
+          page_step: this.sidebar_page_step
+        })
       }
     },
     mounted: function () {
@@ -211,6 +221,13 @@
           this.change_page(this.sidebar_current_page)
         })
       }
+    },
+    filters: {
+      filterFileName: function (fname) {
+        // 適当なfilter処理
+        let fname_split = fname.split('/')
+        return fname_split[fname_split.length - 1]
+      }
     }
   }
 </script>
@@ -244,19 +261,6 @@
           background: #2d3e50;
           color: #fff;
         }
-      }
-    }
-    #search-box {
-      width: 100%;
-      margin-bottom: 3px;
-      box-sizing: border-box;
-
-      input {
-        width: 100%;
-        margin: 0;
-        outline: none;
-        padding: 1px 5px;
-        box-sizing: border-box;
       }
     }
 

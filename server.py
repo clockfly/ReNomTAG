@@ -15,6 +15,7 @@ from io import BytesIO as IO
 app = Bottle()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMG_DIR = '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/'
+XML_DIR = './xml'
 
 
 def set_json_body(body):
@@ -23,7 +24,7 @@ def set_json_body(body):
   return r
 
 
-def get_img_path(img_dir=IMG_DIR):
+def get_img_paths(img_dir=IMG_DIR):
   exts = ["jpg", "jpeg", "png"]
   res = []
   for e in exts:
@@ -33,6 +34,28 @@ def get_img_path(img_dir=IMG_DIR):
     else:
       res.extend(glob2.glob(path))
   return sorted(res)
+
+
+def get_xml_paths(xml_dir=XML_DIR):
+  xml_files_pat = os.path.join(xml_dir, "**.xml")
+  xml_paths = glob2.glob(xml_files_pat)
+  return xml_paths
+
+
+def get_file_name(x):
+  return x.split("/")[-1].split(".")[0]
+
+
+def get_difference_set():
+  img_paths = get_img_paths(IMG_DIR)
+  xml_paths = get_xml_paths(XML_DIR)
+  xml_names = list(map(get_file_name, xml_paths))
+
+  def difference_set_paths_filter(img_paths):
+    img_name = get_file_name(img_paths)
+    return img_name not in xml_names
+
+  return list(filter(difference_set_paths_filter, img_paths))
 
 
 def json2xml(json_obj, line_padding=""):
@@ -88,7 +111,6 @@ def fonts(file_name):
 def get_raw_img():
   # root_dir = request.params.root_dir
   filename = request.params.filename
-  print(filename)
 
   # file_path = os.path.join(root_dir, filename)
   with open(filename, "rb") as image_reader:
@@ -105,6 +127,7 @@ def get_raw_img():
 @route("/api/get_raw_images", method="POST")
 def get_raw_images():
   # root_dir = request.params.root_dir
+  # filename_list = request.params.filename_list.split(',')
   filename_list = request.params.filename_list.split(',')
 
   result = []
@@ -127,12 +150,11 @@ def get_raw_images():
 @route("/api/get_filename_list", method="POST")
 def get_filename_list():
   root_dir = request.params.root_dir
-  file_paths = get_img_path(root_dir)
 
-  # filename_list = [f.split("/")[-1] for f in file_paths]
+  difference_set_paths = get_difference_set()
 
   body = json.dumps({
-    "filename_list": file_paths,
+    "filename_list": difference_set_paths,
   })
   ret = set_json_body(body)
   return ret
@@ -140,7 +162,8 @@ def get_filename_list():
 
 @route("/api/get_sidebar_thumbnail_and_filename_list", method="POST")
 def get_sidebar_thumbnail_and_filename_list():
-  file_paths = request.params.filename_list.split(",")
+  # file_paths = request.params.filename_list.split(",")
+  file_paths = get_difference_set()
 
   # current page. start: 1
   current_page = int(request.params.current_page)
@@ -167,7 +190,7 @@ def get_sidebar_thumbnail_and_filename_list():
 
   body = json.dumps({
     "sidebar_thumbnail_list": image_list,
-    "sidebar_filename_list": [f.split("/")[-1] for f in file_paths],
+    "sidebar_filename_list": file_paths,
     "sidebar_filename_list_index": indices
   })
   ret = set_json_body(body)
@@ -184,6 +207,7 @@ def save_xml_from_label_dict():
   label_dict = json.loads(request.params.label_dict)
   save_xml_file_name = request.params.save_xml_file_name
   save_xml_dir = request.params.save_xml_dir
+
   if not os.path.exists(save_xml_dir):
     os.makedirs(save_xml_dir)
 
@@ -238,6 +262,37 @@ def load_label_candidates_dict():
 
   with open(load_json_file_path, 'r') as ftpr:
     json_data = json.load(ftpr)
+
+  body = json.dumps({
+    'json_data': json_data
+  })
+
+  ret = set_json_body(body)
+  return ret
+
+
+@route("/api/get_bbox_list", method="POST")
+def get_bbox_list():
+  xml_file_path = request.params.xml_file_path
+
+  if not os.path.exists(xml_file_path):
+    json_data = ''
+
+  else:
+    json_data = xml2json(xml_file_path)
+
+    json_dict = json.loads(json_data)
+
+    try:
+      # object dataが1つだけの場合、dictになってしまうのでlistに変換する
+      if isinstance(json_dict['anotation']['object'], dict):
+        temp = [json_dict['anotation']['object']]
+        json_dict['anotation']['object'] = temp
+
+    except KeyError:
+      json_dict['anotation']['object'] = ''
+
+    json_data = json.dumps(json_dict, indent=4)
 
   body = json.dumps({
     'json_data': json_data

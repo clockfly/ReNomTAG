@@ -4,7 +4,7 @@
       <div id='file-text'>
         <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
         + 1 }} / {{ filename_list_length }}</span>
-        <span>{{ current_file_name }}</span>
+        <span>{{ current_file_path }}</span>
       </div>
       <div id='icon'>
         <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
@@ -19,10 +19,7 @@
         <input type='button' value='<<' @click='load_prev_raw_img()'>
         <input type='button' value='save' @click='save_xml_from_dict()'>
         <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save at <input type="text" v-model="save_xml_dir"
-                                     class="save_xml_dir_input">/
-          {{ save_xml_file_name_computed }}.xml
-        </div>
+        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name_computed }}.xml</div>
       </div>
     </div>
   </div>
@@ -49,8 +46,15 @@
       filename_list_length: function () {
         return this.filename_list.length
       },
+      sidebar_filename_list: function () {
+        return this.$store.getters.get_sidebar_filename_list
+      },
+
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
+      },
+      current_file_path: function () {
+        return this.$store.getters.get_current_file_path
       },
       current_file_name: function () {
         return this.$store.getters.get_current_file_name
@@ -68,13 +72,23 @@
         return this.$store.getters.get_current_img_height
       },
       save_xml_file_name_computed: function () {
-        let file_path_split = this.filename_list[this.current_file_index].split('/')
-        return file_path_split[file_path_split.length - 1].split('.')[0]
-      }
+        if (this.filename_list.length < 1) {
+          return ''
+        } else {
+//          let file_path_split = this.filename_list[this.current_file_index].split('/')
+          return this.current_file_name.split('.')[0]
+        }
+      },
+      sidebar_current_page: function () {
+        return this.$store.getters.get_sidebar_current_page
+      },
+      sidebar_page_step: function () {
+        return this.$store.getters.get_sidebar_page_step
+      },
     },
     created () {
       const self = this
-      if (this.$store.getters.get_filename_list.length === 0) {
+      if (this.filename_list.length === 0) {
         let ret = this.$store.dispatch('load_filename_list')
         ret.then(function () {
           self.load_raw_img(0)
@@ -86,20 +100,34 @@
     methods: {
       // Defined index
       load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {index: index})
+        this.$store.dispatch('load_raw_img', {
+          filename_list: this.filename_list,
+          index: index
+        })
       },
       load_next_raw_img: function () {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {index: this.current_file_index + 1})
+          this.$store.dispatch('load_raw_img', {
+            filename_list: this.sidebar_filename_list,
+            index: this.current_file_index + 1
+          })
         )
       },
-
       load_prev_raw_img: function () {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {index: this.current_file_index - 1})
+          this.$store.dispatch('load_raw_img', {
+            filename_list: self.sidebar_filename_list,
+            index: this.current_file_index - 1
+          })
         )
+      },
+      load_sidebar_thumbnail_and_filename_list () {
+        this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
+          current_page: this.sidebar_current_page,
+          page_step: this.sidebar_page_step
+        })
       },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
@@ -108,7 +136,7 @@
         let self = this
 
         self.$store.dispatch('set_current_label_dict', {
-          file_path: self.filename_list[self.current_file_index],
+          file_path: self.current_file_path,
           size_height: self.current_img_height,
           size_width: self.current_img_width
         }).then(
@@ -117,6 +145,10 @@
             save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
           })
+        ).then(
+          self.$store.commit('toggle_update_bbox_flag')
+        ).then(
+          self.load_sidebar_thumbnail_and_filename_list()
         )
       }
     }
@@ -165,7 +197,7 @@
           margin: 0 0 0 0;
           padding: 3px 4px 3px 4px;
         }
-        .save_xml_file_name_input, .save_xml_dir_input {
+        .save_xml_file_name_input {
           :focus {
             outline: none;
           }
