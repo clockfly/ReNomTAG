@@ -162,7 +162,9 @@ def get_filename_list():
 
 @route("/api/get_sidebar_thumbnail_and_filename_list", method="POST")
 def get_sidebar_thumbnail_and_filename_list():
-  file_paths = request.params.filename_list.split(",")
+
+  # file_paths = request.params.filename_list.split(",")
+  file_paths = get_difference_set()
 
   # current page. start: 1
   current_page = int(request.params.current_page)

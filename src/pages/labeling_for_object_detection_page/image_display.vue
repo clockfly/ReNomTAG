@@ -102,8 +102,8 @@
         )
       },
 
-      reload_sidebar_thumbnail_and_filename_list () {
-        this.$store.dispatch('reload_sidebar_thumbnail_and_filename_list', {
+      load_sidebar_thumbnail_and_filename_list () {
+        this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
           current_page: this.sidebar_current_page,
           page_step: this.sidebar_page_step
         })
@@ -134,7 +134,7 @@
         ).then(
           self.$store.commit('toggle_update_bbox_flag')
         ).then(
-          self.reload_sidebar_thumbnail_and_filename_list()
+          self.load_sidebar_thumbnail_and_filename_list()
         )
       }
     }
