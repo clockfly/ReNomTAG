@@ -8,6 +8,25 @@
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
       <div class="object_name" v-if="name">{{ name }}</div>
+      <div class="not_labeled" v-else>
+        <table class="bbox-label-list">
+          <tr>
+            <th>
+              Label
+            </th>
+            <th>
+              Shortcut
+            </th>
+          </tr>
+          <tr class="bbox-list-item" v-for="key in Object.keys(label_candidates_dict)"
+              :shortcut="key"
+              :label="label_candidates_dict[key]['label']"
+          >
+            <td class="label-text">{{ label_candidates_dict[key]['label'] }}</td>
+            <td class="label-shortcut">{{ key }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +55,11 @@
     computed: {
       isSelected: function () {
         return this.selectedFlag
+      },
+      label_candidates_dict () {
+        return this.$store.getters.get_label_candidates_dict
       }
+
     },
     props: ['box_id', 'bndbox', 'current_img_width', 'current_img_height', 'prop_name'],
 
@@ -281,6 +304,21 @@
         background: #73DD00;
 
         z-index: 3;
+      }
+      .not_labeled {
+        position: absolute;
+        right: -200px;
+        top: 0;
+        color: #000;
+
+        .bbox-label-list {
+          tr {
+            padding: 0;
+          }
+          th, td {
+            padding: 2px 5px;
+          }
+        }
       }
     }
     .selected {
