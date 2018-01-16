@@ -11,6 +11,7 @@
         <span><i class='fa fa-search-minus' aria-hidden='true'></i></span>
       </div>
     </div>
+    <div>{{ bbox_labeled_flag }}</div>
     <div id='outer-panel'>
       <transition>
         <image-canvas></image-canvas>
@@ -85,6 +86,9 @@
       sidebar_page_step: function () {
         return this.$store.getters.get_sidebar_page_step
       },
+      bbox_labeled_flag () {
+        return this.$store.getters.get_bbox_labeled_flag
+      }
     },
     created () {
       const self = this

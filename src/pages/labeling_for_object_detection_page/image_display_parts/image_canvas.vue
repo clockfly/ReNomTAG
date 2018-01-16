@@ -183,13 +183,10 @@
         this.bbox_list.splice(delete_index, 1)
 
         this.updateBoxes()
-        this.$store.commit('set_bbox_labeled_flag', {
-          flag: true
-        })
+
 //         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
-        console.log('mouse down')
 
         let [x, y] = this.transformCurrentCorrdinate(event)
         let select_flag = true
@@ -245,13 +242,6 @@
           this.boxEventType = boxEvent['create']
         }
         this.add_recent_labeled_file_path(this.current_file_path)
-
-
-        this.$store.commit('set_bbox_labeled_flag', {
-          flag: false
-        })
-
-
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
@@ -261,7 +251,6 @@
         this.updateBoxes()
       },
       onMouseMove: function (event) {
-        console.log('move')
         if (!this.mouseDownFlag) return
         let [x, y] = this.transformCurrentCorrdinate(event)
         if (!this.currentBbox) {
@@ -271,6 +260,10 @@
           if (this.boxEventType === boxEvent['create']) {
 
             this.currentBbox.createdScalingBox(x, y)
+
+            this.$store.commit('set_bbox_labeled_flag', {
+              flag: false
+            })
 
           } else if (this.boxEventType === boxEvent['move']) {
             this.currentBbox.moveBox(x, y, event.target)
@@ -306,9 +299,6 @@
 
           this.$children[true_selected_box_id]['name'] = label
 
-          this.$store.commit('set_bbox_labeled_flag', {
-            flag: true
-          })
 
           this.updateBoxes()
         }

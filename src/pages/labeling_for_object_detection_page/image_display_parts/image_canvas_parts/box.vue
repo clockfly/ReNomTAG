@@ -28,7 +28,6 @@
         </table>
       </div>
     </div>
-    {{ bbox_labeled_flag }}
   </div>
 </template>
 
@@ -262,7 +261,17 @@
       this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100
       this.h = (this.bndbox['ymax'] - this.bndbox['ymin']) / this.current_img_height * 100
       this.name = this.prop_name
-    }
+    },
+    watch: {
+      // この関数は current_raw_img_src が変わるごとに実行されます。
+      name: function (newValue, oldValue) {
+        if (oldValue === '' && newValue !== '') {
+          this.$store.commit('set_bbox_labeled_flag', {
+            flag: true
+          })
+        }
+      }
+    },
   }
 </script>
 

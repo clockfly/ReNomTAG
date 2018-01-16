@@ -46,8 +46,6 @@
           fd.append('xml_file_path', this.xml_file_path)
           return axios.post('/api/get_bbox_list', fd).then(
             function (response) {
-              console.log()
-              console.log(response.data.json_data)
               self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
             }
           )
