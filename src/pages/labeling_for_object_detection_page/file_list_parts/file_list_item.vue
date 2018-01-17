@@ -1,7 +1,5 @@
 <template>
-  <div class='img-box'>
-    <img :src='imgData'>
-  </div>
+  <img :src='imgData' class="file_list_item_img">
 </template>
 
 <script>
@@ -27,25 +25,11 @@
 </script>
 
 <style lang='scss'>
+  .file_list_item_img {
+    width: 100%;
+    display: block;
+    transition: all .8s;
 
-  .img-box {
-    height: 100%;
-    width: 30%;
-    position: relative;
-
-    img {
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 100%;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      position: absolute;
-      margin: auto;
-      text-align: left;
-    }
   }
 
 </style>

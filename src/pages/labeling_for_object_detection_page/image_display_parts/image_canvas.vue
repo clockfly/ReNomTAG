@@ -291,6 +291,7 @@
         return [x, y]
       },
       onAnyKeyDown: function (event) {
+
         let box = this.$el.querySelector('.selected')
         this.currentDownKey = event.key
         if (box && this.currentDownKey in this.label_candidates_dict) {
@@ -298,8 +299,6 @@
           let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
 
           this.$children[true_selected_box_id]['name'] = label
-
-
           this.updateBoxes()
         }
       },

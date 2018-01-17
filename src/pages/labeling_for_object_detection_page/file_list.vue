@@ -1,32 +1,37 @@
 <template>
-  <div id='file-list'>
-    <div>
-      <select name="select_page_step"
-              id="select_page_step"
-              @change="change_page_step(select_page_step)"
-              v-model="select_page_step">
-        <option>50</option>
-        <option selected="selected">100</option>
-        <option>200</option>
-      </select>
-    </div>
+  <div id='left-sidebar'>
+
+    <!--<div>-->
+    <!--<select name="select_page_step"-->
+    <!--id="select_page_step"-->
+    <!--@change="change_page_step(select_page_step)"-->
+    <!--v-model="select_page_step">-->
+    <!--<option>50</option>-->
+    <!--<option selected="selected">100</option>-->
+    <!--<option>200</option>-->
+    <!--</select>-->
+    <!--</div>-->
     <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
 
     <!--<p style="font-size: 10px; line-height: 0.8; margin: 5px;">sidebar_selected_item_offset_top :{{ sidebar_selected_item_offset_top-->
     <!--}} <br />sidebar_selected_item_offset_height: {{ sidebar_selected_item_offset_height}} </p>-->
     <!--<p style="font-size: 10px; line-height: 0.5; margin: 5px;">file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>-->
 
-    <div id='inner-file-list'>
+    <div class="file-list-header">Images</div>
+    <div id='file-list-wrapper'>
 
-      <div class="file-item" v-for='(fname, index) in sidebar_filename_list'
-           :key='index' @click="click_action(index)"
-           :class="{selected: index===sidebar_current_file_index}">
-        <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
-        </file-item>
-        {{ fname | filterFileName }}
-      </div>
+      <ul id="file-list-inner">
+
+        <li class="file-item" v-for='(fname, index) in sidebar_filename_list'
+            :key='index' @click="click_action(index)"
+            :class="{selected: index===sidebar_current_file_index}">
+          <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
+          </file-item>
+        </li>
+      </ul>
 
     </div>
+
     <ul id="file-list-page-nation">
       <li @click="change_page(1)" class="arrow"><</li>
       <li v-for="n in this.sidebar_page_nation" @click="change_page(n)"
@@ -35,7 +40,6 @@
       </li>
       <li @click="change_page(sidebar_page_number)" class="arrow">></li>
     </ul>
-    <button @click="reload_filename_list">reload</button>
   </div>
 </template>
 <script>
@@ -223,43 +227,79 @@
       }
     },
     filters: {
-      filterFileName: function (fname) {
-        // 適当なfilter処理
-        let fname_split = fname.split('/')
-        return fname_split[fname_split.length - 1]
-      }
+//      filterFileName: function (fname) {
+//        // 適当なfilter処理
+//        let fname_split = fname.split('/')
+//        return fname_split[fname_split.length - 1]
+//      }
     }
   }
 </script>
 
 <style lang='scss'>
 
-  #file-list {
-    width: 200px;
-    #inner-file-list {
-      height: calc(100% - 120px);
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      overflow: auto;
+  #left-sidebar {
+    width: 250px;
+    border-right: 1px solid #666666;
 
-      .file-item {
-        height: 40px;
+    .file-list-header {
+      font-size: 18px;
+      font-weight: bold;
+      width: 200px;
+      margin: 0 auto;
+      padding: 20px 0 5px 0;
+
+    }
+    #file-list-wrapper {
+      height: calc(100% - 100px);
+      overflow: scroll;
+      width: 200px;
+      margin: 0 auto;
+
+      #file-list-inner {
+
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #e6e6e6;
-        padding-right: 10px;
-        box-sizing: border-box;
-        margin-bottom: 2px;
+        height: auto;
+        overflow: scroll;
 
-        cursor: pointer;
+        -webkit-column-count: 3;
+        -webkit-column-gap: 1.3px;
+        -webkit-column-fill: auto;
+        -moz-column-count: 3;
+        -moz-column-gap: 1.3px;
+        -moz-column-fill: auto;
+        column-count: 3;
+        column-gap: 1.3px;
+        column-fill: auto;
 
-        font-size: 12px;
+        margin: 0;
+        padding-left: 0;
 
-        &.selected {
-          background: #2d3e50;
-          color: #fff;
+        .file-item {
+
+          display: inline-block;
+          background: #FEFEFE;
+
+          -webkit-column-break-inside: avoid;
+          -moz-column-break-inside: avoid;
+          column-break-inside: avoid;
+          background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
+          opacity: 1;
+
+          -webkit-transition: all .2s ease;
+          -moz-transition: all .2s ease;
+          -o-transition: all .2s ease;
+          transition: all .2s ease;
+
+          margin-bottom: -4px;
+
+          &.selected {
+            background: #2d3e50;
+            color: #fff;
+          }
+          &:hover {
+            cursor: pointer;
+          }
         }
       }
     }
@@ -282,7 +322,7 @@
 
       li {
         padding: 2px 0;
-        width: 25px;
+        width: 20px;
         text-align: center;
         border: 1px solid #0c0c0c;
         box-sizing: border-box;

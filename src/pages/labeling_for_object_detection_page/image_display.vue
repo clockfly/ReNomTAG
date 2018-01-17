@@ -1,17 +1,16 @@
 <template>
   <div id='image-display'>
-    <div id='header'>
-      <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
-        + 1 }} / {{ filename_list_length }}</span>
-        <span>{{ current_file_path }}</span>
-      </div>
-      <div id='icon'>
-        <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
-        <span><i class='fa fa-search-minus' aria-hidden='true'></i></span>
-      </div>
-    </div>
-    <div>{{ bbox_labeled_flag }}</div>
+    <!--<div id='header'>-->
+      <!--<div id='file-text'>-->
+        <!--<span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index-->
+        <!--+ 1 }} / {{ filename_list_length }}</span>-->
+        <!--<span>{{ current_file_path }}</span>-->
+      <!--</div>-->
+      <!--<div id='icon'>-->
+        <!--<span><i class='fa fa-search-plus' aria-hidden='true'></i></span>-->
+        <!--<span><i class='fa fa-search-minus' aria-hidden='true'></i></span>-->
+      <!--</div>-->
+    <!--</div>-->
     <div id='outer-panel'>
       <transition>
         <image-canvas></image-canvas>
@@ -186,10 +185,11 @@
     #outer-panel {
       width: 100%;
       height: calc(100% - 30px);
-      padding: 3px 3px 3px 3px;
+      /*padding: 3px 3px 3px 3px;*/
+
       background-color: #ffffff;
       box-sizing: border-box;
-      border: solid 1px #a3a3a3;
+      // border: solid 1px #a3a3a3;
       #low-button {
         height: 40px;
         width: 400px;
