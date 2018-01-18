@@ -1,53 +1,34 @@
 <template>
   <div id='tag-list'>
     <div id='tag-list-header'>
-      <span>Labels</span>
+      Class List
     </div>
     <form id="add-new-label-form">
-
-      <p class="add-new-label-header">Add New Label</p>
       <div class="add-new-label-input-area">
         <input type="text"
                class="label-text"
                v-model='newLabelText'
                @keyup.enter='addNewLabel'
-               placeholder="Input New Label">
+               placeholder="label name...">
         <input type="text"
                class="label-shortcut"
                v-model='newLabelShortcut'
                @keyup.enter.stop='addNewLabel'
                @keyup='setShortcutKey'
-               placeholder="Input New Shortcut">
+               placeholder="key...">
       </div>
 
       <button @click="addNewLabel" class="add-new-label-btn">Add New Label</button>
 
     </form>
-    <div id='main-tag-list'>
 
-      <div class='tag-tree'>
-        <table class='tag-list'>
-          <tr>
-            <th>
-              Label
-            </th>
-            <th>
-              Shortcut
-            </th>
-          </tr>
-          <label-tree v-for="key in Object.keys(label_candidates_dict)" :shortcut="key"
-                      :label="label_candidates_dict[key]['label']"></label-tree>
+    <div id='tag-tree'>
+      <ul class='tag-list'>
+        <label-tree v-for="key in Object.keys(label_candidates_dict)" :shortcut="key"
+                    :label="label_candidates_dict[key]['label']"></label-tree>
+      </ul>
 
-        </table>
-
-      </div>
     </div>
-
-    <div class="save-load-label-btn">
-      <!--<button @click="save_label_candidates_dict" class="save-label-btn">Save Label</button>-->
-      <!--<button @click="load_label_candidates_dict" class="load-label-btn">Load label</button>-->
-    </div>
-
   </div>
 </template>
 
@@ -105,12 +86,15 @@
         if (!this.newLabelText) {
           alert('Please set label')
           return
+
         } else if (!this.newLabelShortcut) {
           alert('Please set shortcut')
           return
+
         } else if (this.label_candidates_dict[this.newLabelShortcut]) {
           alert('Shortcut is already exists.')
           return
+
         }
 
         this.$store.commit('add_new_label', {
@@ -136,57 +120,18 @@
 
 <style lang='scss'>
   #tag-list {
-    width: 250px;
+    width: 200px;
     display: flex;
     justify-content: flex-start;
+    background-color: #f4f4f2;
+    padding: 0 25px;
+
     #tag-list-header {
-      display: flex;
-      align-items: center;
-      background-color: #a3a3a3;
-      width: 100%;
-      height: 30px;
-      span {
-        margin-left: 5px;
-        color: #3a3a3a;
-        font-weight: bold;
-      }
-    }
-    #tag-list-search-box {
-      width: 100%;
-      margin: 5px 0;
-      input {
-        width: 100%;
-        padding: 0 0 0 0;
-        margin: 0 0 0 0;
-      }
-    }
-
-    #main-tag-list {
-      overflow-y: scroll;
-      .tag-tree {
-        left: 0px;
-        width: 200px;
-      }
-
-      .tag-list {
-        width: 100%;
-        height: 100%;
-        font-size: 1.0rem;
-        font-weight: bold;
-        box-sizing: border-box;
-        border: solid 1px #a3a3a3;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        th {
-          padding: 0;
-          font-size: 12px;
-        }
-
-        tr {
-          padding: 0;
-        }
-      }
+      font-size: 18px;
+      font-weight: bold;
+      width: 200px;
+      margin: 0 auto;
+      padding: 20px 0 5px 0;
     }
 
     #add-new-label-form {
@@ -195,36 +140,47 @@
       background: none;
       border: none;
 
-      .add-new-label-header {
-        margin: 0;
-        padding: 10px 0 5px 0;
-      }
       .add-new-label-input-area {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
 
         input {
-          margin: 0 0 5px 0;
-          padding: 2px 5px;
+          padding: 3px 7px;
           outline: none;
+          border-color: #7d7d7d;
+          margin: 0;
+          &::-webkit-input-placeholder {
+            color: #a6a6a6;
+            font-size: 13px;
+          }
 
         }
         input.label-text {
+          width: 132.5px;
 
         }
         input.label-shortcut {
+          width: 62.5px;
 
         }
       }
       .add-new-label-btn {
-        margin: 5px 0 10px 0;
         width: 100%;
         text-align: center;
-        padding: 5px 0;
-
+        padding: 10px 0;
+        margin: 0;
         cursor: pointer;
         border: none;
-        border-radius: 0.1875rem;
-        background-color: tomato;
+        border-radius: 5px;
+        background-color: #326699;
         color: #fff;
+        &:focus {
+          outline: none;
+        }
+        &:hover {
+          background-color: lighten(#326699, 10%);
+        }
 
       }
     }
@@ -261,6 +217,22 @@
         color: #fff;
       }
 
+    }
+    #tag-tree {
+      padding-top: 15px;
+      max-height: 360px;
+      overflow-y: scroll;
+      .tag-list {
+        width: 100%;
+        height: 100%;
+        font-weight: bold;
+        box-sizing: border-box;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-style: none;
+
+      }
     }
   }
 

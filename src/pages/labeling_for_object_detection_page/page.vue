@@ -7,7 +7,6 @@
     </div>
     <div id='row2'>
       <recent-images-list class='row2'></recent-images-list>
-      <div id='shortcut-description' class='row2'></div>
     </div>
   </div>
 </template>
@@ -35,29 +34,25 @@
     #row1 {
       display: flex;
       height: calc(100% - 200px);
-      padding-left: 5px;
+      /*padding-left: 5px;*/
       .row1 {
-        height: calc(100% - 10px);
+        /*height: calc(100% - 10px);*/
         display: inline-block;
-        padding-right: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        /*padding-right: 5px;*/
+        /*padding-top: 5px;*/
+        /*padding-bottom: 5px;*/
       }
     }
     #row2 {
       display: flex;
       height: 200px;
-      padding-left: 5px;
+      /*padding-left: 5px;*/
       .row2 {
-        padding-right: 5px;
-        height: calc(100% - 5px);
+        /*padding-right: 5px;*/
+        height: calc(100%);
         display: inline-block;
-        padding-bottom: 5px;
+        /*padding-bottom: 5px;*/
       }
     }
-  }
-
-  #shortcut-description {
-    width: 200px;
   }
 </style>

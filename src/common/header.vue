@@ -1,14 +1,12 @@
 <template>
   <header>
-    <div class='header-title'>
-      <p id='soft-symbol'>
-        <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' @click='toggleMenu' v-bind:class='{ open: isMenuShown }'></i>
-        ReNom
-      </p>
-    </div>
+
+    <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' @click='toggleMenu'
+       v-bind:class='{ open: isMenuShown }'></i>
+    <div class="tool-name"><span class="bold">ReNom</span> Label</div>
+
   </header>
 </template>
-
 
 <script>
   export default {
@@ -30,26 +28,28 @@
 <style lang='scss'>
   header {
     width: 100%;
-    height: 35px;
+    height: 50px;
     margin: 0;
     padding: 0;
-    background-color: #2d3e50;
-    font-family: 'Arial Black';
+    background-color: #1e264d;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
 
-    #soft-symbol {
-      margin: 0 0 0 0;
-      padding-left: 10px;
-      color: #ffffff;
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-align: left;
-
-      #toggle-menu {
-        margin-right: 20px;
-      }
-      #toggle-menu:hover {
-        color: #a3a3a3;
+    .tool-name {
+      font-size: 18px;
+      .bold {
+        font-size: 18px;
+        font-weight: bold;
       }
     }
+
+    #toggle-menu {
+      margiN: 0 20px;
+    }
+    #toggle-menu:hover {
+      cursor: pointer;
+    }
+
   }
 </style>

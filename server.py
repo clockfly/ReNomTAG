@@ -180,13 +180,17 @@ def get_sidebar_thumbnail_and_filename_list():
   indices = list(range(start_page + 1, start_page + end_page + 1))
 
   for f in file_paths:
-    img = Image.open(f, 'r')
-    img.thumbnail((40, 40), Image.ANTIALIAS)
-    buffered = IO()
-    img.save(buffered, format='PNG')
-    encoded_img = base64.b64encode(buffered.getvalue())
-    encoded_img = encoded_img.decode('utf8')
-    image_list.append(encoded_img)
+    with open(f, "rb") as image_reader:
+      encoded_img = base64.b64encode(image_reader.read())
+      encoded_img = encoded_img.decode('utf8')
+      image_list.append(encoded_img)
+
+      # img = Image.open(f, 'r')
+      # img.thumbnail((40, 40), Image.ANTIALIAS)
+      # buffered = IO()
+      # img.save(buffered, format='PNG')
+      # encoded_img = base64.b64encode(buffered.getvalue())
+      # encoded_img = encoded_img.decode('utf8')
 
   body = json.dumps({
     "sidebar_thumbnail_list": image_list,

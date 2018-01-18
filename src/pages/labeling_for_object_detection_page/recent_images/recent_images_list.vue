@@ -1,12 +1,15 @@
 <template>
   <div id='recent-image'>
     <div id='inner-recent-image'>
-      <div class='recent-image-header'>
-        <span>Recent Labeled Images</span>
+
+      <div class="recent-images-text">
+        <div class="recent-images-inner-text">
+          <p>Labeled</p>
+          <p>Images</p>
+        </div>
       </div>
-
-
       <ul id='recent-images-list'>
+
         <recentImagesListItem
           v-for='(img_src, index) in recent_raw_images'
           :img_src="img_src"
@@ -77,28 +80,33 @@
 <style lang='scss'>
 
   #recent-image {
-    width: calc(100% - 260px);
+    /*width: calc(100% - 270px);*/
+    width: 100%;
     height: 100%;
 
     #inner-recent-image {
       height: 100%;
       box-sizing: border-box;
-      border: solid 1px #a3a3a3;
+      background-color: #cccccc;
+      display: flex;
 
-      .recent-image-header {
+      .recent-images-text {
+
+        color: #fff;
+        background-color: #2d3e50;
+        height: 100%;
+        padding: 0 20px 0 60px;
         display: flex;
-        height: 30px;
-        width: 100%;
-        background-color: #a3a3a3;
+        justify-content: center;
         align-items: center;
-        tt {
-          color: #3a3a3a;
-          font-weight: bold;
+        p {
+          margin: 0;
         }
+
       }
 
       #recent-images-list {
-        height: calc(100% - 30px);
+        height: 100%;
         width: 100%;
         margin: 0;
         padding: 0;

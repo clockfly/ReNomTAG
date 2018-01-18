@@ -36,6 +36,11 @@
 </script>
 
 <style lang='scss'>
+
+  body {
+    background-color: #fff !important;
+  }
+
   #app {
     position: relative;
     display: flex;

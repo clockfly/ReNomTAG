@@ -1,16 +1,10 @@
 <template>
 
-  <tr class="tag-list-item">
-    <!--<input type="text"-->
-           <!--v-model="label"-->
-           <!--class="label-text"-->
-    <!--&gt;-->
-    <!--<input type="text" v-model="shortcut" class="label-shortcut">-->
-
-    <td class="label-text">{{ label }}</td>
-    <td class="label-shortcut">{{ shortcut }}</td>
-
-  </tr>
+  <li class="tag-list-item">
+    <div class="label-text">{{ label }}</div>
+    <div class="label-shortcut">{{ shortcut }}</div>
+    <div class="label-count count-10">1</div>
+  </li>
 </template>
 
 <script>
@@ -29,24 +23,6 @@
     },
     computed: {},
     methods: {},
-    watch: {
-
-//      shortcut_data: function () {
-//        let self = this
-//        console.log('fafa')
-//        this.$store.dispatch('update_label_candidates_dict_shortcut', {
-//          old_shortcut: self.shortcut,
-//          new_shortcut: self.shortcut_data
-//        })
-//      },
-//      label_data: function () {
-//        let self = this
-//        this.$store.dispatch('update_label_candidates_dict_label', {
-//          shortcut: self.shortcut_data,
-//          new_label: self.label_data
-//        })
-//      }
-    }
   }
 </script>
 
@@ -54,25 +30,59 @@
 
   .tag-list-item {
     width: 100%;
+    border-top: 1px solid #797979;
+    padding: 5px 10px 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    &:last-child {
+      border-bottom: 1px solid #797979;
+    }
 
     .label-text, .label-shortcut {
       padding: 0;
       margin: 0;
       outline: none;
-      color: rgba(0, 0, 0, 0.9)
+      color: #777777;
     }
-
 
     .label-text {
       flex: 1;
-      padding-left: 5px;
-      &::-webkit-input-placeholder, &:-ms-input-placeholder, &::-moz-placeholder {
-        color: #ccc;
-      }
     }
     .label-shortcut {
-      width: 50px;
+      width: 25px;
       text-align: center;
+      color: #3c3c3c;
+      background: #fff;
+      border: 1px solid #3c3c3c;
+      border-radius: 5px;
+      margin-right: 5px;
+      justify-content: center;
+      align-items: center;
+    }
+    .label-count {
+      border-radius: 5px;
+      width: 50px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .count-10 {
+      background-color: #e7009a;
+    }
+    .count-50 {
+      background-color: #9f13c1;
+    }
+    .count-100 {
+      background-color: #3f9aaf;
+    }
+    .count-200 {
+      background-color: #0920c4;
+    }
+    .count-10 {
+      background-color: #ea4b34;
     }
 
   }

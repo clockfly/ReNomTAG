@@ -1,25 +1,14 @@
 <template>
   <div id='image-display'>
-    <div id='header'>
-      <div id='file-text'>
-        <span style='margin-right: 20px; margin-left: 20px;'>{{ current_file_index
-        + 1 }} / {{ filename_list_length }}</span>
-        <span>{{ current_file_path }}</span>
-      </div>
-      <div id='icon'>
-        <span><i class='fa fa-search-plus' aria-hidden='true'></i></span>
-        <span><i class='fa fa-search-minus' aria-hidden='true'></i></span>
-      </div>
-    </div>
     <div id='outer-panel'>
       <transition>
         <image-canvas></image-canvas>
       </transition>
       <div id='low-button'>
-        <input type='button' value='<<' @click='load_prev_raw_img()'>
-        <input type='button' value='save' @click='save_xml_from_dict()'>
-        <input type='button' value='>>' @click='load_next_raw_img()'>
-        <div class="">save at {{ save_xml_dir }}/{{ save_xml_file_name_computed }}.xml</div>
+        <span class="file-name">{{ current_file_name }}</span>
+        <div id="save_xml_btn" @click='save_xml_from_dict()'>
+          Save <span class="save_xml_btn_arrow">>></span>
+        </div>
       </div>
     </div>
   </div>
@@ -85,6 +74,9 @@
       sidebar_page_step: function () {
         return this.$store.getters.get_sidebar_page_step
       },
+      bbox_labeled_flag () {
+        return this.$store.getters.get_bbox_labeled_flag
+      }
     },
     created () {
       const self = this
@@ -161,52 +153,41 @@
     height: 100%;
     flex: 1;
 
-    #header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      height: 30px;
-      background-color: #b5b5b5;
-      #file-text {
-        color: #3a3a3a;
-        font-weight: bold;
-      }
-      #icon {
-        tt {
-          font-size: 1.2rem;
-          margin-right: 10px;
-        }
-      }
-    }
     #outer-panel {
       width: 100%;
       height: calc(100% - 30px);
-      padding: 3px 3px 3px 3px;
+      /*padding: 3px 3px 3px 3px;*/
+
       background-color: #ffffff;
       box-sizing: border-box;
-      border: solid 1px #a3a3a3;
+      // border: solid 1px #a3a3a3;
       #low-button {
         height: 40px;
         width: 400px;
         display: flex;
         align-items: center;
         margin: auto;
-        justify-content: space-around;
-        input {
-          margin: 0 0 0 0;
-          padding: 3px 4px 3px 4px;
+        justify-content: center;
+
+        .file-name {
+          color: #666;
+          padding-right: 15px;
         }
-        .save_xml_file_name_input {
-          :focus {
-            outline: none;
+
+        #save_xml_btn {
+          background-color: #326699;
+          border-radius: 5px;
+          color: #fff;
+          padding: 3px 15px;
+          .save_xml_btn_arrow {
+            margin-left: 5px;
           }
-        }
-        .save_xml_file_name_input {
-          width: 150px;
-        }
-        .save_xml_dir_input {
-          width: 40px;
+
+          &:hover {
+            background-color: lighten(#326699, 10%);
+            cursor: pointer;
+          }
+
         }
       }
       .v-enter-active, .v-leave-active {
