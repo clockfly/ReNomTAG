@@ -7,7 +7,6 @@
     </div>
     <div id='row2'>
       <recent-images-list class='row2'></recent-images-list>
-      <div id='shortcut-description' class='row2'></div>
     </div>
   </div>
 </template>
@@ -55,9 +54,5 @@
         /*padding-bottom: 5px;*/
       }
     }
-  }
-
-  #shortcut-description {
-    width: 200px;
   }
 </style>

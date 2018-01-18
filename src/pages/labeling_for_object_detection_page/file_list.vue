@@ -239,7 +239,8 @@
 <style lang='scss'>
 
   #left-sidebar {
-    width: 250px;
+    width: 200px;
+    padding: 0 25px;
     border-right: 1px solid #666666;
 
     .file-list-header {

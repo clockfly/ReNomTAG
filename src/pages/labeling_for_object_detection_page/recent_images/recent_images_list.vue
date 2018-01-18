@@ -80,13 +80,14 @@
 <style lang='scss'>
 
   #recent-image {
-    width: calc(100% - 270px);
+    /*width: calc(100% - 270px);*/
+    width: 100%;
     height: 100%;
 
     #inner-recent-image {
       height: 100%;
       box-sizing: border-box;
-      border: solid 1px #666;
+      background-color: #cccccc;
       display: flex;
 
       .recent-images-text {
@@ -94,7 +95,7 @@
         color: #fff;
         background-color: #2d3e50;
         height: 100%;
-        width: 120px;
+        padding: 0 20px 0 60px;
         display: flex;
         justify-content: center;
         align-items: center;

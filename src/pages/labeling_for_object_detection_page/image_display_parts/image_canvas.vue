@@ -6,7 +6,18 @@
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
 
+
+    <div id="load_prev_btn" @click='load_prev_raw_img()'>
+      <div class="arrow prev_arrow"></div>
+    </div>
+    <div id="load_next_btn" @click='load_next_raw_img()'>
+      <div class="arrow next_arrow"></div>
+    </div>
+
+
     <div id='inner-canvas'>
+
+
       <div id='mask'
            @mousedown='onMouseDown'
            @mouseup='onMouseUp'
@@ -135,7 +146,10 @@
       },
       bbox_labeled_flag: function () {
         return this.$store.getters.get_bbox_labeled_flag
-      }
+      },
+      sidebar_filename_list: function () {
+        return this.$store.getters.get_sidebar_filename_list
+      },
     },
     methods: {
       setShowFlag: function (flag) {
@@ -405,7 +419,27 @@
             self.bbox_list = temp_bbox_list
           }
         )
-      }
+      },
+
+      load_prev_raw_img: function () {
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
+          this.$store.dispatch('load_raw_img', {
+            filename_list: self.sidebar_filename_list,
+            index: this.current_file_index - 1
+          })
+        )
+      },
+      load_next_raw_img: function () {
+        let self = this
+        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
+          this.$store.dispatch('load_raw_img', {
+            filename_list: this.sidebar_filename_list,
+            index: this.current_file_index + 1
+          })
+        )
+      },
+
     }
   }
 </script>
@@ -418,6 +452,56 @@
     justify-content: center;
     align-items: center;
     outline: none;
+    position: relative;
+
+    #load_prev_btn, #load_next_btn {
+      position: absolute;
+      height: 30px;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      .arrow {
+        position: relative;
+        display: inline-block;
+        padding-left: 20px;
+
+        &:before {
+          content: '';
+          width: 25px;
+          height: 25px;
+          border: 0;
+          border-top: solid 2px #c2c2c2;
+          border-right: solid 2px #c2c2c2;
+
+          position: absolute;
+          top: 50%;
+          left: 0;
+          margin-top: -4px;
+        }
+      }
+      .next_arrow::before {
+        -ms-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+      .prev_arrow::before {
+        -ms-transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+        transform: rotate(-135deg);
+      }
+    }
+    #load_prev_btn {
+      left: 50px;
+    }
+    #load_next_btn {
+      right: 50px;
+    }
+
     #inner-canvas {
       width: calc(100% - 100px);
       height: calc(100% - 100px);

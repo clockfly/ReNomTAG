@@ -37,7 +37,7 @@
   #navigation-bar {
     background-color: #2d3e50;
     position: absolute;
-    top: 35px;
+    top: 50px;
     left: 0;
     width: 170px;
     height: 100%;
