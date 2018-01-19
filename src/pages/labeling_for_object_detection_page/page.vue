@@ -33,7 +33,7 @@
     height: calc(100% - 35px);
     #row1 {
       display: flex;
-      height: calc(100% - 200px);
+      height: calc(100% - 215px);
       /*padding-left: 5px;*/
       .row1 {
         /*height: calc(100% - 10px);*/

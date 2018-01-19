@@ -252,7 +252,7 @@
 
     }
     #file-list-wrapper {
-      height: calc(100% - 100px);
+      height: calc(100% - 120px);
       overflow: scroll;
       width: 200px;
       margin: 0 auto;
