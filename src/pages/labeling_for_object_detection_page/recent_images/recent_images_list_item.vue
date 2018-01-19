@@ -122,6 +122,7 @@
 
     display: inline-block;
     white-space: normal;
+    flex: 0 0 auto;
 
     &:hover {
       cursor: pointer;

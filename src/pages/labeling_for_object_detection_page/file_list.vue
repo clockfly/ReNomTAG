@@ -252,7 +252,7 @@
 
     }
     #file-list-wrapper {
-      height: calc(100% - 100px);
+      height: calc(100% - 120px);
       overflow: scroll;
       width: 200px;
       margin: 0 auto;
@@ -266,9 +266,19 @@
         -webkit-column-count: 3;
         -webkit-column-gap: 1.3px;
         -webkit-column-fill: auto;
+
         -moz-column-count: 3;
         -moz-column-gap: 1.3px;
         -moz-column-fill: auto;
+
+        -o-column-count: 3;
+        -o-column-gap: 1.3px;
+        -o-column-fill: auto;
+
+        -ms-column-count: 3;
+        -ms-column-gap: 1.3px;
+        -ms-column-fill: auto;
+
         column-count: 3;
         column-gap: 1.3px;
         column-fill: auto;
@@ -277,13 +287,15 @@
         padding-left: 0;
 
         .file-item {
-
           display: inline-block;
           background: #FEFEFE;
 
           -webkit-column-break-inside: avoid;
           -moz-column-break-inside: avoid;
+          -o-column-break-inside: avoid;
+          -ms-column-break-inside: avoid;
           column-break-inside: avoid;
+
           background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
           opacity: 1;
 
