@@ -2,17 +2,13 @@ import axios from 'axios'
 
 let action = {
   load_filename_list (context) {
-    let fd = new FormData()
-    fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-    return axios.post('/api/get_filename_list', fd).then(
+    return axios.post('/api/get_filename_list').then(
       function (response) {
-        let error = response.data.error
-        if (error) {
-          alert('File not found. Please try again.')
-          return
-        }
         context.commit('set_filename_list', {
           filename_list: response.data.filename_list
+        })
+        context.commit('set_error_status', {
+          "success": response.data.success
         })
       }
     )

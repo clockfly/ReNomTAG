@@ -14,9 +14,17 @@ from io import BytesIO as IO
 
 app = Bottle()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMG_DIR = '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/'
+IMG_DIR = 'dataset/VOCdevkit/VOC2012/JPEGImages/'
 XML_DIR = './xml'
 
+ERROR = {
+  FileNotFoundError.__name__: 1
+}
+
+def get_error_msg(exception):
+  ret =  ERROR.get(exception.__class__.__name__, 999)
+  print("DEBUG", ret)
+  return ret
 
 def set_json_body(body):
   r = HTTPResponse(status=200, body=body)
@@ -55,7 +63,10 @@ def get_difference_set():
     img_name = get_file_name(img_paths)
     return img_name not in xml_names
 
-  return list(filter(difference_set_paths_filter, img_paths))
+  ret = list(filter(difference_set_paths_filter, img_paths))
+  if not ret:
+    raise FileNotFoundError()
+  return ret 
 
 
 def json2xml(json_obj, line_padding=""):
@@ -149,11 +160,15 @@ def get_raw_images():
 
 @route("/api/get_filename_list", method="POST")
 def get_filename_list():
-  root_dir = request.params.root_dir
-
-  difference_set_paths = get_difference_set()
+  success = 0
+  try:
+    difference_set_paths = get_difference_set()
+  except Exception as e:
+    difference_set_paths = [] 
+    success = get_error_msg(e)
 
   body = json.dumps({
+    "success": success,
     "filename_list": difference_set_paths,
   })
   ret = set_json_body(body)
@@ -162,7 +177,7 @@ def get_filename_list():
 
 @route("/api/get_sidebar_thumbnail_and_filename_list", method="POST")
 def get_sidebar_thumbnail_and_filename_list():
-  # file_paths = request.params.filename_list.split(",")
+  success = 0
   file_paths = get_difference_set()
 
   # current page. start: 1
@@ -180,19 +195,20 @@ def get_sidebar_thumbnail_and_filename_list():
   indices = list(range(start_page + 1, start_page + end_page + 1))
 
   for f in file_paths:
-    with open(f, "rb") as image_reader:
-      encoded_img = base64.b64encode(image_reader.read())
-      encoded_img = encoded_img.decode('utf8')
-      image_list.append(encoded_img)
-
-      # img = Image.open(f, 'r')
-      # img.thumbnail((40, 40), Image.ANTIALIAS)
-      # buffered = IO()
-      # img.save(buffered, format='PNG')
-      # encoded_img = base64.b64encode(buffered.getvalue())
+    # with open(f, "rb") as image_reader:
+      # encoded_img = base64.b64encode(image_reader.read())
       # encoded_img = encoded_img.decode('utf8')
 
+    img = Image.open(f, 'r')
+    img.thumbnail((40, 140), Image.ANTIALIAS)
+    buffered = IO()
+    img.save(buffered, format='PNG')
+    encoded_img = base64.b64encode(buffered.getvalue())
+    encoded_img = encoded_img.decode('utf8')
+    image_list.append(encoded_img)
+
   body = json.dumps({
+    "success":success,
     "sidebar_thumbnail_list": image_list,
     "sidebar_filename_list": file_paths,
     "sidebar_filename_list_index": indices

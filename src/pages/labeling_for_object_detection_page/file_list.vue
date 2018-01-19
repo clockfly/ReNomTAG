@@ -1,27 +1,8 @@
 <template>
   <div id='left-sidebar'>
-
-    <!--<div>-->
-    <!--<select name="select_page_step"-->
-    <!--id="select_page_step"-->
-    <!--@change="change_page_step(select_page_step)"-->
-    <!--v-model="select_page_step">-->
-    <!--<option>50</option>-->
-    <!--<option selected="selected">100</option>-->
-    <!--<option>200</option>-->
-    <!--</select>-->
-    <!--</div>-->
-    <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
-
-    <!--<p style="font-size: 10px; line-height: 0.8; margin: 5px;">sidebar_selected_item_offset_top :{{ sidebar_selected_item_offset_top-->
-    <!--}} <br />sidebar_selected_item_offset_height: {{ sidebar_selected_item_offset_height}} </p>-->
-    <!--<p style="font-size: 10px; line-height: 0.5; margin: 5px;">file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>-->
-
     <div class="file-list-header">Images</div>
     <div id='file-list-wrapper'>
-
       <ul id="file-list-inner">
-
         <li class="file-item" v-for='(fname, index) in sidebar_filename_list'
             :key='index' @click="click_action(index)"
             :class="{selected: index===sidebar_current_file_index}">
@@ -61,6 +42,7 @@
     },
     created () {
       const self = this
+      console.log("DEBUG", self.sidebar_current_page)
       this.$store.dispatch('load_filename_list').then(function () {
         self.change_page(self.sidebar_current_page)
       })
