@@ -8,7 +8,8 @@
       <div class='right-top small-box'></div>
       <div class='right-bottom small-box'></div>
       <div class="object_name" v-if="name">{{ name }}</div>
-      <div class="not_labeled" v-else>
+
+      <!--<div class="not_labeled" v-else>
         <table class="bbox-label-list">
           <tr>
             <th>
@@ -26,7 +27,8 @@
             <td class="label-shortcut">{{ key }}</td>
           </tr>
         </table>
-      </div>
+      </div>-->
+
     </div>
   </div>
 </template>
