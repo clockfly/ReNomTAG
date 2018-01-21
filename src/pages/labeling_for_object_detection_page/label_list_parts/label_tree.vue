@@ -3,7 +3,7 @@
   <li class="tag-list-item">
     <div class="label-text">{{ label }}</div>
     <div class="label-shortcut">{{ shortcut }}</div>
-    <div class="label-count count-10">1</div>
+    <!--<div class="label-count count-10">1</div>-->
   </li>
 </template>
 
