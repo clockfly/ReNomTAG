@@ -203,7 +203,7 @@
       onMouseDown: function (event) {
 
         let [x, y] = this.transformCurrentCorrdinate(event)
-        let select_flag = true
+        let create_new_bbox_flag = true
         let target = event.target
 
         this.mouseDownFlag = true
@@ -217,7 +217,7 @@
           query_list.push(box.$el.querySelector('.bbox'))
 
           if (query_list.indexOf(target) >= 0) {
-            select_flag = false
+            create_new_bbox_flag = false
 
             this.currentBbox = box
             this.currentBbox.setSelectedFlag(true)
@@ -247,14 +247,16 @@
           }
         }
 
+        // Class名がつけられていない場合、Boxは定義されない.
         if (!this.bbox_labeled_flag) {
           return
         }
 
-        if (select_flag) {
+        if (create_new_bbox_flag) {
           this.appendBbox(event)
           this.boxEventType = boxEvent['create']
         }
+        // 直近にラベルがつけられた画像のリストを更新する.現在ラベルをつけている画像を先頭に持ってくる処理
         this.add_recent_labeled_file_path(this.current_file_path)
       },
       onMouseUp: function (event) {
@@ -326,7 +328,6 @@
       updateBoxes: function () {
 
         let objects = []
-
         for (let box of this.$children) {
 
           let xmin = this.imgWidth * (box['x'] / 100.0)

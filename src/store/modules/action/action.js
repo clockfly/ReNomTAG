@@ -159,10 +159,12 @@ let action = {
     })
   },
   add_recent_labeled_file_path (context, payload) {
+    
     let add_file_path = payload.add_file_path
     let index = context.getters.get_recent_labeled_file_paths.indexOf(payload.add_file_path)
 
     if (index >= 0) {
+      // すでにラベルがついていれば、その画像パスを先頭に持ってくる.
       context.state.recent_labeled_file_paths.splice(index, 1)
       context.state.recent_labeled_file_paths.unshift(add_file_path)
     } else {
