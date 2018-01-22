@@ -231,7 +231,7 @@
     }
     #file-list-wrapper {
       height: calc(100% - 120px);
-      overflow: scroll;
+      overflow: auto;
       width: 200px;
       margin: 0 auto;
 
@@ -239,7 +239,7 @@
 
         width: 100%;
         height: auto;
-        overflow: scroll;
+        overflow: auto;
 
         -webkit-column-count: 3;
         -webkit-column-gap: 1.3px;

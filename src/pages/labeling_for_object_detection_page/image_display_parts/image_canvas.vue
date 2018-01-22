@@ -2,6 +2,7 @@
   <div id='image-canvas'
        tabindex='0'
        @mousemove='onMouseMove'
+       @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
@@ -20,7 +21,6 @@
 
       <div id='mask'
            @mousedown='onMouseDown'
-           @mouseup='onMouseUp'
            v-bind:style='{"background-image": "url("+current_raw_img_src+")",
                         "height": maskHeight+"%",
                         "width": maskWidth+"%"
@@ -249,19 +249,16 @@
         }
 
         // Class名がつけられていない場合、Boxは定義されない.
-        if (!this.bbox_labeled_flag) {
+        if (!this.bbox_labeled_flag && this.bbox_id_list.length > 0) {
           return
         }
 
         if (create_new_bbox_flag) {
           this.appendBbox(event)
         }
-        // 直近にラベルがつけられた画像のリストを更新する.現在ラベルをつけている画像を先頭に持ってくる処理
-        this.add_recent_labeled_file_path(this.current_file_path)
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
-        // console.log("mouseUP")
         if (this.currentBbox) {
           this.currentBbox = null
         }
@@ -279,7 +276,6 @@
             this.$store.commit('set_bbox_labeled_flag', {
               flag: false
             })
-
           } else if (this.boxEventType === boxEvent['move']) {
             this.currentBbox.moveBox(x, y, event.target)
           } else if (this.boxEventType === boxEvent['rescale-left-top']) {
@@ -362,16 +358,7 @@
           label_objects: objects
         })
       },
-      add_recent_labeled_file_path: function (add_file_path) {
-        let self = this
-        this.$store.dispatch('add_recent_labeled_file_path', {
-          add_file_path: add_file_path
-        }).then(
-          this.$store.dispatch('load_recent_images', {
-            file_paths: self.$store.getters.get_recent_labeled_file_paths
-          })
-        )
-      },
+
       appendBbox: function (event) {
         let object = {
           'object': {
