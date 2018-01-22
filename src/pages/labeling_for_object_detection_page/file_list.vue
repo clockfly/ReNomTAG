@@ -50,9 +50,6 @@
       sidebar_filename_list: function () {
         return this.$store.getters.get_sidebar_filename_list
       },
-      sidebar_filename_list_index: function () {
-        return this.$store.getters.get_sidebar_filename_list_index
-      },
       sidebar_current_file_index: function () {
         return this.current_file_index - ((this.sidebar_current_page - 1) * this.sidebar_page_step)
       },

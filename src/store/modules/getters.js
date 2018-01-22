@@ -7,9 +7,6 @@ let getters = {
   get_sidebar_filename_list (state) {
     return state.sidebar_filename_list
   },
-  get_sidebar_filename_list_index (state) {
-    return state.sidebar_filename_list_index
-  },
   get_sidebar_current_page (state) {
     return state.sidebar_current_page
   },
@@ -88,9 +85,6 @@ let getters = {
   },
   get_selected_box_id (state) {
     return state.selected_box_id
-  },
-  get_update_bbox_flag (state) {
-    return state.update_bbox_flag
   },
   get_bbox_labeled_flag (state) {
     return state.bbox_labeled_flag

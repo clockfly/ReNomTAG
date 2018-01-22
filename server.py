@@ -192,7 +192,6 @@ def get_sidebar_thumbnail_and_filename_list():
   image_list = []
   # get page file paths
   file_paths = file_paths[start_page:end_page]
-  indices = list(range(start_page + 1, start_page + end_page + 1))
 
   for f in file_paths:
     img = Image.open(f, 'r')
@@ -207,7 +206,6 @@ def get_sidebar_thumbnail_and_filename_list():
     "success":success,
     "sidebar_thumbnail_list": image_list,
     "sidebar_filename_list": file_paths,
-    "sidebar_filename_list_index": indices
   })
   ret = set_json_body(body)
   return ret

@@ -28,7 +28,6 @@ let action = {
         context.commit('set_sidebar_thumbnail_and_filename_list', {
           sidebar_thumbnail_list: response.data.sidebar_thumbnail_list,
           sidebar_filename_list: response.data.sidebar_filename_list,
-          sidebar_filename_list_index: response.data.sidebar_filename_list_index,
           sidebar_current_page: current_page,
           sidebar_page_step: page_step
         })
@@ -345,9 +344,6 @@ let action = {
       shortcut: payload.shortcut,
       new_label: payload.new_label
     })
-  },
-  toggle_update_bbox_flag (context, payload) {
-    context.commit('toggle_update_bbox_flag')
   },
   set_bbox_labeled_flag (context, payload) {
     context.commit('set_bbox_labeled_flag', {

@@ -129,19 +129,12 @@
             save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
           }).then(() => {
-            self.$store.dispatch('toggle_update_bbox_flag')
-              .then(() => {
-                self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-                  current_page: self.sidebar_current_page,
-                  page_step: self.sidebar_page_step
-                }).then(() => {
-                  self.$store.dispatch('load_raw_img', {
-                    filename_list: self.sidebar_filename_list,
-                    index: self.current_file_index
-                  })
-                  this.add_recent_labeled_file_path()
-                })
+            self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
+            self.$store.dispatch('load_raw_img', {
+              filename_list: self.sidebar_filename_list,
+                index: self.current_file_index + 1
               })
+            this.add_recent_labeled_file_path()
           })
         })
       }

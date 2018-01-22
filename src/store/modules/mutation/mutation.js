@@ -7,7 +7,6 @@ let mutation = {
   set_sidebar_thumbnail_and_filename_list (state, payload) {
     state.sidebar_thumbnail_list = payload.sidebar_thumbnail_list
     state.sidebar_filename_list = payload.sidebar_filename_list
-    state.sidebar_filename_list_index = payload.sidebar_filename_list_index
     state.sidebar_page_step = payload.sidebar_page_step
     state.sidebar_current_page = payload.sidebar_current_page
   },
@@ -100,14 +99,19 @@ let mutation = {
   update_label_candidates_dict_label (state, payload) {
     state.label_candidates_dict[payload.shortcut]['label'] = payload.new_label
   },
-  toggle_update_bbox_flag (state, payload) {
-    state.update_bbox_flag = !state.update_bbox_flag
-  },
   set_bbox_labeled_flag (state, payload) {
     state.bbox_labeled_flag = payload.flag
   },
   set_error_status (state, payload) {
     state.error_status = payload.success
+  },
+  remove_thumbnail_img (state, payload) {
+    let filename = payload.filename
+    let index = state.sidebar_filename_list.indexOf(filename)
+    let len = state.sidebar_filename_list.length - 1
+    state.sidebar_thumbnail_list.splice(index, 1)
+    state.sidebar_filename_list.splice(index, 1)
+    state.current_file_index = index - 1
   }
 }
 

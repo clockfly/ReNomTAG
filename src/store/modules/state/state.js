@@ -18,7 +18,6 @@ let state = {
   // Left_side_bar
   sidebar_thumbnail_list: [],
   sidebar_filename_list: [],
-  sidebar_filename_list_index: [],
 
   sidebar_current_page: 1,
   sidebar_page_step: 100,
@@ -62,8 +61,6 @@ let state = {
       ]
     }
   },
-  update_bbox_flag: false,
-
   bbox_labeled_flag: true
 }
 
