@@ -44,7 +44,7 @@ let action = {
 
     let fd = new FormData()
     let current_file_index = payload.index
-    let filename_list = context.getters.get_filename_list
+    let filename_list = payload.filename_list
 
     if (filename_list.length <= 0) {
       await context.dispatch('load_filename_list')
@@ -162,7 +162,7 @@ let action = {
     })
   },
   add_recent_labeled_file_path (context, payload) {
-    
+
     let add_file_path = payload.add_file_path
     let index = context.getters.get_recent_labeled_file_paths.indexOf(payload.add_file_path)
 
