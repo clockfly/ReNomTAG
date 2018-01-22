@@ -309,6 +309,8 @@
           &.selected {
             background: #2d3e50;
             color: #fff;
+            box-sizing: border-box;
+            border: 2px solid red;
           }
           &:hover {
             cursor: pointer;
