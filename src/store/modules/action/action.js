@@ -15,7 +15,6 @@ let action = {
   },
   load_sidebar_thumbnail_and_filename_list (context, {current_page, page_step}) {
     let fd = new FormData()
-    fd.append('filename_list', context.getters.get_filename_list)
     fd.append('current_page', current_page)
     fd.append('page_step', page_step)
 
@@ -33,17 +32,24 @@ let action = {
           sidebar_current_page: current_page,
           sidebar_page_step: page_step
         })
+        context.commit('set_error_status', {
+          "success": response.data.success
+        })
       }
     )
   },
 
-  load_raw_img (context, payload) {
+  async load_raw_img (context, payload) {
     // Arguments : index
 
     let fd = new FormData()
     let current_file_index = payload.index
-    // let filename_list = context.getters.get_filename_list
-    let filename_list = payload.filename_list
+    let filename_list = context.getters.get_filename_list
+
+    if (filename_list.length <= 0) {
+      await context.dispatch('load_filename_list')
+      filename_list = context.getters.get_filename_list
+    }
 
     // Reset current_file_index to filename_list.length - 1
     if (current_file_index < 0) {

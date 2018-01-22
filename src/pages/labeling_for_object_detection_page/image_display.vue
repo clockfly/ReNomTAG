@@ -78,25 +78,7 @@
         return this.$store.getters.get_bbox_labeled_flag
       }
     },
-    created () {
-      const self = this
-      if (this.filename_list.length === 0) {
-        let ret = this.$store.dispatch('load_filename_list')
-        ret.then(function () {
-          self.load_raw_img(0)
-        })
-      } else {
-        self.load_raw_img(-1)
-      }
-    },
     methods: {
-      // Defined index
-      load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {
-          filename_list: this.filename_list,
-          index: index
-        })
-      },
       load_next_raw_img: function () {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
