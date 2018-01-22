@@ -58,10 +58,9 @@ let action = {
     }
 
     // Get file name from file_name list
-    let current_file_path = filename_list[current_file_index]
+    let new_file_path = filename_list[current_file_index]
 
-    // fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
-    fd.append('filename', current_file_path)
+    fd.append('filename', new_file_path)
 
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
@@ -73,7 +72,7 @@ let action = {
         context.commit('set_raw_img', {
           current_raw_img: response.data.raw_img,
           current_file_index: current_file_index,
-          current_file_path: current_file_path
+          current_file_path: new_file_path
         })
 
         // check sidebar current page
@@ -86,8 +85,6 @@ let action = {
     // Arguments : index
 
     let fd = new FormData()
-
-    // fd.append('root_dir', '../ObjDetector/dataset/VOCdevkit/VOC2012/JPEGImages/')
     fd.append('filename', payload.file_path)
 
 
