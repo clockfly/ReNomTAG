@@ -1,3 +1,5 @@
+import error_msg from './error'
+
 let getters = {
   get_sidebar_thumbnail_list (state) {
     return state.sidebar_thumbnail_list
@@ -92,8 +94,10 @@ let getters = {
   },
   get_bbox_labeled_flag (state) {
     return state.bbox_labeled_flag
+  },
+  get_error_message(state){
+    return error_msg[state.error_status]
   }
-
 }
 
 export default getters

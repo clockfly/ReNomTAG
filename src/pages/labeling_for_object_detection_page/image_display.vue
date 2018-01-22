@@ -78,25 +78,7 @@
         return this.$store.getters.get_bbox_labeled_flag
       }
     },
-    created () {
-      const self = this
-      if (this.filename_list.length === 0) {
-        let ret = this.$store.dispatch('load_filename_list')
-        ret.then(function () {
-          self.load_raw_img(0)
-        })
-      } else {
-        self.load_raw_img(-1)
-      }
-    },
     methods: {
-      // Defined index
-      load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {
-          filename_list: this.filename_list,
-          index: index
-        })
-      },
       load_next_raw_img: function () {
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
@@ -124,9 +106,19 @@
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
       },
+      add_recent_labeled_file_path: function () {
+        let add_file_path = this.$store.getters.get_current_file_path
+        let self = this
+        this.$store.dispatch('add_recent_labeled_file_path', {
+          add_file_path: add_file_path
+        }).then(
+          this.$store.dispatch('load_recent_images', {
+            file_paths: self.$store.getters.get_recent_labeled_file_paths
+          })
+        )
+      },
       save_xml_from_dict: function () {
         let self = this
-
         self.$store.dispatch('set_current_label_dict', {
           file_path: self.current_file_path,
           size_height: self.current_img_height,
@@ -147,6 +139,7 @@
                     filename_list: self.sidebar_filename_list,
                     index: self.current_file_index
                   })
+                  this.add_recent_labeled_file_path()
                 })
               })
           })

@@ -1,27 +1,8 @@
 <template>
   <div id='left-sidebar'>
-
-    <!--<div>-->
-    <!--<select name="select_page_step"-->
-    <!--id="select_page_step"-->
-    <!--@change="change_page_step(select_page_step)"-->
-    <!--v-model="select_page_step">-->
-    <!--<option>50</option>-->
-    <!--<option selected="selected">100</option>-->
-    <!--<option>200</option>-->
-    <!--</select>-->
-    <!--</div>-->
-    <!--<p>it :{{ inner_file_list_offset_top }} ih: {{ inner_file_list_offset_height }}</p>-->
-
-    <!--<p style="font-size: 10px; line-height: 0.8; margin: 5px;">sidebar_selected_item_offset_top :{{ sidebar_selected_item_offset_top-->
-    <!--}} <br />sidebar_selected_item_offset_height: {{ sidebar_selected_item_offset_height}} </p>-->
-    <!--<p style="font-size: 10px; line-height: 0.5; margin: 5px;">file list scroll pos: {{ sidebar_file_list_scroll_position }}</p>-->
-
     <div class="file-list-header">Images</div>
     <div id='file-list-wrapper'>
-
       <ul id="file-list-inner">
-
         <li class="file-item" v-for='(fname, index) in sidebar_filename_list'
             :key='index' @click="click_action(index)"
             :class="{selected: index===sidebar_current_file_index}">
@@ -60,10 +41,7 @@
       }
     },
     created () {
-      const self = this
-      this.$store.dispatch('load_filename_list').then(function () {
-        self.change_page(self.sidebar_current_page)
-      })
+      this.change_page(this.sidebar_current_page)
     },
     computed: {
       sidebar_thumbnail_list: function () {
@@ -174,7 +152,7 @@
         })
       },
       reload_sidebar_current_position_top () {
-        let selected_item = document.getElementById('inner-file-list').getElementsByClassName('selected')
+        let selected_item = document.getElementById('file-list-inner').getElementsByClassName('selected')
         this.$store.dispatch('set_sidebar_selected_item_offset', {
           sidebar_selected_item_offset_top: selected_item[0].offsetTop,
           sidebar_selected_item_offset_height: selected_item[0].offsetHeight
@@ -195,7 +173,7 @@
     mounted: function () {
       let self = this
       this.$nextTick(function () {
-        let inner_file_list = document.getElementById('inner-file-list')
+        let inner_file_list = document.getElementById('file-list-inner')
         self.$store.dispatch('set_sidebar_inner_file_list_offset', {
           sidebar_inner_file_list_offset_top: inner_file_list.offsetTop,
           sidebar_inner_file_list_offset_height: inner_file_list.offsetHeight
@@ -217,7 +195,7 @@
         this.$nextTick(function () {
           self.reload_sidebar_current_position_top()
           self.calc_and_set_sidebar_file_list_scroll_position()
-          document.getElementById('inner-file-list').scrollTop = this.sidebar_file_list_scroll_position
+          document.getElementById('file-list-inner').scrollTop = this.sidebar_file_list_scroll_position
         })
       },
       sidebar_current_page: function () {
@@ -253,7 +231,7 @@
     }
     #file-list-wrapper {
       height: calc(100% - 120px);
-      overflow: scroll;
+      overflow: auto;
       width: 200px;
       margin: 0 auto;
 
@@ -261,7 +239,7 @@
 
         width: 100%;
         height: auto;
-        overflow: scroll;
+        overflow: auto;
 
         column-count: 3;
         -webkit-column-count: 3;

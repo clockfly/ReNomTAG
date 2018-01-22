@@ -22,6 +22,9 @@
     computed: {
       isMenuShown: function () {
         return this.$store.getters.get_is_menu_shown
+      },
+      error_msg: function () {
+        return this.$store.getters.get_error_message
       }
     },
     methods: {
@@ -30,6 +33,16 @@
       },
       closeMenu: function () {
         this.$store.commit('close_menu')
+      }
+    },
+    watch: {
+      error_msg: function () {
+        if(this.error_msg){
+          alert(this.error_msg)
+          this.$store.commit('set_error_status', {
+            "success":0
+          })
+        }
       }
     }
   }

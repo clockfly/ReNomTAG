@@ -105,6 +105,9 @@ let mutation = {
   },
   set_bbox_labeled_flag (state, payload) {
     state.bbox_labeled_flag = payload.flag
+  },
+  set_error_status (state, payload) {
+    state.error_status = payload.success
   }
 }
 

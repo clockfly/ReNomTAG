@@ -24,6 +24,25 @@
       'image-display': ImageDisplay,
       'recent-images-list': RecentImagesList,
       'label-list': LabelList
+    },
+    created(){
+      const self = this
+      let ret = this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
+        'current_page': 1,
+        'page_step': 100
+      })
+      let filename_list = this.$store.getters.get_filename_list
+      ret.then(function () {
+        self.load_raw_img(0, filename_list)
+      })
+    },
+    methods: {
+      load_raw_img: function (index, filename_list) {
+        this.$store.dispatch('load_raw_img', {
+          filename_list: filename_list,
+          index: index
+        })
+      },
     }
   }
 </script>

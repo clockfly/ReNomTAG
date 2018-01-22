@@ -1,4 +1,7 @@
 let state = {
+  // Error status
+  error_status: 0,
+
   // Global
   filename_list: [],
   current_raw_img: '',
@@ -62,7 +65,6 @@ let state = {
   update_bbox_flag: false,
 
   bbox_labeled_flag: true
-
 }
 
 export default state

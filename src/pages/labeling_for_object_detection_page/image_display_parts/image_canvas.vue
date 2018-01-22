@@ -2,6 +2,7 @@
   <div id='image-canvas'
        tabindex='0'
        @mousemove='onMouseMove'
+       @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
@@ -20,7 +21,6 @@
 
       <div id='mask'
            @mousedown='onMouseDown'
-           @mouseup='onMouseUp'
            v-bind:style='{"background-image": "url("+current_raw_img_src+")",
                         "height": maskHeight+"%",
                         "width": maskWidth+"%"
@@ -168,7 +168,6 @@
           img_width: img.width,
           img_height: img.height
         })
-
         this.onResizeWindow()
       },
       onResizeWindow: function () {
@@ -203,11 +202,13 @@
       onMouseDown: function (event) {
 
         let [x, y] = this.transformCurrentCorrdinate(event)
-        let select_flag = true
+        let create_new_bbox_flag = true
         let target = event.target
 
         this.mouseDownFlag = true
         this.currentBbox = null
+        this.boxEventType = boxEvent['create']
+
         for (let box of this.$children) {
           let query_list = []
           query_list.push(box.$el.querySelector('.left-top'))
@@ -217,7 +218,7 @@
           query_list.push(box.$el.querySelector('.bbox'))
 
           if (query_list.indexOf(target) >= 0) {
-            select_flag = false
+            create_new_bbox_flag = false
 
             this.currentBbox = box
             this.currentBbox.setSelectedFlag(true)
@@ -247,15 +248,14 @@
           }
         }
 
-        if (!this.bbox_labeled_flag) {
+        // Class名がつけられていない場合、Boxは定義されない.
+        if (!this.bbox_labeled_flag && this.bbox_id_list.length > 0) {
           return
         }
 
-        if (select_flag) {
+        if (create_new_bbox_flag) {
           this.appendBbox(event)
-          this.boxEventType = boxEvent['create']
         }
-        this.add_recent_labeled_file_path(this.current_file_path)
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
@@ -272,13 +272,10 @@
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
-
             this.currentBbox.createdScalingBox(x, y)
-
             this.$store.commit('set_bbox_labeled_flag', {
               flag: false
             })
-
           } else if (this.boxEventType === boxEvent['move']) {
             this.currentBbox.moveBox(x, y, event.target)
           } else if (this.boxEventType === boxEvent['rescale-left-top']) {
@@ -326,7 +323,6 @@
       updateBoxes: function () {
 
         let objects = []
-
         for (let box of this.$children) {
 
           let xmin = this.imgWidth * (box['x'] / 100.0)
@@ -362,16 +358,7 @@
           label_objects: objects
         })
       },
-      add_recent_labeled_file_path: function (add_file_path) {
-        let self = this
-        this.$store.dispatch('add_recent_labeled_file_path', {
-          add_file_path: add_file_path
-        }).then(
-          this.$store.dispatch('load_recent_images', {
-            file_paths: self.$store.getters.get_recent_labeled_file_paths
-          })
-        )
-      },
+
       appendBbox: function (event) {
         let object = {
           'object': {
