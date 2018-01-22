@@ -168,7 +168,6 @@
           img_width: img.width,
           img_height: img.height
         })
-
         this.onResizeWindow()
       },
       onResizeWindow: function () {
@@ -208,6 +207,8 @@
 
         this.mouseDownFlag = true
         this.currentBbox = null
+        this.boxEventType = boxEvent['create']
+
         for (let box of this.$children) {
           let query_list = []
           query_list.push(box.$el.querySelector('.left-top'))
@@ -254,13 +255,13 @@
 
         if (create_new_bbox_flag) {
           this.appendBbox(event)
-          this.boxEventType = boxEvent['create']
         }
         // 直近にラベルがつけられた画像のリストを更新する.現在ラベルをつけている画像を先頭に持ってくる処理
         this.add_recent_labeled_file_path(this.current_file_path)
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
+        // console.log("mouseUP")
         if (this.currentBbox) {
           this.currentBbox = null
         }
@@ -274,9 +275,7 @@
           this.currentBbox.initializeBox(x, y)
         } else {
           if (this.boxEventType === boxEvent['create']) {
-
             this.currentBbox.createdScalingBox(x, y)
-
             this.$store.commit('set_bbox_labeled_flag', {
               flag: false
             })
