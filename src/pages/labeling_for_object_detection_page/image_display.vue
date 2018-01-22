@@ -113,17 +113,26 @@
           file_path: self.current_file_path,
           size_height: self.current_img_height,
           size_width: self.current_img_width
-        }).then(
+        }).then(() => {
           self.$store.dispatch('save_xml_from_label_dict', {
             save_xml_file_name: self.save_xml_file_name_computed,
             save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
+          }).then(() => {
+            self.$store.dispatch('toggle_update_bbox_flag')
+              .then(() => {
+                self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
+                  current_page: self.sidebar_current_page,
+                  page_step: self.sidebar_page_step
+                }).then(() => {
+                  self.$store.dispatch('load_raw_img', {
+                    filename_list: self.sidebar_filename_list,
+                    index: self.current_file_index
+                  })
+                })
+              })
           })
-        ).then(
-          self.$store.commit('toggle_update_bbox_flag')
-        ).then(
-          self.load_sidebar_thumbnail_and_filename_list()
-        )
+        })
       }
     }
   }
