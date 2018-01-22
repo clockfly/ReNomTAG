@@ -263,31 +263,29 @@
         height: auto;
         overflow: scroll;
 
-        -webkit-column-count: 3;
-        -webkit-column-gap: 1.3px;
-        -webkit-column-fill: auto;
-
-        -moz-column-count: 3;
-        -moz-column-gap: 1.3px;
-        -moz-column-fill: auto;
-
-        -o-column-count: 3;
-        -o-column-gap: 1.3px;
-        -o-column-fill: auto;
-
-        -ms-column-count: 3;
-        -ms-column-gap: 1.3px;
-        -ms-column-fill: auto;
-
         column-count: 3;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        -o-column-count: 3;
+        -ms-column-count: 3;
+
         column-gap: 1.3px;
+        -webkit-column-gap: 1.3px;
+        -moz-column-gap: 1.3px;
+        -o-column-gap: 1.3px;
+        -ms-column-gap: 1.3px;
+
+        -webkit-column-fill: auto;
+        -moz-column-fill: auto;
+        -o-column-fill: auto;
+        -ms-column-fill: auto;
         column-fill: auto;
 
         margin: 0;
         padding-left: 0;
 
         .file-item {
-          display: inline-block;
+          display: block;
           background: #FEFEFE;
 
           -webkit-column-break-inside: avoid;
@@ -296,15 +294,7 @@
           -ms-column-break-inside: avoid;
           column-break-inside: avoid;
 
-          background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
-          opacity: 1;
-
-          -webkit-transition: all .2s ease;
-          -moz-transition: all .2s ease;
-          -o-transition: all .2s ease;
-          transition: all .2s ease;
-
-          margin-bottom: -4px;
+          margin-bottom: 1px;
 
           &.selected {
             background: #2d3e50;
