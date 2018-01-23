@@ -35,21 +35,23 @@
       }
     },
     methods: {
-      setImgSrc: function (img) {
-        this.imgWidth = img.width
-        this.imgHeight = img.height
-      },
       update_bbox () {
         let self = this
         let fd = new FormData()
+        let img_size
         if (this.xml_file_path !== '') {
           fd.append('xml_file_path', this.xml_file_path)
           return axios.post('/api/get_bbox_list', fd).then(
             function (response) {
               if (response.data.json_data === '') {
                 self.bbox_list = []
+                self.imgWidth = 0
+                self.imgHeight = 0
               } else {
-                self.bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+                self.bbox_list = JSON.parse(response.data.json_data)['annotation']['object']
+                img_size = JSON.parse(response.data.json_data)['annotation']['size']
+                self.imgWidth = img_size.width
+                self.imgHeight = img_size.height
               }
             }
           )
@@ -82,12 +84,8 @@
       this.file_name_data = this.file_name
       let self = this
       let img = new Image()
-      img.onload = function () {
-        self.setImgSrc(img)
-      }
 
       img.src = 'data:image/png;base64,' + this.img_src
-
       this.update_bbox()
     }
   }

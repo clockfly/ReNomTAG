@@ -390,7 +390,7 @@
               return
             }
 
-            let temp_bbox_list = JSON.parse(response.data.json_data)['anotation']['object']
+            let temp_bbox_list = JSON.parse(response.data.json_data)['annotation']['object']
 
             self.bbox_id_list = []
             self.bbox_list = []

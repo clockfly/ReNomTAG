@@ -132,17 +132,8 @@ let action = {
     let fd = new FormData()
     let file_paths = payload.file_paths
 
-    // let filename_list = context.getters.get_filename_list
-
-    // let fetch_filename_list = []
-
-    // for (let n of file_paths) {
-    //   fetch_filename_list.push(filename_list[n])
-    // }
-
     fd.append('filename_list', file_paths)
-
-    return axios.post('/api/get_raw_images', fd).then(
+    return axios.post('/api/get_small_sized_images', fd).then(
       function (response) {
         let error = response.data.error
         if (error) {
@@ -150,7 +141,7 @@ let action = {
           return
         }
         context.commit('set_recent_raw_images', {
-          recent_raw_images: response.data.raw_images
+          recent_raw_images: response.data.small_sized_images
         })
       }
     )

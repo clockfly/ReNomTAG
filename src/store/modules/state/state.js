@@ -43,7 +43,7 @@ let state = {
   recent_labeled_file_paths: [],
 
   current_label_dict: {
-    'anotation': {
+    'annotation': {
       path: '',
       source: {
         database: 'Unknown'

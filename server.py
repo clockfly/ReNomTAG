@@ -158,6 +158,31 @@ def get_raw_images():
   return ret
 
 
+@route("/api/get_small_sized_images", method="POST")
+def get_small_sized_images():
+  # root_dir = request.params.root_dir
+  # filename_list = request.params.filename_list.split(',')
+  filename_list = request.params.filename_list.split(',')
+
+  result = []
+  for filename in filename_list:
+    # file_path = os.path.join(root_dir, filename)
+
+    img = Image.open(filename, 'r')
+    img.thumbnail((1000, 150), Image.ANTIALIAS)
+    buffered = IO()
+    img.save(buffered, format='PNG')
+    encoded_img = base64.b64encode(buffered.getvalue())
+    encoded_img = encoded_img.decode('utf8')
+    result.append(encoded_img)
+
+  ret = json.dumps({
+    "small_sized_images": result
+  })
+
+  ret = set_json_body(ret)
+  return ret
+
 @route("/api/get_filename_list", method="POST")
 def get_filename_list():
   success = 0
@@ -227,15 +252,15 @@ def save_xml_from_label_dict():
 
   save_xml_file_path = os.path.join(save_xml_dir, save_xml_file_name + '.xml')
 
-  label_dict_split = label_dict['anotation']['path'].split('/')
+  label_dict_split = label_dict['annotation']['path'].split('/')
   if len(label_dict_split) > 1:
     folder = label_dict_split[-2]
   else:
     folder = '.'
 
   file_name = label_dict_split[-1]
-  label_dict['anotation']['folder'] = folder
-  label_dict['anotation']['file_name'] = file_name
+  label_dict['annotation']['folder'] = folder
+  label_dict['annotation']['file_name'] = file_name
 
   # convert dict to xml
   xml_data = json2xml(label_dict)
@@ -246,7 +271,7 @@ def save_xml_from_label_dict():
     xml_soup.find('object').parent.unwrap()
 
   with open(save_xml_file_path, 'w') as ftpr:
-    ftpr.write(xml_soup.find('anotation').prettify())
+    ftpr.write(xml_soup.find('annotation').prettify())
 
   print('%s is saved' % (save_xml_file_path))
 
@@ -299,12 +324,12 @@ def get_bbox_list():
 
     try:
       # object dataが1つだけの場合、dictになってしまうのでlistに変換する
-      if isinstance(json_dict['anotation']['object'], dict):
-        temp = [json_dict['anotation']['object']]
-        json_dict['anotation']['object'] = temp
+      if isinstance(json_dict['annotation']['object'], dict):
+        temp = [json_dict['annotation']['object']]
+        json_dict['annotation']['object'] = temp
 
     except KeyError:
-      json_dict['anotation']['object'] = ''
+      json_dict['annotation']['object'] = ''
 
     json_data = json.dumps(json_dict, indent=4)
 

@@ -69,6 +69,7 @@
         let height = 0
         let list_size = this.parentSize()
         let src_list = []
+        let break_flag = false
 
         if(list_size.length < 1)
           return src_list
@@ -78,15 +79,16 @@
           let src = images[img_src]
 
           img.src = 'data:image/png;base64,' + src 
-          src_list.push(src)
-
-          let ratio = list_size[1]/img.height
-          width += img.width*ratio;
-
-          if(width > list_size[0])
-            break
+          img.onload = function(){
+            let ratio = list_size[1]/img.height
+            width += img.width*ratio;
+            if(width > list_size[0]){
+            }else{
+              src_list.push(src)
+            }
+          }
         }
-        return src_list
+        return images
       },
       current_file_name () {
         return this.$store.getters.get_current_file_name
