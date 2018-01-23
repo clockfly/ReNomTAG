@@ -53,14 +53,6 @@
         this.tree = this.label_candidates_dict
         return this.tree[0]['nodes']
       },
-
-//      shortcut_label_dict () {
-//        return this.$store.getters.get_shortcut_label_dict
-//      },
-
-//      label_id_dict_list () {
-//        return this.$store.getters.get_label_id_dict_list
-//      },
       label_candidates_dict () {
         return this.$store.getters.get_label_candidates_dict
       }
@@ -82,21 +74,31 @@
         this.addingLabelFlag = flag
       },
       addNewLabel () {
+        
         this.setAddLabelFlag(false)
+        let new_text_enable_flag = true
+        for (let attr in this.label_candidates_dict) {
+          let text = this.label_candidates_dict[attr]['label']
+          if(this.newLabelText===text){
+            new_text_enable_flag = false
+            break
+          }
+        }
+
         if (!this.newLabelText) {
           alert('Please set label')
           return
-
-        } else if (!this.newLabelShortcut) {
-          alert('Please set shortcut')
+        } else if(!new_text_enable_flag){
+          alert('Please set unique label')
           return
+        } else if (!this.newLabelShortcut) {
+          let dict_size = Object.keys(this.label_candidates_dict).length
+          this.newLabelShortcut = String("no_shortcut"+dict_size)
 
         } else if (this.label_candidates_dict[this.newLabelShortcut]) {
           alert('Shortcut is already exists.')
           return
-
         }
-
         this.$store.commit('add_new_label', {
           label_text: this.newLabelText,
           id: this.label_id,
@@ -221,7 +223,7 @@
     #tag-tree {
       padding-top: 15px;
       max-height: 360px;
-      overflow-y: scroll;
+      overflow-y: auto;
       .tag-list {
         width: 100%;
         height: 100%;

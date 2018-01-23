@@ -316,6 +316,16 @@
       onAnyKeyUp: function (event) {
         this.currentDownKey = ''
       },
+      onClassListClick: function (shortcut_name) {
+      // Cation: This function is called by function of 'label_tree.vue'. 
+        let box = this.$el.querySelector('.selected')
+        if (box && shortcut_name in this.label_candidates_dict) {
+          let label = this.label_candidates_dict[shortcut_name]['label']
+          let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
+          this.$children[true_selected_box_id]['name'] = label
+          this.updateBoxes()
+        }
+      },  
       disabled: function () {
         return false
       },

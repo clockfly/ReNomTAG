@@ -1,9 +1,8 @@
 <template>
 
-  <li class="tag-list-item">
+  <li class="tag-list-item" @click='setLabel'>
     <div class="label-text">{{ label }}</div>
-    <div class="label-shortcut">{{ shortcut }}</div>
-    <!--<div class="label-count count-10">1</div>-->
+    <div class="label-shortcut" v-if='hasKey'>{{ shortcut }}</div>
   </li>
 </template>
 
@@ -21,8 +20,22 @@
         label_id: 0
       }
     },
-    computed: {},
-    methods: {},
+    computed: {
+      hasKey() {
+        if(this.shortcut.indexOf('no_shortcut') >= 0){
+          return false
+        }else{
+          return true
+        }
+      }
+    },
+    methods: {
+      setLabel: function() {
+        // Dirty code, but it works.
+        // Be careful for changing component index.
+        this.$parent.$parent.$children[1].$children[0].onClassListClick(this.shortcut)
+      }
+    },
   }
 </script>
 
@@ -84,6 +97,9 @@
     .count-10 {
       background-color: #ea4b34;
     }
+  }
 
+  .tag-list-item:hover{
+    background-color: #d3d3d3;
   }
 </style>

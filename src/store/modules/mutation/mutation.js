@@ -52,7 +52,6 @@ let mutation = {
     let label_text = payload.label_text
     let id = payload.id
 
-    // state.shortcut_label_dict[shortcut] = {'label': label_text, 'id': payload_id}
     state.label_candidates_dict[shortcut] = {'label': label_text, 'id': id}
   },
   set_sidebar_selected_item_offset (state, payload) {
