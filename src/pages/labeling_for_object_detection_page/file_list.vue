@@ -201,13 +201,6 @@
         })
       }
     },
-    filters: {
-//      filterFileName: function (fname) {
-//        // 適当なfilter処理
-//        let fname_split = fname.split('/')
-//        return fname_split[fname_split.length - 1]
-//      }
-    }
   }
 </script>
 
@@ -229,7 +222,7 @@
     #file-list-wrapper {
       height: calc(100% - 120px);
       overflow: auto;
-      width: 200px;
+      width: 202px;
       margin: 0 auto;
 
       #file-list-inner {
@@ -238,24 +231,16 @@
         height: auto;
         overflow: auto;
 
-        column-count: 3;
+
+
+        line-height: 0;
+ 
         -webkit-column-count: 3;
+        -webkit-column-gap: 1px;
         -moz-column-count: 3;
-        -o-column-count: 3;
-        -ms-column-count: 3;
-
-        column-gap: 1.3px;
-        -webkit-column-gap: 1.3px;
-        -moz-column-gap: 1.3px;
-        -o-column-gap: 1.3px;
-        -ms-column-gap: 1.3px;
-
-        -webkit-column-fill: auto;
-        -moz-column-fill: auto;
-        -o-column-fill: auto;
-        -ms-column-fill: auto;
-        column-fill: auto;
-
+        -moz-column-gap: 1px;
+        column-count: 3;
+        column-gap: 1px;
         margin: 0;
         padding-left: 0;
 
