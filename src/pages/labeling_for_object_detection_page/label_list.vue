@@ -13,13 +13,11 @@
         <input type="text"
                class="label-shortcut"
                v-model='newLabelShortcut'
-               @keyup.enter.stop='addNewLabel'
+               @keyup.enter='addNewLabel'
                @keyup='setShortcutKey'
                placeholder="key...">
       </div>
-
       <button @click="addNewLabel" class="add-new-label-btn">Add New Label</button>
-
     </form>
 
     <div id='tag-tree'>
@@ -29,6 +27,7 @@
       </ul>
 
     </div>
+    <button @click='removeAllClassName' id='remove-button'>Refresh list</button>
   </div>
 </template>
 
@@ -73,8 +72,7 @@
       setAddLabelFlag (flag) {
         this.addingLabelFlag = flag
       },
-      addNewLabel () {
-        
+      addNewLabel (event) {
         this.setAddLabelFlag(false)
         let new_text_enable_flag = true
         for (let attr in this.label_candidates_dict) {
@@ -111,7 +109,29 @@
         this.save_label_candidates_dict()
       },
       setShortcutKey (event) {
+        let not_allowed_key_list = [
+          13, // Enter(ten key)
+          32, // Space
+          8, // BackSpace
+          9, // Tab
+          46, // Delete
+        ]
+        if(not_allowed_key_list.indexOf(event.keyCode) >= 0){
+          console.log("not allowed")
+          return
+        }
         this.newLabelShortcut = event.key
+      },
+      removeAllClassName () {
+        let ret = confirm("Are you sure flushing class list?");
+        if(ret==true){
+          this.$store.dispatch('flush_label_candidates_dict',{
+            save_json_file_path: 'label_candidates.json'
+          })
+          this.load_label_candidates_dict()
+        } else {
+          return
+        }
       }
     },
     created: function () {
@@ -122,6 +142,7 @@
 
 <style lang='scss'>
   #tag-list {
+    height: 100%;
     width: 200px;
     display: flex;
     justify-content: flex-start;
@@ -183,46 +204,11 @@
         &:hover {
           background-color: lighten(#326699, 10%);
         }
-
       }
-    }
-    .save-load-label-btn {
-
-      display: flex;
-      justify-content: space-between;
-
-      .save-label-btn, .load-label-btn {
-        font-size: 12px;
-        width: 45%;
-        cursor: pointer;
-        border: none;
-        border-radius: 0.1875rem;
-        outline: none;
-        transition: all 150ms ease-out;
-
-        &:focus, &:hover {
-
-          opacity: 0.8;
-        }
-
-      }
-      .save-label-btn {
-        margin-left: 0;
-        background-color: tomato;
-        color: #ffffff;
-
-      }
-      .load-label-btn {
-        margin-right: 0;
-
-        background-color: #12171a;
-        color: #fff;
-      }
-
     }
     #tag-tree {
       padding-top: 15px;
-      max-height: 360px;
+      height: calc(100% - 220px);
       overflow-y: auto;
       .tag-list {
         width: 100%;
@@ -234,6 +220,24 @@
         margin: 0;
         border-style: none;
 
+      }
+    }
+    #remove-button{
+      width: 60%;
+      text-align: center;
+      padding: 10px 0;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #adadad;
+      color: #fff;
+      margin-left: auto;
+
+      &:focus {
+        outline: none;
+      }
+      &:hover {
+        background-color: lighten(#ff1616, 10%);
       }
     }
   }

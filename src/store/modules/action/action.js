@@ -336,6 +336,26 @@ let action = {
       new_label: payload.new_label
     })
   },
+  flush_label_candidates_dict (context, payload) {
+    let fd = new FormData()
+    fd.append('save_json_file_path', payload.save_json_file_path)
+    // convert dict to json
+    fd.append('json_data', JSON.stringify({}))
+
+    let headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    axios.defaults.headers.post['Content-Type'] = 'application/json'
+
+    return axios.post('/api/save_label_candidates_dict', fd).then(
+      function (response) {
+        let error = response.data.error
+        if (error) {
+          alert('Error is occured.')
+          return
+        }
+      }
+    )
+  },
   set_bbox_labeled_flag (context, payload) {
     context.commit('set_bbox_labeled_flag', {
       flag: payload.flag

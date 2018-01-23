@@ -1,12 +1,14 @@
 <template>
-  <div id='image-display'>
+  <div id='image-display'
+  @keyup.capture.space.stop='save_xml_from_dict()'>
     <div id='outer-panel'>
       <transition>
         <image-canvas></image-canvas>
       </transition>
       <div id='low-button'>
         <span class="file-name">{{ current_file_name }}</span>
-        <div id="save_xml_btn" @click='save_xml_from_dict()'>
+        <div id="save_xml_btn"
+          @click='save_xml_from_dict()'>
           Save <span class="save_xml_btn_arrow">>></span>
         </div>
       </div>

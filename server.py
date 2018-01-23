@@ -220,7 +220,7 @@ def get_sidebar_thumbnail_and_filename_list():
 
   for f in file_paths:
     img = Image.open(f, 'r')
-    img.thumbnail((40, 140), Image.ANTIALIAS)
+    img.thumbnail((35, 140), Image.ANTIALIAS)
     buffered = IO()
     img.save(buffered, format='PNG')
     encoded_img = base64.b64encode(buffered.getvalue())
