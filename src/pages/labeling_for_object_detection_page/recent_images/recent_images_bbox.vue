@@ -16,23 +16,33 @@
 <script>
   export default {
     name: 'RecentImagesBbox',
-    props: ['aspectRatio', 'bbox'],
+    props: ['rawImageSize', 'bbox'],
     data: function () {
       return {}
     },
-    methods: {},
     computed: {
       top () {
-        return String(this.bbox['bndbox']['ymin'] * this.aspectRatio) + 'px'
+        let parentHeight = this.$parent.$el.clientHeight
+        let ratio = parentHeight/this.rawImageSize[1]
+
+        return String(this.bbox['bndbox']['ymin'] * ratio) + 'px'
       },
       left () {
-        return String(this.bbox['bndbox']['xmin'] * this.aspectRatio) + 'px'
+        let parentWidth = this.$parent.$el.clientWidth
+        let ratio = parentWidth/this.rawImageSize[0]
+
+        return String(this.bbox['bndbox']['xmin'] * ratio) + 'px'
       },
       width () {
-        return String((this.bbox['bndbox']['xmax'] - this.bbox['bndbox']['xmin']) * this.aspectRatio) + 'px'
+        let parentWidth = this.$parent.$el.clientWidth
+        let ratio = parentWidth/this.rawImageSize[0]
+
+        return String((this.bbox['bndbox']['xmax'] - this.bbox['bndbox']['xmin']) * ratio) + 'px'
       },
       height () {
-        return String((this.bbox['bndbox']['ymax'] - this.bbox['bndbox']['ymin']) * this.aspectRatio) + 'px'
+        let parentHeight = this.$parent.$el.clientHeight
+        let ratio = parentHeight/this.rawImageSize[1]
+        return String((this.bbox['bndbox']['ymax'] - this.bbox['bndbox']['ymin']) * ratio) + 'px'
       },
       name () {
         return this.bbox['name']

@@ -53,7 +53,6 @@
       recent_images_file_name (index) {
         let file_path = this.filename_list[this.recent_labeled_images_id_arr[index]]
         let file_split = file_path.split('/')
-
         return file_split[file_split.length - 1].split('.')[0]
       },
     },
@@ -65,13 +64,45 @@
         return this.$store.getters.get_recent_labeled_file_paths
       },
       recent_raw_images: function () {
-        return this.$store.getters.get_recent_raw_images
-      },
-      parentHeight () {
-        return document.getElementById('recent-images-list').clientHeight
+        let images = this.$store.getters.get_recent_raw_images
+        let width = 0
+        let height = 0
+        let list_size = this.parentSize()
+        let src_list = []
+
+        if(list_size.length < 1)
+          return src_list
+
+        for(let img_src in images){
+          let img = new Image();
+          let src = images[img_src]
+
+          img.src = 'data:image/png;base64,' + src 
+          src_list.push(src)
+
+          let ratio = list_size[1]/img.height
+          width += img.width*ratio;
+
+          if(width > list_size[0])
+            break
+        }
+        return src_list
       },
       current_file_name () {
         return this.$store.getters.get_current_file_name
+      },
+      parentHeight () {
+        let elem = document.getElementById('recent-images-list')
+        return elem.clientHeight
+      },
+    },
+    methods: {
+      parentSize () {
+        let elem = document.getElementById('recent-images-list')
+        if(elem)
+          return [elem.clientWidth, elem.clientHeight]
+        else
+          return []
       }
     }
   }
@@ -91,7 +122,6 @@
       display: flex;
 
       .recent-images-text {
-
         color: #fff;
         background-color: #2d3e50;
         height: 100%;
@@ -102,7 +132,6 @@
         p {
           margin: 0;
         }
-
       }
 
       #recent-images-list {

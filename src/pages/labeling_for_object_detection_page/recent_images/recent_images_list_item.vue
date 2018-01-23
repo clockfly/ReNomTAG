@@ -6,7 +6,7 @@
     <recent-images-bbox
       v-for="(bbox, index) in bbox_list"
       :bbox="bbox"
-      :aspectRatio="aspectRatio"
+      :rawImageSize="rawImageSize"
       :key="index">
     </recent-images-bbox>
   </li>
@@ -63,8 +63,8 @@
       }
     },
     computed: {
-      aspectRatio () {
-        return this.parent_height / this.imgHeight
+      rawImageSize () {
+        return [this.imgWidth, this.imgHeight]
       },
       xml_file_path () {
         let file_path_split = this.file_path.split('/')
@@ -103,7 +103,7 @@
 
     display: inline-block;
     white-space: normal;
-    flex: 0 0 auto;
+    // flex: 0 0 auto;
 
     &:hover {
       cursor: pointer;

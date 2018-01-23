@@ -171,7 +171,7 @@ let action = {
       context.state.recent_labeled_file_paths.unshift(add_file_path)
     } else {
       if (context.getters.get_recent_labeled_file_paths.length >= 10) {
-        context.state.recent_labeled_file_paths.shift()
+        context.state.recent_labeled_file_paths.pop()
       }
       context.state.recent_labeled_file_paths.unshift(add_file_path)
     }
