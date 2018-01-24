@@ -14,8 +14,12 @@ from io import BytesIO as IO
 
 app = Bottle()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMG_DIR = 'dataset/VOCdevkit/VOC2012/JPEGImages/'
-XML_DIR = './xml'
+IMG_DIR = 'dataset'
+XML_DIR = 'label'
+
+for path in [IMG_DIR, XML_DIR]:
+  if not os.path.exists(path):
+    os.makedirs(path)
 
 ERROR = {
   FileNotFoundError.__name__: 1
