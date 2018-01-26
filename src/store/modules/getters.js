@@ -1,9 +1,6 @@
 import error_msg from './error'
 
 let getters = {
-  get_sidebar_thumbnail_list (state) {
-    return state.sidebar_thumbnail_list
-  },
   get_sidebar_filename_list (state) {
     return state.sidebar_filename_list
   },

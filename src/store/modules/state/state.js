@@ -16,7 +16,6 @@ let state = {
   working_dict: {},
 
   // Left_side_bar
-  sidebar_thumbnail_list: [],
   sidebar_filename_list: [],
 
   sidebar_current_page: 1,

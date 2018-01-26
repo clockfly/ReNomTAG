@@ -6,7 +6,7 @@
         <li class="file-item" v-for='(fname, index) in sidebar_filename_list'
             :key='index' @click="click_action(index)"
             :class="{selected: index===sidebar_current_file_index}">
-          <file-item :img-data='"data:image/png;base64,"+sidebar_thumbnail_list[index]'>
+           <file-item :img-data='"./t/"+sidebar_filename_list[index]'>
           </file-item>
         </li>
       </ul>
@@ -44,9 +44,6 @@
       this.change_page(this.sidebar_current_page)
     },
     computed: {
-      sidebar_thumbnail_list: function () {
-        return this.$store.getters.get_sidebar_thumbnail_list
-      },
       sidebar_filename_list: function () {
         return this.$store.getters.get_sidebar_filename_list
       },
