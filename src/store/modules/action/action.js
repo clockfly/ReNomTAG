@@ -26,7 +26,6 @@ let action = {
           return
         }
         context.commit('set_sidebar_thumbnail_and_filename_list', {
-          sidebar_thumbnail_list: response.data.sidebar_thumbnail_list,
           sidebar_filename_list: response.data.sidebar_filename_list,
           sidebar_current_page: current_page,
           sidebar_page_step: page_step

@@ -5,7 +5,6 @@ let mutation = {
     state.filename_list = payload.filename_list
   },
   set_sidebar_thumbnail_and_filename_list (state, payload) {
-    state.sidebar_thumbnail_list = payload.sidebar_thumbnail_list
     state.sidebar_filename_list = payload.sidebar_filename_list
     state.sidebar_page_step = payload.sidebar_page_step
     state.sidebar_current_page = payload.sidebar_current_page
@@ -108,7 +107,6 @@ let mutation = {
     let filename = payload.filename
     let index = state.sidebar_filename_list.indexOf(filename)
     let len = state.sidebar_filename_list.length - 1
-    state.sidebar_thumbnail_list.splice(index, 1)
     state.sidebar_filename_list.splice(index, 1)
     state.current_file_index = index - 1
   }
