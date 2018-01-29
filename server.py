@@ -15,6 +15,9 @@ import sys
 import mimetypes
 import time
 from io import BytesIO as IO
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 
 app = Bottle()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -62,13 +65,17 @@ def get_file_name(x):
 
 
 IMG_FILE_CACHE = []
+XML_FILE_CACHE = []
 
 def get_difference_set():
-    global IMG_FILE_CACHE
+    global IMG_FILE_CACHE, XML_FILE_CACHE
     if not IMG_FILE_CACHE:
         IMG_FILE_CACHE = get_img_paths(IMG_DIR)
     img_paths = IMG_FILE_CACHE
-    xml_paths = get_xml_paths(XML_DIR)
+
+    if not XML_FILE_CACHE:
+        XML_FILE_CACHE = get_xml_paths(XML_DIR)
+    xml_paths = XML_FILE_CACHE
     xml_names = list(map(get_file_name, xml_paths))
     def difference_set_paths_filter(img_paths):
         img_name = get_file_name(img_paths)
@@ -373,5 +380,23 @@ def get_bbox_list():
     return ret
 
 
+class ImageEventHandler(FileSystemEventHandler):
+     def on_any_event(self, event):
+        global IMG_FILE_CACHE
+        IMG_FILE_CACHE = []
+
+class XMLEventHandler(FileSystemEventHandler):
+     def on_any_event(self, event):
+        global XML_FILE_CACHE
+        XML_FILE_CACHE = []
+
 if __name__ == '__main__':
+    observer = Observer()
+    observer.schedule(ImageEventHandler(), IMG_DIR, recursive=True)
+    observer.schedule(XMLEventHandler(), XML_DIR, recursive=True)
+    observer.daemon = True
+
+    observer.start()
     run(host="0.0.0.0", port=8090)
+    observer.stop()
+    observer.join()
