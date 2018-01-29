@@ -241,7 +241,6 @@ let action = {
     let fd = new FormData()
 
     fd.append('save_xml_file_name', payload.save_xml_file_name)
-    fd.append('save_xml_dir', payload.save_xml_dir)
 
     // convert dict to json
     fd.append('label_dict', JSON.stringify(payload.label_dict))

@@ -281,15 +281,13 @@ def save_xml_from_label_dict():
 
     :return:
     """
-
     label_dict = json.loads(request.params.label_dict)
     save_xml_file_name = request.params.save_xml_file_name
-    save_xml_dir = request.params.save_xml_dir
 
-    if not os.path.exists(save_xml_dir):
-        os.makedirs(save_xml_dir)
+    if not os.path.exists(XML_DIR):
+        os.makedirs(XML_DIR)
 
-    save_xml_file_path = os.path.join(save_xml_dir, save_xml_file_name + '.xml')
+    save_xml_file_path = os.path.join(XML_DIR, save_xml_file_name + '.xml')
 
     label_dict_split = label_dict['annotation']['path'].split('/')
     if len(label_dict_split) > 1:

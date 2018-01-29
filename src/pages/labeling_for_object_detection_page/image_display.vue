@@ -27,7 +27,6 @@
     data: function () {
       return {
         imgData: '',
-        save_xml_dir: 'xml'
       }
     },
     computed: {
@@ -128,7 +127,6 @@
         }).then(() => {
           self.$store.dispatch('save_xml_from_label_dict', {
             save_xml_file_name: self.save_xml_file_name_computed,
-            save_xml_dir: self.save_xml_dir,
             label_dict: self.current_label_dict
           }).then(() => {
             self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
