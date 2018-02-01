@@ -27,14 +27,18 @@
     },
     created(){
       const self = this
-      let ret = this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-        'current_page': 1,
-        'page_step': 100
+
+      this.$store.dispatch('load_filename_list')
+      .then(function() {
+        return self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
+          'current_page': 1,
+          'page_step': 100
+        })
       })
-      let filename_list = this.$store.getters.get_filename_list
-      ret.then(function () {
-        self.load_raw_img(0, filename_list)
+      .then(function() {
+          self.load_raw_img(0, self.$store.getters.get_filename_list)
       })
+
     },
     methods: {
       load_raw_img: function (index, filename_list) {

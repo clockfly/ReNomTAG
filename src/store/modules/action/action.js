@@ -43,12 +43,13 @@ let action = {
     let fd = new FormData()
     let current_file_index = payload.index
     let filename_list = payload.filename_list
-
+/*
     if (filename_list.length <= 0) {
       await context.dispatch('load_filename_list')
       filename_list = context.getters.get_filename_list
     }
-
+*/
+/*
     // Reset current_file_index to filename_list.length - 1
     if (current_file_index < 0) {
       current_file_index = filename_list.length - 1
@@ -56,7 +57,7 @@ let action = {
     } else if (current_file_index > filename_list.length - 1) {
       current_file_index = 0
     }
-
+*/
     // Get file name from file_name list
     let new_file_path = filename_list[current_file_index]
 
@@ -76,7 +77,7 @@ let action = {
         })
 
         // check sidebar current page
-        context.dispatch('check_sidebar_current_page')
+//        context.dispatch('check_sidebar_current_page')
       }
     )
   },

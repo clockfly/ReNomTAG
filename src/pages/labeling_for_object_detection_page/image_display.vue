@@ -130,9 +130,13 @@
             label_dict: self.current_label_dict
           }).then(() => {
             self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
+            let file_index = self.current_file_index + 1
+            if (file_index >= self.sidebar_filename_list.length) {
+              file_index = self.sidebar_filename_list.length-1
+            }
             self.$store.dispatch('load_raw_img', {
               filename_list: self.sidebar_filename_list,
-                index: self.current_file_index + 1
+                index: file_index
               })
             this.add_recent_labeled_file_path()
           })

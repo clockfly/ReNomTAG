@@ -7,7 +7,7 @@
             :key='index' @click="click_action(index)"
             :class="{selected: index===sidebar_current_file_index}">
            <file-item :img-data='"./t/"+sidebar_filename_list[index]'>
-          </file-item>
+          </file-item> 
         </li>
       </ul>
 
@@ -48,7 +48,7 @@
         return this.$store.getters.get_sidebar_filename_list
       },
       sidebar_current_file_index: function () {
-        return this.current_file_index - ((this.sidebar_current_page - 1) * this.sidebar_page_step)
+        return this.current_file_index
       },
       sidebar_page_number: function () {
         // divide file number by page step then plus1
@@ -134,11 +134,12 @@
         this.$store.dispatch('change_sidebar_page_step', {sidebar_page_step: page_step})
       },
       click_action (index) {
+        console.log(index)
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: false}).then(
           self.$store.dispatch('load_raw_img', {
             filename_list: self.sidebar_filename_list,
-            index: ((self.sidebar_current_page - 1) * self.sidebar_page_step) + index
+            index: index
           })
         )
         this.$store.commit('set_bbox_labeled_flag', {
