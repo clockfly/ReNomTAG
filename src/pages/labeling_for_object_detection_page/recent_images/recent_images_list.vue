@@ -44,12 +44,6 @@
           file_paths: self.recent_labeled_img_paths
         })
       },
-      load_raw_img: function (index) {
-        this.$store.dispatch('load_raw_img', {
-          filename_list: this.filename_list,
-          index: index
-        })
-      },
       recent_images_file_name (index) {
         let file_path = this.filename_list[this.recent_labeled_images_id_arr[index]]
         let file_split = file_path.split('/')

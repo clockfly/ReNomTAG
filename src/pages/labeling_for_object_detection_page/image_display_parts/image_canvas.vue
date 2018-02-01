@@ -139,7 +139,7 @@
       },
       xml_file_path: function () {
         let file_name = this.$store.getters.get_current_file_name
-        return 'xml/' + file_name.split('.')[0] + '.xml'
+        return file_name.split('.')[0] + '.xml'
       },
       current_label_dict: function () {
         return this.$store.getters.get_current_label_dict
@@ -413,7 +413,9 @@
               self.bbox_id_list.push(self.bbox_id_counter)
               self.bbox_id_counter++
             }
-            self.bbox_list = temp_bbox_list
+            if(temp_bbox_list){
+              self.bbox_list = temp_bbox_list
+            }
           }
         )
       },

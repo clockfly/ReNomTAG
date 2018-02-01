@@ -134,7 +134,6 @@
         this.$store.dispatch('change_sidebar_page_step', {sidebar_page_step: page_step})
       },
       click_action (index) {
-        console.log(index)
         let self = this
         self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: false}).then(
           self.$store.dispatch('load_raw_img', {
@@ -154,7 +153,6 @@
         })
       },
       calc_and_set_sidebar_file_list_scroll_position: function () {
-//        console.log('sidebar_selected_item_offset_top : ' + this.sidebar_selected_item_offset_top)
         this.$store.dispatch('calc_and_set_sidebar_file_list_scroll_position')
       },
 

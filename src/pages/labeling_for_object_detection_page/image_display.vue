@@ -130,10 +130,11 @@
             label_dict: self.current_label_dict
           }).then(() => {
             self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
-            let file_index = self.current_file_index + 1
+            let file_index = self.current_file_index
             if (file_index >= self.sidebar_filename_list.length) {
-              file_index = self.sidebar_filename_list.length-1
+              file_index = self.sidebar_filename_list.length
             }
+            console.log("SD", file_index, self.current_file_index)
             self.$store.dispatch('load_raw_img', {
               filename_list: self.sidebar_filename_list,
                 index: file_index

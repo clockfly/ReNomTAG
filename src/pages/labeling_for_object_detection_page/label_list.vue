@@ -117,7 +117,6 @@
           46, // Delete
         ]
         if(not_allowed_key_list.indexOf(event.keyCode) >= 0){
-          console.log("not allowed")
           return
         }
         this.newLabelShortcut = event.key

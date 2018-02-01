@@ -108,7 +108,6 @@ let mutation = {
     let index = state.sidebar_filename_list.indexOf(filename)
     let len = state.sidebar_filename_list.length - 1
     state.sidebar_filename_list.splice(index, 1)
-    state.current_file_index = index - 1
   }
 }
 

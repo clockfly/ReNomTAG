@@ -43,6 +43,7 @@
           fd.append('xml_file_path', this.xml_file_path)
           return axios.post('/api/get_bbox_list', fd).then(
             function (response) {
+              console.log(response.data)
               if (response.data.json_data === '') {
                 self.bbox_list = []
                 self.imgWidth = 0
@@ -71,7 +72,7 @@
       xml_file_path () {
         let file_path_split = this.file_path.split('/')
         let file_name = file_path_split[file_path_split.length - 1].split('.')[0]
-        return 'xml/' + file_name + '.xml'
+        return file_name + '.xml'
       },
       current_file_path () {
         return this.$store.getters.get_current_file_path

@@ -335,28 +335,27 @@ def save_label_candidates_dict():
 @route("/api/load_label_candidates_dict", method="POST")
 def load_label_candidates_dict():
     load_json_file_path = request.params.load_json_file_path
-
-    with open(load_json_file_path, 'r') as ftpr:
-        json_data = json.load(ftpr)
-
-    body = json.dumps({
-      'json_data': json_data
-    })
-
+    if not os.path.exists(load_json_file_path):
+        body = {'json_data':{}}
+    else:
+        with open(load_json_file_path, 'r') as ftpr:
+            json_data = json.load(ftpr)
+        body = json.dumps({
+          'json_data': json_data
+        })
     ret = set_json_body(body)
     return ret
 
 
 @route("/api/get_bbox_list", method="POST")
 def get_bbox_list():
-    xml_file_path = request.params.xml_file_path
+    xml_file_path = os.path.join(XML_DIR, request.params.xml_file_path)
 
+    print(xml_file_path)
     if not os.path.exists(xml_file_path):
         json_data = ''
-
     else:
         json_data = xml2json(xml_file_path)
-
         json_dict = json.loads(json_data)
 
         try:
