@@ -134,7 +134,6 @@
             if (file_index >= self.sidebar_filename_list.length) {
               file_index = self.sidebar_filename_list.length
             }
-            console.log("SD", file_index, self.current_file_index)
             self.$store.dispatch('load_raw_img', {
               filename_list: self.sidebar_filename_list,
                 index: file_index

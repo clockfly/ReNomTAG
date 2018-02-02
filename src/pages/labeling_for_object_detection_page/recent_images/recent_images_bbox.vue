@@ -46,9 +46,10 @@
       },
       name () {
         return this.bbox['name']
-      }
-    },
-    created: function () {
+      },
+      current_file_path: function () {
+        return this.$store.getters.get_current_file_path
+      },
     }
   }
 </script>
