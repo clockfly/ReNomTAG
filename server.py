@@ -394,6 +394,6 @@ if __name__ == '__main__':
     observer.daemon = True
 
     observer.start()
-    run(host="0.0.0.0", port=8090)
+    run(host="0.0.0.0", port=8060)
     observer.stop()
     observer.join()
