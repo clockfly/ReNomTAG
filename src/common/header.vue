@@ -3,7 +3,7 @@
 
     <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' @click='toggleMenu'
        v-bind:class='{ open: isMenuShown }'></i>
-    <div class="tool-name"><span class="bold">ReNom</span> Label</div>
+    <div class="tool-name"><span class="bold">ReNom</span> TAG</div>
 
   </header>
 </template>
