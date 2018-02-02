@@ -197,13 +197,13 @@
 
         this.updateBoxes()
 
-//         this.boxIdList.splice(this.boxIdList.indexOf(String(this.selected_box_id)), 1)
       },
       onMouseDown: function (event) {
 
         let [x, y] = this.transformCurrentCorrdinate(event)
         let create_new_bbox_flag = true
         let target = event.target
+        let all_labeled = true
 
         this.mouseDownFlag = true
         this.currentBbox = null
@@ -216,6 +216,8 @@
           query_list.push(box.$el.querySelector('.right-top'))
           query_list.push(box.$el.querySelector('.right-bottom'))
           query_list.push(box.$el.querySelector('.bbox'))
+
+          all_labeled *= box.isLabeled()
 
           if (query_list.indexOf(target) >= 0) {
             create_new_bbox_flag = false
@@ -249,13 +251,20 @@
         }
 
         // Class名がつけられていない場合、Boxは定義されない.
-        if (!this.bbox_labeled_flag && this.bbox_id_list.length > 0) {
+        if (!all_labeled) {
           return
         }
 
         if (create_new_bbox_flag) {
           this.appendBbox(event)
         }
+      },
+      isAllLabeled: function(){
+        let labeled = true
+        for (let b of this.$children) {
+          labeled *= b.isLabeled()
+        }
+        return labeled
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
@@ -309,7 +318,7 @@
           let label = this.label_candidates_dict[this.currentDownKey]['label']
           let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
 
-          this.$children[true_selected_box_id]['name'] = label
+          this.$children[true_selected_box_id].name = label
           this.updateBoxes()
         }
       },
@@ -322,7 +331,7 @@
         if (box && shortcut_name in this.label_candidates_dict) {
           let label = this.label_candidates_dict[shortcut_name]['label']
           let true_selected_box_id = this.bbox_id_list.indexOf(this.selected_box_id)
-          this.$children[true_selected_box_id]['name'] = label
+          this.$children[true_selected_box_id].name = label
           this.updateBoxes()
         }
       },  

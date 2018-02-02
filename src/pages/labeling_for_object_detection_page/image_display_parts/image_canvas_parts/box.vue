@@ -252,17 +252,29 @@
         this.scaleInitW = this.w
         this.scaleInitH = this.h
       },
+      isLabeled: function () {
+        let name = this.name
+        if (name == null || name == 'None' || name == undefined || !name) {
+          return false
+        }
+        return true
+      }
     },
 
     created: function () {
       if (typeof this.bndbox === 'undefined') {
+        this.name = ''
         return
       }
+      let name = this.prop_name
       this.x = this.bndbox['xmin'] / this.current_img_width * 100
       this.y = this.bndbox['ymin'] / this.current_img_height * 100
       this.w = (this.bndbox['xmax'] - this.bndbox['xmin']) / this.current_img_width * 100
       this.h = (this.bndbox['ymax'] - this.bndbox['ymin']) / this.current_img_height * 100
-      this.name = this.prop_name
+      if (name == null || name == 'None' || name == undefined || !name) {
+        name = ''
+      }
+      this.name = name
     },
     watch: {
       // この関数は current_raw_img_src が変わるごとに実行されます。

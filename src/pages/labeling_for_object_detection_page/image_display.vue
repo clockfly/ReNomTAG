@@ -124,6 +124,12 @@
       },
       save_xml_from_dict: function () {
         let self = this
+
+        if (!this.$children[0].isAllLabeled()) {
+          alert("All bounding boxes must be named.")
+          return
+        }
+
         self.$store.dispatch('set_current_label_dict', {
           file_path: self.current_file_path,
           size_height: self.current_img_height,
