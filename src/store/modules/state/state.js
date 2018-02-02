@@ -33,13 +33,14 @@ let state = {
 
   // Recent images
   recent_raw_images: [],
+  recent_labeled_file_paths: [],
+  recent_label_list: [],
 
   isMenuShown: false,
   shortcut_label_dict: {}, // Key: shortcut key, Value: {'label': label, 'id': id}
   label_id_dict_list: [], // Key: label, Value: id
 
   label_candidates_dict: {},
-  recent_labeled_file_paths: [],
 
   current_label_dict: {
     'annotation': {

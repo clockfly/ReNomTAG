@@ -22,25 +22,22 @@
     },
     computed: {
       top () {
-        let parentHeight = this.$parent.$el.clientHeight
+        let parentHeight = 200
         let ratio = parentHeight/this.rawImageSize[1]
-
         return String(this.bbox['bndbox']['ymin'] * ratio) + 'px'
       },
       left () {
-        let parentWidth = this.$parent.$el.clientWidth
-        let ratio = parentWidth/this.rawImageSize[0]
-
+        let parentHeight = 200
+        let ratio = parentHeight/this.rawImageSize[1]
         return String(this.bbox['bndbox']['xmin'] * ratio) + 'px'
       },
       width () {
-        let parentWidth = this.$parent.$el.clientWidth
-        let ratio = parentWidth/this.rawImageSize[0]
-
+        let parentHeight = 200
+        let ratio = parentHeight/this.rawImageSize[1]
         return String((this.bbox['bndbox']['xmax'] - this.bbox['bndbox']['xmin']) * ratio) + 'px'
       },
       height () {
-        let parentHeight = this.$parent.$el.clientHeight
+        let parentHeight = 200
         let ratio = parentHeight/this.rawImageSize[1]
         return String((this.bbox['bndbox']['ymax'] - this.bbox['bndbox']['ymin']) * ratio) + 'px'
       },

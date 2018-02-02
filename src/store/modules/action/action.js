@@ -154,17 +154,23 @@ let action = {
   add_recent_labeled_file_path (context, payload) {
 
     let add_file_path = payload.add_file_path
+    let add_label = payload.add_label
     let index = context.getters.get_recent_labeled_file_paths.indexOf(payload.add_file_path)
 
     if (index >= 0) {
       // すでにラベルがついていれば、その画像パスを先頭に持ってくる.
       context.state.recent_labeled_file_paths.splice(index, 1)
       context.state.recent_labeled_file_paths.unshift(add_file_path)
+      context.state.recent_label_list.splice(index, 1)
+      context.state.recent_label_list.unshift(add_label)
+
     } else {
       if (context.getters.get_recent_labeled_file_paths.length >= 10) {
         context.state.recent_labeled_file_paths.pop()
+        context.state.recent_label_list.pop()
       }
       context.state.recent_labeled_file_paths.unshift(add_file_path)
+      context.state.recent_label_list.unshift(add_label)
     }
   },
   set_sidebar_selected_item_offset (context, payload) {

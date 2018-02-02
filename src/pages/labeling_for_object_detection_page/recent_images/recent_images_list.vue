@@ -17,6 +17,7 @@
           :file_path="recent_labeled_file_paths[index]"
           :key="img_src"
           :index="recent_labeled_file_paths[index]"
+          :annotation="recent_label_list[index].annotation"
         >
         </recentImagesListItem>
       </ul>
@@ -56,6 +57,9 @@
       },
       recent_labeled_file_paths: function () {
         return this.$store.getters.get_recent_labeled_file_paths
+      },
+      recent_label_list: function () {
+        return this.$store.getters.get_recent_label_list
       },
       recent_raw_images: function () {
         let images = this.$store.getters.get_recent_raw_images

@@ -108,10 +108,14 @@
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
       },
       add_recent_labeled_file_path: function () {
+        // Please be sure that the mutation 'set_current_label_dict' is
+        // called just before this func.
+
         let add_file_path = this.$store.getters.get_current_file_path
         let self = this
         this.$store.dispatch('add_recent_labeled_file_path', {
-          add_file_path: add_file_path
+          add_file_path: add_file_path,
+          add_label: JSON.parse(JSON.stringify(this.current_label_dict))
         }).then(
           this.$store.dispatch('load_recent_images', {
             file_paths: self.$store.getters.get_recent_labeled_file_paths
@@ -127,7 +131,7 @@
         }).then(() => {
           self.$store.dispatch('save_xml_from_label_dict', {
             save_xml_file_name: self.save_xml_file_name_computed,
-            label_dict: self.current_label_dict
+            label_dict: JSON.parse(JSON.stringify(self.current_label_dict))
           }).then(() => {
             self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
             let file_index = self.current_file_index

@@ -5,7 +5,7 @@
 
     <recent-images-bbox
       v-for="(bbox, index) in bbox_list"
-      :bbox="bbox"
+      :bbox="bbox.object"
       :rawImageSize="rawImageSize"
       :key="index">
     </recent-images-bbox>
@@ -18,7 +18,7 @@
 
   export default {
     name: 'RecentImagesListItem',
-    props: ['img_src', 'file_path', 'parent_height', 'index'],
+    props: ['img_src', 'file_path', 'parent_height', 'index', 'annotation'],
     components: {
       'recent-images-bbox': RecentImagesBbox
     },
@@ -26,7 +26,6 @@
       return {
         imgWidth: 0,
         imgHeight: 0,
-        bbox_list: [],
         left: 0,
         top: 0,
         width: 0,
@@ -35,28 +34,6 @@
       }
     },
     methods: {
-      update_bbox () {
-        let self = this
-        let fd = new FormData()
-        let img_size
-        if (this.xml_file_path !== '') {
-          fd.append('xml_file_path', this.xml_file_path)
-          return axios.post('/api/get_bbox_list', fd).then(
-            function (response) {
-              if (response.data.json_data === '') {
-                self.bbox_list = []
-                self.imgWidth = 0
-                self.imgHeight = 0
-              } else {
-                self.bbox_list = JSON.parse(response.data.json_data)['annotation']['object']
-                img_size = JSON.parse(response.data.json_data)['annotation']['size']
-                self.imgWidth = img_size.width
-                self.imgHeight = img_size.height
-              }
-            }
-          )
-        }
-      },
       click_action () {
         let self = this
         self.$store.dispatch('load_raw_img_from_path', {
@@ -65,7 +42,17 @@
       }
     },
     computed: {
+      bbox_list (){
+        if(!this.annotation){
+          console.log("DAS")
+          return []
+        }
+        return this.annotation.objects
+      },
       rawImageSize () {
+        let img_size = this.annotation['size']
+        this.imgWidth = img_size.width
+        this.imgHeight = img_size.height
         return [this.imgWidth, this.imgHeight]
       },
       xml_file_path () {
@@ -79,17 +66,19 @@
       current_file_name () {
         return this.$store.getters.get_current_file_name
       },
+      recent_labeled_file_paths: function () {
+        return this.$store.getters.get_recent_labeled_file_paths
+      },
+      recent_label_list: function () {
+        return this.$store.getters.get_recent_label_list
+      },
     },
-    updated: function () {
-      this.update_bbox()
-    },
-    mounted: function () {
+    created: function () {
       this.file_name_data = this.file_name
       let self = this
       let img = new Image()
       img.src = 'data:image/png;base64,' + this.img_src
-      this.update_bbox()
-    }
+    },
   }
 </script>
 

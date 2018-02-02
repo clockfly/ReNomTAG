@@ -47,6 +47,9 @@ let getters = {
   get_recent_labeled_file_paths (state) {
     return state.recent_labeled_file_paths
   },
+  get_recent_label_list (state) {
+    return state.recent_label_list
+  },
   get_sidebar_selected_item_offset_top (state) {
     return state.sidebar_selected_item_offset_top
   },
