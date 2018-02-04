@@ -92,7 +92,7 @@ VOCdevkit
 
 次に、アプリケーションを起動します。  
 
-ReNomIMGフォルダに移動して、以下のコマンドを打ちwebサーバを起動してください。  
+ReNomTAGフォルダに移動して、以下のコマンドを打ちwebサーバを起動してください。  
 
 `python server.py`
 
