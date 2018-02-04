@@ -10,7 +10,7 @@ ReNom TAGとは、オブジェクト検出モデルを構築するために用�
 
 次に、依存するライブラリを以下のコマンドでインストールします。
 
-`pip install -r requirement.txt`
+`pip install -r requirements.txt`
 
 依存するライブラリのインストールが完了したらReNom TAGを使い始めることができます。
 
