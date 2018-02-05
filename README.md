@@ -36,7 +36,7 @@ labelは、bug(バグ), request(UIの改善や追加であれば嬉しい機能�
 
 ### PASCAL VOCデータセット  
 
-PASCAL VOCデータセットとは、PASCAL VOC ChallengeというPASCAL(attern Analysis, Statistical Modelling and Computational Learnin)が主催する画像認識のコンペで使用されたデータセットです。  
+PASCAL VOCデータセットとは、PASCAL VOC ChallengeというPASCAL(Pattern Analysis, Statistical Modelling and Computational Learnin)が主催する画像認識のコンペで使用されたデータセットです。  
 
 以下のリンクからデータセットをダウンロードできます。  
 
