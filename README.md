@@ -18,7 +18,7 @@ ReNom TAGとは、オブジェクト検出モデルを構築するために用�
 
 ReNom TAGを利用中に、バグや改善点などを見つけた際は、gitlabのissue機能を使って報告してください。  
 
-issueは、issue画面のNew issueボタンから作成することができます。  
+issueは、issues画面のNew issueボタンから作成することができます。  
 
 入力画面では、issueタイトル、issueの説明、labelを設定してください。  
 
@@ -77,7 +77,7 @@ VOCdevkit
  │
  └ VOC2012
      │
-     ├ Annotations // bouding boxのxmlファイルが入っているフォルダ
+     ├ Annotations // bounding boxのxmlファイルが入っているフォルダ
      ├ ImageSets
      ├ JPEGImages // Object Detectionに使える画像が入っているフォルダ
      ├ SegmentationClass
