@@ -297,7 +297,7 @@ def save_xml_from_label_dict():
 
     file_name = label_dict_split[-1]
     label_dict['annotation']['folder'] = folder
-    label_dict['annotation']['file_name'] = file_name
+    label_dict['annotation']['filename'] = file_name
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -351,7 +351,6 @@ def load_label_candidates_dict():
 def get_bbox_list():
     xml_file_path = os.path.join(XML_DIR, request.params.xml_file_path)
 
-    print(xml_file_path)
     if not os.path.exists(xml_file_path):
         json_data = ''
     else:
