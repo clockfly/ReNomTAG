@@ -13,29 +13,6 @@ let action = {
       }
     )
   },
-  load_sidebar_thumbnail_and_filename_list (context, {current_page, page_step}) {
-    let fd = new FormData()
-    fd.append('current_page', current_page)
-    fd.append('page_step', page_step)
-
-    return axios.post('/api/get_sidebar_thumbnail_and_filename_list', fd).then(
-      function (response) {
-        let error = response.data.error
-        if (error) {
-          alert('File not found. Please try again.')
-          return
-        }
-        context.commit('set_sidebar_thumbnail_and_filename_list', {
-          sidebar_filename_list: response.data.sidebar_filename_list,
-          sidebar_current_page: current_page,
-          sidebar_page_step: page_step
-        })
-        context.commit('set_error_status', {
-          "success": response.data.success
-        })
-      }
-    )
-  },
 
   async load_raw_img (context, payload) {
     // Arguments : index
@@ -224,11 +201,6 @@ let action = {
 
     context.commit('set_sidebar_file_list_scroll_position', {
       sidebar_file_list_scroll_position: scroll_position
-    })
-  },
-  set_sidebar_file_list_scroll_position_flag (context, payload) {
-    context.commit('set_sidebar_file_list_scroll_position_flag', {
-      flag: payload.flag
     })
   },
   set_sidebar_file_list_scroll_window_position (context, payload) {

@@ -1,3 +1,4 @@
+.vscode
 node_modules/
 .DS_Store
 
@@ -10,5 +11,5 @@ static/build\.js
 xml/
 
 xm/
-
+label/
 dataset/

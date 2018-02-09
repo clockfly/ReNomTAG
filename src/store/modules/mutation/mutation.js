@@ -3,7 +3,20 @@ import axios from 'axios'
 let mutation = {
   set_filename_list (state, payload) {
     state.filename_list = payload.filename_list
+    state.filename_max_display = 100;
+
+    if (state.filename_list.length < state.filename_max_display) {
+      state.filename_max_display = state.filename_list.length;
+    }
   },
+
+  set_filename_max_display(state, payload) {
+    state.filename_max_display = payload.filename_max_display;
+    if (state.filename_list.length < state.filename_max_display) {
+      state.filename_max_display = state.filename_list.length;
+    }
+  },
+
   set_sidebar_thumbnail_and_filename_list (state, payload) {
     state.sidebar_filename_list = payload.sidebar_filename_list
     state.sidebar_page_step = payload.sidebar_page_step
@@ -63,9 +76,6 @@ let mutation = {
   },
   set_sidebar_file_list_scroll_position (state, payload) {
     state.sidebar_file_list_scroll_position = payload.sidebar_file_list_scroll_position
-  },
-  set_sidebar_file_list_scroll_position_flag (state, payload) {
-    state.sidebar_file_list_scroll_position_flag = payload.flag
   },
   set_sidebar_file_list_scroll_window_position (state, payload) {
     state.sidebar_file_list_scroll_window_start_position = payload.start_position

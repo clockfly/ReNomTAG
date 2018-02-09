@@ -4,6 +4,8 @@ let state = {
 
   // Global
   filename_list: [],
+  filename_max_display: 0,  
+
   current_raw_img: '',
   current_img_width: 0,
   current_img_height: 0,

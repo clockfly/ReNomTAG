@@ -98,12 +98,6 @@
           })
         )
       },
-      load_sidebar_thumbnail_and_filename_list () {
-        this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          current_page: this.sidebar_current_page,
-          page_step: this.sidebar_page_step
-        })
-      },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
       },
