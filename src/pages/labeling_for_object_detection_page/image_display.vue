@@ -39,7 +39,6 @@
       sidebar_filename_list: function () {
         return this.$store.getters.get_sidebar_filename_list
       },
-
       current_file_index: function () {
         return this.$store.getters.get_current_file_index
       },
@@ -65,7 +64,6 @@
         if (this.filename_list.length < 1) {
           return ''
         } else {
-//          let file_path_split = this.filename_list[this.current_file_index].split('/')
           return this.current_file_name.split('.')[0]
         }
       },
@@ -146,9 +144,10 @@
             }
             self.$store.dispatch('load_raw_img', {
               filename_list: self.sidebar_filename_list,
-                index: file_index
-              })
-            this.add_recent_labeled_file_path()
+              index: file_index
+            })
+            self.add_recent_labeled_file_path()
+            self.$children[0].initialize()
           })
         })
       }

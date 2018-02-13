@@ -294,7 +294,6 @@
     z-index: 5;
     .bbox {
       position: absolute;
-      background-color: rgba(255, 255, 255, 0.7);
       border: 3px solid rgba(115, 221, 0, 0.93);
       box-sizing: border-box;
       .small-box {
@@ -332,8 +331,13 @@
         justify-content: center;
         align-items: center;
         background: #73DD00;
-
         z-index: 3;
+
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer */
+        -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+        -webkit-user-select: none; /* Chrome, Safari, and Opera */
+        -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
       }
       .not_labeled {
         position: absolute;
@@ -353,6 +357,7 @@
     }
     .selected {
       border: 3px solid red;
+      background-color: rgba(255, 255, 255, 0.7);
       .object_name {
         background: red;
       }
