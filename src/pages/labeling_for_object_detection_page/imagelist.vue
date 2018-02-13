@@ -5,7 +5,7 @@
       <div id="file-list-inner">
         <img class="file-item" v-for='idx in filename_max_display'
             :key='filename_list[idx-1]' @click="click_action(filename_list[idx-1])"
-            :class="{selected: false}" :src="'./t/'+filename_list[idx-1]">
+            :class="{selected: current_file_path === filename_list[idx-1]}" :src="'./t/'+filename_list[idx-1]">
       </div>
     </div>
   </div>
@@ -21,6 +21,7 @@
     },
     computed: mapState({
       filename_list: 'filename_list',
+      current_file_path: 'current_file_path',
       filename_max_display: function (state) {
         let ret = state.filename_max_display
         if (ret >= this.filename_list.length) {
@@ -35,11 +36,11 @@
           {file_path: filename})
       },
       on_scroll: function(event) {
-        let MARGIN = 50
+        let MARGIN = 100
         if (this.filename_max_display < this.filename_list.length) {
           let n = this.filename_max_display - MARGIN
           if (n <= 0) {
-            return
+            n = 1
           }
           let img = this.$el.querySelector(
              `#file-list-inner img:nth-child(${n})`);
@@ -54,7 +55,7 @@
 
           if (imgrc.top <  wrapperrc.top) {
             this.$store.commit("set_filename_max_display",
-              {filename_max_display: this.filename_max_display + 100})
+              {filename_max_display: this.filename_max_display + 200})
           }
         }
       }
@@ -65,7 +66,7 @@
 <style lang='scss'>
 
   #left-sidebar {
-    width: 300px;
+    width: 350px;
     padding: 0 5px;
     border-right: 1px solid #666666;
       background-color: #f4f4f2;
@@ -73,7 +74,7 @@
     .file-list-header {
       font-size: 18px;
       font-weight: bold;
-      width: 300px;
+      width: 350px;
       margin: 0 auto;
       padding: 20px 0 5px 0;
 
@@ -82,7 +83,7 @@
       background-color: #f4f4f2;
       height: calc(100% - 70px);
       overflow: auto;
-      width: 300px;
+      width: 350px;
       margin: 0 auto;
       #file-list-inner {
 
@@ -95,7 +96,7 @@
         line-height: 0;
  
         margin: 0;
-        padding-left: 0;
+        padding: 2px;
 
         display: flex;
         flex-wrap: wrap;
@@ -105,11 +106,11 @@
           align-self: flex-end;
           background: #FEFEFE;
           margin: 1px;
+          box-sizing: border-box;
           &.selected {
             background: #2d3e50;
             color: #fff;
-            box-sizing: border-box;
-            border: 2px solid red;
+            outline:2px ridge red;
           }
           &:hover {
             cursor: pointer;

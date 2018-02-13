@@ -77,9 +77,6 @@ let action = {
           current_raw_img: response.data.raw_img,
           current_file_path: payload.file_path
         })
-
-        // check sidebar current page
-        context.dispatch('check_sidebar_current_page')
       }
     )
   },
@@ -94,16 +91,6 @@ let action = {
     context.commit('update_current_label_objects', {
       label_objects: payload.label_objects
     })
-  },
-  check_sidebar_current_page (context, payload) {
-    // Change page nation if new page !== current page
-    // index is start by 0, so +1(avoid 0 divide)
-    let new_page = Math.ceil((context.getters.get_current_file_index + 1) / (context.getters.get_sidebar_page_step))
-    if (new_page !== context.getters.get_sidebar_current_page) {
-      context.commit('set_sidebar_current_page', {
-        sidebar_current_page: new_page
-      })
-    }
   },
   load_recent_images (context, payload) {
     let fd = new FormData()
@@ -218,7 +205,6 @@ let action = {
   },
   save_xml_from_label_dict (context, payload) {
     let fd = new FormData()
-
     fd.append('save_xml_file_name', payload.save_xml_file_name)
 
     // convert dict to json
