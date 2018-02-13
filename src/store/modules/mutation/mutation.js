@@ -75,17 +75,25 @@ let mutation = {
     state.current_json = payload.json_data
   },
   update_current_label_objects (state, payload) {
+    if (!state.current_label_dict.annotation)
+      state.current_label_dict['annotation'] = {}
     state.current_label_dict['annotation']['objects'] = payload.label_objects
   },
   set_selected_box_id (state, payload) {
     state.selected_box_id = payload.selected_box_id
   },
   set_current_label_dict (state, payload) {
+    if (!state.current_label_dict.annotation)
+      state.current_label_dict['annotation'] = {}
+    if (!state.current_label_dict.annotation.size)
+      state.current_label_dict['annotation']['size'] = {}
     state.current_label_dict['annotation']['path'] = payload.file_path
     state.current_label_dict['annotation']['size']['height'] = payload.size_height
     state.current_label_dict['annotation']['size']['width'] = payload.size_width
   },
-
+  flush_current_label_dict (state) {
+    state.current_label_dict = {}
+  },
   set_label_candidates_dict (state, payload) {
     state.label_candidates_dict = payload.label_candidates_dict
   },

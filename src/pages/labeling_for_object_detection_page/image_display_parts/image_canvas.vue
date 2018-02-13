@@ -261,6 +261,7 @@
       },
       initialize: function (){
         this.bbox_id_list = []
+        this.bbox_list = []
       },
       onMouseUp: function (event) {
         this.mouseDownFlag = false

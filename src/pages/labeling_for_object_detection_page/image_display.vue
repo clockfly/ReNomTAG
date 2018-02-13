@@ -117,7 +117,8 @@
         }).then(
           this.$store.dispatch('load_recent_images', {
             file_paths: self.$store.getters.get_recent_labeled_file_paths
-          })
+          }),
+          this.$store.commit('flush_current_label_dict')
         )
       },
       save_xml_from_dict: function () {
@@ -128,6 +129,10 @@
           return
         }
 
+        if (Object.keys(this.current_label_dict).length == 0) {
+          alert("No label to save.")
+          return
+        }
         self.$store.dispatch('set_current_label_dict', {
           file_path: self.current_file_path,
           size_height: self.current_img_height,
