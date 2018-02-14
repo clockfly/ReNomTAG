@@ -155,7 +155,7 @@ def get_thumbnail(file_name):
     response.content_type=mimetypes.guess_type(file_name)
 
     img = Image.open(file_name, 'r')
-    img.thumbnail((35, 140), Image.ANTIALIAS)
+    img.thumbnail((70, 70), Image.ANTIALIAS)
     buffered = IO()
     img.save(buffered, format='PNG')
 
