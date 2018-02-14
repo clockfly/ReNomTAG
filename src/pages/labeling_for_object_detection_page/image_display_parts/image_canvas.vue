@@ -7,11 +7,11 @@
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
 
-
-    <div id="load_prev_btn" @click='load_prev_raw_img()'>
+    
+    <div v-if="current_file_name.length > 0" id="load_prev_btn" @click='load_prev_raw_img()'>
       <div class="arrow prev_arrow"></div>
     </div>
-    <div id="load_next_btn" @click='load_next_raw_img()'>
+    <div v-if="current_file_name.length > 0" id="load_next_btn" @click='load_next_raw_img()'>
       <div class="arrow next_arrow"></div>
     </div>
 
@@ -104,7 +104,10 @@
       this.updateBoxes()
     },
     computed: {
-      label_candidates_dict () {
+      filename_list: function () {
+        return this.$store.state.filename_list  
+      },
+      label_candidates_dict:function () {
         return this.$store.getters.get_label_candidates_dict
       },
       current_raw_img_src: function () {
@@ -430,22 +433,31 @@
       },
 
       load_prev_raw_img: function () {
-        let self = this
-        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {
-            filename_list: self.sidebar_filename_list,
-            index: this.current_file_index - 1
+        let index = this.filename_list.indexOf(this.current_file_path)
+        if (index != -1) {
+          if (index === 0) {
+            return
+          }
+          index = index - 1
+          console.log(index, this.filename_list[index])
+          this.$store.dispatch('load_raw_img_from_path', {
+            file_path: this.filename_list[index]
           })
-        )
+        }
       },
+
       load_next_raw_img: function () {
-        let self = this
-        self.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: true}).then(
-          this.$store.dispatch('load_raw_img', {
-            filename_list: this.sidebar_filename_list,
-            index: this.current_file_index + 1
+        let index = this.filename_list.indexOf(this.current_file_path)
+        if (index != -1) {
+          if (index >= (this.filename_list.length - 1)) {
+            return
+          }
+          index = index + 1
+          console.log(index, this.filename_list[index])
+          this.$store.dispatch('load_raw_img_from_path', {
+            file_path: this.filename_list[index]
           })
-        )
+        }
       },
 
     }
@@ -453,6 +465,7 @@
 </script>
 
 <style lang='scss'>
+
   #image-canvas {
     width: 100%;
     height: calc(100% - 40px);
@@ -464,9 +477,8 @@
 
     #load_prev_btn, #load_next_btn {
       position: absolute;
-      height: 30px;
-      top: 0;
-      bottom: 0;
+      height: 60px;
+      width: 40px;
       margin: auto;
 
       &:hover {
@@ -476,38 +488,40 @@
       .arrow {
         position: relative;
         display: inline-block;
-        padding-left: 20px;
-
+        padding-left: 0px;
         &:before {
           content: '';
           width: 25px;
           height: 25px;
           border: 0;
-          border-top: solid 2px #c2c2c2;
-          border-right: solid 2px #c2c2c2;
 
           position: absolute;
           top: 50%;
-          left: 0;
+          left: 0px;
           margin-top: -4px;
         }
       }
       .next_arrow::before {
+        border-top: solid 2px #c2c2c2;
+        border-right: solid 2px #c2c2c2;
         -ms-transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         transform: rotate(45deg);
       }
       .prev_arrow::before {
-        -ms-transform: rotate(-135deg);
-        -webkit-transform: rotate(-135deg);
-        transform: rotate(-135deg);
+        margin-left: 10px;
+        border-top: solid 2px #c2c2c2;
+        border-left: solid 2px #c2c2c2;
+        -ms-transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
       }
     }
     #load_prev_btn {
-      left: 50px;
+      left: 15px;
     }
     #load_next_btn {
-      right: 50px;
+      right: 15px;
     }
 
     #inner-canvas {

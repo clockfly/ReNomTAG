@@ -351,7 +351,6 @@ def load_label_candidates_dict():
 def get_bbox_list():
     xml_file_path = os.path.join(XML_DIR, request.params.xml_file_path)
 
-    print(xml_file_path)
     if not os.path.exists(xml_file_path):
         json_data = ''
     else:
