@@ -46,17 +46,14 @@
         let wrapper = this.$el.querySelector(
           `#file-list-wrapper`);
         let wrapperrc = wrapper.getBoundingClientRect()
-        console.log(newvalue, n, imgrc.top ,  wrapperrc.top)
         if (imgrc.bottom >=  wrapperrc.bottom) {
           let dy = imgrc.bottom - wrapperrc.bottom
 
           wrapper.scrollBy(0, dy+(wrapperrc.height / 4))
-          console.log(scroll)
         }
         else if (imgrc.top <  wrapperrc.top) {
           let dy = imgrc.top - wrapperrc.top- (wrapperrc.height / 4)
           wrapper.scrollBy(0, dy)
-          console.log(scroll)
         }
       }
     },
@@ -66,7 +63,7 @@
           {file_path: filename})
       },
       on_scroll: function(event) {
-        let MARGIN = 100
+        let MARGIN = 50
         if (this.filename_max_display < this.filename_list.length) {
           let n = this.filename_max_display - MARGIN
           if (n <= 0) {
@@ -85,7 +82,7 @@
 
           if (imgrc.top <  wrapperrc.top) {
             this.$store.commit("set_filename_max_display",
-              {filename_max_display: this.filename_max_display + 200})
+              {filename_max_display: this.filename_max_display +100})
           }
         }
       }
