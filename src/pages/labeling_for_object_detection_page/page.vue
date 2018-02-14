@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import ImageList from './imagelist.vue'
+  import ImageList from './image_list.vue'
   import ImageDisplay from './image_display.vue'
   import RecentImagesList from './recent_images/recent_images_list.vue'
   import LabelList from './label_list.vue'
@@ -24,20 +24,6 @@
       'image-display': ImageDisplay,
       'recent-images-list': RecentImagesList,
       'label-list': LabelList
-    },
-    created(){
-/*
-      this.$store.dispatch('load_filename_list')
-      .then(function() {
-        return self.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          'current_page': 1,
-          'page_step': 100
-        })
-      })
-      .then(function() {
-          self.load_raw_img(0, self.$store.getters.get_filename_list)
-      })
-*/
     },
     methods: {
       load_raw_img: function (index, filename_list) {

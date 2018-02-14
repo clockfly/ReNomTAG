@@ -13,29 +13,6 @@ let action = {
       }
     )
   },
-  load_sidebar_thumbnail_and_filename_list (context, {current_page, page_step}) {
-    let fd = new FormData()
-    fd.append('current_page', current_page)
-    fd.append('page_step', page_step)
-
-    return axios.post('/api/get_sidebar_thumbnail_and_filename_list', fd).then(
-      function (response) {
-        let error = response.data.error
-        if (error) {
-          alert('File not found. Please try again.')
-          return
-        }
-        context.commit('set_sidebar_thumbnail_and_filename_list', {
-          sidebar_filename_list: response.data.sidebar_filename_list,
-          sidebar_current_page: current_page,
-          sidebar_page_step: page_step
-        })
-        context.commit('set_error_status', {
-          "success": response.data.success
-        })
-      }
-    )
-  },
 
   async load_raw_img (context, payload) {
     // Arguments : index
@@ -100,9 +77,6 @@ let action = {
           current_raw_img: response.data.raw_img,
           current_file_path: payload.file_path
         })
-
-        // check sidebar current page
-        context.dispatch('check_sidebar_current_page')
       }
     )
   },
@@ -117,16 +91,6 @@ let action = {
     context.commit('update_current_label_objects', {
       label_objects: payload.label_objects
     })
-  },
-  check_sidebar_current_page (context, payload) {
-    // Change page nation if new page !== current page
-    // index is start by 0, so +1(avoid 0 divide)
-    let new_page = Math.ceil((context.getters.get_current_file_index + 1) / (context.getters.get_sidebar_page_step))
-    if (new_page !== context.getters.get_sidebar_current_page) {
-      context.commit('set_sidebar_current_page', {
-        sidebar_current_page: new_page
-      })
-    }
   },
   load_recent_images (context, payload) {
     let fd = new FormData()
@@ -226,11 +190,6 @@ let action = {
       sidebar_file_list_scroll_position: scroll_position
     })
   },
-  set_sidebar_file_list_scroll_position_flag (context, payload) {
-    context.commit('set_sidebar_file_list_scroll_position_flag', {
-      flag: payload.flag
-    })
-  },
   set_sidebar_file_list_scroll_window_position (context, payload) {
     context.commit('set_sidebar_file_list_scroll_window_position', {
       start_position: payload.start_position,
@@ -246,7 +205,6 @@ let action = {
   },
   save_xml_from_label_dict (context, payload) {
     let fd = new FormData()
-
     fd.append('save_xml_file_name', payload.save_xml_file_name)
 
     // convert dict to json

@@ -96,12 +96,6 @@
           })
         )
       },
-      load_sidebar_thumbnail_and_filename_list () {
-        this.$store.dispatch('load_sidebar_thumbnail_and_filename_list', {
-          current_page: this.sidebar_current_page,
-          page_step: this.sidebar_page_step
-        })
-      },
       set_sidebar_file_list_scroll_position_flag: function (flag) {
         this.$store.dispatch('set_sidebar_file_list_scroll_position_flag', {flag: flag})
       },
@@ -142,17 +136,26 @@
             save_xml_file_name: self.save_xml_file_name_computed,
             label_dict: JSON.parse(JSON.stringify(self.current_label_dict))
           }).then(() => {
-            self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
-            let file_index = self.current_file_index
-            if (file_index >= self.sidebar_filename_list.length) {
-              file_index = self.sidebar_filename_list.length
+            let index = this.filename_list.indexOf(self.current_file_path)
+            this.add_recent_labeled_file_path()
+            if (index != -1) {
+              self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
+
+              if (index >= self.filename_list.length) {
+                index = self.filename_list.length-1
+              }
+
+              if (index >= 0) {
+                self.$store.dispatch('load_raw_img_from_path', {
+                  file_path: self.filename_list[index]
+                })
+                return
+              }
             }
-            self.$store.dispatch('load_raw_img', {
-              filename_list: self.sidebar_filename_list,
-              index: file_index
+
+            self.$store.commit('set_raw_img_from_path', {
+              current_raw_img: '', current_file_path: ''
             })
-            self.add_recent_labeled_file_path()
-            self.$children[0].initialize()
           })
         })
       }
