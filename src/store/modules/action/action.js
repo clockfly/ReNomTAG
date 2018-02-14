@@ -129,7 +129,7 @@ let action = {
       context.state.recent_label_list.unshift(add_label)
 
     } else {
-      if (context.getters.get_recent_labeled_file_paths.length >= 10) {
+      if (context.getters.get_recent_labeled_file_paths.length >= 5) {
         context.state.recent_labeled_file_paths.pop()
         context.state.recent_label_list.pop()
       }

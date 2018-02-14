@@ -15,10 +15,7 @@
       <div class="arrow next_arrow"></div>
     </div>
 
-
     <div id='inner-canvas'>
-
-
       <div id='mask'
            @mousedown='onMouseDown'
            v-bind:style='{"background-image": "url("+current_raw_img_src+")",
@@ -29,12 +26,10 @@
 
         <box v-for='(bbox_id, index) in bbox_id_list'
              v-if="bbox_list.length > 0"
-
              :key='bbox_id'
              :box_id='bbox_id'
              :bndbox='bbox_list[index]["bndbox"]'
              :prop_name="bbox_list[index]['name']"
-
              :current_img_width="current_img_width"
              :current_img_height="current_img_height"
         ></box>
@@ -79,7 +74,6 @@
 
         bbox_list: [],
         bbox_id_list: [],
-        bbox_id_counter: 0
       }
     },
     watch: {
@@ -269,10 +263,19 @@
         }
         return labeled
       },
+      initialize: function (){
+        this.bbox_id_list = []
+        this.bbox_list = []
+      },
       onMouseUp: function (event) {
         this.mouseDownFlag = false
         if (this.currentBbox) {
           this.currentBbox = null
+        } else {
+          // This is the case of that a box is
+          // created but any mouse move event are not fired.
+          this.bbox_id_list.pop()
+          this.bbox_list.pop()
         }
         this.updateBoxes()
       },
@@ -394,9 +397,7 @@
         }
 
         this.bbox_list.push(object)
-        this.bbox_id_list.push(this.bbox_id_counter)
-        this.bbox_id_counter++
-
+        this.bbox_id_list.push(this.bbox_id_list.length)
       },
       loadBbox: function () {
         let self = this
@@ -422,8 +423,7 @@
             }
 
             for (let n in temp_bbox_list) {
-              self.bbox_id_list.push(self.bbox_id_counter)
-              self.bbox_id_counter++
+              self.bbox_id_list.push(self.bbox_id_list.length)
             }
             if(temp_bbox_list){
               self.bbox_list = temp_bbox_list
@@ -439,7 +439,6 @@
             return
           }
           index = index - 1
-          console.log(index, this.filename_list[index])
           this.$store.dispatch('load_raw_img_from_path', {
             file_path: this.filename_list[index]
           })
@@ -453,7 +452,6 @@
             return
           }
           index = index + 1
-          console.log(index, this.filename_list[index])
           this.$store.dispatch('load_raw_img_from_path', {
             file_path: this.filename_list[index]
           })

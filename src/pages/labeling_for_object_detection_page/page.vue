@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import ImageList from './imagelist.vue'
+  import ImageList from './image_list.vue'
   import ImageDisplay from './image_display.vue'
   import RecentImagesList from './recent_images/recent_images_list.vue'
   import LabelList from './label_list.vue'

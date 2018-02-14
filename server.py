@@ -297,7 +297,7 @@ def save_xml_from_label_dict():
 
     file_name = label_dict_split[-1]
     label_dict['annotation']['folder'] = folder
-    label_dict['annotation']['file_name'] = file_name
+    label_dict['annotation']['filename'] = file_name
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -393,6 +393,6 @@ if __name__ == '__main__':
     observer.daemon = True
 
     observer.start()
-    run(host="0.0.0.0", port=8090)
+    run(host="0.0.0.0", port=8060)
     observer.stop()
     observer.join()

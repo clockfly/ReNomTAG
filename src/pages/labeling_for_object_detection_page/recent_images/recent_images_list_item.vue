@@ -44,7 +44,6 @@
     computed: {
       bbox_list (){
         if(!this.annotation){
-          console.log("DAS")
           return []
         }
         return this.annotation.objects
@@ -83,7 +82,6 @@
 </script>
 
 <style lang='scss'>
-
   .recent-images-list-item {
     position: relative;
     list-style: none;
