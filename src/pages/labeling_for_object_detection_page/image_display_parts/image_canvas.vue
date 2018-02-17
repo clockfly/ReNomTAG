@@ -401,7 +401,7 @@
       },
       loadBbox: function () {
         let self = this
-
+        this.initialize()
         let fd = new FormData()
         fd.append('xml_file_path', this.xml_file_path)
 
@@ -414,10 +414,8 @@
             }
 
             let temp_bbox_list = JSON.parse(response.data.json_data)['annotation']['object']
-
             self.bbox_id_list = []
             self.bbox_list = []
-
             if (typeof temp_bbox_list === 'undefined') {
               return
             }
