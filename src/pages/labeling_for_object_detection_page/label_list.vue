@@ -8,12 +8,10 @@
         <input type="text"
                class="label-text"
                v-model='newLabelText'
-               @keyup.enter='addNewLabel'
                placeholder="label name...">
         <input type="text"
                class="label-shortcut"
                v-model='newLabelShortcut'
-               @keyup.enter='addNewLabel'
                @keyup='setShortcutKey'
                placeholder="key...">
       </div>

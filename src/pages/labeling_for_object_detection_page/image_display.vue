@@ -1,6 +1,6 @@
 <template>
   <div id='image-display'
-  @keyup.capture.space.stop='save_xml_from_dict()'>
+  @keyup.capture.space='save_xml_from_dict()'>
     <div id='outer-panel'>
       <transition>
         <image-canvas></image-canvas>
