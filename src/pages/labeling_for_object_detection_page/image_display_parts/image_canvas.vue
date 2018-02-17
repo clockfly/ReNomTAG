@@ -90,7 +90,6 @@
         img_data = this.current_raw_img_src
         img.src = img_data
         this.loadBbox().then(function(){
-          console.log("LENGTH", self.$children.length)
           self.updateBoxes()
         })
       }

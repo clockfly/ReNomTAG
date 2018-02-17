@@ -31,6 +31,15 @@
       }
     }),
     watch: {
+      filename_list: function(newvalue, oldvalue){
+        if (oldvalue.length === 0 && newvalue !== 0){
+          if(this.filename_list.length > 0) {
+            this.$store.dispatch('load_raw_img_from_path', {
+              file_path: this.filename_list[0]
+            })
+          }
+        }
+      },
       current_file_path: function(newvalue, oldvalue) {
         let n = this.filename_list.indexOf(newvalue)
         if (n == -1) {
