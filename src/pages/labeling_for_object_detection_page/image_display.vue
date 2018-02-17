@@ -27,6 +27,7 @@
     data: function () {
       return {
         imgData: '',
+        index: 0,
       }
     },
     computed: {
@@ -117,7 +118,6 @@
       },
       save_xml_from_dict: function () {
         let self = this
-
         if (!this.$children[0].isAllLabeled()) {
           alert("All bounding boxes must be named.")
           return
@@ -127,6 +127,7 @@
           alert("No label to save.")
           return
         }
+
         self.$store.dispatch('set_current_label_dict', {
           file_path: self.current_file_path,
           size_height: self.current_img_height,
@@ -138,23 +139,19 @@
           }).then(() => {
             let index = this.filename_list.indexOf(self.current_file_path)
             this.add_recent_labeled_file_path()
+
             if (index != -1) {
               self.$store.commit('remove_thumbnail_img', {'filename': self.current_file_path})
-
               if (index >= self.filename_list.length) {
                 index = self.filename_list.length-1
-              }
-
-              if (index >= 0) {
-                self.$store.dispatch('load_raw_img_from_path', {
-                  file_path: self.filename_list[index]
-                })
-                return
-              }
+              } 
+            }else{
+              index = this.index
             }
+            this.index = index
 
-            self.$store.commit('set_raw_img_from_path', {
-              current_raw_img: '', current_file_path: ''
+            self.$store.dispatch('load_raw_img_from_path', {
+               file_path: self.filename_list[index]
             })
           })
         })

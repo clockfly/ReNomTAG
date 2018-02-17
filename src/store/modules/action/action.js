@@ -52,9 +52,6 @@ let action = {
           current_file_index: current_file_index,
           current_file_path: new_file_path
         })
-
-        // check sidebar current page
-//        context.dispatch('check_sidebar_current_page')
       }
     )
   },
@@ -64,7 +61,7 @@ let action = {
 
     let fd = new FormData()
     fd.append('filename', payload.file_path)
-
+    console.log("Action", payload.file_path)
 
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {
