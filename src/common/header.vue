@@ -1,7 +1,7 @@
 <template>
   <header>
 
-    <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' @click='toggleMenu'
+    <i id='toggle-menu' class='fa fa-bars' aria-hidden='true' 
        v-bind:class='{ open: isMenuShown }'></i>
     <div class="tool-name"><span class="bold">ReNom</span> TAG</div>
 
@@ -47,9 +47,5 @@
     #toggle-menu {
       margiN: 0 20px;
     }
-    #toggle-menu:hover {
-      cursor: pointer;
-    }
-
   }
 </style>
