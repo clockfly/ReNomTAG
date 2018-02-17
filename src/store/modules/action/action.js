@@ -61,7 +61,6 @@ let action = {
 
     let fd = new FormData()
     fd.append('filename', payload.file_path)
-    console.log("Action", payload.file_path)
 
     return axios.post('/api/get_raw_img', fd).then(
       function (response) {

@@ -2,7 +2,6 @@
   <div id='image-canvas'
        tabindex='0'
        @mousemove='onMouseMove'
-       @mouseup='onMouseUp'
        @keydown='onAnyKeyDown'
        @keyup='onAnyKeyUp'
        @keyup.delete='onKeyDelete'>
@@ -18,6 +17,7 @@
     <div id='inner-canvas'>
       <div id='mask'
            @mousedown='onMouseDown'
+           @mouseup='onMouseUp'
            v-bind:style='{"background-image": "url("+current_raw_img_src+")",
                         "height": maskHeight+"%",
                         "width": maskWidth+"%"
@@ -89,8 +89,10 @@
         }
         img_data = this.current_raw_img_src
         img.src = img_data
-
-        this.loadBbox()
+        this.loadBbox().then(function(){
+          console.log("LENGTH", self.$children.length)
+          self.updateBoxes()
+        })
       }
     },
     created: function () {
