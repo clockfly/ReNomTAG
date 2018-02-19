@@ -18,13 +18,25 @@
 
 If the server starts, you will see a message like below.
 
-<img src='static/img/server_run.png' width='60%'/>
+<img src='./static/img/server_run.png' width='60%'/>
 
 3.Then you access to http://0.0.0.0:8060/, the application
 is ready to use.
 
 
 ## How to use
+
+The following video describes how to use ReNomTAG.
+In this video, the Oxford-IIIT Pet Dataset is used.
+
+- Cats and Dogs Classification  
+https://github.com/JDonini/Cats_Dogs_Classification
+
+- O. M. Parkhi, A. Vedaldi, A. Zisserman, C. V. Jawahar
+Cats and Dogs  
+IEEE Conference on Computer Vision and Pattern Recognition, 2012
+Bibtex  
+http://www.robots.ox.ac.uk/~vgg/data/pets/
 
 
 ## Format of xml file.
