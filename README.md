@@ -26,7 +26,7 @@ is ready to use.
 
 ## How to use
 
-The following video describes how to use ReNomTAG.
+The following videos describes how to use ReNomTAG.
 In this video, the Oxford-IIIT Pet Dataset is used.
 
 - Cats and Dogs Classification  
@@ -37,6 +37,18 @@ Cats and Dogs
 IEEE Conference on Computer Vision and Pattern Recognition, 2012
 Bibtex  
 http://www.robots.ox.ac.uk/~vgg/data/pets/
+
+#### 1.Set image data to RaNomTAG.
+![](static/movie/movie01.mp4)
+
+#### 2.Run ReNomTAG
+![](static/movie/movie02.mp4)
+
+#### 3.How to use ReNomTAG
+![](static/movie/movie03.mp4)
+
+#### 4.Recognize generated xml file.
+![](static/movie/movie04.mp4)
 
 
 ## Format of xml file.
