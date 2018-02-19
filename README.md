@@ -1,10 +1,16 @@
 # ReNom TAG Master Branch
 
 ## Install
+For installing ReNomTAG, download the repository from following url.
 
 `git clone https://gitlab.com/suwa/ReNomTAG.git`
 
+And move into ReNomTAG directory.
+`cd ReNomTAG`
+
+Then install all required python packages.
 `pip install -r requirement.txt`
+
 
 ## How to start
 
