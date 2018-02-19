@@ -95,6 +95,12 @@
           alert('Shortcut is already exists.')
           return
         }
+
+        if ((this.newLabelText.match(/^[0-9a-zA-Z]+$/)) ? false : true) {
+          alert("Class name must be alphanumeric single-byte.");
+          return
+        }
+
         this.$store.commit('add_new_label', {
           label_text: this.newLabelText,
           id: this.label_id,
