@@ -64,6 +64,10 @@ Xml files are generated into the label directory.
 
 ![](static/movie/movie04.mp4)
 
+## Notification
+ReNomTAG only accepts ASCII characters.
+Thus you can't input non ASCII characters to class name list.
+
 
 ## Format of xml file.
 
