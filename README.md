@@ -10,6 +10,11 @@ For installing ReNomTAG, download the repository from following url.
 And move into ReNomTAG directory.
 `cd ReNomTAG`
 
+Then install all required packages.
+
+`pip install -r requirements.txt`
+
+
 ## How to start
 
 1.Move to ReNomTAG directory using following command.
