@@ -39,15 +39,24 @@ Bibtex
 http://www.robots.ox.ac.uk/~vgg/data/pets/
 
 #### 1.Set image data to RaNomTAG.
+As following video showing, please put the image you want to tag in the `ReNomTAG/dataset` folder.
+
 ![](static/movie/movie01.mp4)
 
 #### 2.Run ReNomTAG
+Same as before mentioned in 'How to start ReNom', following video describes
+how to start ReNomTAG.
+
 ![](static/movie/movie02.mp4)
 
 #### 3.How to use ReNomTAG
+It is a video tagging by ReNom tag.
+
 ![](static/movie/movie03.mp4)
 
 #### 4.Recognize generated xml file.
+Xml files are generated into the label directory.
+
 ![](static/movie/movie04.mp4)
 
 
