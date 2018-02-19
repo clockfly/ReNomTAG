@@ -10,10 +10,6 @@ For installing ReNomTAG, download the repository from following url.
 And move into ReNomTAG directory.
 `cd ReNomTAG`
 
-Then install all required python packages.
-`pip install -r requirement.txt`
-
-
 ## How to start
 
 1.Move to ReNomTAG directory using following command.
@@ -27,10 +23,6 @@ Then install all required python packages.
 If the server starts, you will see a message like below.
 
 <img src='./static/img/server_run.png' width='60%'/>
-
-3.Then you access to http://0.0.0.0:8060/, the application
-is ready to use.
-
 
 ## How to use
 
@@ -131,7 +123,6 @@ An example is bellow.
 “ReNomTAG” is provided by GRID inc., as subscribed software.  By downloading ReNomTAG, you are agreeing to be bound by our ReNom Subscription agreement between you and GRID inc.
 To use ReNomTAG for commercial purposes, you must first obtain a paid license. Please contact us or one of our resellers.  If you are an individual wishing to use ReNomTAG for academic, educational and/or product evaluation purposes, you may use ReNomTAG royalty-free.
 The ReNom Subscription agreements are subject to change without notice. You agree to be bound by any such revisions. You are responsible for visiting www.renom.jp to determine the latest terms to which you are bound.
-
 
 [PASCAL VOC]:http://host.robots.ox.ac.uk/pascal/VOC/
 
