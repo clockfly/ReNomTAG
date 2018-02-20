@@ -71,14 +71,15 @@ You can use shortcut keys to select the bounding box' class name.
 In the following class name list, shortcut key 'q' is set to the class name 'dog'.
 Similarly, the key 'w' is set to the class name 'cat'.
 
-<img src='./static/img/class_list.png' width='60%'/>
+<img src='./static/img/class_list.png' width='30%'/>
 
 You can use these shortcuts when you select a bounding box.
 You can assign the corresponding class name by pressing the shortcut key while selecting the box.
 
-When you want to save the xml file, 'space' key is a shortcut of the button 'Save >>'.
+When you want to save the xml file, you can use the 'space' key as a saving button.
+The 'space' key is a shortcut of the button 'Save >>'.
 
-<img src='./static/img/save_button.png' width='60%'/>
+<img src='./static/img/save_button.png' width='30%'/>
 
 
 
@@ -87,7 +88,7 @@ ReNomTAG only accepts alphanumeric characters.
 Thus you can't input non alphanumeric characters to class name list.
 
 
-## Format of xml file.
+## Format of xml file
 
 The format of the xml file which created by ReNomTAG follows [PASCAL VOC] format.
 
