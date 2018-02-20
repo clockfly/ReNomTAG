@@ -64,6 +64,24 @@ Xml files are generated into the label directory.
 
 ![](static/movie/movie04.mp4)
 
+## Shortcut Keys
+
+You can use shortcut keys to select the bounding box' class name.
+
+In the following class name list, shortcut key 'q' is set to the class name 'dog'.
+Similarly, the key 'w' is set to the class name 'cat'.
+
+<img src='./static/img/class_list.png' width='60%'/>
+
+You can use these shortcuts when you select a bounding box.
+You can assign the corresponding class name by pressing the shortcut key while selecting the box.
+
+When you want to save the xml file, 'space' key is a shortcut of the button 'Save >>'.
+
+<img src='./static/img/save_button.png' width='60%'/>
+
+
+
 ## Notification
 ReNomTAG only accepts alphanumeric characters.
 Thus you can't input non alphanumeric characters to class name list.
