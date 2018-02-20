@@ -3,9 +3,7 @@
 Tagging tool for object detection.
 
 ## Install
-For installing ReNomTAG, download the repository from following url.
-
-`git clone https://gitlab.com/suwa/ReNomTAG.git`
+For installing ReNomTAG, download this repository.
 
 And move into ReNomTAG directory.
 `cd ReNomTAG`
