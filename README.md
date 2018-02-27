@@ -44,27 +44,23 @@ http://www.robots.ox.ac.uk/~vgg/data/pets/
 #### 1.Set image data to RaNomTAG.
 As following video showing, please put the image you want to tag in the `ReNomTAG/dataset` folder.
 
-*The introduction movie will be uploaded later.
-Currently the video is in the folder `static/movie/movie01.mp4`.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/snz5APOi_io" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 #### 2.Run ReNomTAG
 Same as before mentioned in 'How to start ReNom', following video describes
 how to start ReNomTAG.
 
-*The introduction movie will be uploaded later.
-Currently the video is in the folder `static/movie/movie02.mp4`.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xFAMbdi1dMo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 #### 3.How to use ReNomTAG
 It is a video tagging by ReNom tag.
 
-*The introduction movie will be uploaded later.
-Currently the video is in the folder `static/movie/movie03.mp4`.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/10TNIvM4_fE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 #### 4.Recognize generated xml file.
 Xml files are generated into the label directory.
 
-*The introduction movie will be uploaded later.
-Currently the video is in the folder `static/movie/movie04.mp4`.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LfLqbNszwfI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ## Shortcut Keys
 
