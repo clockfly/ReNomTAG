@@ -1,0 +1,24 @@
+image: node:9.8
+
+pages:
+  script:
+    - apt-get -y update
+    - apt install -y zip
+    - cd js
+    - npm install
+    - npm run build
+
+    - cd ..
+    - zip -r renomtag.zip __main__.py renomtag
+    - echo '#!/usr/bin/env python3' > renomtag.bin
+    - cat renomtag.zip >>renomtag.bin
+
+    - mkdir public
+    - mkdir public/master
+    - mv renomtag.zip public/
+    - mv renomtag public/
+  artifacts:
+    paths:
+    - public
+  only:
+    - master
