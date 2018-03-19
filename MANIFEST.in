@@ -1,0 +1,1 @@
+recursive-include renomtag = *.css *.eot *.html *.js *.svg *.ttf *.woff *.woff2

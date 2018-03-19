@@ -3,20 +3,11 @@ image: node:9.8
 pages:
   script:
     - apt-get -y update
-    - apt install -y zip
-    - cd js
-    - npm install
-    - npm run build
-
-    - cd ..
-    - zip -r renomtag.zip __main__.py renomtag
-    - echo '#!/usr/bin/env python3' > renomtag.bin
-    - cat renomtag.zip >>renomtag.bin
-
+    - apt install -y python3 python3-pip python3-wheel
+    - python3 setup.py bdist_wheel
     - mkdir public
     - mkdir public/master
-    - mv renomtag.zip public/
-    - mv renomtag public/
+    - mv dist/* /public/master/
   artifacts:
     paths:
     - public
