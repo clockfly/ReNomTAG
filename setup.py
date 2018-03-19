@@ -24,7 +24,7 @@ entry_points = {
 }
 
 versionpy = DIR / 'renomtag/__version__.py'
-version = re.search(r'"([\d.]+)"', versionpy.read_text())[1]
+version = re.search(r'"([\d.]+)"', versionpy.open().read())[1]
 
 import setuptools.command.build_py
 
