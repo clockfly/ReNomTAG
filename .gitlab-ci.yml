@@ -5,9 +5,8 @@ pages:
     - apt-get -y update
     - apt install -y python3 python3-pip python3-wheel
     - python3 setup.py bdist_wheel
-    - mkdir public
-    - mkdir public/master
-    - mv dist/* /public/master/
+    - mkdir -p public/master
+    - mv dist/* public/master/
   artifacts:
     paths:
     - public
