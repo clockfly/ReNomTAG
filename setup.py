@@ -9,7 +9,7 @@ import distutils.command.build
 if sys.version_info < (3, 4):
     raise RuntimeError('renomtag requires Python3')
 
-DIR = pathlib.Path(__file__).resolve().parent
+DIR = str(pathlib.Path(__file__).resolve().parent)
 
 requires = [
     "bs4", "bottle", "glob2", "lxml", "Pillow",
@@ -23,10 +23,8 @@ entry_points = {
     ]
 }
 
-versionpy = DIR / 'renomtag/__version__.py'
-version = re.search(r'"([\d.]+)"', versionpy.open().read())[1]
-
-import setuptools.command.build_py
+versionpy = os.path.join(DIR, 'renomtag/__version__.py')
+version = re.search(r'"([\d.]+)"', open(versionpy).read()).group(1)
 
 
 class BuildNPM(distutils.command.build.build):
