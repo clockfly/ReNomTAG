@@ -31,7 +31,7 @@ class BuildNPM(distutils.command.build.build):
     """Custom build command."""
 
     def run(self):
-        shutil.rmtree(os.path.join(DIR, 'renomtag/.build'))
+        shutil.rmtree(os.path.join(DIR, 'renomtag/.build'), ignore_errors=True)
         curdir = os.getcwd()
          
         try:
