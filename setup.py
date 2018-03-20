@@ -33,17 +33,19 @@ class BuildNPM(distutils.command.build.build):
     def run(self):
         shutil.rmtree(os.path.join(DIR, 'renomtag/.build'), ignore_errors=True)
         curdir = os.getcwd()
-         
         try:
             jsdir = os.path.join(DIR, 'js')
-            os.chdir(jsdir)
-            ret = os.system('npm install')
-            if ret:
-                raise RuntimeError('Failed to install npm modules')
 
-            ret = os.system('npm run build')
-            if ret:
-                raise RuntimeError('Failed to build npm modules')
+            # skip if js directory not exists.
+            if os.path.isdir(jsdir):
+                os.chdir(jsdir)
+                ret = os.system('npm install')
+                if ret:
+                    raise RuntimeError('Failed to install npm modules')
+
+                ret = os.system('npm run build')
+                if ret:
+                    raise RuntimeError('Failed to build npm modules')
 
         finally:
             os.chdir(curdir)

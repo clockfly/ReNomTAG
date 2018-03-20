@@ -1,0 +1,22 @@
+package:
+  name: renomtag
+  version: 0.0.1
+
+source:
+  path: ../sdist/renomtag-0.0.1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - beautifulsoup4
+    - bottle
+    - glob2
+    - lxml
+    - pillow
+    - pyyaml
+    - watchdog
+    - xmltodict
