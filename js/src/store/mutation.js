@@ -12,6 +12,10 @@ export default {
     state.error_status = payload.error_status
   },
 
+  set_loading_message(state, payload) {
+    state.loading_message = payload.loading_message;
+  },
+
   set_main_menu_visible(state, payload) {
     state.main_menu_visible = payload.visible
   },
@@ -19,6 +23,9 @@ export default {
   set_file_list(state, payload) {
     state.files = payload.file_list;
     state.filename_max_display = 100;
+    if (!state.files || state.files.length == 0) {
+      state.loading_message = 'No images found.'
+    }
   },
 
   set_filename_max_display(state, payload) {

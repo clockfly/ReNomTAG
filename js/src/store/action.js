@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as utils from '@/utils'
 
-async function async_func(f) {
+async function async_func(context, f) {
   let ret;
   try {
     ret = await f()
@@ -17,7 +17,8 @@ async function async_func(f) {
 
 export default {
   async load_imagefile_list(context) {
-    let response = await async_func(
+    context.commit('set_loading_message', {loading_message: 'Loading images...'});
+    let response = await async_func(context,
       () => axios.post(utils.build_api_url('/api/get_filename_list')))
 
     context.commit('set_file_list', {
@@ -32,8 +33,8 @@ export default {
     context.commit('set_active_image', {
       file: null
     });
-
-    let response = await async_func(
+    
+    let response = await async_func(context,
       ()=>axios.get(utils.build_api_url('/api/get_raw_img/' + file)));
 
     const boxes = [];
@@ -60,12 +61,12 @@ export default {
 
   async add_label(context, payload) {
     context.commit('add_label', payload)
-    await async_func(()=>axios.post(
+    await async_func(context, ()=>axios.post(
           utils.build_api_url('/api/save_label_candidates_dict'), context.state.labels))
   },
 
   async load_label_candidates_dict(context, payload) {
-    let response = await async_func(()=>axios.post(
+    let response = await async_func(context, ()=>axios.post(
       utils.build_api_url('/api/load_label_candidates_dict'), context.state.labels))
     context.commit('set_labels', response.data)  
   },
@@ -106,7 +107,7 @@ export default {
       value.annotation.objects.push(o);
     }
 
-    let response = await async_func(()=>axios.post(
+    let response = await async_func(context, ()=>axios.post(
       utils.build_api_url('/api/save_xml_from_label_dict'), value))
 
     context.commit('add_tagged_image', {

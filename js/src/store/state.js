@@ -4,6 +4,7 @@ let state = {
   // menu state
   main_menu_visible: false,
 
+  loading_message: 'Loading images...',
 
   // image files
   files: [],

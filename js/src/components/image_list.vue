@@ -1,5 +1,8 @@
 <template>
   <div id="imagelistblock">
+    <div v-if='file_list.length == 0' id=msg_no_image>
+      {{loading_message}}
+    </div>
     <div id="imagelist" @scroll="on_scroll">
       <img v-for="file in file_list_top" :key="file"
            :src='get_image_url(file)'
@@ -19,7 +22,7 @@ export default {
     this.$store.dispatch("load_imagefile_list");
   },
   computed: {
-    ...mapState(["files", "filename_max_display", "active_image_filename"]),
+    ...mapState(["loading_message", "files", "filename_max_display", "active_image_filename"]),
 
     file_list_top: function() {
       if (!this.files) {
@@ -106,6 +109,18 @@ export default {
   flex-shrink: 0;
   overflow: hidden;
   padding: 3px;
+}
+
+#msg_no_image {
+  position: absolute;
+  font-weight: bold;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 200px;
+  height: 100px;
+  margin: auto;
 }
 
 #imagelist {
