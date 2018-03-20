@@ -7,8 +7,6 @@ pages:
     - python3 setup.py bdist_wheel sdist
     - mkdir -p public/bin
     - cp dist/* public/bin
-    - cp public/bin/renomtag-*.tar.gz public/bin/renomtag_latest.tar.gz
-    - cp public/bin/renomtag-*.whl public/bin/renomtag_latest.whl
 #    - mkdir sdist
 #    - tar xzf dist/*.tar.gz -C sdist
 #    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh

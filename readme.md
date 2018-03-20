@@ -1,26 +1,25 @@
 # RenomTag
 
-## Install
+## Install from source
 
-1. Install Python packages
 
 ```
-$ pip install -r requirements.txt
+$ pip3 install -e .
 ```
 
-2. Install npm packages and build
+
+## Build Javascript
 
 ```
 $ cd js
-$ npm install
-$ npm run build
+$ npm run start
 ```
 
 
 ## Run
 
 ```
-$ python server.py
+$ python3 -m renomtag
 ```
 
 
@@ -33,13 +32,32 @@ $ npm run start
 ```
 
 
-## RenomTag binary
+## RenomTag package
 
-Ready-to-run binary files are created each time master branch updated.
+The Wheel package is provided at:
 
-The https://suwa.gitlab.io/ReNomTAG2nd/renomtag.zip is Python package archive. You can run `renomtag.zip` as follows.
+    https://suwa.gitlab.io/ReNomTAG2nd/bin/renomtag-VERSION-py3-none-any.whl
+
+(`VERSION` is stands for actual version number e.g. 0.0.1)
+
+You can install the wheel package with pip3 command::
 
 ```
-$ python3 renomtag.zip
+$ pip3 install https://suwa.gitlab.io/ReNomTAG2nd/bin/renomtag-0.0.99-py3-none-any.whl
 ```
 
+The Wheel package contains pre-build js files so you don't have to build manually.
+
+
+
+Once installed, you can run RenomTag as follows.
+
+```
+$ python3 -m renomtag
+```
+
+You can also use `renomtag` command installed by the wheel.
+
+```
+$ renomtag
+```
