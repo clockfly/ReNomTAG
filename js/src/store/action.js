@@ -20,7 +20,7 @@ export default {
     context.commit('set_loading_message', {loading_message: 'Loading images...'});
     let response = await async_func(context,
       () => axios.post(utils.build_api_url('/api/get_filename_list')))
-
+    
     context.commit('set_file_list', {
       file_list: response.data.filename_list
     });

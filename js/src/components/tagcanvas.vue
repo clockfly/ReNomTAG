@@ -6,7 +6,7 @@
         
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
-      <div v-if="creating" id="newtag" :style="newtag_style" />
+      <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
 
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle' 
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    
+
     <div id='imageinfo'>
       <div>{{img_file_name}}</div>
       <button id="save_xml_btn"
@@ -79,13 +79,6 @@ export default {
     has_image: function() {
       return Boolean(this.active_image_filename);
     },
-    creating: function() {
-      return this.status === "new";
-    },
-    newtag_style: function() {
-      let ret = this.to_canvas_rect(this.newbox_rect);
-      return this.size_style(ret);
-    },
     img_file_name: function() {
       let idx = this.active_image_filename.search(/[\/\\]/);
       return this.active_image_filename.slice(idx + 1);
@@ -109,9 +102,21 @@ export default {
   },
   methods: {
     ...mapMutations(["set_active_boxid"]),
+
+    newtag_style: function() {
+      let ret = this.to_canvas_rect(this.newbox_rect);
+      return this.size_style(ret);
+    },
+
     on_drag_start: function(idx) {
+      // does nothing
       return false
     },
+
+    is_creating: function() {
+      return this.status === "new";
+    },
+
     is_active_box: function(idx) {
       return this.active_boxid === idx;
     },
@@ -119,6 +124,7 @@ export default {
     get_box: function(id) {
       return this.active_image_tag_boxes[id];
     },
+    
     get_box_label(id) {
       return this.get_box(id).label;
     },
@@ -170,7 +176,6 @@ export default {
 
     calc_image_rect: function() {
       const imgrc = this.$refs.canvas.getBoundingClientRect();
-
       const orgwidth = this.active_image_width;
       const orgheight = this.active_image_height;
 
@@ -181,28 +186,28 @@ export default {
       const margin = utils.max(0, (imgrc.width - orgwidth * ratio) / 2);
 
       const left = imgrc.left + margin;
-      const right = left + orgwidth * ratio;
+      const right = Math.floor(left + orgwidth * ratio);
       const top = imgrc.top;
-      const bottom = imgrc.top + orgheight * ratio;
+      const bottom = Math.floor(imgrc.top + orgheight * ratio);
       return [ratio, [left, top, right, bottom]];
     },
 
     box_to_client: function(box) {
       let [ratio, imgrc] = this.calc_image_rect();
-      const l = box.left * ratio + imgrc[0];
-      const t = box.top * ratio + imgrc[1];
-      const r = box.right * ratio + imgrc[0];
-      const b = box.bottom * ratio + imgrc[1];
+      const l = Math.floor(box.left * ratio + imgrc[0]);
+      const t = Math.floor(box.top * ratio + imgrc[1]);
+      const r = Math.floor(box.right * ratio + imgrc[0]);
+      const b = Math.floor(box.bottom * ratio + imgrc[1]);
       return [l, t, r, b];
     },
 
     client_to_box: function(rect) {
       let [left, top, right, bottom] = utils.normalize_rect(rect);
       let [ratio, imgrc] = this.calc_image_rect();
-      left = (left - imgrc[0]) / ratio;
-      top = (top - imgrc[1]) / ratio;
-      right = (right - imgrc[0]) / ratio;
-      bottom = (bottom - imgrc[1]) / ratio;
+      left = Math.floor((left - imgrc[0]) / ratio);
+      top = Math.floor((top - imgrc[1]) / ratio);
+      right = Math.floor((right - imgrc[0]) / ratio);
+      bottom = Math.floor((bottom - imgrc[1]) / ratio);
 
       return { left, top, right, bottom };
     },
@@ -246,7 +251,6 @@ export default {
       if (!utils.pt_in_rect(rc, event.clientX, event.clientY)) {
         return;
       }
-
       this._clean_boxes();
 
       [this.dragfrom_x, this.dragfrom_y] = [event.clientX, event.clientY];
@@ -383,7 +387,6 @@ export default {
           if (rc[3] + diff_y > imgrc[3]) {
             diff_y = imgrc[3] - rc[3];
           }
-
           rc[0] += diff_x;
           rc[2] += diff_x;
           rc[1] += diff_y;
@@ -408,7 +411,6 @@ export default {
           boxid: this.active_boxid,
           box: newbox
         });
-        //        this.arrange_boxes()
       }
     },
 

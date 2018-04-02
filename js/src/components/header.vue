@@ -51,4 +51,3 @@ header {
   }
 }
 </style>
-border

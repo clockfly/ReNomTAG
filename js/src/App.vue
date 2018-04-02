@@ -23,4 +23,3 @@ body {
   box-sizing: border-box;
 }
 </style>
-set_main_menu_visible

@@ -21,6 +21,12 @@ export default {
   created: function() {
     this.$store.dispatch("load_imagefile_list");
   },
+  data: function() {
+    return {
+      IMAGE_RELOAD_MARGIN: 100,
+      IMAGE_RELOAD_AMOUNT: 300
+    }
+  },
   computed: {
     ...mapState(["loading_message", "files", "filename_max_display", "active_image_filename"]),
 
@@ -51,7 +57,9 @@ export default {
       let imgrc = img.getBoundingClientRect();
 
       let wrapper = this.$el.querySelector(`#imagelist`);
+
       let wrapperrc = wrapper.getBoundingClientRect();
+
       if (imgrc.bottom >= wrapperrc.bottom) {
         let dy = imgrc.bottom - wrapperrc.bottom;
 
@@ -75,13 +83,13 @@ export default {
       }
     },
     on_scroll: function(event) {
-      let MARGIN = 100;
       if (this.filename_max_display < this.files.length) {
-        let n = this.filename_max_display - MARGIN;
+        let n = this.filename_max_display - this.IMAGE_RELOAD_MARGIN;
         if (n <= 0) {
           n = 1;
         }
-        let img = this.$el.querySelector(`#imagelist img:nth-child(${n})`);
+        let img = this.$el.querySelector(
+          `#imagelist img:nth-child(${n})`);
         if (img === null) {
           return;
         }
@@ -90,9 +98,9 @@ export default {
         let wrapper = this.$el.querySelector(`#imagelist`);
         let wrapperrc = wrapper.getBoundingClientRect();
 
-        if (imgrc.top < wrapperrc.top) {
+        if (imgrc.top <= wrapperrc.top) {
           this.$store.commit("set_filename_max_display", {
-            max_display: this.filename_max_display + 300
+            max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
           });
         }
       }

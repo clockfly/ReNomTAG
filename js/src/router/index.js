@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import TaggerPage from '@/components/tagger_page'
+import TaggerPage from '@/components/taggerpage'
 
 Vue.use(Router)
 

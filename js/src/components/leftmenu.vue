@@ -1,11 +1,12 @@
 <template>
   <div id='left-menu'  v-bind:class='{ open: main_menu_visible }' @click='closeMenu'>
     <div class='left-menu-bar'>
-      <button class='bar-button' @click='goToDetectPage'>
+      <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
         <span class='menu-text'>Detection Label</span>
       </button>
-      <button class='bar-button' @click='goToSettingPage'>
+
+      <button class='bar-button'>
         <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
         <span class='menu-text'>Settings</span>
       </button>
@@ -20,16 +21,8 @@ export default {
   computed: mapState(["main_menu_visible"]),
   methods: {
     closeMenu: function() {
-      this.$store.commit("set_main_menu_visible", { main_menu_visible: false });
+      this.$store.commit("set_main_menu_visible", { visible: false });
     },
-    goToDetectPage: function() {
-      this.$router.push({ path: "/" });
-      this.closeMenu();
-    },
-    goToSettingPage: function() {
-      this.$router.push({ path: "/setting" });
-      this.closeMenu();
-    }
   }
 };
 </script>

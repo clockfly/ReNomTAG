@@ -27,8 +27,8 @@
 
 <script>
 import AppHeader from './header.vue'
-import LeftMenu from './left_menu.vue'
-import ImageList from '@/components/image_list'
+import LeftMenu from './leftmenu.vue'
+import ImageList from '@/components/imagelist'
 import NavArrow from '@/components/navarrow'
 import TagCanvas from './tagcanvas.vue'
 import Tags from './tags.vue'
