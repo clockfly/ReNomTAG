@@ -146,15 +146,27 @@ export default {
 
     on_keyup: function(event) {
       if (event.target.nodeName === "BODY") {
+        if (event.key === " ") {
+          if (this.canbesaved) {
+            this.save_tags();
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+          }
+        }
         if (this.has_image && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
             this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
-            return;
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
           }
           for (let label of this.labels) {
             if (label.shortcut === event.key) {
               this.$store.commit("set_activebox_label", label);
-              break;
+              event.preventDefault();
+              event.stopPropagation();
+              return false;
             }
           }
         }
