@@ -1,11 +1,12 @@
 image: node:9.8
 
+before_script:
+  - apt-get -y update
+  - apt install -y python3 python3-pip python3-wheel
+  - pip3 install -r requirements.txt
 
 test:
   script:
-    - apt-get -y update
-    - apt install -y python3 python3-pip python3-wheel
-    - pip3 install -r requirements.txt
     - pip3 install -e .
     - pytest
     - cd js
