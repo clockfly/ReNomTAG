@@ -12,7 +12,6 @@ pluggy==0.6.0
 py==1.5.3
 pytest==3.5.0
 PyYAML==3.12
--e git+git@gitlab.com:suwa/ReNomTAG2nd.git@e600aa78257a004c269c9e2e85aede7b5543878f#egg=renomtag
 six==1.11.0
 waitress==1.1.0
 watchdog==0.8.3
