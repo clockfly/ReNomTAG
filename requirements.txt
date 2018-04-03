@@ -1,11 +1,21 @@
 argh==0.26.2
+attrs==17.4.0
 beautifulsoup4==4.6.0
 bottle==0.12.13
 bs4==0.0.1
 glob2==0.6
-lxml==4.1.1
+lxml==4.2.0
+more-itertools==4.1.0
 pathtools==0.1.2
 Pillow==5.0.0
+pluggy==0.6.0
+py==1.5.3
+pytest==3.5.0
 PyYAML==3.12
+-e git+git@gitlab.com:suwa/ReNomTAG2nd.git@e600aa78257a004c269c9e2e85aede7b5543878f#egg=renomtag
+six==1.11.0
+waitress==1.1.0
 watchdog==0.8.3
+WebOb==1.7.4
+WebTest==2.0.29
 xmltodict==0.11.0

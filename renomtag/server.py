@@ -6,7 +6,7 @@ from PIL import Image
 import os
 import pkg_resources
 from bottle import (HTTPResponse, route, run, static_file, request,
-    response, Bottle, hook, get, parse_date)
+                    response, Bottle, hook, get, parse_date)
 import base64
 import glob2
 import bs4
@@ -22,7 +22,6 @@ import posixpath
 import PIL
 
 app = Bottle()
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
 
@@ -30,22 +29,19 @@ for path in [IMG_DIR, XML_DIR]:
     if not os.path.exists(path):
         os.makedirs(path)
 
-@hook('after_request')
+
+@app.hook('after_request')
 def enable_cors():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = (
         'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token')
 
 
 def set_json_body(body):
-    r = HTTPResponse(status=200, body=body)
-    r.set_header('Content-Type', 'application/json')
-    r.headers['Access-Control-Allow-Origin'] = '*'
-    r.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
-    r.headers['Access-Control-Allow-Headers'] = (
-        'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token')
-    return r
+    response.status = 200
+    response.set_header('Content-Type', 'application/json')
+    return body
 
 
 def get_img_files():
@@ -76,8 +72,10 @@ def get_xml_files():
 def _get_file_name(x):
     return os.path.splitext(os.path.split(x)[1])[0]
 
+
 IMG_FILE_CACHE = []
 XML_FILE_CACHE = []
+
 
 def get_difference_set():
     get_img_files()
@@ -135,7 +133,6 @@ def xml2json(xml_file, xml_attribs=True):
         return json.dumps(d, indent=4)
 
 
-
 def strip_path(filename):
     if os.path.isabs(filename):
         raise ValueError('Invalid path')
@@ -151,7 +148,7 @@ def strip_path(filename):
 def _get_resource(path, filename):
     filename = strip_path(filename)
     body = pkg_resources.resource_string(__name__, posixpath.join('.build', path, filename))
-    
+
     headers = {}
     mimetype, encoding = mimetypes.guess_type(filename)
     if mimetype:
@@ -160,12 +157,13 @@ def _get_resource(path, filename):
         headers['encoding'] = encoding
     return HTTPResponse(body, **headers)
 
-@route("/")
+
+@app.route("/")
 def index():
     return _get_resource('', 'index.html')
 
 
-@route("/static/<file_name:re:.+>")
+@app.route("/static/<file_name:re:.+>")
 def static(file_name):
     return _get_resource('static', file_name)
 
@@ -206,7 +204,7 @@ def get_boxes(img_filename):
     return json_dict
 
 
-@route("/api/get_raw_img/<file_name:re:.+>")
+@app.route("/api/get_raw_img/<file_name:re:.+>")
 def get_raw_img(file_name):
 
     filename = strip_path(file_name)
@@ -219,7 +217,6 @@ def get_raw_img(file_name):
     im = PIL.Image.open(filename)
     width, height = im.size
 
-
     ret = json.dumps({
         'img': encoded_img,
         'width': width,
@@ -231,7 +228,7 @@ def get_raw_img(file_name):
     return ret
 
 
-@route("/t/<file_name:re:.+>")
+@app.route("/t/<file_name:re:.+>")
 def get_thumbnail(file_name):
     file_name = strip_path(file_name)
     check_path(IMG_DIR, file_name)
@@ -249,7 +246,7 @@ def get_thumbnail(file_name):
         headers['Date'] = time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())
         return HTTPResponse(status=304, **headers)
 
-    response.content_type=mimetypes.guess_type(file_name)
+    response.content_type = 'image/png'
 
     img = Image.open(file_name, 'r')
     img.thumbnail((70, 70), Image.ANTIALIAS)
@@ -262,20 +259,21 @@ def get_thumbnail(file_name):
     return ret
 
 
-@route("/api/get_filename_list", method="POST")
+@app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
     success = 0
     difference_set_paths = get_difference_set()
 
     body = json.dumps({
-      "success": success,
-      "filename_list": difference_set_paths,
+        "success": success,
+        "filename_list": difference_set_paths,
     })
     ret = set_json_body(body)
     return ret
 
 
-@route("/api/save_xml_from_label_dict", method=["POST", "OPTIONS"])
+
+@app.route("/api/save_xml_from_label_dict", method=["POST", "OPTIONS"])
 def save_xml_from_label_dict():
     """save xml file from dictionary
 
@@ -292,7 +290,7 @@ def save_xml_from_label_dict():
 
     ann_path = strip_path(label_dict['annotation']['path'])
     check_path(IMG_DIR, ann_path)
-    
+
     folder, file_name = posixpath.split(ann_path)
     if not folder:
         folder = '.'
@@ -317,13 +315,14 @@ def save_xml_from_label_dict():
     print('%s is saved' % (save_xml_file_name))
 
 
+SAVE_JSON_FILE_PATH = "label_candidates.json"
 
-@route("/api/save_label_candidates_dict", method=['OPTIONS', 'POST'])
+
+@app.route("/api/save_label_candidates_dict", method=['OPTIONS', 'POST'])
 def save_label_candidates_dict():
     if request.method == 'OPTIONS':
         return set_json_body({})
 
-    save_json_file_path = "label_candidates.json"
     labels = {}
     for n, d in enumerate(request.json):
         label = d['label'].strip()
@@ -336,26 +335,24 @@ def save_label_candidates_dict():
         labels[shortcut] = {'label': label}
 
     json_data = json.dumps(labels)
-    with open(save_json_file_path, 'w') as ftpr:
+    with open(SAVE_JSON_FILE_PATH, 'w') as ftpr:
         ftpr.write(json_data)
 
 
-@route("/api/load_label_candidates_dict", method=["POST", "OPTIONS"])
+@app.route("/api/load_label_candidates_dict", method=["POST", "OPTIONS"])
 def load_label_candidates_dict():
     if request.method == 'OPTIONS':
         return set_json_body({})
 
-    load_json_file_path = "label_candidates.json"
-
     ret = []
-    if os.path.exists(load_json_file_path):
-        with open(load_json_file_path, 'r') as ftpr:
+    if os.path.exists(SAVE_JSON_FILE_PATH):
+        with open(SAVE_JSON_FILE_PATH, 'r') as ftpr:
             json_data = json.load(ftpr)
 
         for k, v in json_data.items():
             if 'no_shortcut' in k:
                 k = ''
-            ret.append({'label':v['label'], 'shortcut':k})
+            ret.append({'label': v['label'], 'shortcut': k})
 
     body = json.dumps(ret)
     ret = set_json_body(body)
@@ -363,15 +360,16 @@ def load_label_candidates_dict():
 
 
 class ImageEventHandler(FileSystemEventHandler):
-     def on_any_event(self, event):
+    def on_any_event(self, event):
         global IMG_FILE_CACHE
         IMG_FILE_CACHE = []
 
 
 class XMLEventHandler(FileSystemEventHandler):
-     def on_any_event(self, event):
+    def on_any_event(self, event):
         global XML_FILE_CACHE
         XML_FILE_CACHE = []
+
 
 def main():
     get_img_files()
@@ -383,7 +381,7 @@ def main():
     observer.daemon = True
 
     observer.start()
-    run(host="0.0.0.0", port=8000)
+    run(app, host="0.0.0.0", port=8000)
     observer.stop()
     observer.join()
 
