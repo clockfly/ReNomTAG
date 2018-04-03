@@ -12,6 +12,7 @@ function update_store() {
     s.state.labels = [{
       label: 'label1', shortcut: '1'
     }]
+    s.actions.load_label_candidates_dict = (context, payload)=>{};
   })
 }
 
