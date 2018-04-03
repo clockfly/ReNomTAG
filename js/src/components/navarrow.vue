@@ -19,7 +19,7 @@ export default {
       } else {
         return this.get_fore_name();
       }
-    },
+    }
   },
   methods: {
     get_back_name() {
@@ -31,7 +31,7 @@ export default {
 
     get_fore_name() {
       const idx = this.files.indexOf(this.active_image_filename);
-      if (idx != -1 && idx < this.files.length - 1) {
+      if (idx !== -1 && idx < this.files.length - 1) {
         return this.files[idx + 1];
       }
     },

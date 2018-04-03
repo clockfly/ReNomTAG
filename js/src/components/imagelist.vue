@@ -1,6 +1,6 @@
 <template>
   <div id="imagelistblock">
-    <div v-if='file_list.length == 0' id=msg_no_image>
+    <div v-if='file_list.length === 0' id=msg_no_image>
       {{loading_message}}
     </div>
     <div id="imagelist" @scroll="on_scroll">
@@ -25,10 +25,15 @@ export default {
     return {
       IMAGE_RELOAD_MARGIN: 100,
       IMAGE_RELOAD_AMOUNT: 300
-    }
+    };
   },
   computed: {
-    ...mapState(["loading_message", "files", "filename_max_display", "active_image_filename"]),
+    ...mapState([
+      "loading_message",
+      "files",
+      "filename_max_display",
+      "active_image_filename"
+    ]),
 
     file_list_top: function() {
       if (!this.files) {
@@ -47,7 +52,7 @@ export default {
   watch: {
     active_image_filename: function(newvalue, oldvalue) {
       let n = this.files.indexOf(newvalue);
-      if (n == -1) {
+      if (n === -1) {
         return;
       }
       let img = this.$el.querySelector(`#imagelist img:nth-child(${n + 1})`);
@@ -75,7 +80,7 @@ export default {
       return utils.build_api_url("/t/" + file);
     },
     is_selected(filename) {
-      return filename == this.active_image_filename;
+      return filename === this.active_image_filename;
     },
     select_image(event) {
       if (event.target.dataset.file !== this.active_image_filename) {
@@ -88,8 +93,7 @@ export default {
         if (n <= 0) {
           n = 1;
         }
-        let img = this.$el.querySelector(
-          `#imagelist img:nth-child(${n})`);
+        let img = this.$el.querySelector(`#imagelist img:nth-child(${n})`);
         if (img === null) {
           return;
         }

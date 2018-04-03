@@ -1,10 +1,10 @@
 let state = {
   // error state
-  error_status: '',
+  error_status: "",
   // menu state
   main_menu_visible: false,
 
-  loading_message: 'Loading images...',
+  loading_message: "Loading images...",
 
   // image files
   files: [],
@@ -18,12 +18,11 @@ let state = {
   // tag boxes
   active_image_tag_boxes: [],
 
-
   // labels
   labels: [],
 
   // tagged images
-  tagged_images: [],
-}
+  tagged_images: []
+};
 
-export default state
+export default state;

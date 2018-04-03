@@ -5,7 +5,7 @@
       <left-menu></left-menu>
       <image-list/>
       <navarrow dir="back"/>
-      <div v-if="active_image_filename == null" class="filler"></div>
+      <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
       <navarrow dir="forward"/>
       <tags></tags>
@@ -26,56 +26,53 @@
 </template>
 
 <script>
-import AppHeader from './header.vue'
-import LeftMenu from './leftmenu.vue'
-import ImageList from '@/components/imagelist'
-import NavArrow from '@/components/navarrow'
-import TagCanvas from './tagcanvas.vue'
-import Tags from './tags.vue'
-import TaggedImages from './taggedimages.vue'
-import ModalBox from '@/components/modalbox'
+import AppHeader from "./header.vue";
+import LeftMenu from "./leftmenu.vue";
+import ImageList from "@/components/imagelist";
+import NavArrow from "@/components/navarrow";
+import TagCanvas from "./tagcanvas.vue";
+import Tags from "./tags.vue";
+import TaggedImages from "./taggedimages.vue";
+import ModalBox from "@/components/modalbox";
 
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from "vuex";
 
 export default {
   components: {
-    'app-header': AppHeader,
-    'left-menu': LeftMenu,
-    'image-list': ImageList,
-    'tagcanvas': TagCanvas,
-    'tags': Tags,
-    'tagged-images': TaggedImages,
-    'navarrow': NavArrow,
-    'modal-box': ModalBox,
+    "app-header": AppHeader,
+    "left-menu": LeftMenu,
+    "image-list": ImageList,
+    tagcanvas: TagCanvas,
+    tags: Tags,
+    "tagged-images": TaggedImages,
+    navarrow: NavArrow,
+    "modal-box": ModalBox
   },
   computed: {
-    ...mapState([
-      'active_image_filename', 'error_status'
-    ]),
+    ...mapState(["active_image_filename", "error_status"])
   },
   methods: {
-    ...mapMutations(['set_error_status']),
+    ...mapMutations(["set_error_status"])
   }
-}
+};
 </script>
 <style lang='scss'>
-
 #page {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
 
 #main-container {
-    box-sizing: border-box;
-    display: flex;
-    height: calc(100% - 50px - 200px);
-    align-items: stretch;
-    width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  height: calc(100% - 50px - 200px);
+  align-items: stretch;
+  width: 100%;
 
-    .filler {
-      flex-grow: 1;
-    }
+  .filler {
+    flex-grow: 1;
+  }
 }
 
 .error-msg {

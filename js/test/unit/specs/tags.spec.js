@@ -23,7 +23,7 @@ describe('taggedimages.vue', () => {
     const wrapper = shallow(Tags, {store, localVue});
     const event = {keyCode:64, preventDefault:jest.fn()}
     wrapper.vm.keydown(event)
-    expect(event.preventDefault.mock.calls.length == 1).toBe(true)
+    expect(event.preventDefault.mock.calls.length === 1).toBe(true)
   })
 
   it('test delete key', () => {
@@ -32,6 +32,6 @@ describe('taggedimages.vue', () => {
     const wrapper = shallow(Tags, {store, localVue});
     const event = {keyCode:46, preventDefault:jest.fn()}
     wrapper.vm.keydown(event)
-    expect(event.preventDefault.mock.calls.length == 1).toBe(true)
+    expect(event.preventDefault.mock.calls.length === 1).toBe(true)
   })
 })

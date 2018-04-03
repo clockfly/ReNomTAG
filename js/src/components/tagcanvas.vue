@@ -52,12 +52,12 @@ export default {
 
   created: function() {
     window.addEventListener("resize", this.on_resize);
-    window.addEventListener("keyup", this.on_keyup)
+    window.addEventListener("keyup", this.on_keyup);
   },
 
   beforeDestroy: function() {
     window.removeEventListener("resize", this.on_resize);
-    window.removeEventListener("keyup", this.on_keyup)
+    window.removeEventListener("keyup", this.on_keyup);
   },
   mounted: function() {
     setTimeout(this.arrange_boxes, 20);
@@ -80,11 +80,11 @@ export default {
       return Boolean(this.active_image_filename);
     },
     img_file_name: function() {
-      let idx = this.active_image_filename.search(/[\/\\]/);
+      let idx = this.active_image_filename.search(/[/\\]/);
       return this.active_image_filename.slice(idx + 1);
     },
     canbesaved: function() {
-      if (this.active_image_tag_boxes.length == 0) {
+      if (this.active_image_tag_boxes.length === 0) {
         return false;
       }
       for (let box of this.active_image_tag_boxes) {
@@ -110,7 +110,7 @@ export default {
 
     on_drag_start: function(idx) {
       // does nothing
-      return false
+      return false;
     },
 
     is_creating: function() {
@@ -124,7 +124,7 @@ export default {
     get_box: function(id) {
       return this.active_image_tag_boxes[id];
     },
-    
+
     get_box_label(id) {
       return this.get_box(id).label;
     },
@@ -145,16 +145,16 @@ export default {
     },
 
     on_keyup: function(event) {
-      if (event.target.nodeName === 'BODY') {
-        if (this.has_image && (this.active_boxid !== null)) {
-          if (event.key == 'Delete' || event.key == 'Backspace') {
-            this.$store.commit('remove_tagbox', {boxid:this.active_boxid})
-            return
+      if (event.target.nodeName === "BODY") {
+        if (this.has_image && this.active_boxid !== null) {
+          if (event.key === "Delete" || event.key === "Backspace") {
+            this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
+            return;
           }
           for (let label of this.labels) {
             if (label.shortcut === event.key) {
-              this.$store.commit('set_activebox_label', label)
-              break
+              this.$store.commit("set_activebox_label", label);
+              break;
             }
           }
         }
@@ -246,7 +246,7 @@ export default {
         return;
       }
 
-      const [ratio, rc] = this.calc_image_rect();
+      const [, rc] = this.calc_image_rect();
       rc[2] = rc[2] - 1;
       if (!utils.pt_in_rect(rc, event.clientX, event.clientY)) {
         return;
@@ -298,8 +298,8 @@ export default {
 
     on_boxclick: function(event) {
       const boxid = event.currentTarget.dataset.boxid;
-      if (boxid != this.active_boxid) {
-        this._clean_boxes()
+      if (boxid !== this.active_boxid) {
+        this._clean_boxes();
       }
       const tag = this.get_box(boxid);
       if (!tag) {
@@ -310,7 +310,7 @@ export default {
         event.clientX,
         event.clientY
       );
-      if (resize == "") {
+      if (resize === "") {
         this.status = "dragging";
       } else {
         this.status = resize;
@@ -332,19 +332,19 @@ export default {
         e: "ew-resize",
         s: "ns-resize",
         sw: "nesw-resize",
-        se: "nwse-resize",
-      }
+        se: "nwse-resize"
+      };
       return cursor_map[dir];
     },
 
     on_boxmousemove: function(event) {
-      let status = this.status ;
+      let status = this.status;
       if (!status) {
-          status = this.box_getcursor_type(
-            event.currentTarget,
-            event.clientX,
-            event.clientY
-          )
+        status = this.box_getcursor_type(
+          event.currentTarget,
+          event.clientX,
+          event.clientY
+        );
       }
       let cursor = this.dir_to_cursor(status);
       if (!cursor) {
@@ -357,13 +357,13 @@ export default {
       if (!this.has_image) {
         return;
       }
-      let [ratio, imgrc] = this.calc_image_rect();
+      let [, imgrc] = this.calc_image_rect();
       let x = utils.min(utils.max(imgrc[0], event.clientX), imgrc[2]);
       let y = utils.min(utils.max(imgrc[1], event.clientY), imgrc[3]);
 
       if (this.status === "new") {
         // resize newly created box
-        let [l, t, r, b] = this.newbox_rect;
+        let [l, t] = this.newbox_rect;
         this.newbox_rect = [l, t, x, y];
       } else if (this.status) {
         const rc = this.org_boxrc.slice();
@@ -392,16 +392,16 @@ export default {
           rc[1] += diff_y;
           rc[3] += diff_y;
         } else {
-          if (this.status.indexOf("n") != -1) {
+          if (this.status.indexOf("n") !== -1) {
             rc[1] = utils.min(utils.max(imgrc[1], rc[1] + diff_y), rc[3] - 1);
           }
-          if (this.status.indexOf("s") != -1) {
+          if (this.status.indexOf("s") !== -1) {
             rc[3] = utils.min(utils.max(rc[1], rc[3] + diff_y), imgrc[3]);
           }
-          if (this.status.indexOf("w") != -1) {
+          if (this.status.indexOf("w") !== -1) {
             rc[0] = utils.min(utils.max(imgrc[0], rc[0] + diff_x), rc[2] - 1);
           }
-          if (this.status.indexOf("e") != -1) {
+          if (this.status.indexOf("e") !== -1) {
             rc[2] = utils.min(utils.max(rc[0], rc[2] + diff_x), imgrc[2] - 1);
           }
         }
@@ -515,7 +515,7 @@ export default {
       background-color: lighten(#326699, 10%);
       cursor: pointer;
     }
-    
+
     &:disabled {
       background-color: #adadad;
     }

@@ -22,7 +22,7 @@ export default {
   methods: {
     closeMenu: function() {
       this.$store.commit("set_main_menu_visible", { visible: false });
-    },
+    }
   }
 };
 </script>
@@ -62,4 +62,3 @@ export default {
   }
 }
 </style>
-

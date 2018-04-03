@@ -272,7 +272,6 @@ def get_filename_list():
     return ret
 
 
-
 @app.route("/api/save_xml_from_label_dict", method=["POST", "OPTIONS"])
 def save_xml_from_label_dict():
     """save xml file from dictionary

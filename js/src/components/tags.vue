@@ -51,117 +51,116 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import ModalBox from '@/components/modalbox'
+import { mapState } from "vuex";
+import ModalBox from "@/components/modalbox";
 
 export default {
   components: {
-    'modal-box': ModalBox,
+    "modal-box": ModalBox
   },
 
   data: function() {
     return {
-      label: '',
-      shortcut: '',
-      show_delete_dialog: false,
-    }
+      label: "",
+      shortcut: "",
+      show_delete_dialog: false
+    };
   },
 
-  created: function () {
-    this.$store.dispatch('load_label_candidates_dict')
+  created: function() {
+    this.$store.dispatch("load_label_candidates_dict");
   },
 
   computed: {
-    ...mapState([
-      'labels',
-    ]),
-    
+    ...mapState(["labels"]),
+
     errormsg: function() {
       if (this.label.length) {
-        if (!this.label.match('^[0-9a-z-A-Z]+$')) {
+        if (!this.label.match("^[0-9a-z-A-Z]+$")) {
           return "Class name must be alphanumeric single-byte.";
         }
       }
-      for (let {label, shortcut} of this.labels) {
+      for (let { label, shortcut } of this.labels) {
         if (label === this.label) {
-          return "Please set unique label."
+          return "Please set unique label.";
         }
         if (this.shortcut && shortcut === this.shortcut) {
-          return "Shortcut is already exists."
+          return "Shortcut is already exists.";
         }
       }
-      return '';
+      return "";
     },
 
     is_valid_label: function() {
       if (!this.label.length) {
-        return false
+        return false;
       }
-      return this.errormsg == '';
-    },
+      return this.errormsg === "";
+    }
   },
 
   methods: {
     addNewLabel: function() {
-      this.$store.dispatch('add_label', {label: this.label, shortcut:this.shortcut})
-      this.label = this.shortcut = ''
-      document.body.focus()
+      this.$store.dispatch("add_label", {
+        label: this.label,
+        shortcut: this.shortcut
+      });
+      this.label = this.shortcut = "";
+      document.body.focus();
     },
 
     is_control_key(k) {
-      const keys =  [
-          13, // Enter(ten key)
-          32, // Space
-          8, // BackSpace
-          9, // Tab
-          46, // Delete
-      ]
+      const keys = [
+        13, // Enter(ten key)
+        32, // Space
+        8, // BackSpace
+        9, // Tab
+        46 // Delete
+      ];
       if (keys.indexOf(k) >= 0) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     },
 
     keydown(event) {
-      if (event.keyCode == 46 || event.keyCode == 8) {
+      if (event.keyCode === 46 || event.keyCode === 8) {
         // delete or backspace
-        this.shortcut = '';  
-        event.preventDefault()
-        return
+        this.shortcut = "";
+        event.preventDefault();
+        return;
       }
       if (!this.is_control_key(event.keyCode)) {
-        event.preventDefault()
+        event.preventDefault();
       }
     },
 
-    setShortcutKey (event) {
-      if (this.is_control_key(event.keyCode)){
-        return
+    setShortcutKey(event) {
+      if (this.is_control_key(event.keyCode)) {
+        return;
       }
 
-      this.shortcut = event.key
+      this.shortcut = event.key;
     },
 
     on_click(event) {
-      const label =  event.currentTarget.dataset.label
-      this.$store.commit('set_activebox_label', {label})
+      const label = event.currentTarget.dataset.label;
+      this.$store.commit("set_activebox_label", { label });
     },
 
     delete_tags(event) {
-      this.$store.commit('set_labels', []);
+      this.$store.commit("set_labels", []);
       this.show_delete_dialog = false;
     }
   }
-}
-
+};
 </script>
 
 <style lang='scss'>
 #tags {
   box-sizing: border-box;
-  width:  250px;
+  width: 250px;
   height: 100%;
   flex-grow: 0;
   flex-shrink: 0;
@@ -203,15 +202,12 @@ export default {
         color: #a6a6a6;
         font-size: 13px;
       }
-
     }
     input.label-text {
       width: 130px;
-
     }
     input.label-shortcut {
       width: 62.5px;
-
     }
   }
   .add-new-label-btn {
@@ -249,12 +245,10 @@ export default {
       padding: 0;
       margin: 0;
       border-style: none;
-
     }
   }
 
   .tag-list-item {
-
     width: 100%;
     border-top: 1px solid #797979;
     padding: 5px 10px 5px 10px;
@@ -266,11 +260,12 @@ export default {
       border-bottom: 1px solid #797979;
     }
 
-    &:hover{
+    &:hover {
       background-color: #d3d3d3;
     }
 
-    .label-text, .label-shortcut {
+    .label-text,
+    .label-shortcut {
       padding: 0;
       margin: 0;
       outline: none;
@@ -292,8 +287,8 @@ export default {
       align-items: center;
     }
   }
-  
-  #remove-button{
+
+  #remove-button {
     width: 60%;
     text-align: center;
     padding: 10px 0;
@@ -312,7 +307,7 @@ export default {
     }
   }
   .label_errormsg {
-    display:block;
+    display: block;
     position: absolute;
     font-weight: bold;
     color: #ff1616;
@@ -325,7 +320,7 @@ export default {
     right: 20px;
   }
   #delete_labels_button {
-      background-color: lighten(#ff1616, 10%);
+    background-color: lighten(#ff1616, 10%);
   }
 }
 </style>

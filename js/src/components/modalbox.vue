@@ -29,8 +29,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {};
 </script>
 
@@ -62,7 +60,6 @@ export default {};
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
-
 
 .modal-enter {
   opacity: 0;

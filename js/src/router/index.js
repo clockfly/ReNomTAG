@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import TaggerPage from '@/components/taggerpage'
+import Vue from "vue";
+import Router from "vue-router";
+import TaggerPage from "@/components/taggerpage";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'TaggerPage',
+      path: "/",
+      name: "TaggerPage",
       component: TaggerPage
     }
   ]
-})
+});

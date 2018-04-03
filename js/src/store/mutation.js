@@ -1,15 +1,13 @@
-import * as utils from '@/utils'
-
 function _set_tagbox(state, payload) {
-  const pri = state.active_image_tag_boxes.slice(0, payload.boxid)
-  const follow = state.active_image_tag_boxes.slice(payload.boxid + 1)
+  const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
+  const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
 
-  state.active_image_tag_boxes = [...pri, payload.box, ...follow]
+  state.active_image_tag_boxes = [...pri, payload.box, ...follow];
 }
 
 export default {
   set_error_status(state, payload) {
-    state.error_status = payload.error_status
+    state.error_status = payload.error_status;
   },
 
   set_loading_message(state, payload) {
@@ -17,14 +15,14 @@ export default {
   },
 
   set_main_menu_visible(state, payload) {
-    state.main_menu_visible = payload.visible
+    state.main_menu_visible = payload.visible;
   },
 
   set_file_list(state, payload) {
     state.files = payload.file_list;
     state.filename_max_display = 100;
-    if (!state.files || state.files.length == 0) {
-      state.loading_message = 'No images found.'
+    if (!state.files || state.files.length === 0) {
+      state.loading_message = "No images found.";
     }
   },
 
@@ -57,11 +55,14 @@ export default {
   },
 
   new_tagbox(state, payload) {
-    state.active_image_tag_boxes = [...state.active_image_tag_boxes, payload.box]
+    state.active_image_tag_boxes = [
+      ...state.active_image_tag_boxes,
+      payload.box
+    ];
   },
 
   set_tagbox(state, payload) {
-    _set_tagbox(state, payload)
+    _set_tagbox(state, payload);
   },
 
   set_tagboxes(state, payload) {
@@ -69,57 +70,55 @@ export default {
   },
 
   remove_tagbox(state, payload) {
-    const pri = state.active_image_tag_boxes.slice(0, payload.boxid)
-    const follow = state.active_image_tag_boxes.slice(payload.boxid + 1)
-  
-    state.active_image_tag_boxes = [...pri, ...follow]
+    const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
+    const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
+
+    state.active_image_tag_boxes = [...pri, ...follow];
     state.active_boxid = null;
   },
-    
+
   set_activebox_label(state, payload) {
     const boxid = state.active_boxid;
     if (boxid === null) {
-      return
+      return;
     }
-    const box = state.active_image_tag_boxes[boxid]
+    const box = state.active_image_tag_boxes[boxid];
     const newbox = Object.assign(box, { label: payload.label });
 
-    _set_tagbox(state, { boxid, box: newbox })
+    _set_tagbox(state, { boxid, box: newbox });
   },
 
   set_dragger(state, payload) {
-    if (payload == null) {
-      state.dragger = {}
-    }
-    else {
-      state.dragger = { ...state.dragger, ...payload }
+    if (payload === null) {
+      state.dragger = {};
+    } else {
+      state.dragger = { ...state.dragger, ...payload };
     }
   },
 
   add_label(state, payload) {
-    state.labels = [...state.labels, payload]
+    state.labels = [...state.labels, payload];
   },
 
   set_labels(state, labels) {
-    state.labels = labels
+    state.labels = labels;
   },
 
   add_tagged_image(state, payload) {
-    const imgs = [payload]
+    const imgs = [payload];
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 200;
 
     let width = 0;
     for (const img of state.tagged_images) {
       if (img.filename !== payload.filename) {
-        imgs.push(img)
+        imgs.push(img);
       }
-      width += (img.width * (img.height / IMAGE_HEIGHT));
+      width += img.width * (img.height / IMAGE_HEIGHT);
       if (width > MAX_WIDTH) {
-        break
+        break;
       }
     }
-    state.tagged_images = imgs
+    state.tagged_images = imgs;
   }
-
-}
+};

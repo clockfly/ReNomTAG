@@ -20,16 +20,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import * as utils from '@/utils'
+import { mapState } from "vuex";
 
-export const BLOCK_HEIGHT=200;
+export const BLOCK_HEIGHT = 200;
 
 export default {
   computed: {
-    ...mapState([
-      'tagged_images',
-    ]),
+    ...mapState(["tagged_images"])
   },
 
   methods: {
@@ -46,20 +43,19 @@ export default {
       return {
         left: `${box.left * ratio}px`,
         top: `${box.top * ratio}px`,
-        width: `${(box.right-box.left) * ratio}px`,
-        height: `${(box.bottom-box.top) * ratio}px`,
-      }
+        width: `${(box.right - box.left) * ratio}px`,
+        height: `${(box.bottom - box.top) * ratio}px`
+      };
     },
     on_click: function(event) {
-      const filename = event.currentTarget.dataset.filename
-      this.$store.dispatch('load_current_image', filename)
+      const filename = event.currentTarget.dataset.filename;
+      this.$store.dispatch("load_current_image", filename);
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped lang='scss'>
-
 #tagged-images {
   position: relative;
   box-sizing: border-box;
@@ -97,19 +93,16 @@ export default {
 
   .image-box {
     position: absolute;
-    border: solid 1px  red;
+    border: solid 1px red;
 
     .taglabel {
       position: absolute;
-      right:0;
-      top:0;
+      right: 0;
+      top: 0;
       color: white;
       background-color: red;
       font-size: 10px;
     }
-
   }
-
 }
-
 </style>
