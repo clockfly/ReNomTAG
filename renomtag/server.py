@@ -29,6 +29,7 @@ for path in [IMG_DIR, XML_DIR]:
     if not os.path.exists(path):
         os.makedirs(path)
 
+
 def set_json_body(body):
     response.status = 200
     response.set_header('Content-Type', 'application/json')
