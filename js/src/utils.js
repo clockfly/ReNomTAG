@@ -1,4 +1,4 @@
-var API_SERVER = process.env.api_server || "";
+var API_SERVER = '' // process.env.api_server || "";
 
 export function build_api_url(path) {
   if (API_SERVER.length) {
