@@ -36,4 +36,3 @@ pages:
 
   only:
     - master
-    - suwa/change_module_name
