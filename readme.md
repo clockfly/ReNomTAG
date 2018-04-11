@@ -1,4 +1,4 @@
-# ReNomTAG
+# ReNomTAG v0.2beta
 
 Tagging tool for object detection.
 
