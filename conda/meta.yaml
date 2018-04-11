@@ -1,9 +1,9 @@
 package:
-  name: renomtag
+  name: renom_tag
   version: 0.0.1
 
 source:
-  path: ../sdist/renomtag-0.0.1
+  path: ../sdist/renom_tag-0.0.1
 
 requirements:
   build:

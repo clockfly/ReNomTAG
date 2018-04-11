@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from PIL import Image
 import xmltodict
 from webtest import TestApp as testapp
-from renomtag import server
+from renom_tag import server
 
 
 def test_get_raw_img(tmpdir):

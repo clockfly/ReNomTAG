@@ -1,2 +1,2 @@
-from renomtag import server
+from renom_tag import server
 server.main()

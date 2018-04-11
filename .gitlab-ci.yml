@@ -27,7 +27,7 @@ pages:
 #    - miniconda/bin/conda install -y conda-build
 #    - miniconda/bin/conda config --add channels conda-forge
 #    - miniconda/bin/conda-build conda
-#    - mv miniconda/conda-bld/linux-64/renomtag-* public/bin
+#    - mv miniconda/conda-bld/linux-64/renom_tag-* public/bin
     - ls public/bin
 
   artifacts:

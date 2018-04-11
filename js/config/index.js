@@ -49,10 +49,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../../renomtag/.build/index.html'),
+    index: path.resolve(__dirname, '../../renom_tag/.build/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../../renomtag/.build/'),
+    assetsRoot: path.resolve(__dirname, '../../renom_tag/.build/'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 

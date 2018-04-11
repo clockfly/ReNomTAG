@@ -19,7 +19,7 @@ $ npm run start
 ## Run
 
 ```
-$ python3 -m renomtag
+$ python3 -m renom_tag
 ```
 
 
@@ -36,28 +36,28 @@ $ npm run start
 
 The Wheel package is provided at:
 
-    https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renomtag-VERSION-py3-none-any.whl
+    https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renom_tag-VERSION-py3-none-any.whl
 
 (`VERSION` is stands for actual version number e.g. 0.0.1)
 
 You can install the wheel package with pip3 command::
 
 ```
-$ pip3 install https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renomtag-0.0.99-py3-none-any.whl
+$ pip3 install https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renom_tag-0.0.99-py3-none-any.whl
 ```
 
 The Wheel package contains pre-build js files so you don't have to build manually.
 
 
 
-Once installed, you can run RenomTag as follows.
+Once installed, you can run ReNomTAG as follows.
 
 ```
-$ python3 -m renomtag
+$ python3 -m renom_tag
 ```
 
-You can also use `renomtag` command installed by the wheel.
+You can also use `renom_tag` command installed by the wheel.
 
 ```
-$ renomtag
+$ renom_tag
 ```
