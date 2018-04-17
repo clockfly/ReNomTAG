@@ -1,4 +1,4 @@
-# ReNomTAG v0.2beta
+# ReNomTAG v0.3beta
 
 Tagging tool for object detection.
 
@@ -13,7 +13,7 @@ The Wheel package is provided at:
 You can install the wheel package with pip3 command::
 
 ```
-$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-0.2.0-py3-none-any.whl
+$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-0.3.0-py3-none-any.whl
 ```
 
 The Wheel package contains pre-build js files so you don't have to build manually.
