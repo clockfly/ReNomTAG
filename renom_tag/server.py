@@ -264,15 +264,12 @@ def get_filename_list():
     return ret
 
 
-@app.route("/api/save_xml_from_label_dict", method=["POST", "OPTIONS"])
+@app.route("/api/save_xml_from_label_dict", method=["POST"])
 def save_xml_from_label_dict():
     """save xml file from dictionary
 
     :return:
     """
-
-    if request.method == 'OPTIONS':
-        return set_json_body({})
 
     if not os.path.exists(XML_DIR):
         os.makedirs(XML_DIR)
@@ -309,11 +306,8 @@ def save_xml_from_label_dict():
 SAVE_JSON_FILE_PATH = "label_candidates.json"
 
 
-@app.route("/api/save_label_candidates_dict", method=['OPTIONS', 'POST'])
+@app.route("/api/save_label_candidates_dict", method=['POST'])
 def save_label_candidates_dict():
-    if request.method == 'OPTIONS':
-        return set_json_body({})
-
     labels = {}
     for n, d in enumerate(request.json):
         label = d['label'].strip()
@@ -330,11 +324,8 @@ def save_label_candidates_dict():
         ftpr.write(json_data)
 
 
-@app.route("/api/load_label_candidates_dict", method=["POST", "OPTIONS"])
+@app.route("/api/load_label_candidates_dict", method=["POST"])
 def load_label_candidates_dict():
-    if request.method == 'OPTIONS':
-        return set_json_body({})
-
     ret = []
     if os.path.exists(SAVE_JSON_FILE_PATH):
         with open(SAVE_JSON_FILE_PATH, 'r') as ftpr:

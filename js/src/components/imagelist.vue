@@ -60,9 +60,7 @@ export default {
         return;
       }
       let imgrc = img.getBoundingClientRect();
-
       let wrapper = this.$el.querySelector(`#imagelist`);
-
       let wrapperrc = wrapper.getBoundingClientRect();
 
       if (imgrc.bottom >= wrapperrc.bottom) {
@@ -142,7 +140,7 @@ export default {
   box-sizing: border-box;
   height: 100%;
   align-content: flex-start;
-  justify-content: space-between;
+  justify-content: space-evenly;
 
   img {
     box-sizing: border-box;
