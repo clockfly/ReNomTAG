@@ -16,21 +16,54 @@ async function async_func(context, f) {
   return ret;
 }
 
-export default {
-  async load_imagefile_list(context) {
-    context.commit("set_loading_message", {
-      loading_message: "Loading images..."
-    });
-    let response = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/get_filename_list"))
-    );
+async function load_imagefile_list(context) {
+  context.commit("set_loading_message", {
+    loading_message: "Loading images..."
+  });
+  let response = await async_func(context, () =>
+    axios.post(utils.build_api_url("/api/get_filename_list"), {
+      folder: context.state.folder,
+      all: true
+    })
+  );
 
-    context.commit("set_file_list", {
-      file_list: response.data.filename_list
+  context.commit("set_file_list", {
+    file_list: response.data.filename_list
+  });
+  if (context.state.files.length > 0) {
+    context.dispatch("load_current_image", context.state.files[0]);
+  }
+}
+
+async function load_label_candidates_dict(context) {
+  let response = await async_func(context, () =>
+    axios.post(
+      utils.build_api_url("/api/load_label_candidates_dict"),
+      {folder: context.state.folder}
+    )
+  );
+  context.commit("set_labels", response.data);
+}
+
+
+export default {
+  async load_folder_list(context) {
+    let response = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/folderlist"), {
+        folder: context.state.folder
+      })
+    );
+    context.commit("set_folder_list", {
+      folder_list: response.data.folder_list
     });
-    if (context.state.files.length > 0) {
-      context.dispatch("load_current_image", context.state.files[0]);
-    }
+  },
+
+  async set_folder(context, folder) {
+    context.commit("set_folder", { folder});
+    context.commit("set_file_list", {file_list: []});
+    await load_imagefile_list(context);
+    await load_label_candidates_dict(context);
+    
   },
 
   async load_current_image(context, file) {
@@ -39,7 +72,7 @@ export default {
     });
 
     let response = await async_func(context, () =>
-      axios.get(utils.build_api_url("/api/get_raw_img/" + file))
+      axios.get(utils.build_api_url("/api/get_raw_img/" + context.state.folder + "/" + file))
     );
 
     const boxes = [];
@@ -69,19 +102,9 @@ export default {
     await async_func(context, () =>
       axios.post(
         utils.build_api_url("/api/save_label_candidates_dict"),
-        context.state.labels
+        {folder: context.state.folder, labels: context.state.labels}
       )
     );
-  },
-
-  async load_label_candidates_dict(context, payload) {
-    let response = await async_func(context, () =>
-      axios.post(
-        utils.build_api_url("/api/load_label_candidates_dict"),
-        context.state.labels
-      )
-    );
-    context.commit("set_labels", response.data);
   },
 
   async save_annotation(context) {
@@ -121,7 +144,8 @@ export default {
     }
 
     await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), value)
+      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), 
+                 {folder: context.state.folder, value})
     );
 
     context.commit("add_tagged_image", {

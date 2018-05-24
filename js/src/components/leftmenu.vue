@@ -1,5 +1,5 @@
 <template>
-  <div id='left-menu'  v-bind:class='{ open: main_menu_visible }' @click='closeMenu'>
+  <div id='left-menu'  v-bind:class='{ open: main_menu_visible || (folder.length == 0) }' @click='closeMenu'>
     <div class='left-menu-bar'>
       <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
@@ -10,20 +10,41 @@
         <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
         <span class='menu-text'>Settings</span>
       </button>
+
+      <hr>
+
+      <button v-for="name in folder_list" :key="name"
+        class='bar-button'
+        :data-folder='name'
+        @click='selectFolder'>
+        <i v-if="folder === name" class="fa fa-folder-open" aria-hidden="true"></i>
+        <i v-if="folder !== name" class="fa fa-folder" aria-hidden="true"></i>
+        <span class='menu-text'>{{name}}</span>
+
+      </button>
+
+
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import * as utils from "@/utils";
 
 export default {
-  computed: mapState(["main_menu_visible"]),
+  computed: mapState(["main_menu_visible", "folder", "folder_list"]),
   methods: {
     closeMenu: function() {
       this.$store.commit("set_main_menu_visible", { visible: false });
+    },
+    selectFolder: function(event) {
+      this.$store.dispatch("set_folder", event.target.dataset.folder);
+      utils.cookies.setItem('tags-foldername', event.target.dataset.folder, Infinity)
+      console.log(utils.cookies.getItem('tags-foldername'))
+      this.closeMenu();
     }
-  }
+  },
 };
 </script>
 
@@ -41,7 +62,7 @@ export default {
   }
   .left-menu-bar {
     background-color: #2d3e50;
-    width: 170px;
+    width: 300px;
     height: 100%;
   }
   .bar-button {

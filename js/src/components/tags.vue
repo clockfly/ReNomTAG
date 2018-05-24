@@ -67,10 +67,6 @@ export default {
     };
   },
 
-  created: function() {
-    this.$store.dispatch("load_label_candidates_dict");
-  },
-
   computed: {
     ...mapState(["labels"]),
 

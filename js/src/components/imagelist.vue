@@ -1,6 +1,6 @@
 <template>
   <div id="imagelistblock">
-    <div v-if='file_list.length === 0' id=msg_no_image>
+    <div v-if='(this.folder.length != 0) && (file_list.length === 0)' id=msg_no_image>
       {{loading_message}}
     </div>
     <div id="imagelist" @scroll="on_scroll">
@@ -18,9 +18,6 @@ import { mapState } from "vuex";
 import * as utils from "@/utils";
 
 export default {
-  created: function() {
-    this.$store.dispatch("load_imagefile_list");
-  },
   data: function() {
     return {
       IMAGE_RELOAD_MARGIN: 100,
@@ -29,6 +26,8 @@ export default {
   },
   computed: {
     ...mapState([
+      "folder",
+      "folder_list",
       "loading_message",
       "files",
       "filename_max_display",
@@ -75,7 +74,7 @@ export default {
   },
   methods: {
     get_image_url(file) {
-      return utils.build_api_url("/t/" + file);
+      return utils.build_api_url("/t/" + this.folder + "/" + file);
     },
     is_selected(filename) {
       return filename === this.active_image_filename;

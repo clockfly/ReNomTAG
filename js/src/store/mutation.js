@@ -18,6 +18,14 @@ export default {
     state.main_menu_visible = payload.visible;
   },
 
+  set_folder_list(state, payload) {
+    state.folder_list = payload.folder_list;
+  },
+  
+  set_folder(state, payload) {
+    state.folder = payload.folder;
+  },
+
   set_file_list(state, payload) {
     state.files = payload.file_list;
     state.filename_max_display = 100;

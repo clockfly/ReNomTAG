@@ -16,19 +16,18 @@ import sys
 import mimetypes
 import time
 from io import BytesIO as IO
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 import posixpath
 import PIL
 
 app = Bottle()
+DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
 
-for path in [IMG_DIR, XML_DIR]:
-    if not os.path.exists(path):
-        os.makedirs(path)
-
+#for path in [IMG_DIR, XML_DIR]:
+#    if not os.path.exists(path):
+#        os.makedirs(path)
+#
 
 def set_json_body(body):
     response.status = 200
@@ -36,45 +35,64 @@ def set_json_body(body):
     return body
 
 
-def get_img_files():
-    global IMG_FILE_CACHE
-    if IMG_FILE_CACHE:
-        return
+def ensure_folder(folder):
+    if not os.path.exists(os.path.join(DIR_ROOT, folder, IMG_DIR)):
+        raise ValueError('Invalid folder')
 
+    xmlfolder = os.path.join(DIR_ROOT, folder, XML_DIR)
+    if not os.path.exists(xmlfolder):
+        os.makedirs(xmlfolder)
+
+
+
+def filter_datafilenames(dir, ext):
+    dir = os.path.join(DIR_ROOT, os.path.normpath(dir))
+    if not dir.endswith(os.path.sep):
+        dir = dir + os.path.sep
+
+    isvalid= re.compile(r"^[a-zA-Z0-9./_\%s]+$" % os.path.sep).match
+
+    path = os.path.join(dir, "**", '*.' + ext)
+    names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
+
+    return names
+
+def get_img_files(folder):
+    ensure_folder(folder)
     exts = ["jpg", "jpeg", "png"]
-    res = []
+    ret = []
+    dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        path = os.path.join(IMG_DIR, "**", '*.' + e)
-        for name in glob2.glob(path):
-            if re.match(r"[a-zA-Z0-9.\%s]" % os.path.sep, name):
-                res.append(name)
-    IMG_FILE_CACHE = sorted(res)
+        ret.extend(filter_datafilenames(dir, e))
+    return ret
 
-
-def get_xml_files():
-    global XML_FILE_CACHE
-    if XML_FILE_CACHE:
-        return
-
-    xml_files_pat = os.path.join(XML_DIR, "**.xml")
-    xml_paths = glob2.glob(xml_files_pat)
-    XML_FILE_CACHE = list(xml_paths)
+def get_xml_files(folder):
+    ensure_folder(folder)
+    dir = os.path.join(folder, XML_DIR)
+    return filter_datafilenames(dir, "xml")
 
 
 def _get_file_name(x):
     return os.path.splitext(os.path.split(x)[1])[0]
 
 
-IMG_FILE_CACHE = []
-XML_FILE_CACHE = []
 
+MAX_FOLDER_NAME = 256
 
-def get_difference_set():
-    get_img_files()
-    get_xml_files()
+def strip_foldername(folder):
+    if (os.path.isabs(folder) or 
+       re.search(r'[^a-zA-Z0-9_.-]', folder) or
+       (len(folder) >= MAX_FOLDER_NAME)):
 
-    img_paths = IMG_FILE_CACHE
-    xml_paths = XML_FILE_CACHE
+        raise ValueError('Invalid path')
+
+    return folder
+
+def get_difference_set(folder):
+    folder = strip_foldername(folder)
+
+    img_paths = get_img_files(folder)
+    xml_paths = get_xml_files(folder)
     xml_names = list(map(_get_file_name, xml_paths))
 
     def difference_set_paths_filter(img_path):
@@ -162,21 +180,25 @@ def static(file_name):
 
 def check_path(path, filename):
     head = os.path.abspath(path)
-    filename = os.path.abspath(filename)
+    if not head.endswith(('/', '\\')):
+        head += os.path.sep
+
+    filename = os.path.abspath(os.path.join(head, filename))
 
     if not filename.startswith(head):
         raise ValueError('invalid path')
 
-    if not head.endswith(('/', '\\')):
-        if filename[len(head)] not in ('/', '\\'):
-            raise ValueError('invalid path')
+    return filename
+
+def get_folderpath(folder):
+    return check_path(DIR_ROOT, folder)
 
 
-def get_boxes(img_filename):
-    img_filename = strip_path(img_filename)
+def get_boxes(folder, img_filename):
     filename = os.path.splitext(os.path.split(img_filename)[1])[0] + '.xml'
-    xmlfilename = os.path.join(XML_DIR, filename)
-    check_path(XML_DIR, xmlfilename)
+
+    xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
+    xmlfilename = check_path(xmlfolder, filename)
 
     if not os.path.exists(xmlfilename):
         json_dict = {}
@@ -196,11 +218,9 @@ def get_boxes(img_filename):
     return json_dict
 
 
-@app.route("/api/get_raw_img/<file_name:re:.+>")
-def get_raw_img(file_name):
-
-    filename = strip_path(file_name)
-    check_path(IMG_DIR, file_name)
+@app.route("/api/get_raw_img/<folder>/<file_name:re:.+>")
+def get_raw_img(folder, file_name):
+    filename = check_path(os.path.join(get_folderpath(folder), IMG_DIR), file_name)
 
     img = open(filename, "rb").read()
     encoded_img = base64.b64encode(img)
@@ -208,25 +228,24 @@ def get_raw_img(file_name):
 
     im = PIL.Image.open(filename)
     width, height = im.size
-
     ret = json.dumps({
         'img': encoded_img,
         'width': width,
         'height': height,
-        'boxes': get_boxes(file_name)
+        'boxes': get_boxes(folder, filename)
     })
 
     ret = set_json_body(ret)
     return ret
 
 
-@app.route("/t/<file_name:re:.+>")
-def get_thumbnail(file_name):
-    file_name = strip_path(file_name)
-    check_path(IMG_DIR, file_name)
+@app.route("/t/<folder:re:.+>/<file_name:re:.+>")
+def get_thumbnail(folder, file_name):
+
+    filename = check_path(os.path.join(get_folderpath(folder), IMG_DIR), file_name)
 
     headers = {}
-    stats = os.stat(file_name)
+    stats = os.stat(filename)
 
     lm = time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime(stats.st_mtime))
     response.set_header('Last-Modified', lm)
@@ -240,7 +259,7 @@ def get_thumbnail(file_name):
 
     response.content_type = 'image/png'
 
-    img = Image.open(file_name, 'r')
+    img = Image.open(filename, 'r')
     img.thumbnail((70, 70), Image.ANTIALIAS)
     buffered = IO()
     img.save(buffered, format='PNG')
@@ -253,12 +272,18 @@ def get_thumbnail(file_name):
 
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
+    folder = request.json['folder']
+
     success = 0
-    difference_set_paths = get_difference_set()
+
+    if request.json['all']:
+        files = get_img_files(folder)
+    else:
+        files = get_difference_set(folder)
 
     body = json.dumps({
         "success": success,
-        "filename_list": difference_set_paths,
+        "filename_list": files,
     })
     ret = set_json_body(body)
     return ret
@@ -271,11 +296,7 @@ def save_xml_from_label_dict():
     :return:
     """
 
-    if not os.path.exists(XML_DIR):
-        os.makedirs(XML_DIR)
-
-    label_dict = request.json
-
+    label_dict = request.json['value']
     ann_path = strip_path(label_dict['annotation']['path'])
     check_path(IMG_DIR, ann_path)
 
@@ -286,8 +307,8 @@ def save_xml_from_label_dict():
     label_dict['annotation']['folder'] = folder
     label_dict['annotation']['filename'] = file_name
 
-    save_xml_file_name = os.path.join(XML_DIR, _get_file_name(file_name)) + '.xml'
-    check_path(XML_DIR, save_xml_file_name)
+    folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
+    save_xml_file_name = check_path(folderpath , _get_file_name(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -296,6 +317,7 @@ def save_xml_from_label_dict():
 
     if (xml_soup.find('object')):
         xml_soup.find('object').parent.unwrap()
+
 
     with open(save_xml_file_name, 'w') as ftpr:
         ftpr.write(xml_soup.find('annotation').prettify())
@@ -308,8 +330,10 @@ SAVE_JSON_FILE_PATH = "label_candidates.json"
 
 @app.route("/api/save_label_candidates_dict", method=['POST'])
 def save_label_candidates_dict():
+    label_dict = request.json
     labels = {}
-    for n, d in enumerate(request.json):
+
+    for n, d in enumerate(label_dict['labels']):
         label = d['label'].strip()
         shortcut = d['shortcut'].strip()
         if not re.match(r"^[0-9a-zA-Z]+$", label):
@@ -320,15 +344,23 @@ def save_label_candidates_dict():
         labels[shortcut] = {'label': label}
 
     json_data = json.dumps(labels)
-    with open(SAVE_JSON_FILE_PATH, 'w') as ftpr:
+    folderpath = get_folderpath(label_dict['folder'])
+    jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
+
+    with open(jsonfile, 'w') as ftpr:
         ftpr.write(json_data)
 
 
 @app.route("/api/load_label_candidates_dict", method=["POST"])
 def load_label_candidates_dict():
+    label_dict = request.json
     ret = []
-    if os.path.exists(SAVE_JSON_FILE_PATH):
-        with open(SAVE_JSON_FILE_PATH, 'r') as ftpr:
+
+    folderpath = get_folderpath(label_dict['folder'])
+    jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
+
+    if os.path.exists(jsonfile):
+        with open(jsonfile, 'r') as ftpr:
             json_data = json.load(ftpr)
 
         for k, v in json_data.items():
@@ -337,35 +369,30 @@ def load_label_candidates_dict():
             ret.append({'label': v['label'], 'shortcut': k})
 
     body = json.dumps(ret)
-    ret = set_json_body(body)
+    return set_json_body(body)
+
+
+@app.route("/api/folderlist", method=["POST"])
+def get_folderlist():
+    folders = []
+    for d in os.listdir(DIR_ROOT):
+        if not re.match(r"^[a-zA-Z0-9._]+$", d):
+            continue
+
+        if not os.path.isdir(os.path.join(DIR_ROOT, d)):
+            continue
+        
+        if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
+            continue
+
+        folders.append(d)
+                
+    ret = set_json_body(json.dumps({'folder_list':folders}))
     return ret
 
 
-class ImageEventHandler(FileSystemEventHandler):
-    def on_any_event(self, event):
-        global IMG_FILE_CACHE
-        IMG_FILE_CACHE = []
-
-
-class XMLEventHandler(FileSystemEventHandler):
-    def on_any_event(self, event):
-        global XML_FILE_CACHE
-        XML_FILE_CACHE = []
-
-
 def main():
-    get_img_files()
-    get_xml_files()
-
-    observer = Observer()
-    observer.schedule(ImageEventHandler(), IMG_DIR, recursive=True)
-    observer.schedule(XMLEventHandler(), XML_DIR, recursive=True)
-    observer.daemon = True
-
-    observer.start()
     run(app, host="0.0.0.0", port=8000)
-    observer.stop()
-    observer.join()
 
 
 if __name__ == '__main__':

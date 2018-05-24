@@ -6,6 +6,8 @@ let state = {
 
   loading_message: "Loading images...",
 
+  folder: '',
+  folder_list: [],
   // image files
   files: [],
   filename_max_display: 0,

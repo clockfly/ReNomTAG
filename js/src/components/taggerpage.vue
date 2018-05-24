@@ -3,7 +3,7 @@
     <app-header></app-header>
     <div id='main-container'>
       <left-menu></left-menu>
-      <image-list/>
+      <image-list  v-if="folder.length !== 0"/>
       <navarrow dir="back"/>
       <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
@@ -34,7 +34,7 @@ import TagCanvas from "./tagcanvas.vue";
 import Tags from "./tags.vue";
 import TaggedImages from "./taggedimages.vue";
 import ModalBox from "@/components/modalbox";
-
+import * as utils from "@/utils";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -49,11 +49,23 @@ export default {
     "modal-box": ModalBox
   },
   computed: {
-    ...mapState(["active_image_filename", "error_status"])
+    ...mapState(["folder", "folder_list", "active_image_filename", "error_status"])
   },
   methods: {
     ...mapMutations(["set_error_status"])
-  }
+  },
+
+  created: function() {
+    this.$store.dispatch("load_folder_list").then(()=>{
+      const foldername = utils.cookies.getItem('tags-foldername')
+      if (foldername) {
+        if (this.folder_list.indexOf(foldername) !== -1) {
+          this.$store.dispatch("set_folder", foldername);
+        }
+      }
+    })
+  },
+  
 };
 </script>
 <style lang='scss'>
