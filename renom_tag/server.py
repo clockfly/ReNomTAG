@@ -273,7 +273,6 @@ def get_thumbnail(folder, file_name):
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
     folder = request.json['folder']
-
     success = 0
 
     if request.json['all']:
