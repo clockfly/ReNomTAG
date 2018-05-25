@@ -58,6 +58,7 @@ export default {
   created: function() {
     this.$store.dispatch("load_folder_list").then(()=>{
       const foldername = utils.cookies.getItem('tags-foldername')
+
       if (foldername) {
         if (this.folder_list.indexOf(foldername) !== -1) {
           this.$store.dispatch("set_folder", foldername);

@@ -53,6 +53,7 @@ export default {
         folder: context.state.folder
       })
     );
+
     context.commit("set_folder_list", {
       folder_list: response.data.folder_list
     });
