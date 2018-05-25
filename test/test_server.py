@@ -13,13 +13,13 @@ from renom_tag import server
 
 def build_img_dir(tmpdir, folder):
     imgdir = tmpdir.join(server.DIR_ROOT, folder, server.IMG_DIR)
-    os.makedirs(imgdir)
+    os.makedirs(imgdir.strpath)
     return imgdir
 
 
 def build_xml_dir(tmpdir, folder):
     xmldir = tmpdir.join(server.DIR_ROOT, folder, server.XML_DIR)
-    os.makedirs(xmldir)
+    os.makedirs(xmldir.strpath)
     return xmldir
 
 
@@ -53,7 +53,7 @@ def test_save_xml_from_label_dict(tmpdir):
 
         json = {'folder': 'folderx',
                 'value': {'annotation':
-                          {'path': 'dataset/a.jpg',
+                          {'path': 'a.jpg',
                            'source': {'database': 'Unknown'},
                            'size': {'width': 500, 'height': 375, 'depth': 3},
                            'segments': 0,
@@ -72,7 +72,7 @@ def test_save_xml_from_label_dict(tmpdir):
         d = xmltodict.parse(xml, xml_attribs=True)
 
         ann = d['annotation']
-        assert ann['path'] == 'dataset/a.jpg'
+        assert ann['path'] == 'a.jpg'
         assert ann['size']['width'] == '500'
         assert ann['size']['height'] == '375'
         assert ann['folder'] == 'dataset'
@@ -111,7 +111,7 @@ def test_save_label_candidates_dict(tmpdir):
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
-        saved = json.load(open(jsonfile))
+        saved = json.load(open(jsonfile.strpath))
         assert saved == {'1': {'label': 'label'}}
 
 
@@ -123,7 +123,7 @@ def test_load_label_candidates_dict(tmpdir):
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
-        with open(jsonfile, 'w') as f:
+        with open(jsonfile.strpath, 'w') as f:
             json.dump(d, f)
 
         app = testapp(server.app)
