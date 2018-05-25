@@ -23,7 +23,7 @@ async function load_imagefile_list(context) {
   let response = await async_func(context, () =>
     axios.post(utils.build_api_url("/api/get_filename_list"), {
       folder: context.state.folder,
-      all: true
+      all: false
     })
   );
 

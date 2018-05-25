@@ -304,9 +304,8 @@ def save_xml_from_label_dict():
     check_path(IMG_DIR, ann_path)
 
     folder, file_name = posixpath.split(ann_path)
-    if not folder:
-        folder = '.'
-
+    folder = os.path.join('dataset', folder).rstrip('/') # add 'dataset' for compatibility
+    
     label_dict['annotation']['folder'] = folder
     label_dict['annotation']['filename'] = file_name
 
