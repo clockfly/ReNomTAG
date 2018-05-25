@@ -10,15 +10,18 @@ import xmltodict
 from webtest import TestApp as testapp
 from renom_tag import server
 
+
 def build_img_dir(tmpdir, folder):
     imgdir = tmpdir.join(server.DIR_ROOT, folder, server.IMG_DIR)
     os.makedirs(imgdir)
     return imgdir
 
+
 def build_xml_dir(tmpdir, folder):
     xmldir = tmpdir.join(server.DIR_ROOT, folder, server.XML_DIR)
     os.makedirs(xmldir)
     return xmldir
+
 
 def test_get_raw_img(tmpdir):
     with tmpdir.as_cwd():
@@ -50,13 +53,13 @@ def test_save_xml_from_label_dict(tmpdir):
 
         json = {'folder': 'folderx',
                 'value': {'annotation':
-                            {'path': 'dataset/a.jpg',
-                             'source': {'database': 'Unknown'},
-                             'size': {'width': 500, 'height': 375, 'depth': 3},
-                             'segments': 0,
-                             'objects': [
-                                 {'object':
-                                  {'name': 'asda', 'pose': 'Unspecified',
+                          {'path': 'dataset/a.jpg',
+                           'source': {'database': 'Unknown'},
+                           'size': {'width': 500, 'height': 375, 'depth': 3},
+                           'segments': 0,
+                           'objects': [
+                               {'object':
+                                {'name': 'asda', 'pose': 'Unspecified',
                                    'truncated': 0, 'difficult': 0,
                                    'bndbox':
                                    {'xmin': 10, 'xmax': 100, 'ymin': 20, 'ymax': 200
@@ -101,12 +104,12 @@ def test_save_label_candidates_dict(tmpdir):
         xmldir = build_xml_dir(tmpdir, 'folderx')
 
         app = testapp(server.app)
-        app.post_json('/api/save_label_candidates_dict', 
-            {'folder': 'folderx',
-             'labels': [{'label': 'label', 'shortcut': '1'}]})
+        app.post_json('/api/save_label_candidates_dict',
+                      {'folder': 'folderx',
+                       'labels': [{'label': 'label', 'shortcut': '1'}]})
 
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
-            server.SAVE_JSON_FILE_PATH)
+                               server.SAVE_JSON_FILE_PATH)
 
         saved = json.load(open(jsonfile))
         assert saved == {'1': {'label': 'label'}}
@@ -118,7 +121,7 @@ def test_load_label_candidates_dict(tmpdir):
 
         d = {'1': {'label': 'label'}}
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
-            server.SAVE_JSON_FILE_PATH)
+                               server.SAVE_JSON_FILE_PATH)
 
         with open(jsonfile, 'w') as f:
             json.dump(d, f)

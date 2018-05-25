@@ -24,10 +24,11 @@ DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
 
-#for path in [IMG_DIR, XML_DIR]:
+# for path in [IMG_DIR, XML_DIR]:
 #    if not os.path.exists(path):
 #        os.makedirs(path)
 #
+
 
 def set_json_body(body):
     response.status = 200
@@ -44,18 +45,18 @@ def ensure_folder(folder):
         os.makedirs(xmlfolder)
 
 
-
 def filter_datafilenames(dir, ext):
     dir = os.path.join(DIR_ROOT, os.path.normpath(dir))
     if not dir.endswith(os.path.sep):
         dir = dir + os.path.sep
 
-    isvalid= re.compile(r"^[a-zA-Z0-9./_\%s]+$" % os.path.sep).match
+    isvalid = re.compile(r"^[a-zA-Z0-9./_\%s]+$" % os.path.sep).match
 
     path = os.path.join(dir, "**", '*.' + ext)
     names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
 
     return names
+
 
 def get_img_files(folder):
     ensure_folder(folder)
@@ -65,6 +66,7 @@ def get_img_files(folder):
     for e in exts:
         ret.extend(filter_datafilenames(dir, e))
     return ret
+
 
 def get_xml_files(folder):
     ensure_folder(folder)
@@ -76,17 +78,18 @@ def _get_file_name(x):
     return os.path.splitext(os.path.split(x)[1])[0]
 
 
-
 MAX_FOLDER_NAME = 256
 
+
 def strip_foldername(folder):
-    if (os.path.isabs(folder) or 
-       re.search(r'[^a-zA-Z0-9_.-]', folder) or
-       (len(folder) >= MAX_FOLDER_NAME)):
+    if (os.path.isabs(folder) or
+        re.search(r'[^a-zA-Z0-9_.-]', folder) or
+            (len(folder) >= MAX_FOLDER_NAME)):
 
         raise ValueError('Invalid path')
 
     return folder
+
 
 def get_difference_set(folder):
     folder = strip_foldername(folder)
@@ -189,6 +192,7 @@ def check_path(path, filename):
         raise ValueError('invalid path')
 
     return filename
+
 
 def get_folderpath(folder):
     return check_path(DIR_ROOT, folder)
@@ -307,7 +311,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['filename'] = file_name
 
     folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
-    save_xml_file_name = check_path(folderpath , _get_file_name(file_name)) + '.xml'
+    save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -316,7 +320,6 @@ def save_xml_from_label_dict():
 
     if (xml_soup.find('object')):
         xml_soup.find('object').parent.unwrap()
-
 
     with open(save_xml_file_name, 'w') as ftpr:
         ftpr.write(xml_soup.find('annotation').prettify())
@@ -380,13 +383,13 @@ def get_folderlist():
 
         if not os.path.isdir(os.path.join(DIR_ROOT, d)):
             continue
-        
+
         if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
             continue
 
         folders.append(d)
-                
-    ret = set_json_body(json.dumps({'folder_list':folders}))
+
+    ret = set_json_body(json.dumps({'folder_list': folders}))
     return ret
 
 
