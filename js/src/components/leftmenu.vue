@@ -61,7 +61,7 @@ export default {
     display: block;
   }
   .left-menu-bar {
-    background-color: #2d3e50;
+    background-color: #1e264d;
     width: 300px;
     height: 100%;
   }
@@ -69,7 +69,7 @@ export default {
     width: 100%;
     height: 45px;
     position: relative;
-    $bg_color: #2d3e50;
+    $bg_color: #1e264d;
     text-align: left;
     margin: 0;
     color: #b7b7b7;

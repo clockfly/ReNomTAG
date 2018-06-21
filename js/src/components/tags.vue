@@ -31,7 +31,7 @@
 
   </div>
   <button @click='show_delete_dialog=true' id='remove-button'>Refresh list</button>
-  
+
   <modal-box v-if='show_delete_dialog'
     @ok='delete_tags'
     @cancel='show_delete_dialog=false' >
@@ -111,7 +111,11 @@ export default {
         32, // Space
         8, // BackSpace
         9, // Tab
-        46 // Delete
+        46, // Delete
+        37, // ←
+        38, // →
+        39, // ↑
+        40 // ↓
       ];
       if (keys.indexOf(k) >= 0) {
         return true;
