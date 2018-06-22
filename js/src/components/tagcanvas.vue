@@ -192,8 +192,6 @@ export default {
               }
               break;
             case "ArrowDown":
-            console.log("prebox:",box.bottom);
-            console.log("imgrc[3]:",imgrc[3]);
               if (this.active_image_height > box.bottom){
                 box.top += 1
                 box.bottom += 1;
@@ -207,10 +205,6 @@ export default {
               }
               break;
             case "ArrowRight":
-            console.log("prebox:",box.right);
-            console.log("prebox:",box.left);
-            console.log("imgrac",imgrc);
-            console.log("imgrc[2]:",imgrc[2]*ratio);
                 if(box.right < this.active_image_width){
                   box.left += 1;
                   box.right += 1;
