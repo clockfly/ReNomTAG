@@ -22,10 +22,11 @@
 
   <div id='tag-tree'>
     <ul class='tag-list'>
-        <li v-for='{label, shortcut} in labels' :key='label'
+        <li @dblclick="on_dbclick" v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
           <div class="label-text">{{label}}</div>
-          <div v-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+          <div v-if='shortcut'class="label-shortcut">{{shortcut}}</div>
+          <div v-if='edit'>hi</div>
         </li>
     </ul>
 
@@ -149,6 +150,10 @@ export default {
       this.$store.commit("set_activebox_label", { label });
     },
 
+    on_dbclick(event){
+      alert("Hi");
+      this.edit=true;
+    },
     delete_tags(event) {
       this.$store.commit("set_labels", []);
       this.show_delete_dialog = false;
