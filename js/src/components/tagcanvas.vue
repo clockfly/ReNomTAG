@@ -3,14 +3,14 @@
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
-        
+
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
 
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
-          :style='tagstyle' 
-          class='box-border' 
+          :style='tagstyle'
+          class='box-border'
           :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
           @mousemove='on_boxmousemove'>
         <div :class="['box', is_active_box(idx) ? 'box-active':'']">
@@ -53,11 +53,12 @@ export default {
   created: function() {
     window.addEventListener("resize", this.on_resize);
     window.addEventListener("keyup", this.on_keyup);
+    window.addEventListener("keydown", this.on_keydown);
   },
 
   beforeDestroy: function() {
     window.removeEventListener("resize", this.on_resize);
-    window.removeEventListener("keyup", this.on_keyup);
+    window.removeEventListener("keydown", this.on_keydown);
   },
   mounted: function() {
     setTimeout(this.arrange_boxes, 20);
@@ -172,7 +173,59 @@ export default {
         }
       }
     },
+    on_keydown: function(event){
+      if (this.has_image && this.active_boxid !== null) {
+        if (!this.has_image) {
+            return;
+          }
+          let [ratio, imgrc] = this.calc_image_rect();
 
+          let boxid = this.active_boxid;
+
+          let box = this.get_box(boxid);
+
+          switch (event.key) {
+            case "ArrowUp":
+              if(box.top > 0){
+                box.top -= 1
+                box.bottom -= 1;
+              }
+              break;
+            case "ArrowDown":
+            console.log("prebox:",box.bottom);
+            console.log("imgrc[3]:",imgrc[3]);
+              if (this.active_image_height > box.bottom){
+                box.top += 1
+                box.bottom += 1;
+              }
+              break;
+            case "ArrowLeft":
+              if(box.left > 0){
+                box.left -= 1;
+                box.right -= 1;
+                console.log("prebox:",box.left);
+              }
+              break;
+            case "ArrowRight":
+            console.log("prebox:",box.right);
+            console.log("prebox:",box.left);
+            console.log("imgrac",imgrc);
+            console.log("imgrc[2]:",imgrc[2]*ratio);
+                if(box.right < this.active_image_width){
+                  box.left += 1;
+                  box.right += 1;
+                }
+              break;
+            default:
+                break;
+          }
+
+          this.$store.commit("set_tagbox", {
+            boxid: boxid,
+            box: box
+          });
+      }
+    },
     size_style: function(rc) {
       const left = `${rc[0]}px`;
       const top = `${rc[1]}px`;
