@@ -24,9 +24,19 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
-          <div class="label-text">{{label}}</div>
-          <div v-if='shortcut'class="label-shortcut">{{shortcut}}</div>
-          <i @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+          <div v-if='!edit_mode' class="label-text">{{label}}</div>
+          <div v-if='shortcut && !edit_mode'class="label-shortcut">{{shortcut}}</div>
+          <i v-if="!edit_mode" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+          <input v-if='edit_mode' type="text"
+                  class="label-text-update"
+                  v-model='label'
+                  placeholder="label name...">
+          <input v-if="edit_mode" type="text"
+                  class="label-shortcut-update"
+                  v-model='shortcut'
+                  @keydown='keydown'
+                  @keyup='setShortcutKey'
+                  placeholder="key...">
         </li>
     </ul>
 
@@ -64,6 +74,7 @@ export default {
     return {
       label: "",
       shortcut: "",
+      edit_mode:"",
       show_delete_dialog: false
     };
   },
@@ -151,8 +162,19 @@ export default {
     },
 
     to_edit_mode(event){
-      alert("Hi");
-      //event.stopPropagation;
+      let mode =null;
+      let children = event.currentTarget.parentNode.children;
+      let label = children[0]
+      let shortcut = children[1];
+      //if shortcut key is not set up
+      console.log("mode",mode);
+
+      if (children.length==2){
+        console.log("icon","ショートカットキーがないよ！");
+      }else{
+        console.log("icon","ショートカットキーは設定してあるよ");
+      }
+
     },
     delete_tags(event) {
       this.$store.commit("set_labels", []);
@@ -215,6 +237,7 @@ export default {
       width: 62.5px;
     }
   }
+
   .add-new-label-btn {
     width: 100%;
     text-align: center;
@@ -251,6 +274,22 @@ export default {
       margin: 0;
       border-style: none;
     }
+    input {
+      padding: 3px 7px;
+      border-color: #7d7d7d;
+      margin: 0;
+      &::-webkit-input-placeholder {
+        color: #a6a6a6;
+        font-size: 13px;
+      }
+    }
+    input.label-text-update {
+      width: 130px;
+    }
+    input.label-shortcut-update {
+      width: 31.125px;
+    }
+
   }
 
   .tag-list-item {

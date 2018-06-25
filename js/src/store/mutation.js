@@ -21,7 +21,7 @@ export default {
   set_folder_list(state, payload) {
     state.folder_list = payload.folder_list;
   },
-  
+
   set_folder(state, payload) {
     state.folder = payload.folder;
   },
