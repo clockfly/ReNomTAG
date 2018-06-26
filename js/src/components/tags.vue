@@ -182,6 +182,10 @@ export default {
       if(this.edit_mode[2]===true){
         this.edit_shortcut = edit_shortcut;
       }
+      if(!this.is_control_key(event.keyCode)){
+        this.edit_shortcut = event.keyCode;
+        console.log("edit_shortcut:",this.edit_shortcut);
+      }
 
       if(this.is_control_key(event.keyCode)){
         if(event.keyCode===13){
