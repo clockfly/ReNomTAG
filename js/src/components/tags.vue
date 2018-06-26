@@ -9,12 +9,16 @@
               class="label-text"
               v-model='label'
               placeholder="label name...">
+
       <input  type="text"
               class="label-shortcut"
               v-model='shortcut'
               @keydown='keydown'
               @keyup='setShortcutKey'
               placeholder="key...">
+      <!-- <input  v-else type="text"
+              class="label-shortcut"
+              placeholder="key..."> -->
     </div>
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Label</button>
@@ -24,22 +28,24 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
-            <!-- <form>
-              <div class="add-new-label-input-area"> -->
-              <!-- <input v-if='edit_mode[0] == label' type="text"
+            <form id="add-new-label-form">
+              <div class="add-new-label-input-area">
+              <input v-if='edit_mode[0] === label' type="text"
                       class="label-text-update"
                       v-model='label'
-                      placeholder="label name..."> -->
-              <div v-if='label' class="label-text">{{label}}</div>
-              <!-- <input v-if="edit_mode[0] == label" type="text"
+                      placeholder="label name...">
+              <div v-else class="label-text">{{label}}</div>
+              <input v-if="edit_mode[0] === label" type="text"
                       class="label-shortcut-update"
                       v-model='shortcut'
-                      placeholder="key..."> -->
-              <div v-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-              <!-- <i v-if="edit_mode[0] == label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-              <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i> -->
-            <!-- </div>
-            </form> -->
+                      @keydown='update_label'
+                      placeholder="key...">
+              <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+              <i v-if="edit_mode[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+              <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+            </div>
+            <!-- <div v-if='errormsg && edit_mode[0] === label' class='label_errormsg'>{{errormsg}}</div> -->
+            </form>
         </li>
     </ul>
 
@@ -164,24 +170,35 @@ export default {
       this.$store.commit("set_activebox_label", { label });
     },
 
+    update_label(event){
+
+      //check flag shortcut is empty
+      if(this.edit_mode[2]){
+        this.label = this.edit_mode[0];
+        this.shortcut= this.edit_mode[1];
+      }
+
+      // if (this.is_control_key(event.keyCode)) {
+      //    if(event.keyCode===13){
+      //      //alert(this.label);
+      //    }
+      //   return;
+      // }
+    },
+
     to_edit_mode(event){
       let children = event.currentTarget.parentNode.children;
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
-      let mode = [label,shortcut];
+      let mode = [label,shortcut,true];
       console.log("mode",mode[0]);
       console.log("label",label);
 
       this.edit_mode=mode;
-
       //if shortcut key is not set up
-      if (children.length==2){
-        console.log("icon","ショートカットキーがないよ！");
-      }else{
-        console.log("icon","ショートカットキーは設定してあるよ");
+      if (children.length===2){
+        mode[2]=false;
       }
-
-
     },
 
     delete_tags(event) {
