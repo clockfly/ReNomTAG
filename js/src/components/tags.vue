@@ -32,12 +32,12 @@
               <div class="add-new-label-input-area">
               <input v-if='edit_mode[0] === label' type="text"
                       class="label-text-update"
-                      v-model='label'
+                      v-model='edit_label'
                       placeholder="label name...">
               <div v-else class="label-text">{{label}}</div>
               <input v-if="edit_mode[0] === label" type="text"
                       class="label-shortcut-update"
-                      v-model='shortcut'
+                      v-model='edit_shortcut'
                       @keydown='update_label'
                       placeholder="key...">
               <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
@@ -81,9 +81,11 @@ export default {
 
   data: function() {
     return {
-      label: "",
-      shortcut: "",
-      edit_mode:"",
+      label: "", //add label
+      shortcut: "", // add shortcut
+      edit_label:"",  // for update labels
+      edit_shortcut:"", // for update shortcut
+      edit_mode:"", //flags
       show_delete_dialog: false
     };
   },
@@ -171,19 +173,22 @@ export default {
     },
 
     update_label(event){
+      let src_label = this.label;
+      let src_shortcut = this.shortcut;
+      let edit_label;
+      let edit_shortcut;
 
       //check flag shortcut is empty
-      if(this.edit_mode[2]){
-        this.label = this.edit_mode[0];
-        this.shortcut= this.edit_mode[1];
+      if(this.edit_mode[2]===true){
+        this.edit_shortcut = edit_shortcut;
       }
 
-      // if (this.is_control_key(event.keyCode)) {
-      //    if(event.keyCode===13){
-      //      //alert(this.label);
-      //    }
-      //   return;
-      // }
+      if(this.is_control_key(event.keyCode)){
+        if(event.keyCode===13){
+          console.log("edit_label:",this.edit_label);
+          console.log("edit_shortcut:",this.edit_shortcut);
+        }
+      }
     },
 
     to_edit_mode(event){
@@ -191,11 +196,11 @@ export default {
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
       let mode = [label,shortcut,true];
-      console.log("mode",mode[0]);
-      console.log("label",label);
+      //console.log("mode",mode[0]);
+      //console.log("label",label);
 
       this.edit_mode=mode;
-      //if shortcut key is not set up
+      //set flag if shortcut key is not set up
       if (children.length===2){
         mode[2]=false;
       }
