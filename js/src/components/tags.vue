@@ -24,20 +24,22 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
-          <input v-if='edit_mode && edit_mode[0] == label' type="text"
-                  class="label-text-update"
-                  v-model='label'
-                  placeholder="label name...">
-          <div v-else class="label-text">{{label}}</div>
-          <input v-if="edit_mode && edit_mode[0] == label" type="text"
-                  class="label-shortcut-update"
-                  v-model='shortcut'
-                  @keydown='keydown'
-                  @keyup='setShortcutKey'
-                  placeholder="key...">
-          <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-          <i v-if="edit_mode && edit_mode[0] == label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-          <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+            <!-- <form>
+              <div class="add-new-label-input-area"> -->
+              <!-- <input v-if='edit_mode[0] == label' type="text"
+                      class="label-text-update"
+                      v-model='label'
+                      placeholder="label name..."> -->
+              <div v-if='label' class="label-text">{{label}}</div>
+              <!-- <input v-if="edit_mode[0] == label" type="text"
+                      class="label-shortcut-update"
+                      v-model='shortcut'
+                      placeholder="key..."> -->
+              <div v-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+              <!-- <i v-if="edit_mode[0] == label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+              <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i> -->
+            <!-- </div>
+            </form> -->
         </li>
     </ul>
 
@@ -166,13 +168,7 @@ export default {
       let children = event.currentTarget.parentNode.children;
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
-      let mode;
-
-
-      children = event.currentTarget.parentNode.children;
-      label = children[0].innerText;
-      shortcut = children[1].innerText;
-      mode =[label,shortcut];
+      let mode = [label,shortcut];
       console.log("mode",mode[0]);
       console.log("label",label);
 
@@ -185,7 +181,9 @@ export default {
         console.log("icon","ショートカットキーは設定してあるよ");
       }
 
+
     },
+
     delete_tags(event) {
       this.$store.commit("set_labels", []);
       this.show_delete_dialog = false;
