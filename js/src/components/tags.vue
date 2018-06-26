@@ -5,11 +5,11 @@
   </div>
   <form id="add-new-label-form">
     <div class="add-new-label-input-area">
-      <input type="text"
+      <input  type="text"
               class="label-text"
               v-model='label'
               placeholder="label name...">
-      <input type="text"
+      <input  type="text"
               class="label-shortcut"
               v-model='shortcut'
               @keydown='keydown'
@@ -24,19 +24,20 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
-          <div v-if='!edit_mode' class="label-text">{{label}}</div>
-          <div v-if='shortcut && !edit_mode'class="label-shortcut">{{shortcut}}</div>
-          <i v-if="!edit_mode" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-          <input v-if='edit_mode' type="text"
+          <input v-if='edit_mode && edit_mode[0] == label' type="text"
                   class="label-text-update"
                   v-model='label'
                   placeholder="label name...">
-          <input v-if="edit_mode" type="text"
+          <div v-else class="label-text">{{label}}</div>
+          <input v-if="edit_mode && edit_mode[0] == label" type="text"
                   class="label-shortcut-update"
                   v-model='shortcut'
                   @keydown='keydown'
                   @keyup='setShortcutKey'
                   placeholder="key...">
+          <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+          <i v-if="edit_mode && edit_mode[0] == label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+          <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
         </li>
     </ul>
 
@@ -162,13 +163,22 @@ export default {
     },
 
     to_edit_mode(event){
-      let mode =null;
       let children = event.currentTarget.parentNode.children;
-      let label = children[0]
-      let shortcut = children[1];
-      //if shortcut key is not set up
-      console.log("mode",mode);
+      let label = children[0].innerText;
+      let shortcut = children[1].innerText;
+      let mode;
 
+
+      children = event.currentTarget.parentNode.children;
+      label = children[0].innerText;
+      shortcut = children[1].innerText;
+      mode =[label,shortcut];
+      console.log("mode",mode[0]);
+      console.log("label",label);
+
+      this.edit_mode=mode;
+
+      //if shortcut key is not set up
       if (children.length==2){
         console.log("icon","ショートカットキーがないよ！");
       }else{
