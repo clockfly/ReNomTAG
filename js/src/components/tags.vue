@@ -16,9 +16,7 @@
               @keydown='keydown'
               @keyup='setShortcutKey'
               placeholder="key...">
-      <!-- <input  v-else type="text"
-              class="label-shortcut"
-              placeholder="key..."> -->
+
     </div>
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Label</button>
@@ -28,6 +26,7 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
+            <!-- this area is dirty. fix it after -->
             <form id="add-new-label-form">
               <div class="add-new-label-input-area">
               <input v-if='edit_mode[0] === label' type="text"
@@ -39,14 +38,18 @@
                       class="label-shortcut-update"
                       v-model='edit_shortcut'
                       @keydown='update_label'
+                      @keyup='updateShortcutKey'
                       placeholder="key...">
               <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
               <i v-if="edit_mode[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
               <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
             </div>
-            <!-- <div v-if='errormsg && edit_mode[0] === label' class='label_errormsg'>{{errormsg}}</div> -->
             </form>
+            <!-- this area is dirty. fix it after -->
         </li>
+        <!-- this area is dirty. fix it after -->
+        <div v-if='test_method' class='label_errormsg'>{{test_method}}</div>
+        <!-- this area is dirty. fix it after -->
     </ul>
 
   </div>
@@ -91,7 +94,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["labels"]),
+    ...mapState(["labels"],[this.edit_label]),
 
     errormsg: function() {
       if (this.label.length) {
@@ -115,7 +118,28 @@ export default {
         return false;
       }
       return this.errormsg === "";
+    },
+
+    test_method: function(){
+      if(this.edit_label.length){
+        if (!this.edit_label.match("^[0-9a-z-A-Z]+$")) {
+          return "Class name must be alphanumeric single-byte.";
+        }
+      }
+
+      for (let { label, shortcut } of this.labels) {
+        if (label === this.edit_label) {
+          return "Please set unique label.";
+        }
+        if (this.edit_shortcut && shortcut === this.edit_shortcut) {
+          return "Shortcut is already exists.";
+        }
+      }
+
+      return "";
     }
+
+
   },
 
   methods: {
@@ -172,29 +196,6 @@ export default {
       this.$store.commit("set_activebox_label", { label });
     },
 
-    update_label(event){
-      let src_label = this.label;
-      let src_shortcut = this.shortcut;
-      let edit_label;
-      let edit_shortcut;
-
-      //check flag shortcut is empty
-      if(this.edit_mode[2]===true){
-        this.edit_shortcut = edit_shortcut;
-      }
-      if(!this.is_control_key(event.keyCode)){
-        this.edit_shortcut = event.keyCode;
-        console.log("edit_shortcut:",this.edit_shortcut);
-      }
-
-      if(this.is_control_key(event.keyCode)){
-        if(event.keyCode===13){
-          console.log("edit_label:",this.edit_label);
-          console.log("edit_shortcut:",this.edit_shortcut);
-        }
-      }
-    },
-
     to_edit_mode(event){
       let children = event.currentTarget.parentNode.children;
       let label = children[0].innerText;
@@ -208,6 +209,31 @@ export default {
       if (children.length===2){
         mode[2]=false;
       }
+    },
+
+    update_label(event){
+      let src_label = this.label;
+      let src_shortcut = this.shortcut;
+      let edit_label = this.edit_label;
+      let edit_shortcut = this.edit_shortcut;
+
+      //check flag shortcut is empty
+      if(this.edit_mode[2]===true){
+        this.edit_shortcut = edit_shortcut;
+      }
+
+      if(event.keyCode===13){
+        console.log("edit_label:",this.edit_label);
+        console.log("edit_shortcut:",this.edit_shortcut);
+      }
+
+    },
+
+    updateShortcutKey(event){
+      if(this.is_control_key(event.keyCode)){
+        return;
+      }
+      this.edit_shortcut = event.key;
     },
 
     delete_tags(event) {
