@@ -29,21 +29,21 @@
             <!-- this area is dirty. fix it after -->
             <form id="add-new-label-form">
               <div class="add-new-label-input-area">
-              <input v-if='edit_mode[0] === label' type="text"
-                      class="label-text-update"
-                      v-model='edit_label'
-                      placeholder="label name...">
-              <div v-else class="label-text">{{label}}</div>
-              <input v-if="edit_mode[0] === label" type="text"
-                      class="label-shortcut-update"
-                      v-model='edit_shortcut'
-                      @keydown='update_label'
-                      @keyup='updateShortcutKey'
-                      placeholder="key...">
-              <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-              <i v-if="edit_mode[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-              <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-            </div>
+                <input v-if='edit_mode[0] === label' type="text"
+                        class="label-text-update"
+                        v-model='edit_label'
+                        placeholder="label name...">
+                <div v-else class="label-text">{{label}}</div>
+                <input v-if="edit_mode[0] === label" type="text"
+                        class="label-shortcut-update"
+                        v-model='edit_shortcut'
+                        @keydown='update_label'
+                        @keyup='updateShortcutKey'
+                        placeholder="key...">
+                <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+                <i v-if="edit_mode[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+                <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+              </div>
             </form>
             <!-- this area is dirty. fix it after -->
         </li>
@@ -94,7 +94,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["labels"],[this.edit_label]),
+    ...mapState(["labels"]),
 
     errormsg: function() {
       if (this.label.length) {
@@ -138,8 +138,6 @@ export default {
 
       return "";
     }
-
-
   },
 
   methods: {
