@@ -29,26 +29,26 @@
             <!-- this area is dirty. fix it after -->
             <form id="add-new-label-form">
               <div class="add-new-label-input-area">
-                <input v-if='edit_mode[0] === label' type="text"
+                <input v-if='edit_target[0] === label' type="text"
                         class="label-text-update"
                         v-model='edit_label'
                         placeholder="label name...">
                 <div v-else class="label-text">{{label}}</div>
-                <input v-if="edit_mode[0] === label" type="text"
+                <input v-if="edit_target[0] === label" type="text"
                         class="label-shortcut-update"
                         v-model='edit_shortcut'
                         @keydown='update_label'
                         @keyup='updateShortcutKey'
                         placeholder="key...">
                 <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-                <i v-if="edit_mode[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
+                <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
                 <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
               </div>
             </form>
             <!-- this area is dirty. fix it after -->
         </li>
         <!-- this area is dirty. fix it after -->
-        <div v-if='test_method' class='label_errormsg'>{{test_method}}</div>
+        <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
         <!-- this area is dirty. fix it after -->
     </ul>
 
@@ -75,6 +75,8 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from "axios";
+import * as utils from "@/utils";
 import ModalBox from "@/components/modalbox";
 
 export default {
@@ -86,9 +88,9 @@ export default {
     return {
       label: "", //add label
       shortcut: "", // add shortcut
-      edit_label:"",  // for update labels
+      edit_label:"",  // for update label
       edit_shortcut:"", // for update shortcut
-      edit_mode:"", //flags
+      edit_target:"", //flags
       show_delete_dialog: false
     };
   },
@@ -120,20 +122,21 @@ export default {
       return this.errormsg === "";
     },
 
-    test_method: function(){
+    update_errormsg: function(){
       if(this.edit_label.length){
         if (!this.edit_label.match("^[0-9a-z-A-Z]+$")) {
           return "Class name must be alphanumeric single-byte.";
         }
       }
+      let check;
+      for (let i =0;i<this.labels.length;i++) {
+        if(this.edit_label===this.labels[i].label){
 
-      for (let { label, shortcut } of this.labels) {
-        if (label === this.edit_label) {
-          return "Please set unique label.";
         }
-        if (this.edit_shortcut && shortcut === this.edit_shortcut) {
-          return "Shortcut is already exists.";
-        }
+      }
+
+      if(!check){
+
       }
 
       return "";
@@ -198,32 +201,37 @@ export default {
       let children = event.currentTarget.parentNode.children;
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
-      let mode = [label,shortcut,true];
-      //console.log("mode",mode[0]);
-      //console.log("label",label);
+      let target = [label,shortcut,true];
 
-      this.edit_mode=mode;
-      //set flag if shortcut key is not set up
-      if (children.length===2){
-        mode[2]=false;
-      }
+      this.edit_label=label;
+      this.edit_shortcut=shortcut;
+
+      this.edit_target=target;
+      // //set flag if shortcut key is not set up
+      // if (children.length===2){
+      //   target[2]=false;
+      // }
     },
 
     update_label(event){
-      let src_label = this.label;
-      let src_shortcut = this.shortcut;
-      let edit_label = this.edit_label;
-      let edit_shortcut = this.edit_shortcut;
-
-      //check flag shortcut is empty
-      if(this.edit_mode[2]===true){
-        this.edit_shortcut = edit_shortcut;
-      }
+      let src_label = this.edit_target[0];
+      let src_shortcut = this.edit_target[1];
 
       if(event.keyCode===13){
-        console.log("edit_label:",this.edit_label);
-        console.log("edit_shortcut:",this.edit_shortcut);
+        this.$store.dispatch(
+          "update_label",{
+          labels:this.labels,
+          src:this.edit_target,
+          dist_label:this.edit_label,
+          dist_shortcut:this.edit_shortcut
+        });
+        document.body.focus();
+        // console.log("src_label:",src_label);
+        // console.log("src_shortcut:",src_shortcut);
+        // console.log("dist_label:",this.edit_label);
+        // console.log("dist_shortcut:",this.edit_shortcut);
       }
+      //console.log('test:',this.labels);
 
     },
 

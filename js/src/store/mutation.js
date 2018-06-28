@@ -112,6 +112,10 @@ export default {
     state.labels = labels;
   },
 
+  update_label(state,payload){
+    console.log('payload',payload);
+  },
+
   add_tagged_image(state, payload) {
     const imgs = [payload];
     const MAX_WIDTH = 10000;

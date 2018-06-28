@@ -45,7 +45,6 @@ async function load_label_candidates_dict(context) {
   context.commit("set_labels", response.data);
 }
 
-
 export default {
   async load_folder_list(context) {
     let response = await async_func(context, () =>
@@ -64,7 +63,7 @@ export default {
     context.commit("set_file_list", {file_list: []});
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
-    
+
   },
 
   async load_current_image(context, file) {
@@ -108,6 +107,24 @@ export default {
     );
   },
 
+  async update_label(context,payload){
+    context.commit("update_label",payload);
+    let data = payload.labels;
+    for (let i = 0;i<data.length;i++){
+      if(data[i].label === payload.src[0]){
+        data[i].label = payload.dist_label;
+        data[i].shortcut = payload.dist_shortcut;
+      }
+    }
+    // await async_func(context, () =>
+    //   axios.post(
+    //     utils.build_api_url("/api/save_label_candidates_dict"),
+    //     {folder: context.state.folder, labels: context.state.labels}
+    //   )
+    // );
+
+  },
+
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
     const value = {
@@ -145,7 +162,7 @@ export default {
     }
 
     await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), 
+      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"),
                  {folder: context.state.folder, value})
     );
 
