@@ -40,8 +40,8 @@
                     @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
             <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-            <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit fa-border edit_icon edit_on"></i>
-            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit fa-border edit_icon"></i>
+            <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit edit_icon edit_on"></i>
+            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit edit_icon"></i>
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
@@ -358,12 +358,6 @@ export default {
     }
     input.label-shortcut-update {
       width: 31.125px;
-    }
-    i.edit_icon{
-      border: solid 0.08em #d3d3d3;
-      &:hover{
-          border: solid 0.08em #f4f4f2;
-      }
     }
     .edit_on{
       padding-top:4%;

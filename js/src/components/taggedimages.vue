@@ -2,12 +2,12 @@
   <div id="tagged-images">
     <div class="labelbox">
       <div class="label_text">Labeled<br>Images</div>
-    
-    
+
+
     </div><div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
          :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
          :data-filename='image.filename'
-         @click.stop.prevent='on_click'> 
+         @click.stop.prevent='on_click'>
 
         <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
            :style='boxstyles(image, box)'>
@@ -71,7 +71,7 @@ export default {
     display: inline-block;
     line-height: normal;
     color: white;
-    background-color: #2d3e50;
+    background-color: #1e264d;
     width: 200px;
     height: 200px;
     text-align: center;
