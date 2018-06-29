@@ -128,14 +128,21 @@ export default {
           return "Class name must be alphanumeric single-byte.";
         }
       }
-      let check;
-      for (let i =0;i<this.labels.length;i++) {
-        if(this.edit_label===this.labels[i].label){
 
+      for (let i = 0; i < this.labels.length;i++) {
+        if (this.edit_target[0] !== this.edit_label){
+          if (this.edit_label === this.labels[i].label){
+            return "Please set unique label.";
+          }
         }
-      }
 
-      if(!check){
+        if (this.edit_target[1] !== this.edit_shortcut){
+          if(this.edit_shortcut === this.labels[i].shortcut){
+            if(this.edit_shortcut !== ""){
+                return "Shortcut is already exists.";
+            }
+          }
+        }
 
       }
 
