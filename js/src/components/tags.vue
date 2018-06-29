@@ -29,14 +29,15 @@
             <input v-if='edit_target[0] === label' type="text"
                     class="label-text-update"
                     v-model='edit_label'
-
+                    @keydown.stop.prevent.self
+                    @keyup.stop.prevent.self
                     placeholder="label name...">
             <div v-else class="label-text">{{label}}</div>
             <input v-if="edit_target[0] === label" type="text"
                     class="label-shortcut-update"
                     v-model='edit_shortcut'
-                    @keydown='update_label'
-                    @keyup='updateShortcutKey'
+                    @keydown.stop.prevent.self='update_label'
+                    @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
             <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
             <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit fa-border edit_icon edit_on"></i>
@@ -182,6 +183,11 @@ export default {
       if (!this.is_control_key(event.keyCode)) {
         event.preventDefault();
       }
+      if(event.keyCode===13){
+        if(this.errormsg===""){
+          this.addNewLabel();
+        }
+      }
     },
 
     setShortcutKey(event) {
@@ -228,6 +234,12 @@ export default {
     },
 
     updateShortcutKey(event){
+      if (event.keyCode === 46 || event.keyCode === 8) {
+        // delete or backspace
+        this.shortcut = "";
+        event.preventDefault();
+        return;
+      }
       if(this.is_control_key(event.keyCode)){
         return;
       }
