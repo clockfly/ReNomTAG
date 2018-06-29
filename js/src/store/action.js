@@ -108,7 +108,7 @@ export default {
   },
 
   async update_label(context,payload){
-    context.commit("update_label",payload);
+
     let data = payload.labels;
     for (let i = 0;i<data.length;i++){
       if(data[i].label === payload.src[0]){
@@ -116,12 +116,13 @@ export default {
         data[i].shortcut = payload.dist_shortcut;
       }
     }
-    // await async_func(context, () =>
-    //   axios.post(
-    //     utils.build_api_url("/api/save_label_candidates_dict"),
-    //     {folder: context.state.folder, labels: context.state.labels}
-    //   )
-    // );
+    context.commit("update_label",data);
+    await async_func(context, () =>
+      axios.post(
+        utils.build_api_url("/api/save_label_candidates_dict"),
+        {folder: context.state.folder, labels: context.state.labels}
+      )
+    );
 
   },
 

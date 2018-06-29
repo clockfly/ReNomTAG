@@ -113,7 +113,7 @@ export default {
   },
 
   update_label(state,payload){
-    console.log('payload',payload);
+    state.labels = payload;
   },
 
   add_tagged_image(state, payload) {

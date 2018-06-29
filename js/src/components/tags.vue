@@ -130,9 +130,12 @@ export default {
       }
 
       for (let i = 0; i < this.labels.length;i++) {
+
         if (this.edit_target[0] !== this.edit_label){
           if (this.edit_label === this.labels[i].label){
-            return "Please set unique label.";
+            if(this.edit_target !== ""){
+                return "Please set unique label.";
+            }
           }
         }
 
@@ -212,7 +215,6 @@ export default {
 
       this.edit_label=label;
       this.edit_shortcut=shortcut;
-
       this.edit_target=target;
       // //set flag if shortcut key is not set up
       // if (children.length===2){
@@ -221,10 +223,11 @@ export default {
     },
 
     update_label(event){
-      let src_label = this.edit_target[0];
-      let src_shortcut = this.edit_target[1];
 
       if(event.keyCode===13){
+        if (this.edit_label===""){
+          this.edit_label =this.edit_target[0];
+        }
         this.$store.dispatch(
           "update_label",{
           labels:this.labels,
@@ -232,13 +235,9 @@ export default {
           dist_label:this.edit_label,
           dist_shortcut:this.edit_shortcut
         });
+        this.edit_target ="";
         document.body.focus();
-        // console.log("src_label:",src_label);
-        // console.log("src_shortcut:",src_shortcut);
-        // console.log("dist_label:",this.edit_label);
-        // console.log("dist_shortcut:",this.edit_shortcut);
       }
-      //console.log('test:',this.labels);
 
     },
 
