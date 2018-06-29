@@ -26,30 +26,23 @@
     <ul class='tag-list'>
         <li v-for='{label, shortcut} in labels' :key='label'
             class='tag-list-item' @click="on_click" :data-label='label'>
-            <!-- this area is dirty. fix it after -->
-            <form id="add-new-label-form">
-              <div class="add-new-label-input-area">
-                <input v-if='edit_target[0] === label' type="text"
-                        class="label-text-update"
-                        v-model='edit_label'
-                        placeholder="label name...">
-                <div v-else class="label-text">{{label}}</div>
-                <input v-if="edit_target[0] === label" type="text"
-                        class="label-shortcut-update"
-                        v-model='edit_shortcut'
-                        @keydown='update_label'
-                        @keyup='updateShortcutKey'
-                        placeholder="key...">
-                <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-                <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-                <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit"></i>
-              </div>
-            </form>
-            <!-- this area is dirty. fix it after -->
+            <input v-if='edit_target[0] === label' type="text"
+                    class="label-text-update"
+                    v-model='edit_label'
+
+                    placeholder="label name...">
+            <div v-else class="label-text">{{label}}</div>
+            <input v-if="edit_target[0] === label" type="text"
+                    class="label-shortcut-update"
+                    v-model='edit_shortcut'
+                    @keydown='update_label'
+                    @keyup='updateShortcutKey'
+                    placeholder="key...">
+            <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
+            <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit fa-border edit_icon edit_on"></i>
+            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit fa-border edit_icon"></i>
         </li>
-        <!-- this area is dirty. fix it after -->
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
-        <!-- this area is dirty. fix it after -->
     </ul>
 
   </div>
@@ -130,7 +123,6 @@ export default {
       }
 
       for (let i = 0; i < this.labels.length;i++) {
-
         if (this.edit_target[0] !== this.edit_label){
           if (this.edit_label === this.labels[i].label){
             if(this.edit_target !== ""){
@@ -141,14 +133,12 @@ export default {
 
         if (this.edit_target[1] !== this.edit_shortcut){
           if(this.edit_shortcut === this.labels[i].shortcut){
-            if(this.edit_shortcut !== ""){
+            if(this.edit_shortcut !== "" && this.edit_target !== ""){
                 return "Shortcut is already exists.";
             }
           }
         }
-
       }
-
       return "";
     }
   },
@@ -198,7 +188,6 @@ export default {
       if (this.is_control_key(event.keyCode)) {
         return;
       }
-
       this.shortcut = event.key;
     },
 
@@ -212,30 +201,27 @@ export default {
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
       let target = [label,shortcut,true];
-
       this.edit_label=label;
       this.edit_shortcut=shortcut;
       this.edit_target=target;
-      // //set flag if shortcut key is not set up
-      // if (children.length===2){
-      //   target[2]=false;
-      // }
     },
 
     update_label(event){
 
       if(event.keyCode===13){
-        if (this.edit_label===""){
-          this.edit_label =this.edit_target[0];
+        if(this.update_errormsg===""){
+          if (this.edit_label===""){
+            this.edit_label =this.edit_target[0];
+          }
+          this.$store.dispatch(
+            "update_label",{
+            labels:this.labels,
+            src:this.edit_target,
+            dist_label:this.edit_label,
+            dist_shortcut:this.edit_shortcut
+          });
+          this.edit_target ="";
         }
-        this.$store.dispatch(
-          "update_label",{
-          labels:this.labels,
-          src:this.edit_target,
-          dist_label:this.edit_label,
-          dist_shortcut:this.edit_shortcut
-        });
-        this.edit_target ="";
         document.body.focus();
       }
 
@@ -360,6 +346,20 @@ export default {
     }
     input.label-shortcut-update {
       width: 31.125px;
+    }
+    i.edit_icon{
+      border: solid 0.08em #d3d3d3;
+      &:hover{
+          border: solid 0.08em #f4f4f2;
+      }
+    }
+    .edit_on{
+      padding-top:4%;
+    }
+
+
+    i:hover{
+      background-color: #adadad;
     }
 
   }

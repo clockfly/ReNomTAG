@@ -201,7 +201,6 @@ export default {
               if(box.left > 0){
                 box.left -= 1;
                 box.right -= 1;
-                console.log("prebox:",box.left);
               }
               break;
             case "ArrowRight":
