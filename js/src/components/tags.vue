@@ -29,8 +29,7 @@
             <input v-if='edit_target[0] === label' type="text"
                     class="label-text-update"
                     v-model='edit_label'
-                    @keydown.stop.prevent.self
-                    @keyup.stop.prevent.self
+                    
                     placeholder="label name...">
             <div v-else class="label-text">{{label}}</div>
             <input v-if="edit_target[0] === label" type="text"
