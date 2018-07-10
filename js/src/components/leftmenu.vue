@@ -40,11 +40,15 @@ export default {
     },
     selectFolder: function(event) {
       this.$store.dispatch("set_folder", event.target.dataset.folder);
-      utils.cookies.setItem('tags-foldername', event.target.dataset.folder, Infinity)
-      console.log(utils.cookies.getItem('tags-foldername'))
+      utils.cookies.setItem(
+        "tags-foldername",
+        event.target.dataset.folder,
+        Infinity
+      );
+      console.log(utils.cookies.getItem("tags-foldername"));
       this.closeMenu();
     }
-  },
+  }
 };
 </script>
 

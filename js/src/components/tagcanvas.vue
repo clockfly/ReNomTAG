@@ -173,50 +173,50 @@ export default {
         }
       }
     },
-    on_keydown: function(event){
+    on_keydown: function(event) {
       if (this.has_image && this.active_boxid !== null) {
         if (!this.has_image) {
-            return;
-          }
-          let [ratio, imgrc] = this.calc_image_rect();
+          return;
+        }
+        let [ratio, imgrc] = this.calc_image_rect();
 
-          let boxid = this.active_boxid;
+        let boxid = this.active_boxid;
 
-          let box = this.get_box(boxid);
+        let box = this.get_box(boxid);
 
-          switch (event.key) {
-            case "ArrowUp":
-              if(box.top > 0){
-                box.top -= 1
-                box.bottom -= 1;
-              }
-              break;
-            case "ArrowDown":
-              if (this.active_image_height > box.bottom){
-                box.top += 1
-                box.bottom += 1;
-              }
-              break;
-            case "ArrowLeft":
-              if(box.left > 0){
-                box.left -= 1;
-                box.right -= 1;
-              }
-              break;
-            case "ArrowRight":
-                if(box.right < this.active_image_width){
-                  box.left += 1;
-                  box.right += 1;
-                }
-              break;
-            default:
-                break;
-          }
+        switch (event.key) {
+          case "ArrowUp":
+            if (box.top > 0) {
+              box.top -= 1;
+              box.bottom -= 1;
+            }
+            break;
+          case "ArrowDown":
+            if (this.active_image_height > box.bottom) {
+              box.top += 1;
+              box.bottom += 1;
+            }
+            break;
+          case "ArrowLeft":
+            if (box.left > 0) {
+              box.left -= 1;
+              box.right -= 1;
+            }
+            break;
+          case "ArrowRight":
+            if (box.right < this.active_image_width) {
+              box.left += 1;
+              box.right += 1;
+            }
+            break;
+          default:
+            break;
+        }
 
-          this.$store.commit("set_tagbox", {
-            boxid: boxid,
-            box: box
-          });
+        this.$store.commit("set_tagbox", {
+          boxid: boxid,
+          box: box
+        });
       }
     },
     size_style: function(rc) {

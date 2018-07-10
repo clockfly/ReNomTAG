@@ -79,11 +79,11 @@ export default {
 
   data: function() {
     return {
-      label: "", //add label
+      label: "", // add label
       shortcut: "", // add shortcut
-      edit_label:"",  // for update label
-      edit_shortcut:"", // for update shortcut
-      edit_target:"", //flags
+      edit_label: "", // for update label
+      edit_shortcut: "", // for update shortcut
+      edit_target: "", // flags
       show_delete_dialog: false
     };
   },
@@ -115,26 +115,26 @@ export default {
       return this.errormsg === "";
     },
 
-    update_errormsg: function(){
-      if(this.edit_label.length){
+    update_errormsg: function() {
+      if (this.edit_label.length) {
         if (!this.edit_label.match("^[0-9a-z-A-Z]+$")) {
           return "Class name must be alphanumeric single-byte.";
         }
       }
 
-      for (let i = 0; i < this.labels.length;i++) {
-        if (this.edit_target[0] !== this.edit_label){
-          if (this.edit_label === this.labels[i].label){
-            if(this.edit_target !== ""){
-                return "Please set unique label.";
+      for (let i = 0; i < this.labels.length; i++) {
+        if (this.edit_target[0] !== this.edit_label) {
+          if (this.edit_label === this.labels[i].label) {
+            if (this.edit_target !== "") {
+              return "Please set unique label.";
             }
           }
         }
 
-        if (this.edit_target[1] !== this.edit_shortcut){
-          if(this.edit_shortcut === this.labels[i].shortcut){
-            if(this.edit_shortcut !== "" && this.edit_target !== ""){
-                return "Shortcut is already exists.";
+        if (this.edit_target[1] !== this.edit_shortcut) {
+          if (this.edit_shortcut === this.labels[i].shortcut) {
+            if (this.edit_shortcut !== "" && this.edit_target !== "") {
+              return "Shortcut is already exists.";
             }
           }
         }
@@ -182,8 +182,8 @@ export default {
       if (!this.is_control_key(event.keyCode)) {
         event.preventDefault();
       }
-      if(event.keyCode===13){
-        if(this.errormsg===""){
+      if (event.keyCode === 13) {
+        if (this.errormsg === "") {
           this.addNewLabel();
         }
       }
@@ -201,45 +201,42 @@ export default {
       this.$store.commit("set_activebox_label", { label });
     },
 
-    to_edit_mode(event){
+    to_edit_mode(event) {
       let children = event.currentTarget.parentNode.children;
       let label = children[0].innerText;
       let shortcut = children[1].innerText;
-      let target = [label,shortcut,true];
-      this.edit_label=label;
-      this.edit_shortcut=shortcut;
-      this.edit_target=target;
+      let target = [label, shortcut, true];
+      this.edit_label = label;
+      this.edit_shortcut = shortcut;
+      this.edit_target = target;
     },
 
-    update_label(event){
-
-      if(event.keyCode===13){
-        if(this.update_errormsg===""){
-          if (this.edit_label===""){
-            this.edit_label =this.edit_target[0];
+    update_label(event) {
+      if (event.keyCode === 13) {
+        if (this.update_errormsg === "") {
+          if (this.edit_label === "") {
+            this.edit_label = this.edit_target[0];
           }
-          this.$store.dispatch(
-            "update_label",{
-            labels:this.labels,
-            src:this.edit_target,
-            dist_label:this.edit_label,
-            dist_shortcut:this.edit_shortcut
+          this.$store.dispatch("update_label", {
+            labels: this.labels,
+            src: this.edit_target,
+            dist_label: this.edit_label,
+            dist_shortcut: this.edit_shortcut
           });
-          this.edit_target ="";
+          this.edit_target = "";
         }
         document.body.focus();
       }
-
     },
 
-    updateShortcutKey(event){
+    updateShortcutKey(event) {
       if (event.keyCode === 46 || event.keyCode === 8) {
         // delete or backspace
         this.shortcut = "";
         event.preventDefault();
         return;
       }
-      if(this.is_control_key(event.keyCode)){
+      if (this.is_control_key(event.keyCode)) {
         return;
       }
       this.edit_shortcut = event.key;
@@ -358,15 +355,13 @@ export default {
     input.label-shortcut-update {
       width: 31.125px;
     }
-    .edit_on{
-      padding-top:4%;
+    .edit_on {
+      padding-top: 4%;
     }
 
-
-    i:hover{
+    i:hover {
       background-color: #adadad;
     }
-
   }
 
   .tag-list-item {

@@ -49,24 +49,28 @@ export default {
     "modal-box": ModalBox
   },
   computed: {
-    ...mapState(["folder", "folder_list", "active_image_filename", "error_status"])
+    ...mapState([
+      "folder",
+      "folder_list",
+      "active_image_filename",
+      "error_status"
+    ])
   },
   methods: {
     ...mapMutations(["set_error_status"])
   },
 
   created: function() {
-    this.$store.dispatch("load_folder_list").then(()=>{
-      const foldername = utils.cookies.getItem('tags-foldername')
+    this.$store.dispatch("load_folder_list").then(() => {
+      const foldername = utils.cookies.getItem("tags-foldername");
 
       if (foldername) {
         if (this.folder_list.indexOf(foldername) !== -1) {
           this.$store.dispatch("set_folder", foldername);
         }
       }
-    })
-  },
-  
+    });
+  }
 };
 </script>
 <style lang='scss'>

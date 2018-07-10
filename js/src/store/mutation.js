@@ -112,7 +112,7 @@ export default {
     state.labels = labels;
   },
 
-  update_label(state,payload){
+  update_label(state, payload) {
     state.labels = payload;
   },
 
