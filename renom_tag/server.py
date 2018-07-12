@@ -8,6 +8,7 @@ import pkg_resources
 from bottle import (HTTPResponse, route, run, static_file, request,
                     response, Bottle, hook, get, parse_date)
 import base64
+from xml.sax import saxutils
 import glob2
 import bs4
 import os
@@ -134,8 +135,7 @@ def json2xml(json_obj, line_padding=""):
         raise ValueError('Invalid tag value')
 
     if isinstance(json_obj, str):
-        if not re.match('^[0-9a-zA-Z._%s]+$' % os.path.sep, json_obj):
-            raise ValueError('Invalid string')
+        json_obj = saxutils.escape(json_obj)
 
     return "%s%s" % (line_padding, json_obj)
 
@@ -176,6 +176,11 @@ def index():
     return _get_resource('', 'index.html')
 
 
+@app.route("/admin")
+def index():
+    return _get_resource('', 'index.html')
+
+
 @app.route("/static/<file_name:re:.+>")
 def static(file_name):
     return _get_resource('static', file_name)
@@ -198,6 +203,7 @@ def get_folderpath(folder):
     return check_path(DIR_ROOT, folder)
 
 
+
 def get_boxes(folder, img_filename):
     filename = os.path.splitext(os.path.split(img_filename)[1])[0] + '.xml'
 
@@ -205,19 +211,28 @@ def get_boxes(folder, img_filename):
     xmlfilename = check_path(xmlfolder, filename)
 
     if not os.path.exists(xmlfilename):
-        json_dict = {}
+        json_dict = None
     else:
         json_data = xml2json(xmlfilename)
         json_dict = json.loads(json_data)
-
         try:
             # object dataが1つだけの場合、dictになってしまうのでlistに変換する
             if isinstance(json_dict['annotation']['object'], dict):
                 temp = [json_dict['annotation']['object']]
                 json_dict['annotation']['object'] = temp
-
         except KeyError:
-            json_dict['annotation']['object'] = ''
+            json_dict['annotation']['object'] = []
+
+        # revert `object` to original name(`objects`)
+        json_dict['annotation']['objects'] = json_dict['annotation']['object']
+        del json_dict['annotation']['object']
+
+        # None を空文字列に変換
+        if not json_dict['annotation']['source'].get('reviewresult', False):
+            json_dict['annotation']['source']['reviewresult'] = ''
+        if not json_dict['annotation']['source'].get('reviewcomment', False):
+            json_dict['annotation']['source']['reviewcomment'] = ''
+
 
     return json_dict
 
@@ -276,17 +291,20 @@ def get_thumbnail(folder, file_name):
 
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
-    folder = request.json['folder']
-    success = 0
 
-    if request.json['all']:
-        files = get_img_files(folder)
-    else:
-        files = get_difference_set(folder)
+    folder = request.json['folder']
+    folder = strip_foldername(folder)
+
+    img_paths = get_img_files(folder)
+
+    ret = {}
+    for img in img_paths:
+        xml = get_boxes(folder, img)
+        d = {'filename': img, 'xml': xml}
+        ret[img] = xml
 
     body = json.dumps({
-        "success": success,
-        "filename_list": files,
+        "filename_list": ret,
     })
     ret = set_json_body(body)
     return ret
@@ -324,6 +342,10 @@ def save_xml_from_label_dict():
         ftpr.write(xml_soup.find('annotation').prettify())
 
     print('%s is saved' % (save_xml_file_name))
+
+    xml = get_boxes(request.json['folder'], file_name)
+    ret = set_json_body({'result': xml})
+    return ret
 
 
 SAVE_JSON_FILE_PATH = "label_candidates.json"
@@ -393,7 +415,7 @@ def get_folderlist():
 
 
 def main():
-    run(app, host="0.0.0.0", port=8000)
+    run(app, host="0.0.0.0", port=8001)
 
 
 if __name__ == '__main__':

@@ -4,11 +4,17 @@
       {{loading_message}}
     </div>
     <div id="imagelist" @scroll="on_scroll">
-      <img v-for="file in file_list_top" :key="file"
+      <div v-for="file in file_list_top" :key="file">
+        <div style="position:relative">
+          <img
            :src='get_image_url(file)'
            :data-file='file'
            :class='{selected: is_selected(file)}'
            @click.stop.prevent="select_image">
+          <span style="position:absolute;right:0;bottom:0; color:yellow">{{get_marks(file)}}</span>
+
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -16,6 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import * as utils from "@/utils";
+import {has_bndbox, get_reviewresult} from "@/store/mutation"
 
 export default {
   data: function() {
@@ -29,6 +36,7 @@ export default {
       "folder",
       "folder_list",
       "loading_message",
+      "folder_files",
       "files",
       "filename_max_display",
       "active_image_filename"
@@ -73,6 +81,15 @@ export default {
     }
   },
   methods: {
+    get_marks(file) {
+      const info = this.folder_files[file]
+      let s = ''
+      const review = get_reviewresult(info)
+      if (review === 'ng') {
+        s = s + '👎 '
+      }
+      return s
+    },
     get_image_url(file) {
       return utils.build_api_url("/t/" + this.folder + "/" + file);
     },

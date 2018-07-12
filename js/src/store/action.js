@@ -26,7 +26,6 @@ async function load_imagefile_list(context) {
       all: false
     })
   );
-
   context.commit("set_file_list", {
     file_list: response.data.filename_list
   });
@@ -79,7 +78,7 @@ export default {
 
     const boxes = [];
     if (response.data.boxes && response.data.boxes.annotation) {
-      for (const box of response.data.boxes.annotation.object) {
+      for (const box of response.data.boxes.annotation.objects) {
         boxes.push({
           label: box.name,
           left: box.bndbox.xmin,
@@ -90,12 +89,19 @@ export default {
       }
     }
 
+    let review_result = ''
+    let review_comment = ''
+
+    if (response.data.boxes) {
+      review_result = response.data.boxes.annotation.source.reviewresult
+      review_comment = response.data.boxes.annotation.source.reviewcomment
+    }
     context.commit("set_active_image", {
       filename: file,
       width: response.data.width,
       height: response.data.height,
       image: "data:image;base64," + response.data.img,
-      boxes
+      boxes, review_result, review_comment
     });
   },
 
@@ -128,21 +134,27 @@ export default {
 
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
-    const value = {
-      annotation: {
-        path: cur_filename,
-        source: {
-          database: "Unknown"
-        },
-        size: {
-          width: context.state.active_image_width,
-          height: context.state.active_image_height,
-          depth: 3
-        },
-        segments: 0,
-        objects: []
+    let value = context.state.folder_files[cur_filename]
+    if (!value) {
+      value = {
+        annotation: {
+          path: cur_filename,
+          source: {
+            database: "Unknown"
+          },
+          size: {
+            width: context.state.active_image_width,
+            height: context.state.active_image_height,
+            depth: 3
+          },
+          segments: 0,
+          objects: []
+        }
       }
-    };
+    }
+
+    value.annotation.source.reviewresult = context.state.active_image_review_result
+    value.annotation.source.reviewcomment = context.state.active_image_review_comment
 
     for (let box of context.state.active_image_tag_boxes) {
       let o = {
@@ -162,11 +174,9 @@ export default {
       value.annotation.objects.push(o);
     }
 
-    await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
-        folder: context.state.folder,
-        value
-      })
+    const ret = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"),
+                 {folder: context.state.folder, value})
     );
 
     context.commit("add_tagged_image", {
@@ -200,9 +210,10 @@ export default {
       });
     }
 
-    // Remove image from the list.
-    context.commit("remove_image", {
-      filename: cur_filename
+    // update image data
+    context.commit("update_file", {
+      filename: cur_filename,
+      info: ret.data.result
     });
   }
 };

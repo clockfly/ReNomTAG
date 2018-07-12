@@ -19,19 +19,36 @@
       </div>
     </div>
 
-    <div id='imageinfo'>
-      <div>{{img_file_name}}</div>
-      <button id="save_xml_btn"
-        :disabled="!canbesaved"
-        @click='save_tags'>
-        Save <span class="save_xml_btn_arrow">&gt;&gt;</span>
-      </button>
+    <div>
+      <div id='imageinfo'>
+
+        <div>
+          <div>
+            {{img_file_name}} :
+            <button :class="{
+              admin: this.is_admin,
+              review_checked: this.active_image_review_result === 'ok'}"
+              @click="set_review_result({result:'ok'})">OK &#x1F44C;</button>
+
+            <button :class="{
+              admin: this.is_admin,
+              review_checked: this.active_image_review_result === 'ng'}"
+              @click="set_review_result({result:'ng'})">NG &#x1F44E;</button>
+          </div>
+          <textarea style='width:300px' v-model="active_image_review_comment"></textarea>
+        </div>
+        <button id="save_xml_btn"
+          :disabled="!canbesaved"
+          @click='save_annotation'>
+          Save <span class="save_xml_btn_arrow">&gt;&gt;</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import * as utils from "@/utils";
 
 export default {
@@ -58,6 +75,7 @@ export default {
 
   beforeDestroy: function() {
     window.removeEventListener("resize", this.on_resize);
+    window.removeEventListener("keyup", this.on_keyup);
     window.removeEventListener("keydown", this.on_keydown);
   },
   mounted: function() {
@@ -65,11 +83,13 @@ export default {
   },
   computed: {
     ...mapState([
+      "is_admin",
       "active_image_filename",
       "active_image",
       "active_image_height",
       "active_image_width",
       "active_image_tag_boxes",
+      "active_image_review_result",
       "active_boxid",
       "labels"
     ]),
@@ -94,6 +114,14 @@ export default {
         }
       }
       return true;
+    },
+    active_image_review_comment: {
+      get () {
+        return this.$store.state.active_image_review_comment
+      },
+      set (value) {
+        this.$store.commit('set_review_comment', {comment: value})
+      }
     }
   },
   watch: {
@@ -102,7 +130,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["set_active_boxid"]),
+    ...mapMutations(["set_active_boxid", "set_review_result"]),
+    ...mapActions(["save_annotation"]),
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
@@ -149,11 +178,11 @@ export default {
       if (event.target.nodeName === "BODY") {
         if (event.key === " ") {
           if (this.canbesaved) {
-            this.save_tags();
+            this.save_annotation();
             event.preventDefault();
             event.stopPropagation();
-            return false;
           }
+          return false
         }
         if (this.has_image && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
@@ -176,43 +205,41 @@ export default {
     on_keydown: function(event) {
       if (this.has_image && this.active_boxid !== null) {
         if (!this.has_image) {
-          return;
+            return;
         }
         let [ratio, imgrc] = this.calc_image_rect();
 
         let boxid = this.active_boxid;
-
         let box = this.get_box(boxid);
 
         switch (event.key) {
           case "ArrowUp":
-            if (box.top > 0) {
-              box.top -= 1;
+            if(box.top > 0){
+              box.top -= 1
               box.bottom -= 1;
             }
             break;
           case "ArrowDown":
-            if (this.active_image_height > box.bottom) {
-              box.top += 1;
+            if (this.active_image_height > box.bottom){
+              box.top += 1
               box.bottom += 1;
             }
             break;
           case "ArrowLeft":
-            if (box.left > 0) {
+            if(box.left > 0){
               box.left -= 1;
               box.right -= 1;
             }
             break;
           case "ArrowRight":
-            if (box.right < this.active_image_width) {
+            if(box.right < this.active_image_width){
               box.left += 1;
               box.right += 1;
             }
             break;
           default:
-            break;
+            return
         }
-
         this.$store.commit("set_tagbox", {
           boxid: boxid,
           box: box
@@ -481,13 +508,23 @@ export default {
             boxid: this.active_image_tag_boxes.length - 1
           });
         }
+        else {
+          this.set_active_boxid({
+            boxid: null
+          });
+        }
       }
 
       this.status = "";
     },
-
-    save_tags: function() {
-      this.$store.dispatch("save_annotation");
+    get_reviewstatus: function() {
+      if (this.active_image_review_result === 'ok') {
+        return 'reviewok'
+      }
+      else if (this.active_image_review_result === 'nh') {
+        return 'reviewng'
+      }
+      return 'notreviewed'
     }
   }
 };
@@ -502,13 +539,13 @@ export default {
   flex-grow: 1;
   display: flex;
   position: relative;
-  height: calc(100% - 100px);
+  height: calc(100% - 150px);
 
   #canvas {
     margin: auto;
     width: 90%;
     max-width: 90%;
-    max-height: 90%;
+    max-height: 95%;
     flex-grow: 0;
     flex-shrink: 0;
     object-fit: contain;
@@ -558,6 +595,19 @@ export default {
   color: #666;
   justify-content: center;
   align-items: center;
+
+  button {
+    cursor: not-allowed;
+
+  }
+
+  .admin {
+    cursor: pointer;
+  }
+
+  .review_checked {
+    background-color: #a2c84a;
+  }
 
   #save_xml_btn {
     background-color: #326699;
