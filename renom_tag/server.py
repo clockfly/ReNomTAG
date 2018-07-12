@@ -228,9 +228,9 @@ def get_boxes(folder, img_filename):
         del json_dict['annotation']['object']
 
         # None を空文字列に変換
-        if not json_dict['annotation']['source']['reviewresult']:
+        if not json_dict['annotation']['source'].get('reviewresult', False):
             json_dict['annotation']['source']['reviewresult'] = ''
-        if not json_dict['annotation']['source']['reviewcomment']:
+        if not json_dict['annotation']['source'].get('reviewcomment', False):
             json_dict['annotation']['source']['reviewcomment'] = ''
 
 
@@ -415,7 +415,7 @@ def get_folderlist():
 
 
 def main():
-    run(app, host="0.0.0.0", port=8000)
+    run(app, host="0.0.0.0", port=8001)
 
 
 if __name__ == '__main__':
