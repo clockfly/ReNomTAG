@@ -1,8 +1,91 @@
+
 function _set_tagbox(state, payload) {
   const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
   const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
 
   state.active_image_tag_boxes = [...pri, payload.box, ...follow];
+}
+
+function select_files(state) {
+
+  let tag_preds = []
+  if (state.tag_filter.indexOf('hastags') !== -1) {
+    tag_preds.push((x) => has_bndbox(x))
+  }
+  if (state.tag_filter.indexOf('notags') !== -1) {
+    tag_preds.push((x) => !has_bndbox(x))
+  }
+
+  let review_preds = []
+  if (state.review_filter.indexOf('ok') !== -1) {
+    review_preds.push((x) => (get_reviewresult(x) == 'ok'))
+  }
+  if (state.review_filter.indexOf('ng') !== -1) {
+    review_preds.push((x) => (get_reviewresult(x) == 'ng'))
+  }
+  if (state.review_filter.indexOf('notreviewed') !== -1) {
+    review_preds.push((x) => (get_reviewresult(x) == 'notreviewed'))
+  }
+
+  function any(preds, f) {
+    for (let pred of preds) {
+      if (pred(f)) {
+          return true
+      }
+    }
+    return false
+  }
+
+  const files = []
+  for (let filename of Object.keys(state.folder_files)) {
+    const fileinfo = state.folder_files[filename]
+    if (!any(tag_preds, fileinfo)) {
+      continue
+    }
+    if (!any(review_preds, fileinfo)) {
+      continue
+    }
+    files.push(filename)
+  }
+  files.sort()
+  state.files = files
+}
+
+export function has_bndbox(d) {
+  if (!d) {
+    return false
+  }
+  const ann = d.annotation
+  if (!ann) {
+    return false
+  }
+  const objects = ann.objects
+  if (!objects) {
+    return false
+  }
+  if (!objects.length) {
+    return false
+  }
+  return true
+}
+
+export function get_reviewresult(d) {
+  if (!d) {
+    return "notreviewed"
+  }
+  const ann = d.annotation
+  if (!ann) {
+    return "notreviewed"
+  }
+  const source = ann.source
+  if (!source) {
+    return "notreviewed"
+  }
+  const review = source.reviewresult
+  if (!review) {
+    return "notreviewed"
+  }
+  return review
 }
 
 export default {
@@ -24,15 +107,56 @@ export default {
 
   set_folder(state, payload) {
     state.folder = payload.folder;
+    state.tagged_images = []
+  },
+
+  toggle_tag_filter(state, payload) {
+    const idx = state.tag_filter.indexOf(payload.filter)
+    if (idx === -1) {
+      state.tag_filter.push(payload.filter)
+    }
+    else {
+      if (state.tag_filter.length > 1) {
+        state.tag_filter.splice(idx, 1)
+      }
+    }
+    select_files(state)
+  },
+
+  toggle_review_filter(state, payload) {
+    const idx = state.review_filter.indexOf(payload.filter)
+    if (idx === -1) {
+      state.review_filter.push(payload.filter)
+    }
+    else {
+      if (state.review_filter.length > 1) {
+        state.review_filter.splice(idx, 1)
+      }
+    }
+    select_files(state)
   },
 
   set_file_list(state, payload) {
-    state.files = payload.file_list;
+    state.folder_files = payload.file_list
     state.filename_max_display = 100;
+
+    select_files(state)
+
     if (!state.files || state.files.length === 0) {
       state.loading_message = "No images found.";
     }
   },
+
+  update_file(state, payload) {
+    if (payload.info) {
+      state.folder_files[payload.filename] = payload.info
+    }
+    else {
+      delete state.folder_files[payload.filename]
+    }
+    select_files(state)
+  },
+
 
   set_filename_max_display(state, payload) {
     state.filename_max_display = payload.max_display;
@@ -54,6 +178,8 @@ export default {
     state.active_image_height = payload.height;
     state.active_image = payload.image;
     state.active_image_tag_boxes = payload.boxes;
+    state.active_image_review_result = payload.review_result;
+    state.active_image_review_comment = payload.review_comment;
 
     state.active_boxid = null;
   },
@@ -132,5 +258,15 @@ export default {
       }
     }
     state.tagged_images = imgs;
+  },
+
+  set_review_result(state, payload) {
+    if (state.is_admin) {
+      state.active_image_review_result = payload.result
+    }
+  },
+
+  set_review_comment(state, payload) {
+    state.active_image_review_comment = payload.comment
   }
 };

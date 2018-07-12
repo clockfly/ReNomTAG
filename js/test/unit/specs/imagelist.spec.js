@@ -26,30 +26,6 @@ describe('imagelist.vue', () => {
     expect(selected.pop()).toBe('1')
   })
 
-  it('image changed', () => {
-    const store = setup_store(s=>{
-      _update_store(s)
-    })
-    const wrapper = shallow(ImageList, store)
-
-    const fn = jest.fn()
-    wrapper.find('#imagelist').element.scrollBy = fn;
-    store.store.commit('set_active_image', {
-      filename: '1',
-      width: 100,
-      height: 200,
-      image: 'image',
-      boxes: []
-    });
-
-    wrapper.vm.$nextTick(()=>{
-      const l = wrapper.find('#imagelist');
-      l.trigger('click');
-
-      expect(fn.mock.calls[0]).toEqual([0,0])
-    })
-  })
-
   it('scroll image', () => {
     const selected = []
     const store = setup_store(s=>{
@@ -63,7 +39,6 @@ describe('imagelist.vue', () => {
 
     expect(store.store.state.filename_max_display).toBe(303)
   })
-    
 })
 
 

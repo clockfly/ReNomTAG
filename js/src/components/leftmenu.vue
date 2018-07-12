@@ -39,9 +39,8 @@ export default {
       this.$store.commit("set_main_menu_visible", { visible: false });
     },
     selectFolder: function(event) {
-      this.$store.dispatch("set_folder", event.target.dataset.folder);
-      utils.cookies.setItem('tags-foldername', event.target.dataset.folder, Infinity)
-      console.log(utils.cookies.getItem('tags-foldername'))
+      this.$store.dispatch("set_folder", event.currentTarget.dataset.folder);
+      utils.cookies.setItem('tags-foldername', event.currentTarget.dataset.folder, Infinity)
       this.closeMenu();
     }
   },
