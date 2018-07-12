@@ -203,7 +203,6 @@ def get_folderpath(folder):
     return check_path(DIR_ROOT, folder)
 
 
-
 def get_boxes(folder, img_filename):
     filename = os.path.splitext(os.path.split(img_filename)[1])[0] + '.xml'
 
@@ -232,7 +231,6 @@ def get_boxes(folder, img_filename):
             json_dict['annotation']['source']['reviewresult'] = ''
         if not json_dict['annotation']['source'].get('reviewcomment', False):
             json_dict['annotation']['source']['reviewcomment'] = ''
-
 
     return json_dict
 
