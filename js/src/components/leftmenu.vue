@@ -58,7 +58,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
   display: None;
   width: 100%;
-  height: calc(100% - 50px);
+  height: calc(100% - #{$application-header-hight});
   z-index: 9999;
   &.open {
     width: 100%;

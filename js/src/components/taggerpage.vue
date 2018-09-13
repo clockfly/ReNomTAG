@@ -82,7 +82,7 @@ export default {
 
 #main-container {
   display: flex;
-  height: calc(100% - 50px - 200px);
+  height: calc(100% - #{$application-header-hight} - 100px);
   /*width: 100%;*/
 
   /*.filler {

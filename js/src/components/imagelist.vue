@@ -3,6 +3,38 @@
     <div v-if='(this.folder.length != 0) && (file_list.length === 0)' id=msg_no_image>
       {{loading_message}}
     </div>
+    <div class="title">
+      <div class="title-text">
+        Images
+      </div>
+    </div>
+    <div class="content">
+      <div class="row clear-margin">
+        <div class="col fillter-button left">
+          <div :class='["image_pred_button", is_tag_selected("hastags")]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
+        </div>  
+        <div class="col fillter-button right">
+         <div :class='["image_pred_button",  is_tag_selected("notags")]' @click='toggle_tag_filter({filter:"notags"})'>no tags</div>
+        </div>
+        
+      </div>
+      <div class="row clear-margin">
+        <div class="col fillter-button left">
+          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'>ok</div>
+        </div>
+        <div class="col fillter-button right">
+          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'>ng</div>
+        </div>
+      </div>
+      <div class="row clear-margin">
+        <div class="col fillter-button left">
+          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>not reviewed yet</div>
+        </div>
+        <div class="col fillter-button right">
+          <div class="revised" @click='toggle_review_filter({filter:"notreviewed"})'>Revised</div>
+        </div>
+      </div>
+    </div>
     <div id="imagelist" @scroll="on_scroll">
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
@@ -20,10 +52,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import * as utils from "@/utils";
-import {has_bndbox, get_reviewresult} from "@/store/mutation"
-
+import { has_bndbox, get_reviewresult } from "@/store/mutation"
 export default {
   data: function() {
     return {
@@ -39,7 +70,9 @@ export default {
       "folder_files",
       "files",
       "filename_max_display",
-      "active_image_filename"
+      "active_image_filename",
+      "tag_filter",
+      "review_filter"
     ]),
 
     file_list_top: function() {
@@ -81,6 +114,24 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['set_main_menu_visible', 'toggle_tag_filter', 'toggle_review_filter']),
+
+    is_tag_selected: function(name) {
+      if (this.tag_filter.indexOf(name) != -1) {
+        return 'image_pred_tagbutton_active'
+      }
+      return null
+    },
+    is_review_selected: function(name) {
+      if (this.review_filter.indexOf(name) != -1) {
+        return 'image_pred_reviewbutton_active'
+      }
+      return null
+    },
+    toggleMenuVisible: function() {
+      let cur = this.$store.state.main_menu_visible;
+      this.set_main_menu_visible({ visible: !cur })
+    },
     get_marks(file) {
       const info = this.folder_files[file]
       let s = ''
@@ -130,11 +181,13 @@ export default {
 <style scoped lang='scss'>
 #imagelistblock {
   width: 270px;
-  box-sizing: border-box;
+  //box-sizing: border-box;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;
-  padding: 3px;
+  padding-left: $content-top-heder-horizonral-margin;
+  font-family: $content-top-header-font-family;
+  margin-top: $component-margin-top;
 }
 
 #msg_no_image {
@@ -149,12 +202,53 @@ export default {
   margin: auto;
 }
 
+.title {
+  background: $content-header-color;
+  height: $content-top-header-hight;
+  .title-text {
+    font-size: $content-top-header-font-size;
+    line-height: $content-top-header-hight;
+    margin-left: $content-top-heder-horizonral-margin;
+  }
+}
+.image_pred_tagbutton_active {
+  background-color: red;
+}
+.image_pred_reviewbutton_active {
+  background-color: green;
+}
+
+.clear-margin {
+  margin-right: 0;
+  margin-left: 0;
+}
+.fillter-button {
+  margin-top: $content-top-margin;
+  height: calc(#{$content-top-header-hight} -2px);
+  text-align: center;
+  cursor: pointer;
+}
+
+.revised {
+  height: calc(#{$content-top-header-hight} -2px);
+  line-height: calc(#{$content-top-header-hight} -2px);
+  color: black;
+}
+
+.left {
+  padding-right: 5px;
+}
+.right {
+  padding-left: 5px;
+}
+
 #imagelist {
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
   box-sizing: border-box;
-  height: 100%;
+  height: calc(100% - #{$component-margin-top} - (#{$content-top-margin} * 6) - #{$content-top-header-hight} - (calc(#{$content-top-header-hight} -2px) * 2 ) );
+  margin-top: calc(#{$content-top-margin} * 2);
   align-content: flex-start;
   justify-content: space-evenly;
 
@@ -171,5 +265,6 @@ export default {
       outline-offset: -4px;
     }
   }
+
 }
 </style>

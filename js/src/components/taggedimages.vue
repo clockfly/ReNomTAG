@@ -1,7 +1,7 @@
 <template>
   <div id="tagged-images">
     <div class="labelbox">
-      <div class="label_text">Labeled<br>Images</div>
+      <div class="label_text">Images<br />+Tags</div>
 
 
     </div><div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
@@ -61,7 +61,7 @@ export default {
   box-sizing: border-box;
   background-color: #cccccc;
   white-space: nowrap;
-  height: 200px;
+  height: 100px;
   overflow: hidden;
   flex-wrap: wrap;
 
@@ -79,7 +79,8 @@ export default {
     position: absolute;
     margin: auto;
     width: 200px;
-    margin-top: 60px;
+    /*line-height: 50px;*/
+    margin-top: 25px;
   }
   .tagged-image {
     box-sizing: border-box;

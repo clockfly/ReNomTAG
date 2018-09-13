@@ -14,7 +14,7 @@ export default {
 @import "/../node_modules/bootstrap/scss/bootstrap.scss";
 @font-face {
   font-family: $header-product-name-font-family;
-  src: url("/@/fonts/OpenSans-Regular.ttf");
+  src: url("./fonts/OpenSans-Regular.ttf");
 }
 @font-face {
   font-family: $content-inner-header-font-family;
