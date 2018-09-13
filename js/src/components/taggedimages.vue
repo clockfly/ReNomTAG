@@ -62,7 +62,6 @@ export default {
   background-color: #cccccc;
   white-space: nowrap;
   height: 200px;
-  width: 100%;
   overflow: hidden;
   flex-wrap: wrap;
 

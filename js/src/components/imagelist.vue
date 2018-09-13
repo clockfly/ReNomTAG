@@ -46,7 +46,7 @@ export default {
       if (!this.files) {
         return [];
       }
-      return this.files.slice(0, this.filename_max_display);
+      return this.files.slice(0, this.filename_max_display)
     },
 
     file_list: function() {
@@ -129,7 +129,7 @@ export default {
 
 <style scoped lang='scss'>
 #imagelistblock {
-  width: 400px;
+  width: 270px;
   box-sizing: border-box;
   flex-grow: 0;
   flex-shrink: 0;
