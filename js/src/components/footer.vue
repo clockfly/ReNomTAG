@@ -7,7 +7,7 @@
           <div class="media-wrapper">
             <img :src="url">
             <div class="content-margin-top">
-                ReNom_IMG {{version}}
+                ReNom TAG {{version}}
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
 export default {
   data () {
     return {
-      version: 'ver.1.0',
+      version: 'ver.1.0.0',
       url: require('../assets/renomlogo.png')
     }
   }

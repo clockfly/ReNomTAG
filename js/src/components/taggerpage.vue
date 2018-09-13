@@ -36,7 +36,7 @@ import TaggedImages from "./taggedimages.vue";
 import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
 import { mapState, mapMutations } from "vuex";
-import AppFooter from "./footer.vue";
+// import AppFooter from "./footer.vue";
 export default {
   components: {
     "app-header": AppHeader,
@@ -46,8 +46,8 @@ export default {
     tags: Tags,
     "tagged-images": TaggedImages,
     navarrow: NavArrow,
-    "modal-box": ModalBox,
-    "app-footer": AppFooter
+    "modal-box": ModalBox
+    // "app-footer": AppFooter
   },
   computed: {
     ...mapState([
