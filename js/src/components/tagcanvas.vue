@@ -20,28 +20,33 @@
     </div>
 
     <div>
-      <div id='imageinfo'>
+      <div id='imageinfo' class="row">
 
-        <div>
-          <div>
-            {{img_file_name}} :
-            <button :class="{
-              admin: this.is_admin,
-              review_checked: this.active_image_review_result === 'ok'}"
-              @click="set_review_result({result:'ok'})">OK &#x1F44C;</button>
+        <div class= "col-md-6 row">
+          <div class="col-md-12">
+            <span class="file-name"> {{img_file_name}} :</span> 
 
-            <button :class="{
+            <div class="check-button float-right ng-button" :class="{
               admin: this.is_admin,
               review_checked: this.active_image_review_result === 'ng'}"
-              @click="set_review_result({result:'ng'})">NG &#x1F44E;</button>
+              @click="set_review_result({result:'ng'})">NG</div>
+            <div class="check-button float-right ok-button" :class="{
+              admin: this.is_admin,
+              review_checked: this.active_image_review_result === 'ok'}"
+              @click="set_review_result({result:'ok'})">OK</div>
           </div>
-          <textarea style='width:300px' v-model="active_image_review_comment"></textarea>
+          <div class="col-md-12 button-margin-top">
+            <button id="save_xml_btn"
+              class="float-right"
+              :disabled="!canbesaved"
+              @click='save_annotation'>
+              Save
+            </button>
+          </div>
         </div>
-        <button id="save_xml_btn"
-          :disabled="!canbesaved"
-          @click='save_annotation'>
-          Save <span class="save_xml_btn_arrow">&gt;&gt;</span>
-        </button>
+        <div class="col-md-6"> 
+          <textarea class="form-control" v-model="active_image_review_comment"></textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -533,16 +538,18 @@ export default {
 <style lang='scss' scoped>
 #canvasblock {
   flex-grow: 1;
+  background:#fff;
 }
 
 #canvaspanel {
   flex-grow: 1;
   display: flex;
   position: relative;
-  height: calc(100% - 150px);
+  height: calc(100% - 150px + calc(#{$component-margin-top}));
 
   #canvas {
     margin: auto;
+    margin-top: $component-margin-top;
     width: 90%;
     max-width: 90%;
     max-height: 95%;
@@ -595,37 +602,56 @@ export default {
   color: #666;
   justify-content: center;
   align-items: center;
+  margin-top:$content-top-margin;
 
   button {
     cursor: not-allowed;
-
   }
-
   .admin {
     cursor: pointer;
   }
 
+  .filename {
+    text-align: right;
+  }
+
+  .check-button {
+    height: $panel-height;
+    width: 41px;
+    background: #fff;
+    border-color: #000;
+  }
+  .ok-button {
+    margin-right: 3px;
+  }
+  .ng-button {
+    margin-left: 3px;
+  }
+
+  .form-control {
+    resize: none;
+    height: 80px;
+    border-radius: 0px;
+  }
   .review_checked {
     background-color: #a2c84a;
   }
-
+  .button-margin-top {
+    margin-top: $content-top-margin;
+  }
   #save_xml_btn {
-    background-color: #326699;
-    border-radius: 5px;
+    background-color: $panel-bg-color;
     color: #fff;
-    padding: 3px 15px;
-    margin-left: 10px;
-    .save_xml_btn_arrow {
-      margin-left: 5px;
-    }
-
+    height: $panel-height;
+    width: 88px;
     &:hover {
-      background-color: lighten(#326699, 10%);
+      background-color: $panel-bg-color-hover;
       cursor: pointer;
     }
 
     &:disabled {
       background-color: #adadad;
+      cursor: not-allowed;
     }
   }
 }

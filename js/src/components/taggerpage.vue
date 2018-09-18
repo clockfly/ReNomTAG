@@ -4,14 +4,14 @@
     <div id='main-container' class="row">
       <left-menu></left-menu>
       <image-list class="col-md-2" v-if="folder.length !== 0"/>
-      <navarrow class="col-md-1" dir="back"/>
+      <navarrow class="col-md-1 left" dir="back"/>
       <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas class="col-md-6" v-if="active_image_filename != null" ></tagcanvas>
-      <navarrow class="col-md-1" dir="forward"/>
+      <navarrow class="col-md-1 right" dir="forward"/>
       <tags class="col-md-2"></tags>
     </div>
     <tagged-images class="row"/>
-    <!--  <app-footer class="row"></app-footer>-->
+    <app-footer class="row" ></app-footer>
     <modal-box v-if='error_status'>
       <div slot='contents' class='error-msg'>
         {{error_status}}
@@ -36,7 +36,7 @@ import TaggedImages from "./taggedimages.vue";
 import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
 import { mapState, mapMutations } from "vuex";
-// import AppFooter from "./footer.vue";
+import AppFooter from "./footer.vue";
 export default {
   components: {
     "app-header": AppHeader,
@@ -46,8 +46,8 @@ export default {
     tags: Tags,
     "tagged-images": TaggedImages,
     navarrow: NavArrow,
-    "modal-box": ModalBox
-    // "app-footer": AppFooter
+    "modal-box": ModalBox,
+    "app-footer": AppFooter
   },
   computed: {
     ...mapState([
@@ -77,19 +77,20 @@ export default {
 <style lang='scss'>
 #page {
   width: 100%;
-  height: 100%;
+  height:100%;
+  background: $body-color;
 }
 
 #main-container {
   display: flex;
-  height: calc(100% - #{$application-header-hight} - 100px);
-  /*width: 100%;*/
-
-  /*.filler {
-    flex-grow: 1;
-  }*/
+  height: calc(100% - #{$application-header-hight} - 100px - #{$footer-height} - 35px);
 }
-
+.left {
+  text-align: center;
+}
+.right {
+  text-align: center;
+}
 .error-msg {
   text-align: center;
   font-weight: bold;

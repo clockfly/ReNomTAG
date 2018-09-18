@@ -1,8 +1,5 @@
 <template>
-<div id="tags">
-  <div id='tag-list-header'>
-    Class List
-  </div>
+<div id="tags"> 
   <form id="add-new-label-form">
     <div class="add-new-label-input-area">
       <input  type="text"
@@ -21,26 +18,30 @@
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Label</button>
   </form>
-
+  <div class="title">
+    <div class="title-text">
+      Tag List
+    </div>
+  </div>
   <div id='tag-tree'>
     <ul class='tag-list'>
-        <li v-for='{label, shortcut} in labels' :key='label'
-            class='tag-list-item' @click="on_click" :data-label='label'>
-            <input v-if='edit_target[0] === label' type="text"
+        <li v-for='(data, index) in labels'
+            class='tag-list-item' @click="on_click" :data-label='data.label'>
+            <input v-if='edit_target[0] === data.label' type="text"
                     class="label-text-update"
                     v-model='edit_label'
                     
                     placeholder="label name...">
-            <div v-else class="label-text">{{label}}</div>
-            <input v-if="edit_target[0] === label" type="text"
+            <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
+            <input v-if="edit_target[0] === data.label" type="text"
                     class="label-shortcut-update"
                     v-model='edit_shortcut'
                     @keydown.stop.prevent.self='update_label'
                     @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
-            <div v-else-if='shortcut' class="label-shortcut">{{shortcut}}</div>
-            <i v-if="edit_target[0] === label" @click.stop.prevent="to_edit_mode" class="fa fa-edit edit_icon edit_on"></i>
-            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-edit edit_icon"></i>
+            <div v-else-if='data.shortcut' class="label-shortcut" v-bind:style="{background: color_list[index % 10]}">{{data.shortcut}}</div>
+            <i v-if="edit_target[0] === data.label" @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_on"></i>
+            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_off"></i>
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
@@ -84,7 +85,12 @@ export default {
       edit_label: "", // for update label
       edit_shortcut: "", // for update shortcut
       edit_target: "", // flags
-      show_delete_dialog: false
+      show_delete_dialog: false,
+      color_list: [
+        "#E7009A", "#0A20C4", "#3E9AAF",
+        "#FFCC33", "#EF8200", "#9F14C1", "#582396",
+        "#8BAA1A", "#13894B", "#E94C33"
+      ]
     };
   },
 
@@ -140,7 +146,7 @@ export default {
         }
       }
       return "";
-    }
+    } 
   },
 
   methods: {
@@ -245,33 +251,58 @@ export default {
     delete_tags(event) {
       this.$store.commit("set_labels", []);
       this.show_delete_dialog = false;
+    },
+    get_tag_name: function(tag_name) {
+      let name_length = 12;
+      if (tag_name.length > name_length) {
+        return tag_name.slice(0, name_length) + "...";
+      }
+      return tag_name;
     }
   }
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
+::-webkit-scrollbar{
+  width: 4px;
+}
+::-webkit-scrollbar-track{
+  background: #FFF;
+  border: none;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb{
+  background: #aaa;
+  border-radius: 4px;
+  box-shadow: none;
+}
 #tags {
   box-sizing: border-box;
   width: 250px;
   height: 100%;
   flex-grow: 0;
   flex-shrink: 0;
-
+  color:$font-color;
   padding: 0 25px;
-  background-color: #f4f4f2;
+  background-color: $body-color;
 
-  #tag-list-header {
-    font-size: 18px;
-    font-weight: bold;
-    width: 200px;
-    margin: 0 auto;
-    padding: 20px 0 5px 0;
+  .title {
+    margin-top: $content-top-margin;
+    height: $panel-height;
+    background: $content-header-color;
+    line-height:$panel-height;
+    .title-text {
+      margin-left: $content-margin;
+      font-family: $content-top-header-font-family;
+    }
   }
 
   #add-new-label-form {
     padding: 0;
     margin: 0;
+    margin-top: $component-margin-top;
     background: none;
     border: none;
   }
@@ -305,20 +336,21 @@ export default {
   }
 
   .add-new-label-btn {
+    height: $panel-height;
     width: 100%;
     text-align: center;
     padding: 10px 0;
     margin: 10px 0 0 0;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    background-color: #326699;
+    border-radius: 0px;
+    background-color: $panel-bg-color;
     color: #fff;
     &:focus {
       outline: none;
     }
     &:hover {
-      background-color: lighten(#326699, 10%);
+      background-color: $panel-bg-color-hover;
     }
   }
 
@@ -339,6 +371,7 @@ export default {
       padding: 0;
       margin: 0;
       border-style: none;
+      padding-right: 10px;
     }
     input {
       padding: 3px 7px;
@@ -351,12 +384,26 @@ export default {
     }
     input.label-text-update {
       width: 130px;
+      height: 30px;
+      margin-top: 7px;
+      border-radius: 0;
     }
     input.label-shortcut-update {
       width: 31.125px;
+      height: 30px;
+      margin-top: 7px;
+      border-radius: 0;
     }
     .edit_on {
-      padding-top: 4%;
+      line-height: calc(43px);
+    }
+    .edit_off {
+      line-height:$panel-height; 
+    }
+    .edit_icon{
+      //margin-top: calc(#{$content-top-margin} * 0.5);
+      margin-left: $content-top-margin;
+      color: $font-color-label;
     }
 
     i:hover {
@@ -371,13 +418,15 @@ export default {
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
-
+    background-color: #fff;
     &:last-child {
       border-bottom: 1px solid #797979;
     }
 
     &:hover {
-      background-color: #d3d3d3;
+      background-color: $table-hover-color;
+      cursor: pointer;
+
     }
 
     .label-text,
@@ -392,12 +441,12 @@ export default {
       flex: 1;
     }
     .label-shortcut {
-      width: 25px;
+      width: 35px;
+      height: 18px;
       text-align: center;
-      color: #3c3c3c;
-      background: #fff;
-      border: 1px solid #3c3c3c;
-      border-radius: 5px;
+      margin-top: calc(18px * 0.5);
+      line-height: 18px;
+      color: $font-color;
       margin-right: 5px;
       justify-content: center;
       align-items: center;
@@ -405,14 +454,14 @@ export default {
   }
 
   #remove-button {
+    height: $panel-height;
     width: 60%;
+    margin-top: $content-top-margin;
     text-align: center;
-    padding: 10px 0;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    background-color: #adadad;
-    color: #fff;
+    background-color: #fff;
+    color: $font-color-label;
     margin-left: auto;
 
     &:focus {
@@ -438,5 +487,7 @@ export default {
   #delete_labels_button {
     background-color: lighten(#ff1616, 10%);
   }
+
+  
 }
 </style>

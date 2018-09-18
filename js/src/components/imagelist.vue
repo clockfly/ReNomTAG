@@ -20,15 +20,15 @@
       </div>
       <div class="row clear-margin">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'>ok</div>
+          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'><span class="dot-ok">&#9679;</span>  Check OK</div>
         </div>
         <div class="col fillter-button right">
-          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'>ng</div>
+          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'><span class="dot-ng">&#9679;</span>  Check NG</div>
         </div>
       </div>
       <div class="row clear-margin">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>not reviewed yet</div>
+          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>No Review</div>
         </div>
         <div class="col fillter-button right">
           <div class="revised" @click='toggle_review_filter({filter:"notreviewed"})'>Revised</div>
@@ -36,6 +36,7 @@
       </div>
     </div>
     <div id="imagelist" @scroll="on_scroll">
+ 
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
           <img
@@ -47,6 +48,7 @@
 
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -212,10 +214,12 @@ export default {
   }
 }
 .image_pred_tagbutton_active {
-  background-color: red;
+  background-color: $panel-bg-color;
+  color: $font-color;
 }
 .image_pred_reviewbutton_active {
-  background-color: green;
+  background-color: $panel-bg-color;
+  color: $font-color;
 }
 
 .clear-margin {
@@ -223,6 +227,7 @@ export default {
   margin-left: 0;
 }
 .fillter-button {
+  color: black;
   margin-top: $content-top-margin;
   height: calc(#{$content-top-header-hight} -2px);
   text-align: center;
@@ -233,17 +238,29 @@ export default {
   height: calc(#{$content-top-header-hight} -2px);
   line-height: calc(#{$content-top-header-hight} -2px);
   color: black;
+  background:#fff;
 }
 
 .left {
+  padding: 0;
   padding-right: 5px;
 }
 .right {
+  padding: 0;
   padding-left: 5px;
+}
+
+.dot-ok {
+  color: $tooltips-color;
+}
+
+.dot-ng {
+  color: #dc3545;
 }
 
 #imagelist {
   display: flex;
+  padding-right:6px;
   flex-wrap: wrap;
   overflow: auto;
   box-sizing: border-box;
@@ -251,6 +268,7 @@ export default {
   margin-top: calc(#{$content-top-margin} * 2);
   align-content: flex-start;
   justify-content: space-evenly;
+  background:#fff;
 
   img {
     box-sizing: border-box;
@@ -265,6 +283,5 @@ export default {
       outline-offset: -4px;
     }
   }
-
 }
 </style>

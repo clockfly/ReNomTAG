@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api": "http://localhost:8001",
-      "/t": "http://localhost:8000"
+      "/t": "http://localhost:8001"
     },
 
     // Various Dev Server settings

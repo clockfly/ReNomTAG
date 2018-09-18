@@ -1,9 +1,8 @@
-<template lang="html">
+<template>
 <footer>
-  <div class="row">
-    <div class="col-md-12 footer-content">
-      <div class="row">
-        <div class="col-md-3">
+  <div class="col-md-12 clear-padding">
+    <div class="col-md-12 clear-padding footer-content">
+        <div class="col-md-3 clear-padding">
           <div class="media-wrapper">
             <img :src="url">
             <div class="content-margin-top">
@@ -11,14 +10,13 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 clear-padding">
           <!--none -->
         </div>
-      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 copyright align-middle">
+  <div class="col-md-12 copyright clear-padding">
+    <div class="col-md-12 align-middle clear-padding">
       <div class="copyright-text">
         <small>&copy; 2018 GRID INC. ALL rights reserved.</small>
       </div>
@@ -41,22 +39,21 @@ export default {
 
 <style lang="scss" scoped>
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+.clear-padding{
+  padding-right:0;
+  padding-left:0;
+}
 footer {
   display: block;
-  // width: 100%;
   height: $footer-height;
   padding: 0;
   margin: 0;
   background: $footer-color;
-  // margin-top: $component-margin-top;
   z-index: 99999;
-  .row {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
   .footer-content {
     padding-left: 3%;
     background: $footer-color;
+    margin:0;
     height: 118px;
   }
   .copyright {

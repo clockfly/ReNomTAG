@@ -71,14 +71,14 @@ export default {
     line-height: normal;
     color: white;
     background-color: #1e264d;
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     text-align: center;
   }
   .label_text {
     position: absolute;
     margin: auto;
-    width: 200px;
+    width: 100px;
     /*line-height: 50px;*/
     margin-top: 25px;
   }
