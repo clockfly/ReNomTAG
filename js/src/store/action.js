@@ -215,5 +215,11 @@ export default {
       filename: cur_filename,
       info: ret.data.result
     });
+  },
+  async delete_taglist(context, payload) {
+    context.commit("set_labels", []);
+    axios.post(utils.build_api_url("/api/delete_label_candidates_dict"), {
+      folder: context.state.folder
+    });
   }
 };

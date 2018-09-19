@@ -366,7 +366,7 @@ def save_label_candidates_dict():
             shortcut = 'no_shortcut%s' % n
 
         if 'id' in d:
-            label_id = d['id'].strip()
+            label_id = d['id']
             labels[label_id] =  {'label':label, 'shortcut': shortcut}
             if max_id < int(label_id):
                 max_id = int(label_id)
@@ -404,6 +404,17 @@ def load_label_candidates_dict():
     sort = sorted(ret,key=lambda x:x['id'])
     body = json.dumps(sort)
     return set_json_body(body)
+
+
+@app.route("/api/delete_label_candidates_dict", method=["POST"])
+def delete_label_candidates_dict():
+    label_dict = request.json
+
+    folderpath = get_folderpath(label_dict['folder'])
+    jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
+    
+    if os.path.exists(jsonfile):
+        os.remove(jsonfile)
 
 
 @app.route("/api/folderlist", method=["POST"])

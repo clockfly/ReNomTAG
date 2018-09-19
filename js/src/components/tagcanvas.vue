@@ -23,29 +23,37 @@
       <div id='imageinfo' class="row">
 
         <div class= "col-md-6 row">
-          <div class="col-md-12">
-            <span class="file-name"> {{img_file_name}} :</span> 
-
-            <div class="check-button float-right ng-button" :class="{
-              admin: this.is_admin,
-              review_checked: this.active_image_review_result === 'ng'}"
-              @click="set_review_result({result:'ng'})">NG</div>
-            <div class="check-button float-right ok-button" :class="{
-              admin: this.is_admin,
-              review_checked: this.active_image_review_result === 'ok'}"
-              @click="set_review_result({result:'ok'})">OK</div>
+          <div class="col-md-12 row clear-padding">
+            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} :</span> 
+            <div class="col-md-12 clear-padding">
+              <div class="btn-wrp float-right ng-button">
+                <button class="check-button" :class="{
+                  admin: this.is_admin,
+                  review_checked: this.active_image_review_result === 'ng'}"
+                  @click="set_review_result({result:'ng'})">NG</button>
+              </div>
+              <div class="btn-wrp float-right ok-button">
+                <button class="check-button" :class="{
+                  admin: this.is_admin,
+                  review_checked: this.active_image_review_result === 'ok'}"
+                  @click="set_review_result({result:'ok'})">OK</button>
+              </div>
+            </div>
           </div>
-          <div class="col-md-12 button-margin-top">
-            <button id="save_xml_btn"
-              class="float-right"
-              :disabled="!canbesaved"
-              @click='save_annotation'>
-              Save
-            </button>
+          <div class="col-md-12 button-margin-top row clear-padding">
+            <div class="col-md-12 clear-padding">
+              <button id="save_xml_btn"
+                class="float-right"
+                :disabled="!canbesaved"
+                @click='save_annotation'>
+                Save
+              </button>
+            </div>
           </div>
         </div>
         <div class="col-md-6"> 
-          <textarea class="form-control" v-model="active_image_review_comment"></textarea>
+          <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
+          <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
         </div>
       </div>
     </div>
@@ -538,9 +546,12 @@ export default {
 <style lang='scss' scoped>
 #canvasblock {
   flex-grow: 1;
-  background:#fff;
+  background: #fff;
 }
-
+.clear-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
 #canvaspanel {
   flex-grow: 1;
   display: flex;
@@ -614,30 +625,30 @@ export default {
   .filename {
     text-align: right;
   }
-
   .check-button {
     height: $panel-height;
-    width: 41px;
+    width: 38px;
     background: #fff;
     border-color: #000;
   }
   .ok-button {
-    margin-right: 3px;
+    margin-right: 4px;
   }
   .ng-button {
-    margin-left: 3px;
+    margin-left: 2px;
+    margin-right: 2px;
   }
 
   .form-control {
     resize: none;
-    height: 80px;
+    height: 90px;
     border-radius: 0px;
   }
   .review_checked {
     background-color: #a2c84a;
   }
   .button-margin-top {
-    margin-top: $content-top-margin;
+    margin-top: calc(#{$content-top-margin} * 0.5);
   }
   #save_xml_btn {
     background-color: $panel-bg-color;
@@ -653,6 +664,9 @@ export default {
       background-color: #adadad;
       cursor: not-allowed;
     }
+  }
+  .btn-wrp {
+    border: 1px solid black;
   }
 }
 </style>

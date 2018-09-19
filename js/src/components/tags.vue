@@ -51,13 +51,13 @@
   <modal-box v-if='show_delete_dialog'
     @ok='delete_tags'
     @cancel='show_delete_dialog=false' >
-    <div slot='contents'>
+    <div class="modal-title"  slot='contents'>
       Are you sure flushing class list?
     </div>
     <span slot="okbutton">
       <button id="delete_labels_button" class="modal-default-button"
         @click="delete_tags">
-        Delete labels
+        Delete
       </button>
     </span>
 
@@ -248,7 +248,9 @@ export default {
     },
 
     delete_tags(event) {
-      this.$store.commit("set_labels", []);
+      
+      this.$store.dispatch('delete_taglist')
+      
       this.show_delete_dialog = false;
     },
     get_tag_name: function(tag_name) {
@@ -455,7 +457,7 @@ export default {
   #remove-button {
     height: $panel-height;
     width: 60%;
-    margin-top: $content-top-margin;
+    margin-top: $component-margin-top;
     text-align: center;
     cursor: pointer;
     border: none;
@@ -468,6 +470,7 @@ export default {
     }
     &:hover {
       background-color: lighten(#ff1616, 10%);
+      color: #FFF;
     }
   }
   .label_errormsg {
@@ -484,9 +487,12 @@ export default {
     right: 20px;
   }
   #delete_labels_button {
+    height: $panel-height;
     background-color: lighten(#ff1616, 10%);
   }
-
   
+  .modal-title {
+    color: #000;
+  }
 }
 </style>
