@@ -25,7 +25,7 @@
   </div>
   <div id='tag-tree'>
     <ul class='tag-list'>
-        <li v-for='(data, index) in labels'
+        <li v-for='(data, index) in labels' v-bind:key='data.id'
             class='tag-list-item' @click="on_click" :data-label='data.label'>
             <input v-if='edit_target[0] === data.label' type="text"
                     class="label-text-update"
@@ -45,7 +45,6 @@
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
-
   </div>
   <button @click='show_delete_dialog=true' id='remove-button'>Refresh list</button>
 
@@ -146,7 +145,7 @@ export default {
         }
       }
       return "";
-    } 
+    }
   },
 
   methods: {

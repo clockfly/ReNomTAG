@@ -353,16 +353,28 @@ SAVE_JSON_FILE_PATH = "label_candidates.json"
 def save_label_candidates_dict():
     label_dict = request.json
     labels = {}
-
+    src_labels = label_dict['labels']
+    
+    max_id = 0
     for n, d in enumerate(label_dict['labels']):
         label = d['label'].strip()
         shortcut = d['shortcut'].strip()
+ 
         if not re.match(r"^[0-9a-zA-Z]+$", label):
             raise ValueError("Invalid label")
         if not shortcut:
             shortcut = 'no_shortcut%s' % n
 
-        labels[shortcut] = {'label': label}
+        if 'id' in d:
+            label_id = d['id'].strip()
+            labels[label_id] =  {'label':label, 'shortcut': shortcut}
+            if max_id < int(label_id):
+                max_id = int(label_id)
+        else:
+            if n < max_id:
+                n = max_id
+
+            labels[n] =  {'label':label, 'shortcut': shortcut}
 
     json_data = json.dumps(labels)
     folderpath = get_folderpath(label_dict['folder'])
@@ -385,11 +397,12 @@ def load_label_candidates_dict():
             json_data = json.load(ftpr)
 
         for k, v in json_data.items():
-            if 'no_shortcut' in k:
-                k = ''
-            ret.append({'label': v['label'], 'shortcut': k})
-
-    body = json.dumps(ret)
+            if 'no_shortcut' in v['shortcut']:
+                v['shortcut'] = ''
+            ret.append({'id': int(k),'label': v['label'],'shortcut': v['shortcut']})
+            
+    sort = sorted(ret,key=lambda x:x['id'])
+    body = json.dumps(sort)
     return set_json_body(body)
 
 
