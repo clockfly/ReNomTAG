@@ -54,14 +54,14 @@ footer {
     padding-left: 3%;
     background: $footer-color;
     margin:0;
-    height: 118px;
+    height: calc(#{$footer-height} - #{$footer-copyright-height});
   }
   .copyright {
     background: $footer-copyright-color;
     margin-top: 0;
-    height: 35px;
+    height:$footer-copyright-height;
     .copyright-text {
-      line-height: 35px;
+      line-height: $footer-copyright-height;
       padding-left: 3%;
     }
   }
@@ -70,7 +70,7 @@ footer {
   margin-top: 15px;
 }
 .media-wrapper{
-  margin-top: $content-margin;
+  //margin-top: $content-margin;
 }
 .test{
   margin-top: 5%;

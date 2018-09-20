@@ -61,7 +61,7 @@ export default {
   box-sizing: border-box;
   background-color: #cccccc;
   white-space: nowrap;
-  height: 100px;
+  height: 125px;
   overflow: hidden;
   flex-wrap: wrap;
 
@@ -71,22 +71,22 @@ export default {
     line-height: normal;
     color: white;
     background-color: #1e264d;
-    width: 100px;
-    height: 100px;
+    width: 125px;
+    height: 125px;
     text-align: center;
   }
   .label_text {
     position: absolute;
     margin: auto;
-    width: 100px;
+    width: 125px;
     /*line-height: 50px;*/
-    margin-top: 25px;
+    margin-top: 50px;
   }
   .tagged-image {
     box-sizing: border-box;
     position: relative;
     display: inline-block;
-    height: 200px;
+    height: 150px;
     background-size: cover;
     margin-top: 0px;
   }
