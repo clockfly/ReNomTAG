@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="content">
-      <div class="row clear-margin">
+      <div class="row clear-margin first-row">
         <div class="col fillter-button left">
           <div :class='["image_pred_button", is_tag_selected("hastags")]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
         </div>  
@@ -18,7 +18,7 @@
         </div>
         
       </div>
-      <div class="row clear-margin">
+      <div class="row clear-margin not-first">
         <div class="col fillter-button left">
           <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'><span class="dot-ok">&#9679;</span>  Check OK</div>
         </div>
@@ -26,7 +26,7 @@
           <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'><span class="dot-ng">&#9679;</span>  Check NG</div>
         </div>
       </div>
-      <div class="row clear-margin">
+      <div class="row clear-margin not-first">
         <div class="col fillter-button left">
           <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>No Review</div>
         </div>
@@ -213,6 +213,8 @@ export default {
     margin-left: $content-top-heder-horizonral-margin;
   }
 }
+
+
 .image_pred_tagbutton_active {
   background-color: $panel-bg-color;
   color: $font-color;
@@ -225,13 +227,27 @@ export default {
 .clear-margin {
   margin-right: 0;
   margin-left: 0;
+  height:20px;
 }
+.first-row{
+  margin-top:10px;
+}
+
+.not-first {
+  margin-top: 5px;
+}
+
 .fillter-button {
   color: black;
-  margin-top: $content-top-margin;
-  height: calc(#{$content-top-header-hight} -2px);
-  text-align: center;
+  height: 20px; //calc(#{$content-top-header-hight} - 2px);
+  text-align: left;
   cursor: pointer;
+  font-family: $content-inner-header-font-family;
+  font-size: calc(#{$content-inner-header-font-size} - 2pt);
+}
+
+.off{
+  background:#fff;
 }
 
 .revised {
@@ -264,7 +280,7 @@ export default {
   flex-wrap: wrap;
   overflow: auto;
   box-sizing: border-box;
-  height: calc(100% - #{$component-margin-top} - (#{$content-top-margin} * 6) - #{$content-top-header-hight} - (calc(#{$content-top-header-hight} -2px) * 2 ) );
+  height: calc(100% - #{$component-margin-top} - (#{$content-top-margin} * 3) - #{$content-top-header-hight} - (calc(#{$content-top-header-hight} -2px) * 2 ) );
   margin-top: calc(#{$content-top-margin} * 2);
   align-content: flex-start;
   justify-content: space-evenly;
@@ -284,4 +300,5 @@ export default {
     }
   }
 }
+
 </style>
