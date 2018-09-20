@@ -182,19 +182,19 @@ export default {
 
 <style scoped lang='scss'>
 #imagelistblock {
-  width: 270px;
+  width: 330px;
   //box-sizing: border-box;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;
   padding-left: $content-top-heder-horizonral-margin;
+  padding-right: $content-top-heder-horizonral-margin;
   font-family: $content-top-header-font-family;
   margin-top: $component-margin-top;
 }
 
 #msg_no_image {
   position: absolute;
-  font-weight: bold;
   top: 0;
   bottom: 0;
   left: 0;

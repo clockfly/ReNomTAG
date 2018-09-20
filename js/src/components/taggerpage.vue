@@ -1,14 +1,14 @@
 <template>
   <div id="page" class="col-md-12">
     <app-header class="row"></app-header>
-    <div id='main-container' class="row">
+    <div id='main-container'>
       <left-menu></left-menu>
-      <image-list class="col-md-2" v-if="folder.length !== 0"/>
-      <navarrow class="col-md-1 left" dir="back"/>
+      <image-list class="folder-image" v-if="folder.length !== 0"/>
+      <!-- <navarrow class="col-md-1 left" dir="back"/> -->
       <div v-if="active_image_filename === null" class="filler"></div>
-      <tagcanvas class="col-md-6" v-if="active_image_filename != null" ></tagcanvas>
-      <navarrow class="col-md-1 right" dir="forward"/>
-      <tags class="col-md-2"></tags>
+      <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+      <!-- <navarrow class="col-md-1 right" dir="forward"/> -->
+      <tags></tags>
     </div>
     <tagged-images class="row"/>
     <app-footer class="row" ></app-footer>

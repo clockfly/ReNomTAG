@@ -281,7 +281,7 @@ export default {
 }
 #tags {
   box-sizing: border-box;
-  width: 250px;
+  width: 275px;
   height: 100%;
   flex-grow: 0;
   flex-shrink: 0;
@@ -366,7 +366,8 @@ export default {
     .tag-list {
       width: 100%;
       height: 100%;
-      font-weight: bold;
+      font-family: $content-inner-header-font-family;
+      font-size: $content-modellist-font-size;
       box-sizing: border-box;
       list-style: none;
       padding: 0;
