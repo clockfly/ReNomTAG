@@ -11,10 +11,10 @@
     <div class="content">
       <div class="row clear-margin first-row">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_tag_selected("hastags")]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} , {"off" : is_tag_selected("hastags") === null}]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
         </div>  
         <div class="col fillter-button right">
-          <div :class='["image_pred_button",  is_tag_selected("notags")]' @click='toggle_tag_filter({filter:"notags"})'><img class="button-icon" :src="NO_Tags"> No Tags</div>
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} , { "off" : is_tag_selected("notags") === null}]' @click='toggle_tag_filter({filter:"notags"})'><img class="button-icon" :src="NO_Tags"> No Tags</div>
         </div>
         
       </div>
@@ -255,15 +255,15 @@ export default {
   font-size: calc(#{$content-inner-header-font-size} - 2pt);
 }
 
-.off{
-  background:#fff;
-}
-
-.revised {
+.off {
   height: calc(#{$content-top-header-hight} -2px);
   line-height: calc(#{$content-top-header-hight} -2px);
   color: black;
-  background:#fff;
+  background: #fff;
+  img {
+    color: $content-header-color;
+    background-color:black;
+  }
 }
 
 .left {
