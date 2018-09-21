@@ -4,12 +4,7 @@
       <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
         <span class='menu-text'>Detection Label</span>
-      </button>
-
-      <button class='bar-button'>
-        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
-        <span class='menu-text'>Settings</span>
-      </button>
+      </button> 
 
       <hr>
 
@@ -58,6 +53,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
   display: None;
   width: 100%;
+  left: 0;
   height: calc(100% - #{$application-header-hight});
   z-index: 9999;
   &.open {

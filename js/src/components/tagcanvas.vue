@@ -4,6 +4,7 @@
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
 
+      <navarrow class="arrow" dir="back"/>
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
@@ -17,6 +18,8 @@
           <div class='taglabel'>{{get_box_label(idx)}}</div>
         </div>
       </div>
+
+      <navarrow class="arrow" dir="forward"/>
     </div>
 
     <div>
@@ -61,10 +64,14 @@
 </template>
 
 <script>
+import NavArrow from "@/components/navarrow";
 import { mapState, mapMutations, mapActions } from "vuex";
 import * as utils from "@/utils";
 
 export default {
+  components: {
+    navarrow: NavArrow
+  },
   data: function() {
     return {
       BOX_MARGIN: 2, // margin between box and box-border
@@ -79,7 +86,6 @@ export default {
       boxes: null
     };
   },
-
   created: function() {
     window.addEventListener("resize", this.on_resize);
     window.addEventListener("keyup", this.on_keyup);
@@ -557,7 +563,9 @@ export default {
   display: flex;
   position: relative;
   height: calc(100% - 150px + calc(#{$component-margin-top}));
-
+  .arrow{
+    margin-top: 15%;
+  }
   #canvas {
     margin: auto;
     margin-top: $component-margin-top;
@@ -668,5 +676,6 @@ export default {
   .btn-wrp {
     border: 1px solid black;
   }
+  
 }
 </style>

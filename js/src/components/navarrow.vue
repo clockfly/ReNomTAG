@@ -51,7 +51,6 @@ export default {
   position: relative;
   width: 30px;
   height: 60px;
-  margin: auto;
   flex-grow: 0;
   flex-shrink: 0;
 

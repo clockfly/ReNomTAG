@@ -4,10 +4,8 @@
     <div id='main-container'>
       <left-menu></left-menu>
       <image-list class="folder-image" v-if="folder.length !== 0"/>
-      <!-- <navarrow class="col-md-1 left" dir="back"/> -->
       <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-      <!-- <navarrow class="col-md-1 right" dir="forward"/> -->
       <tags></tags>
     </div>
     <tagged-images class="row"/>

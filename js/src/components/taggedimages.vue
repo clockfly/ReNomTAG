@@ -1,7 +1,7 @@
 <template>
   <div id="tagged-images">
     <div class="labelbox">
-      <div class="label_text">Images<br />+Tags {{toggle_tag_filter}}</div>
+      <div class="label_text">Images<br />+Tags</div>
     </div>
     <div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
       :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"

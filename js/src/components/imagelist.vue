@@ -14,24 +14,24 @@
           <div :class='["image_pred_button", is_tag_selected("hastags")]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
         </div>  
         <div class="col fillter-button right">
-         <div :class='["image_pred_button",  is_tag_selected("notags")]' @click='toggle_tag_filter({filter:"notags"})'>no tags</div>
+          <div :class='["image_pred_button",  is_tag_selected("notags")]' @click='toggle_tag_filter({filter:"notags"})'><img class="button-icon" :src="NO_Tags"> No Tags</div>
         </div>
         
       </div>
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'><span class="dot-ok">&#9679;</span>  Check OK</div>
-        </div>
+          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'><img class="button-icon" :src="CHECK_OK">  Check OK</div>
+      </div>
         <div class="col fillter-button right">
-          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'><span class="dot-ng">&#9679;</span>  Check NG</div>
+          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'><img class="button-icon" :src="CHECK_NG">Check NG</div>
         </div>
       </div>
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>No Review</div>
+          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'><img class="button-icon" :src="NO_REVIEW">No Review</div>
         </div>
         <div class="col fillter-button right">
-          <div class="revised" @click='toggle_review_filter({filter:"notreviewed"})'>Revised</div>
+          <div class="revised" @click='toggle_review_filter({filter:"notreviewed"})'><img class="button-icon" :src="Revised">Revised</div>
         </div>
       </div>
     </div>
@@ -61,7 +61,13 @@ export default {
   data: function() {
     return {
       IMAGE_RELOAD_MARGIN: 100,
-      IMAGE_RELOAD_AMOUNT: 300
+      IMAGE_RELOAD_AMOUNT: 300,
+      NO_REVIEW: require('../assets/images/NOreview.svg'),
+      NO_Tags: require('../assets/images/NOtag.svg'),
+      Revised: require('../assets/images/Revised.svg'),
+      CHECK_OK:require('../assets/images/OK.svg'),
+      CHECK_NG:require('../assets/images/NG.svg')
+
     };
   },
   computed: {
@@ -214,6 +220,9 @@ export default {
   }
 }
 
+.button-icon {
+  height:15px;
+}
 
 .image_pred_tagbutton_active {
   background-color: $panel-bg-color;

@@ -330,9 +330,11 @@ export default {
     }
     input.label-text {
       width: 130px;
+      border-radius: 0;
     }
     input.label-shortcut {
       width: 62.5px;
+      border-radius: 0;
     }
   }
 
