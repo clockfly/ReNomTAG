@@ -72,9 +72,4 @@ footer {
 .media-wrapper{
   //margin-top: $content-margin;
 }
-.test{
-  margin-top: 5%;
-  font-family: $content-inner-header-font-family;
-  font-size: $content-inner-header-font-size;
-}
 </style>

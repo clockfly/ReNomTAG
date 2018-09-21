@@ -18,7 +18,7 @@ export default {
 }
 @font-face {
   font-family: $content-inner-header-font-family;
-  src: url("/@/fonts/OpenSans-Light.ttf");
+  src: url("./fonts/OpenSans-Light.ttf");
 }
 body {
   -webkit-font-smoothing: antialiased;
@@ -27,8 +27,8 @@ body {
 }
 
 #app {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   box-sizing: border-box;
 }
 </style>
