@@ -5,7 +5,7 @@
       <input  type="text"
               class="label-text"
               v-model='label'
-              placeholder="label name...">
+              placeholder="tag name...">
 
       <input  type="text"
               class="label-shortcut"
@@ -16,7 +16,7 @@
 
     </div>
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
-    <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Label</button>
+    <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button>
   </form>
   <div class="title">
     <div class="title-text">
@@ -408,9 +408,6 @@ export default {
       color: $font-color-label;
     }
 
-    i:hover {
-      background-color: #adadad;
-    }
   }
 
   .tag-list-item {

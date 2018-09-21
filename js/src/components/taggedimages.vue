@@ -1,21 +1,17 @@
 <template>
   <div id="tagged-images">
     <div class="labelbox">
-      <div class="label_text">Images<br />+Tags</div>
-
-
-    </div><div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
-         :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
-         :data-filename='image.filename'
-         @click.stop.prevent='on_click'>
-
-        <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
-           :style='boxstyles(image, box)'>
+      <div class="label_text">Images<br />+Tags {{toggle_tag_filter}}</div>
+    </div>
+    <div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
+      :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
+      :data-filename='image.filename'
+      @click.stop.prevent='on_click'>
+      <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
+          :style='boxstyles(image, box)'>
         <div class='taglabel'>{{box.label}}</div>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -26,7 +22,7 @@ export const BLOCK_HEIGHT = 200;
 
 export default {
   computed: {
-    ...mapState(["tagged_images"])
+    ...mapState(["tagged_images", "toggle_tag_filter"])
   },
 
   methods: {
@@ -80,7 +76,7 @@ export default {
     margin: auto;
     width: 125px;
     /*line-height: 50px;*/
-    margin-top: 50px;
+    margin-top: 40px;
   }
   .tagged-image {
     box-sizing: border-box;

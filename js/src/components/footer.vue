@@ -59,9 +59,9 @@ footer {
   .copyright {
     background: $footer-copyright-color;
     margin-top: 0;
-    height:$footer-copyright-height;
     .copyright-text {
       line-height: $footer-copyright-height;
+      height:$footer-copyright-height;
       padding-left: 3%;
     }
   }

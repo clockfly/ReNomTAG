@@ -83,7 +83,7 @@ export default {
 
 #main-container {
   display: flex;
-  height: calc(100% - #{$application-header-hight} - 126.3px - #{$footer-height});
+  height: calc(100% - #{$application-header-hight} - 125px - #{$footer-height});
 }
 .left {
   text-align: center;
