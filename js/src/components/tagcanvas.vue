@@ -116,11 +116,11 @@ export default {
       return true;
     },
     active_image_review_comment: {
-      get () {
-        return this.$store.state.active_image_review_comment
+      get() {
+        return this.$store.state.active_image_review_comment;
       },
-      set (value) {
-        this.$store.commit('set_review_comment', {comment: value})
+      set(value) {
+        this.$store.commit("set_review_comment", { comment: value });
       }
     }
   },
@@ -182,7 +182,7 @@ export default {
             event.preventDefault();
             event.stopPropagation();
           }
-          return false
+          return false;
         }
         if (this.has_image && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
@@ -205,7 +205,7 @@ export default {
     on_keydown: function(event) {
       if (this.has_image && this.active_boxid !== null) {
         if (!this.has_image) {
-            return;
+          return;
         }
         let [ratio, imgrc] = this.calc_image_rect();
 
@@ -214,31 +214,31 @@ export default {
 
         switch (event.key) {
           case "ArrowUp":
-            if(box.top > 0){
-              box.top -= 1
+            if (box.top > 0) {
+              box.top -= 1;
               box.bottom -= 1;
             }
             break;
           case "ArrowDown":
-            if (this.active_image_height > box.bottom){
-              box.top += 1
+            if (this.active_image_height > box.bottom) {
+              box.top += 1;
               box.bottom += 1;
             }
             break;
           case "ArrowLeft":
-            if(box.left > 0){
+            if (box.left > 0) {
               box.left -= 1;
               box.right -= 1;
             }
             break;
           case "ArrowRight":
-            if(box.right < this.active_image_width){
+            if (box.right < this.active_image_width) {
               box.left += 1;
               box.right += 1;
             }
             break;
           default:
-            return
+            return;
         }
         this.$store.commit("set_tagbox", {
           boxid: boxid,
@@ -507,8 +507,7 @@ export default {
           this.set_active_boxid({
             boxid: this.active_image_tag_boxes.length - 1
           });
-        }
-        else {
+        } else {
           this.set_active_boxid({
             boxid: null
           });
@@ -518,13 +517,12 @@ export default {
       this.status = "";
     },
     get_reviewstatus: function() {
-      if (this.active_image_review_result === 'ok') {
-        return 'reviewok'
+      if (this.active_image_review_result === "ok") {
+        return "reviewok";
+      } else if (this.active_image_review_result === "nh") {
+        return "reviewng";
       }
-      else if (this.active_image_review_result === 'nh') {
-        return 'reviewng'
-      }
-      return 'notreviewed'
+      return "notreviewed";
     }
   }
 };
@@ -598,7 +596,6 @@ export default {
 
   button {
     cursor: not-allowed;
-
   }
 
   .admin {

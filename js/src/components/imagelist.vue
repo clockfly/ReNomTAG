@@ -22,7 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import * as utils from "@/utils";
-import {has_bndbox, get_reviewresult} from "@/store/mutation"
+import { has_bndbox, get_reviewresult } from "@/store/mutation";
 
 export default {
   data: function() {
@@ -82,13 +82,13 @@ export default {
   },
   methods: {
     get_marks(file) {
-      const info = this.folder_files[file]
-      let s = ''
-      const review = get_reviewresult(info)
-      if (review === 'ng') {
-        s = s + '👎 '
+      const info = this.folder_files[file];
+      let s = "";
+      const review = get_reviewresult(info);
+      if (review === "ng") {
+        s = s + "👎 ";
       }
-      return s
+      return s;
     },
     get_image_url(file) {
       return utils.build_api_url("/t/" + this.folder + "/" + file);

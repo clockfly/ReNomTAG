@@ -18,32 +18,33 @@
 </template>
 
 <script>
-
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "AppHeader",
 
   computed: {
-    ...mapState([
-      "tag_filter",
-      "review_filter"])
+    ...mapState(["tag_filter", "review_filter"])
   },
 
   methods: {
-    ...mapMutations(['set_main_menu_visible', 'toggle_tag_filter', 'toggle_review_filter']),
+    ...mapMutations([
+      "set_main_menu_visible",
+      "toggle_tag_filter",
+      "toggle_review_filter"
+    ]),
 
     is_tag_selected: function(name) {
       if (this.tag_filter.indexOf(name) != -1) {
-        return 'image_pred_tagbutton_active'
+        return "image_pred_tagbutton_active";
       }
-      return null
+      return null;
     },
     is_review_selected: function(name) {
       if (this.review_filter.indexOf(name) != -1) {
-        return 'image_pred_reviewbutton_active'
+        return "image_pred_reviewbutton_active";
       }
-      return null
+      return null;
     },
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;

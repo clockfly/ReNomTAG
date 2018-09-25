@@ -89,19 +89,21 @@ export default {
       }
     }
 
-    let review_result = ''
-    let review_comment = ''
+    let review_result = "";
+    let review_comment = "";
 
     if (response.data.boxes) {
-      review_result = response.data.boxes.annotation.source.reviewresult
-      review_comment = response.data.boxes.annotation.source.reviewcomment
+      review_result = response.data.boxes.annotation.source.reviewresult;
+      review_comment = response.data.boxes.annotation.source.reviewcomment;
     }
     context.commit("set_active_image", {
       filename: file,
       width: response.data.width,
       height: response.data.height,
       image: "data:image;base64," + response.data.img,
-      boxes, review_result, review_comment
+      boxes,
+      review_result,
+      review_comment
     });
   },
 
@@ -134,7 +136,7 @@ export default {
 
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
-    let value = context.state.folder_files[cur_filename]
+    let value = context.state.folder_files[cur_filename];
     if (!value) {
       value = {
         annotation: {
@@ -150,11 +152,13 @@ export default {
           segments: 0,
           objects: []
         }
-      }
+      };
     }
 
-    value.annotation.source.reviewresult = context.state.active_image_review_result
-    value.annotation.source.reviewcomment = context.state.active_image_review_comment
+    value.annotation.source.reviewresult =
+      context.state.active_image_review_result;
+    value.annotation.source.reviewcomment =
+      context.state.active_image_review_comment;
 
     for (let box of context.state.active_image_tag_boxes) {
       let o = {
@@ -175,8 +179,10 @@ export default {
     }
 
     const ret = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"),
-                 {folder: context.state.folder, value})
+      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
+        folder: context.state.folder,
+        value
+      })
     );
 
     context.commit("add_tagged_image", {
