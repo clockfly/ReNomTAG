@@ -252,7 +252,8 @@ export default {
       if (img.filename !== payload.filename) {
         imgs.push(img);
       }
-      width += img.width * (img.height / IMAGE_HEIGHT);
+      width += img.width * (IMAGE_HEIGHT / img.height);
+      console.log('width', width);
       if (width > MAX_WIDTH) {
         break;
       }
