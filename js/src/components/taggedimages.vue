@@ -18,7 +18,7 @@
 <script>
 import { mapState } from "vuex";
 
-export const BLOCK_HEIGHT = 200;
+export const BLOCK_HEIGHT = 125;
 
 export default {
   computed: {
@@ -82,7 +82,7 @@ export default {
     box-sizing: border-box;
     position: relative;
     display: inline-block;
-    height: 150px;
+    height: 125px;
     background-size: cover;
     margin-top: 0px;
   }

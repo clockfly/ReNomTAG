@@ -245,7 +245,7 @@ export default {
   add_tagged_image(state, payload) {
     const imgs = [payload];
     const MAX_WIDTH = 10000;
-    const IMAGE_HEIGHT = 200;
+    const IMAGE_HEIGHT = 125;
 
     let width = 0;
     for (const img of state.tagged_images) {
