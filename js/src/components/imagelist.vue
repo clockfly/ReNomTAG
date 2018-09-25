@@ -24,8 +24,6 @@
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok")}, { "off" : is_review_selected("ok") === null}]' 
-            @mouseenter="change_picture('CHECK_OK')" 
-            @mouseleave="return_to_the_original_picture('CHECK_OK')" 
             @click='toggle_review_filter({filter:"ok"})'>
             <img v-if="is_review_selected('ok')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF">  Check OK
@@ -33,8 +31,6 @@
       </div>
         <div class="col fillter-button right">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null}, { "off" : is_review_selected("ng") === null}]'
-            @mouseenter="change_picture('CHECK_NG')"
-            @mouseleave="return_to_the_original_picture('CHECK_NG')"
             @click='toggle_review_filter({filter:"ng"})'>
             <img v-if="is_review_selected('ng')" class="button-icon" :src="CHECK_NG">
             <img v-else class="button-icon" :src="CHECK_NG_OFF"> Check NG
@@ -43,7 +39,7 @@
       </div>
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> No Review
           </div>
@@ -206,37 +202,7 @@ export default {
           });
         }
       }
-    },
-    change_picture(button) {
-      switch(button) {
-        case "CHECK_OK":
-
-          if (this.is_review_selected("ok") === null){
-            this.CHECK_OK = require('../assets/images/OK_hover.svg');
-          }
-          break;
-        case "CHECK_NG":
-          if (this.is_review_selected("ng") === null){
-            this.CHECK_NG = require('../assets/images/NG_hover.svg');
-          }
-          break;
-        case "CHECK_OK":
-          if ( this.is_review_selected("notreviewed") === null ) {
-            this.CHECK_OK = require('../assets/images/OK_hover.svg');
-          }
-          break;
-      }
-    },
-    return_to_the_original_picture(button) {
-      switch(button) {
-        case "CHECK_OK":
-          this.CHECK_OK = require('../assets/images/OK.svg');
-          break;
-        case "CHECK_NG":
-          this.CHECK_NG = require('../assets/images/NG.svg');
-          break;
-      }
-    }
+    } 
   }
 };
 </script>

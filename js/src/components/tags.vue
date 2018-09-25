@@ -1,6 +1,6 @@
 <template>
 <div id="tags"> 
-  <form id="add-new-label-form">
+  <form v-if="this.is_admin" id="add-new-label-form">
     <div class="add-new-label-input-area">
       <input  type="text"
               class="label-text"
@@ -18,7 +18,7 @@
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button>
   </form>
-  <div class="title">
+  <div class="title" :class="{ 'top' : !this.is_admin}">
     <div class="title-text">
       Tag List
     </div>
@@ -46,7 +46,7 @@
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
   </div>
-  <button @click='show_delete_dialog=true' id='remove-button'>Refresh list</button>
+  <button v-if="this.is_admin" @click='show_delete_dialog=true' id='remove-button'>Refresh list</button>
 
   <modal-box v-if='show_delete_dialog'
     @ok='delete_tags'
@@ -94,7 +94,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["labels"]),
+    ...mapState(["labels", "is_admin"]),
 
     errormsg: function() {
       if (this.label.length) {
@@ -291,6 +291,17 @@ export default {
 
   .title {
     margin-top: $content-top-margin;
+    height: $panel-height;
+    background: $content-header-color;
+    line-height:$panel-height;
+    .title-text {
+      margin-left: $content-margin;
+      font-family: $content-top-header-font-family;
+    }
+  }
+
+  .top {
+    margin-top: $component-margin-top;
     height: $panel-height;
     background: $content-header-color;
     line-height:$panel-height;
