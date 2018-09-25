@@ -564,7 +564,7 @@ export default {
   position: relative;
   height: calc(100% - 150px + calc(#{$component-margin-top}));
   .arrow{
-    margin-top: 15%;
+    margin-top: 25%;
   }
   #canvas {
     margin: auto;

@@ -5,7 +5,7 @@
     </div>
     <div class="title">
       <div class="title-text">
-        Images
+        Images {{is_review_selected("ok")}}
       </div>
     </div>
     <div class="content">
@@ -14,29 +14,49 @@
           <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} , {"off" : is_tag_selected("hastags") === null}]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
         </div>  
         <div class="col fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} , { "off" : is_tag_selected("notags") === null}]' @click='toggle_tag_filter({filter:"notags"})'><img class="button-icon" :src="NO_Tags"> No Tags</div>
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} , { "off" : is_tag_selected("notags") === null}]' @click='toggle_tag_filter({filter:"notags"})'>
+            <img v-if="is_tag_selected('notags')" class="button-icon" :src="NO_Tags">
+            <img v-else class="button-icon" :src="NO_Tags_OFF"> No Tags
+          </div>
         </div>
         
       </div>
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'><img class="button-icon" :src="CHECK_OK">  Check OK</div>
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok")}, { "off" : is_review_selected("ok") === null}]' 
+            @mouseenter="change_picture('CHECK_OK')" 
+            @mouseleave="return_to_the_original_picture('CHECK_OK')" 
+            @click='toggle_review_filter({filter:"ok"})'>
+            <img v-if="is_review_selected('ok')" class="button-icon" :src="CHECK_OK">
+            <img v-else class="button-icon" :src="CHECK_OK_OFF">  Check OK
+          </div>
       </div>
         <div class="col fillter-button right">
-          <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'><img class="button-icon" :src="CHECK_NG">Check NG</div>
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null}, { "off" : is_review_selected("ng") === null}]'
+            @mouseenter="change_picture('CHECK_NG')"
+            @mouseleave="return_to_the_original_picture('CHECK_NG')"
+            @click='toggle_review_filter({filter:"ng"})'>
+            <img v-if="is_review_selected('ng')" class="button-icon" :src="CHECK_NG">
+            <img v-else class="button-icon" :src="CHECK_NG_OFF"> Check NG
+          </div>
         </div>
       </div>
       <div class="row clear-margin not-first">
         <div class="col fillter-button left">
-          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'><img class="button-icon" :src="NO_REVIEW">No Review</div>
+          <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>
+            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
+            <img v-else class="button-icon" :src="NO_REVIEW_OFF"> No Review
+          </div>
         </div>
         <div class="col fillter-button right">
-          <div class="revised" @click='toggle_review_filter({filter:"notreviewed"})'><img class="button-icon" :src="Revised">Revised</div>
+          <div class="off" @click='toggle_review_filter({filter:"notreviewed"})'>
+            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="Revised">
+            <img v-else class="button-icon" :src="Revised_OFF">Revised
+          </div>
         </div>
       </div>
     </div>
     <div id="imagelist" @scroll="on_scroll">
- 
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
           <img
@@ -66,7 +86,12 @@ export default {
       NO_Tags: require('../assets/images/NOtag.svg'),
       Revised: require('../assets/images/Revised.svg'),
       CHECK_OK:require('../assets/images/OK.svg'),
-      CHECK_NG:require('../assets/images/NG.svg')
+      CHECK_NG:require('../assets/images/NG.svg'),
+      NO_REVIEW_OFF: require('../assets/images/NOreview_hover.svg'),
+      NO_Tags_OFF: require('../assets/images/NOtag_hover.svg'),
+      Revised_OFF: require('../assets/images/Revised_hover.svg'),
+      CHECK_OK_OFF: require('../assets/images/OK_hover.svg'),
+      CHECK_NG_OFF:require('../assets/images/NG_hover.svg'),
 
     };
   },
@@ -181,6 +206,36 @@ export default {
           });
         }
       }
+    },
+    change_picture(button) {
+      switch(button) {
+        case "CHECK_OK":
+
+          if (this.is_review_selected("ok") === null){
+            this.CHECK_OK = require('../assets/images/OK_hover.svg');
+          }
+          break;
+        case "CHECK_NG":
+          if (this.is_review_selected("ng") === null){
+            this.CHECK_NG = require('../assets/images/NG_hover.svg');
+          }
+          break;
+        case "CHECK_OK":
+          if ( this.is_review_selected("notreviewed") === null ) {
+            this.CHECK_OK = require('../assets/images/OK_hover.svg');
+          }
+          break;
+      }
+    },
+    return_to_the_original_picture(button) {
+      switch(button) {
+        case "CHECK_OK":
+          this.CHECK_OK = require('../assets/images/OK.svg');
+          break;
+        case "CHECK_NG":
+          this.CHECK_NG = require('../assets/images/NG.svg');
+          break;
+      }
     }
   }
 };
@@ -221,7 +276,7 @@ export default {
 }
 
 .button-icon {
-  height:15px;
+  height: 15px;
 }
 
 .image_pred_tagbutton_active {
@@ -260,9 +315,8 @@ export default {
   line-height: calc(#{$content-top-header-hight} -2px);
   color: black;
   background: #fff;
-  img {
-    color: $content-header-color;
-    background-color:black;
+  &:hover{
+    background: #CCCCCC;
   }
 }
 
@@ -282,6 +336,7 @@ export default {
 .dot-ng {
   color: #dc3545;
 }
+
 
 #imagelist {
   display: flex;
@@ -309,5 +364,4 @@ export default {
     }
   }
 }
-
 </style>

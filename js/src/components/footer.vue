@@ -72,7 +72,10 @@ footer {
 }
 .content-margin-top{
   padding-top: 15px;
-  
+  img {
+    height: calc(32px * 0.7);
+    width: calc(170px * 0.7);
+  }
 }
 .media-wrapper{
   //margin-top: $content-margin;
