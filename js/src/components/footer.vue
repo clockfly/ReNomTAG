@@ -3,10 +3,14 @@
   <div class="col-md-12 clear-padding">
     <div class="col-md-12 clear-padding footer-content">
         <div class="col-md-3 clear-padding">
-          <div class="media-wrapper">
-            <img :src="url">
+          <div class="media-wrapper"> 
             <div class="content-margin-top">
+              <p class="logo">
+                <img :src="url">
+              </p>
+              <p class="version">
                 ReNom TAG {{version}}
+              </p>
             </div>
           </div>
         </div>
@@ -67,9 +71,18 @@ footer {
   }
 }
 .content-margin-top{
-  margin-top: 15px;
+  padding-top: 15px;
+  
 }
 .media-wrapper{
   //margin-top: $content-margin;
+}
+.content-margin-top p{
+  margin: 0;
+  display: inline-block;
+  vertical-align: middle; 
+}
+.version {
+  padding-left: 20px;
 }
 </style>
