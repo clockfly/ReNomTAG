@@ -45,11 +45,12 @@ async function load_label_candidates_dict(context) {
 
 async function load_tagged_images(context) {
   let response = await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/load_label_candidates_dict"), {
+    axios.post(utils.build_api_url("/api/load_xml_tagged_images"), {
       folder: context.state.folder
     })
   );
-  context.commit("set_labels", response.data);
+  console.log("response.data:", response.data);
+  // context.commit("set_labels", response.data);
 }
 
 export default {
@@ -70,6 +71,7 @@ export default {
     context.commit("set_file_list", { file_list: [] });
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
+    await load_tagged_images(context);
   },
 
   async load_current_image(context, file) {

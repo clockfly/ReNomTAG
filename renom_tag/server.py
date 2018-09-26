@@ -14,6 +14,7 @@ import bs4
 import os
 import re
 import sys
+import pathlib
 import mimetypes
 import time
 from io import BytesIO as IO
@@ -343,6 +344,52 @@ def save_xml_from_label_dict():
 
     xml = get_boxes(request.json['folder'], file_name)
     ret = set_json_body({'result': xml})
+    return ret
+
+@app.route("/api/load_xml_tagged_images", method=["POST"])
+def load_xml_tagged_images():
+    label_dict = request.json
+    
+    folder = pathlib.Path(label_dict['folder'])
+    print("load_xml_tagged_images")
+    #print(folder)
+    
+    targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
+    searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
+
+    # print('targetdir:' + str(targetdir))
+    
+    tagged_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file()) 
+    
+    files = [str(file) for file in  searchdir.iterdir()]
+
+    # print('files:' + str(files))
+
+    tagged_file_name = set([str(img).split('.')[0] for img in tagged_info if (targetdir / img).with_suffix('.xml').is_file()])    
+
+    # imgs = [img for img in tagged_file_name if file]
+    
+    imgs = []
+    count = 0
+    print('for')
+    for image_name in tagged_file_name:
+        for file in files:
+            if image_name == file.split('/')[3].split('.')[0]:
+                imgs.append(file)
+
+
+            count += 1
+
+    print("imgs:" + str(imgs))
+
+    # search imagefile from xml file
+    # files = [os.path.join(str(targetdir), str(file)) for file in taggedfiles ]
+
+    
+
+    #print(files)
+
+    ret = set_json_body({'result': imgs})
     return ret
 
 
