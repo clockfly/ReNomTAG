@@ -12,7 +12,7 @@
             <slot name="footer">
               <slot name="okbutton">
                 <button class="modal-default-button" @click="$emit('ok')">
-                  Ok
+                  OK
                 </button>
               </slot>
               <slot name="cancelbutton">

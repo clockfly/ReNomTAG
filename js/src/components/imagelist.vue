@@ -5,49 +5,79 @@
     </div>
     <div class="title">
       <div class="title-text">
-        Images {{is_review_selected("ok")}}
+        Images (number)
       </div>
     </div>
     <div class="content">
       <div class="row clear-margin first-row">
-        <div class="col fillter-button left">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} , {"off" : is_tag_selected("hastags") === null}]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
-        </div>  
-        <div class="col fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} , { "off" : is_tag_selected("notags") === null}]' @click='toggle_tag_filter({filter:"notags"})'>
-            <img v-if="is_tag_selected('notags')" class="button-icon" :src="NO_Tags">
-            <img v-else class="button-icon" :src="NO_Tags_OFF"> No Tags
+        <div class="col-md-4 fillter-button left">
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
+            {"off" : is_tag_selected("hastags") === null}]'
+              @click='toggle_tag_filter({filter:"hastags"})'>
+              <span class="no-icon">ALL</span>
+          </div>
+        </div>
+        <div class="col-md-8 fillter-button right">
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
+            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
+            <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
+            <span class="number"></span>
           </div>
         </div>
         
       </div>
-      <div class="row clear-margin not-first">
+      <div class="row clear-margin first-row">
+        <div class="col fillter-button">
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
+            {"off" : is_tag_selected("hastags") === null}]'
+              @click='toggle_tag_filter({filter:"hastags"})'>
+              <span class="no-icon">has tags</span>
+          </div>
+        </div>  
+        <div class="col fillter-button">
+          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} ,
+            { "off" : is_tag_selected("notags") === null}]'
+              @click='toggle_tag_filter({filter:"notags"})'>
+            <img v-if="is_tag_selected('notags')" class="button-icon" :src="NO_Tags">
+            <img v-else class="button-icon" :src="NO_Tags_OFF"> No Tags
+            <span class="number"></span>
+          </div>
+        </div>
+        
+      </div>
+      <div class="row clear-margin first-row">
         <div class="col fillter-button left">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok")}, { "off" : is_review_selected("ok") === null}]' 
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok") !==null },
+            { "off" : is_review_selected("ok") === null}]' 
             @click='toggle_review_filter({filter:"ok"})'>
             <img v-if="is_review_selected('ok')" class="button-icon" :src="CHECK_OK">
-            <img v-else class="button-icon" :src="CHECK_OK_OFF">  Check OK
+            <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
+            <span class="number"></span>
           </div>
       </div>
         <div class="col fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null}, { "off" : is_review_selected("ng") === null}]'
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null},
+            { "off" : is_review_selected("ng") === null}]'
             @click='toggle_review_filter({filter:"ng"})'>
-            <img v-if="is_review_selected('ng')" class="button-icon" :src="CHECK_NG">
-            <img v-else class="button-icon" :src="CHECK_NG_OFF"> Check NG
+            <img v-if="is_review_selected('ng')" class="ng-button-icon" :src="CHECK_NG">
+            <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
+            <span class="number"></span>
           </div>
         </div>
       </div>
-      <div class="row clear-margin not-first">
+      <div class="row clear-margin first-row">
         <div class="col fillter-button left">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
-            <img v-else class="button-icon" :src="NO_REVIEW_OFF"> No Review
+            <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
+            <span class="number"></span>
           </div>
         </div>
         <div class="col fillter-button right">
-          <div class="off" @click='toggle_review_filter({filter:"notreviewed"})'>
+          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="Revised">
-            <img v-else class="button-icon" :src="Revised_OFF">Revised
+            <img v-else class="button-icon" :src="Revised_OFF"> Revised
+            <span class="number"></span>
           </div>
         </div>
       </div>
@@ -55,13 +85,16 @@
     <div id="imagelist" @scroll="on_scroll">
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
+          <span class="img-status-wrapper">
+            <img v-if="is_review_result_ok(file)" class="img-status" :src="STATUS_CHECK_OK">
+            <img v-else class="img-status" :src="STATUS_CHECK_NG">
+          </span>
           <img
            :src='get_image_url(file)'
            :data-file='file'
            :class='{selected: is_selected(file)}'
            @click.stop.prevent="select_image">
-          <span style="position:absolute;right:0;bottom:0; color:yellow">{{get_marks(file)}}</span>
-
+          <!-- <span style="position:absolute;right:0;bottom:0; color:yellow">{{get_marks(file)}}</span>-->
         </div>
       </div>
 
@@ -87,8 +120,9 @@ export default {
       NO_Tags_OFF: require('../assets/images/NOtag_hover.svg'),
       Revised_OFF: require('../assets/images/Revised_hover.svg'),
       CHECK_OK_OFF: require('../assets/images/OK_hover.svg'),
-      CHECK_NG_OFF:require('../assets/images/NG_hover.svg'),
-
+      CHECK_NG_OFF: require('../assets/images/NG_hover.svg'),
+      STATUS_CHECK_OK: require('../assets/images/P_OK.svg'),
+      STATUS_CHECK_NG: require('../assets/images/P_NG.svg')
     };
   },
   computed: {
@@ -170,6 +204,14 @@ export default {
       }
       return s
     },
+    is_review_result_ok(file) {
+      const info = this.folder_files[file]
+      const review = get_reviewresult(info)
+      if (review === 'ng') {
+        return false;
+      }
+      return true;
+    },
     get_image_url(file) {
       return utils.build_api_url("/t/" + this.folder + "/" + file);
     },
@@ -233,17 +275,29 @@ export default {
 
 .title {
   background: $content-header-color;
-  height: $content-top-header-hight;
+  height: calc(#{$panel-height} - 7px);
   .title-text {
     font-size: $content-top-header-font-size;
-    line-height: $content-top-header-hight;
+    line-height: calc(#{$panel-height} - 7px);
     margin-left: $content-top-heder-horizonral-margin;
   }
 }
 
-.button-icon {
-  height: 15px;
+.no-icon {
+  padding-left: calc(21.97px + 5px);
 }
+
+.button-icon {
+  height: calc(15px * 0.8);
+  padding-left: 2px;
+}
+
+.ng-button-icon{
+  height: calc(15px * 0.75);
+  padding-left: 5px;
+  margin-bottom:2px;
+}
+
 
 .image_pred_tagbutton_active {
   background-color: $panel-bg-color;
@@ -272,8 +326,12 @@ export default {
   height: 20px; //calc(#{$content-top-header-hight} - 2px);
   text-align: left;
   cursor: pointer;
-  font-family: $content-inner-header-font-family;
+  font-family: $content-top-header-font-family;
   font-size: calc(#{$content-inner-header-font-size} - 2pt);
+}
+
+.number{
+  font-size: calc(#{$content-inner-header-font-size} - 5pt);
 }
 
 .off {
@@ -288,11 +346,11 @@ export default {
 
 .left {
   padding: 0;
-  padding-right: 5px;
+  padding-right: 2.5px;
 }
 .right {
   padding: 0;
-  padding-left: 5px;
+  padding-left: 2.5px;
 }
 
 .dot-ok {
@@ -325,9 +383,17 @@ export default {
 
     &.selected {
       box-sizing: border-box;
-      outline: 4px solid #e73;
-      outline-offset: -4px;
+      outline: 2px solid #EE7B33;
+      outline-offset: -2px;
     }
+  }
+  .img-status {
+    position: absolute;
+    left: -3px;
+    top: 1px;
+    margin: 0;
+    padding: 0;
+    height: 18px;
   }
 }
 </style>

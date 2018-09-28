@@ -29,7 +29,7 @@
           <div class="col-md-12 row clear-padding">
             <span class="col-md-12 text-right clear-padding"> {{img_file_name}} :</span> 
             <div class="col-md-12 clear-padding">
-              <div class="btn-wrp float-right ng-button">
+              <!-- <div class="btn-wrp float-right ng-button">
                 <button class="check-button" :class="{
                   admin: this.is_admin,
                   review_checked: this.active_image_review_result === 'ng'}"
@@ -39,24 +39,40 @@
                 <button class="check-button" :class="{
                   admin: this.is_admin,
                   review_checked: this.active_image_review_result === 'ok'}"
-                  @click="set_review_result({result:'ok'})">OK</button>
+                  @click="set_review_result({result:'ok'})"></button> 
+              </div> -->
+              <div v-if="this.is_admin" class="btn-wrp">
+              <img :src="NG_BUTTON"
+                    class="img-btn float-right ng-button"
+                    :class="{admin: this.is_admin, review_checked: this.active_image_review_result === 'ng'}"
+                    @click="set_review_result({result:'ng'})">
+              <img :src="OK_BUTTON"
+                    class="img-btn float-right ok-button"
+                    :class="{admin: this.is_admin, review_checked: this.active_image_review_result === 'ok'}"
+                    @click="set_review_result({result:'ok'})">
               </div>
             </div>
           </div>
           <div class="col-md-12 button-margin-top row clear-padding">
             <div class="col-md-12 clear-padding">
-              <button id="save_xml_btn"
+              <div v-if="canbesaved" id="save_xml_btn"
                 class="float-right"
-                :disabled="!canbesaved"
                 @click='save_annotation'>
                 Save
-              </button>
+              </div>
+              <div v-else id="save_xml_btn_disabled"
+                class="float-right"
+                @click='save_annotation'>
+                Save
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6"> 
-          <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
-          <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
+        <div class="col-md-6">
+          <div class="comment-area">
+            <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
+            <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
+          </div>
         </div>
       </div>
     </div>
@@ -83,7 +99,10 @@ export default {
 
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
-      boxes: null
+      boxes: null,
+
+      OK_BUTTON: require("../assets/images/OK_button.png"),
+      NG_BUTTON: require("../assets/images/NG_button.png")
     };
   },
   created: function() {
@@ -621,9 +640,9 @@ export default {
   color: #666;
   justify-content: center;
   align-items: center;
-  margin-top:$content-top-margin;
+  margin-top: $component-margin-top;
 
-  button {
+  .not-admin {
     cursor: not-allowed;
   }
   .admin {
@@ -640,13 +659,19 @@ export default {
     border-color: #000;
   }
   .ok-button {
-    margin-right: 4px;
+    margin-right: 2px;
   }
   .ng-button {
     margin-left: 2px;
-    margin-right: 2px;
   }
 
+  img.img-btn {
+    height: 20px;
+  }
+  
+  .comment-area {
+      padding-right: 20px;
+  }
   .form-control {
     resize: none;
     height: 90px;
@@ -661,20 +686,30 @@ export default {
   #save_xml_btn {
     background-color: $panel-bg-color;
     color: #fff;
-    height: $panel-height;
-    width: 88px;
+    height: calc(#{$panel-height} * 0.8);
+    width: calc(48px * 2);
+    line-height: calc(#{$panel-height} * 0.8);
+    text-align: center;
+    font-family: $content-top-header-font-family;
+    font-size:$content-modellist-font-size;
     &:hover {
       background-color: $panel-bg-color-hover;
       cursor: pointer;
     }
-
-    &:disabled {
-      background-color: #adadad;
-      cursor: not-allowed;
-    }
+  }
+  #save_xml_btn_disabled {
+    color: #fff;
+    height: calc(#{$panel-height} * 0.8);
+    width: calc(48px * 2);
+    line-height: calc(#{$panel-height} * 0.8);
+    text-align: center;
+    background-color:$disabled-color;
+    font-family: $content-top-header-font-family;
+    font-size:$content-modellist-font-size;
+    cursor: not-allowed;
   }
   .btn-wrp {
-    border: 1px solid black;
+    margin-top:$content-top-margin;   
   }
   
 }

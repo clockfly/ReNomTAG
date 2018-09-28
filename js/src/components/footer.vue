@@ -83,7 +83,7 @@ footer {
 .content-margin-top p{
   margin: 0;
   display: inline-block;
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 .version {
   padding-left: 20px;

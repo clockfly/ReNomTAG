@@ -16,7 +16,9 @@
 
     </div>
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
-    <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button>
+    <!-- <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button> -->
+    <img v-if="is_valid_label" @click.prevent.stop="addNewLabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button">
+    <img v-else @click.prevent.stop="addnewlabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button_disabled">
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
     <div class="title-text">
@@ -46,7 +48,7 @@
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
   </div>
-  <button v-if="this.is_admin" @click='show_delete_dialog=true' id='remove-button'>Refresh list</button>
+  <div v-if="this.is_admin" @click='show_delete_dialog=true' id='remove-button'>Refresh List</div>
 
   <modal-box v-if='show_delete_dialog'
     @ok='delete_tags'
@@ -85,6 +87,8 @@ export default {
       edit_shortcut: "", // for update shortcut
       edit_target: "", // flags
       show_delete_dialog: false,
+      add_new_tag_button: require('../assets/images/addnewtag.png'),
+      add_new_tag_button_disabled: require('../assets/images/addnewtag_disabled.png'),
       color_list: [
         "#E7009A", "#0A20C4", "#3E9AAF",
         "#FFCC33", "#EF8200", "#9F14C1", "#582396",
@@ -269,7 +273,7 @@ export default {
   width: 4px;
 }
 ::-webkit-scrollbar-track{
-  background: #FFF;
+  background: $body-color;
   border: none;
   border-radius: 4px;
 }
@@ -291,23 +295,25 @@ export default {
 
   .title {
     margin-top: $content-top-margin;
-    height: $panel-height;
+    height: calc(#{$panel-height} - 7px);
     background: $content-header-color;
-    line-height:$panel-height;
+    line-height: calc(#{$panel-height} - 7px);
     .title-text {
       margin-left: $content-margin;
       font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
     }
   }
 
   .top {
     margin-top: $component-margin-top;
-    height: $panel-height;
+    height: calc(#{$panel-height} - 7px);
     background: $content-header-color;
-    line-height:$panel-height;
+    line-height: calc(#{$panel-height} - 7px);
     .title-text {
       margin-left: $content-margin;
       font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
     }
   }
 
@@ -350,16 +356,16 @@ export default {
   }
 
   .add-new-label-btn {
-    height: $panel-height;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
+    // height: $panel-height;
+    // width: 100%;
+    // text-align: center;
+    // padding: 10px 0;
     margin: 10px 0 0 0;
     cursor: pointer;
-    border: none;
-    border-radius: 0px;
-    background-color: $panel-bg-color;
-    color: #fff;
+    // border: none;
+    // border-radius: 0px;
+    // background-color: $panel-bg-color;
+    // color: #fff;
     &:focus {
       outline: none;
     }
@@ -369,11 +375,11 @@ export default {
   }
 
   .add-new-label-btn:disabled {
-    background-color: #adadad;
+    background-color: $disabled-color;
   }
 
   #tag-tree {
-    padding-top: 15px;
+    margin-top: 10px;
     height: calc(100% - 240px);
     overflow-y: auto;
     .tag-list {
@@ -398,15 +404,15 @@ export default {
       }
     }
     input.label-text-update {
-      width: 130px;
-      height: 30px;
-      margin-top: 7px;
+      width: 130px; // height 36px
+      height: 25px;
+      margin-top: 10px;
       border-radius: 0;
     }
     input.label-shortcut-update {
       width: 31.125px;
-      height: 30px;
-      margin-top: 7px;
+      height: 25px;
+      margin-top: 10px;
       border-radius: 0;
     }
     .edit_on {
@@ -425,15 +431,11 @@ export default {
 
   .tag-list-item {
     width: 100%;
-    border-top: 1px solid #797979;
-    padding: 5px 10px 5px 10px;
+    padding: 0px 10px;
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
     background-color: #fff;
-    &:last-child {
-      border-bottom: 1px solid #797979;
-    }
 
     &:hover {
       background-color: $table-hover-color;
@@ -466,15 +468,17 @@ export default {
   }
 
   #remove-button {
-    height: $panel-height;
+    height: calc(#{$panel-height} * 0.8);
+    line-height: calc(#{$panel-height} * 0.8);
     width: 60%;
     margin-top: $component-margin-top;
     text-align: center;
+    font-family: $content-top-header-font-family;
+    font-size: $content-modellist-font-size;
     cursor: pointer;
     border: none;
     background-color: #fff;
     color: $font-color-label;
-    margin-left: auto;
 
     &:focus {
       outline: none;
@@ -498,7 +502,6 @@ export default {
     right: 20px;
   }
   #delete_labels_button {
-    height: $panel-height;
     background-color: lighten(#ff1616, 10%);
   }
   
