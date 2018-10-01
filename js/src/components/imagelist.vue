@@ -4,8 +4,8 @@
       {{loading_message}}
     </div>
     <div class="title">
-      <div class="title-text">
-        Images (number)
+      <div class="title-text row">
+        <span class="col-md-8">Images</span> <span class="col number">number</span>
       </div>
     </div>
     <div class="content">
@@ -14,73 +14,64 @@
           <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
             {"off" : is_tag_selected("hastags") === null}]'
               @click='toggle_tag_filter({filter:"hastags"})'>
-              <span class="no-icon">ALL</span>
+              ALL
           </div>
         </div>
         <div class="col-md-8 fillter-button right">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
-            <span class="number"></span>
           </div>
         </div>
         
       </div>
       <div class="row clear-margin first-row">
-        <div class="col fillter-button">
+        <!-- <div class="col fillter-button">
           <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
             {"off" : is_tag_selected("hastags") === null}]'
               @click='toggle_tag_filter({filter:"hastags"})'>
               <span class="no-icon">has tags</span>
           </div>
-        </div>  
-        <div class="col fillter-button">
+        </div> -->  
+        <div class="col fillter-button Notags-fillter">
           <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} ,
             { "off" : is_tag_selected("notags") === null}]'
               @click='toggle_tag_filter({filter:"notags"})'>
-            <img v-if="is_tag_selected('notags')" class="button-icon" :src="NO_Tags">
-            <img v-else class="button-icon" :src="NO_Tags_OFF"> No Tags
-            <span class="number"></span>
+              No Tags
           </div>
         </div>
-        
-      </div>
-      <div class="row clear-margin first-row">
-        <div class="col fillter-button left">
+        <div class="col fillter-button OK-fillter">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok") !==null },
             { "off" : is_review_selected("ok") === null}]' 
             @click='toggle_review_filter({filter:"ok"})'>
             <img v-if="is_review_selected('ok')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
-            <span class="number"></span>
           </div>
-      </div>
-        <div class="col fillter-button right">
+        </div>
+        <div class="col fillter-button NG-fillter">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null},
             { "off" : is_review_selected("ng") === null}]'
             @click='toggle_review_filter({filter:"ng"})'>
             <img v-if="is_review_selected('ng')" class="ng-button-icon" :src="CHECK_NG">
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
-            <span class="number"></span>
           </div>
-        </div>
+        </div> 
       </div>
-      <div class="row clear-margin first-row">
+      
+      <!-- <div class="row clear-margin first-row">
         <div class="col fillter-button left">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
-            <span class="number"></span>
           </div>
         </div>
         <div class="col fillter-button right">
           <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
             <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="Revised">
             <img v-else class="button-icon" :src="Revised_OFF"> Revised
-            <span class="number"></span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div id="imagelist" @scroll="on_scroll">
       <div v-for="file in file_list_top" :key="file">
@@ -111,12 +102,12 @@ export default {
     return {
       IMAGE_RELOAD_MARGIN: 100,
       IMAGE_RELOAD_AMOUNT: 300,
-      NO_REVIEW: require('../assets/images/NOreview.svg'),
+      NO_REVIEW: require('../assets/images/Need_Review_ON.svg'),
       NO_Tags: require('../assets/images/NOtag.svg'),
       Revised: require('../assets/images/Revised.svg'),
       CHECK_OK:require('../assets/images/OK.svg'),
       CHECK_NG:require('../assets/images/NG.svg'),
-      NO_REVIEW_OFF: require('../assets/images/NOreview_hover.svg'),
+      NO_REVIEW_OFF: require('../assets/images/Need_Review_Off.svg'),
       NO_Tags_OFF: require('../assets/images/NOtag_hover.svg'),
       Revised_OFF: require('../assets/images/Revised_hover.svg'),
       CHECK_OK_OFF: require('../assets/images/OK_hover.svg'),
@@ -277,9 +268,10 @@ export default {
   background: $content-header-color;
   height: calc(#{$panel-height} - 7px);
   .title-text {
+    padding: 0;
     font-size: $content-top-header-font-size;
     line-height: calc(#{$panel-height} - 7px);
-    margin-left: $content-top-heder-horizonral-margin;
+    padding-left: $content-top-heder-horizonral-margin;
   }
 }
 
@@ -324,7 +316,7 @@ export default {
 .fillter-button {
   color: black;
   height: 20px; //calc(#{$content-top-header-hight} - 2px);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   font-family: $content-top-header-font-family;
   font-size: calc(#{$content-inner-header-font-size} - 2pt);
@@ -348,7 +340,23 @@ export default {
   padding: 0;
   padding-right: 2.5px;
 }
+
 .right {
+  padding: 0;
+  padding-left: 2.5px;
+}
+
+.Notags-fillter {
+  padding: 0;
+  padding-right: 2.5px;
+}
+.OK-fillter {
+  padding: 0;
+  padding-left: 2.5px;
+  padding-right: 2.5px;
+}
+
+.NG-fillter {
   padding: 0;
   padding-left: 2.5px;
 }

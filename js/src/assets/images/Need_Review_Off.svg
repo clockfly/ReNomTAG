@@ -3,7 +3,13 @@
 <svg version="1.1" id="レイヤー_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
 	 y="0px" viewBox="0 0 841.9 595.3" style="enable-background:new 0 0 841.9 595.3;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#FFFFFF;stroke-width:104.5625;stroke-miterlimit:10;stroke-dasharray:52.2813,83.65;}
+	.st0{fill:#0B355E;}
 </style>
-<circle class="st0" cx="420.8" cy="297.8" r="236.5"/>
+<g>
+	<g>
+		<path class="st0" d="M382.8,442.2c0-15.4,4.1-27.1,12.4-35c8.3-7.9,20.3-11.8,36.1-11.8c15.2,0,27,4,35.4,12.1
+			c8.3,8.1,12.5,19.6,12.5,34.7c0,14.5-4.2,25.9-12.7,34.3c-8.4,8.3-20.2,12.5-35.2,12.5c-15.4,0-27.3-4.1-35.8-12.2
+			C387,468.6,382.8,457,382.8,442.2z M465.1,348h-67.2l-14-268.9h95.2L465.1,348z"/>
+	</g>
+</g>
 </svg>
