@@ -352,33 +352,47 @@ def load_xml_tagged_images():
     
     folder = pathlib.Path(label_dict['folder'])
     print("load_xml_tagged_images")
-    #print(folder)
     
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
 
-    # print('targetdir:' + str(targetdir))
     
     tagged_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file()) 
     
     files = [str(file) for file in  searchdir.iterdir()]
 
-    # print('files:' + str(files))
-
-    tagged_file_name = set([str(img).split('.')[0] for img in tagged_info if (targetdir / img).with_suffix('.xml').is_file()])    
-
-    # imgs = [img for img in tagged_file_name if file]
+    imgs = [] 
     
-    imgs = []
     count = 0
-    print('for')
-    for image_name in tagged_file_name:
-        for file in files:
-            if image_name == file.split('/')[3].split('.')[0]:
-                imgs.append(file)
+    # get tagged images from xml
+    for tagged_img in tagged_info:
+        load_xml_file_name = (targetdir / tagged_img)
+        
+        # load xmlfile
+        with open(str(load_xml_file_name), "r") as file:    
+            xml = file.read()
+            xml_soup = bs4.BeautifulSoup(xml, 'xml')
+            
+            # extract attribute
 
+            image_name = xml_soup.find("filename").text.strip()
+            size = xml_soup.find('size')
+            height = size.height.text.strip()
+            width = size.width.text.strip()
+            depth = size.depth.text.strip()
+            
+            objects = xml_soup.findAll('object')
+            
+            # extract bounding box
+            boxes = get_boxes(str(folder), image_name)
 
-            count += 1
+            imgs.append(dict(
+                image_name = image_name,
+                height = height,
+                width = width,
+                depth = depth,
+                boxes = boxes
+            ))
 
     print("imgs:" + str(imgs))
 
@@ -447,7 +461,8 @@ def load_label_candidates_dict():
             if 'no_shortcut' in v['shortcut']:
                 v['shortcut'] = ''
             ret.append({'id': int(k),'label': v['label'],'shortcut': v['shortcut']})
-            
+
+    # sort label
     sort = sorted(ret,key=lambda x:x['id'])
     body = json.dumps(sort)
     return set_json_body(body)
