@@ -258,6 +258,7 @@ export default {
         break;
       }
     }
+    console.log('tagged', imgs)
     state.tagged_images = imgs;
   },
 
@@ -269,5 +270,24 @@ export default {
 
   set_review_comment(state, payload) {
     state.active_image_review_comment = payload.comment
+  },
+  set_tagged_images(state, payload) {
+    const imgs = [payload]
+    const MAX_WIDTH = 10000;
+    const IMAGE_HEIGHT = 125;
+
+    let width = 0;
+    for (const img of state.tagged_images) {
+      if (img.filename !== payload.filename) {
+        imgs.push(img);
+      }
+      width += img.width * (IMAGE_HEIGHT / img.height);
+      console.log('width', width);
+      if (width > MAX_WIDTH) {
+        break;
+      }
+    }
+    console.log('load_tagged', imgs);
+    //state.tagged_images = imgs;
   }
 };

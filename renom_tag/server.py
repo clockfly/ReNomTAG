@@ -344,6 +344,7 @@ def save_xml_from_label_dict():
 
     xml = get_boxes(request.json['folder'], file_name)
     ret = set_json_body({'result': xml})
+    print(ret)
     return ret
 
 @app.route("/api/load_xml_tagged_images", method=["POST"])
@@ -351,7 +352,7 @@ def load_xml_tagged_images():
     label_dict = request.json
     
     folder = pathlib.Path(label_dict['folder'])
-    print("load_xml_tagged_images")
+    print("load_xml_tagged_images")   
     
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
@@ -368,17 +369,24 @@ def load_xml_tagged_images():
         # extract bounding box
         xml = get_boxes(str(folder), str(tagged_img))
         
-        image_name = str((searchdir / xml['annotation']['filename']))
+        # filename = str((searchdir / xml['annotation']['filename']))
+        filename = check_path(os.path.join(get_folderpath(str(folder)), IMG_DIR), xml['annotation']['filename'])
 
-        imgs.append(dict(
-            image_name = image_name,
-            height = xml['annotation']['size']['height'],
-            width = xml['annotation']['size']['width'],
-            depth = xml['annotation']['size']['depth'],
-            boxes = xml['annotation']['objects']
-        ))
+        img = open(filename, "rb").read()
+        encoded_img = base64.b64encode(img)
+        encoded_img = encoded_img.decode('utf8')
+        
+        imgs.append({
+            "filename" : xml['annotation']['filename'],
+            "height" : xml['annotation']['size']['height'],
+            "width" : xml['annotation']['size']['width'],
+            "boxes" : xml['annotation']['objects'],
+            "image" :  "data:image;base64," + encoded_img
+        })
 
     ret = set_json_body({'result': imgs})
+
+    print(ret)
     return ret
 
 

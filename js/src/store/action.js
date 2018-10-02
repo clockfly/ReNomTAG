@@ -49,10 +49,8 @@ async function load_tagged_images(context) {
       folder: context.state.folder
     })
   );
-  console.log("response.data:", response.data);
-  // context.commit("set_labels", response.data);
+  context.commit("set_tagged_images", response.data.result);
 }
-
 export default {
   async load_folder_list(context) {
     let response = await async_func(context, () =>
