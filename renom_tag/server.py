@@ -356,52 +356,27 @@ def load_xml_tagged_images():
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
 
-    
-    tagged_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file()) 
-    
-    files = [str(file) for file in  searchdir.iterdir()]
+    tagged_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file())     
 
     imgs = [] 
     
     count = 0
     # get tagged images from xml
     for tagged_img in tagged_info:
-        load_xml_file_name = (targetdir / tagged_img)
         
-        # load xmlfile
-        with open(str(load_xml_file_name), "r") as file:    
-            xml = file.read()
-            xml_soup = bs4.BeautifulSoup(xml, 'xml')
-            
-            # extract attribute
+        # load xml file convert to json   
+        # extract bounding box
+        xml = get_boxes(str(folder), str(tagged_img))
+        
+        image_name = str((searchdir / xml['annotation']['filename']))
 
-            image_name = xml_soup.find("filename").text.strip()
-            size = xml_soup.find('size')
-            height = size.height.text.strip()
-            width = size.width.text.strip()
-            depth = size.depth.text.strip()
-            
-            objects = xml_soup.findAll('object')
-            
-            # extract bounding box
-            boxes = get_boxes(str(folder), image_name)
-
-            imgs.append(dict(
-                image_name = image_name,
-                height = height,
-                width = width,
-                depth = depth,
-                boxes = boxes
-            ))
-
-    print("imgs:" + str(imgs))
-
-    # search imagefile from xml file
-    # files = [os.path.join(str(targetdir), str(file)) for file in taggedfiles ]
-
-    
-
-    #print(files)
+        imgs.append(dict(
+            image_name = image_name,
+            height = xml['annotation']['size']['height'],
+            width = xml['annotation']['size']['width'],
+            depth = xml['annotation']['size']['depth'],
+            boxes = xml['annotation']['objects']
+        ))
 
     ret = set_json_body({'result': imgs})
     return ret
