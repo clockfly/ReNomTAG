@@ -26,13 +26,6 @@
         
       </div>
       <div class="row clear-margin first-row">
-        <!-- <div class="col fillter-button">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
-            {"off" : is_tag_selected("hastags") === null}]'
-              @click='toggle_tag_filter({filter:"hastags"})'>
-              <span class="no-icon">has tags</span>
-          </div>
-        </div> -->  
         <div class="col fillter-button Notags-fillter">
           <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} ,
             { "off" : is_tag_selected("notags") === null}]'
@@ -56,39 +49,25 @@
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
           </div>
         </div> 
-      </div>
-      
-      <!-- <div class="row clear-margin first-row">
-        <div class="col fillter-button left">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
-            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
-            <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
-          </div>
-        </div>
-        <div class="col fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
-            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="Revised">
-            <img v-else class="button-icon" :src="Revised_OFF"> Revised
-          </div>
-        </div>
-      </div> -->
+      </div> 
     </div>
     <div id="imagelist" @scroll="on_scroll">
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
           <span class="img-status-wrapper">
-            <img v-if="is_review_result_ok(file)" class="img-status" :src="STATUS_CHECK_OK">
-            <img v-else class="img-status" :src="STATUS_CHECK_NG">
+            <img v-if="is_need_review(file)" class="img-status" :src="STATUS_NEED_REVIEW">
+            <img v-else-if="is_review_result_ok(file) === true" class="img-status" :src="STATUS_CHECK_OK">
+            <img v-else-if="is_review_result_ok(file) === false" class="img-status" :src="STATUS_CHECK_NG">
           </span>
           <img
            :src='get_image_url(file)'
            :data-file='file'
            :class='{selected: is_selected(file)}'
            @click.stop.prevent="select_image">
-          <!-- <span style="position:absolute;right:0;bottom:0; color:yellow">{{get_marks(file)}}</span>-->
+          <!-- <span style="position:absolute;right:0;bottom:0; color:yellow">{{is_review_result_ok(file)}}</span>-->
+          <span style="position:absolute;right:0;bottom:0; color:yellow">{{is_has_annotation(file)}}</span>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -104,14 +83,13 @@ export default {
       IMAGE_RELOAD_AMOUNT: 300,
       NO_REVIEW: require('../assets/images/Need_Review_ON.svg'),
       NO_Tags: require('../assets/images/NOtag.svg'),
-      Revised: require('../assets/images/Revised.svg'),
       CHECK_OK:require('../assets/images/OK.svg'),
       CHECK_NG:require('../assets/images/NG.svg'),
       NO_REVIEW_OFF: require('../assets/images/Need_Review_Off.svg'),
       NO_Tags_OFF: require('../assets/images/NOtag_hover.svg'),
-      Revised_OFF: require('../assets/images/Revised_hover.svg'),
       CHECK_OK_OFF: require('../assets/images/OK_hover.svg'),
       CHECK_NG_OFF: require('../assets/images/NG_hover.svg'),
+      STATUS_NEED_REVIEW: require('../assets/images/Need_Review_icon.svg'),
       STATUS_CHECK_OK: require('../assets/images/P_OK.svg'),
       STATUS_CHECK_NG: require('../assets/images/P_NG.svg')
     };
@@ -199,6 +177,22 @@ export default {
       const info = this.folder_files[file]
       const review = get_reviewresult(info)
       if (review === 'ng') {
+        return false;
+      }
+      return true;
+    },
+    is_need_review(file) {
+      const info = this.folder_files[file]
+      const review = get_reviewresult(info)
+      if (review === 'notreviewed') {
+        return true;
+      }
+      return false;
+    },
+    is_has_annotation(file) {
+      const info = this.folder_files[file]
+      const review = get_reviewresult(info)
+      if (review === 'noannotation') {
         return false;
       }
       return true;

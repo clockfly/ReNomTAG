@@ -75,7 +75,7 @@ export function get_reviewresult(d) {
   }
   const ann = d.annotation
   if (!ann) {
-    return "notreviewed"
+    return "noannotation"
   }
   const source = ann.source
   if (!source) {

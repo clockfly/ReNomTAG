@@ -352,18 +352,28 @@ def load_xml_tagged_images():
     label_dict = request.json
     
     folder = pathlib.Path(label_dict['folder'])
-    print("load_xml_tagged_images")   
     
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
 
-    tagged_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file())     
-
-    imgs = [] 
+    before_sort_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file()) 
     
-    count = 0
+    # use for sort
+    sort_info = []
+    
+    for tagged_img in before_sort_info:
+        time = os.stat(str(targetdir / tagged_img)).st_mtime
+        sort_info.append(dict(time=time, tagged_img=tagged_img))
+    
+    # sort by edited time
+    _sort = sorted(sort_info,key=lambda x:x['time'], reverse = False)
+    
+    # remove dictionary key  
+    tagged_info = [item.pop('tagged_img') for item in sort_info]
+
+    imgs = []
     # get tagged images from xml
-    for tagged_img in tagged_info:
+    for tagged_img in reversed(tagged_info):
         
         # load xml file convert to json   
         # extract bounding box
@@ -387,8 +397,6 @@ def load_xml_tagged_images():
             label = objects[i]['name']
             
             boxes.append(dict(left=left,right=right,top=top,bottom=bottom,label=label))
-        
-            print(boxes)
 
         imgs.append(dict(
             filename = xml['annotation']['filename'],
