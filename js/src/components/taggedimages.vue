@@ -7,7 +7,7 @@
       :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
       :data-filename='image.filename'
       @click.stop.prevent='on_click'>
-      {{image.filename}}
+      {{image.boxes[0].bndbox}}
       <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
           :style='boxstyles(image, box)'>
         <div class='taglabel'>{{box.label}}</div>

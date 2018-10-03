@@ -374,19 +374,31 @@ def load_xml_tagged_images():
 
         img = open(filename, "rb").read()
         encoded_img = base64.b64encode(img)
-        encoded_img = encoded_img.decode('utf8')
+        encoded_img = encoded_img.decode('utf8') 
+
+        boxes = []
+        objects = xml['annotation']['objects']
+        for i in range(len(objects)):
+            left = objects[i]['bndbox']['xmin']
+            right = objects[i]['bndbox']['xmax']
+            top = objects[i]['bndbox']['ymin']
+            bottom = objects[i]['bndbox']['ymax']
+
+            label = objects[i]['name']
+            
+            boxes.append(dict(left=left,right=right,top=top,bottom=bottom,label=label))
         
+            print(boxes)
+
         imgs.append(dict(
             filename = xml['annotation']['filename'],
             height = xml['annotation']['size']['height'],
             width = xml['annotation']['size']['width'],
-            boxes = xml['annotation']['objects'],
+            boxes = boxes,
             image =  "data:image;base64," + encoded_img
         ))
 
     ret = set_json_body({'result': imgs})
-
-    print(ret)
     return ret
 
 
