@@ -376,13 +376,13 @@ def load_xml_tagged_images():
         encoded_img = base64.b64encode(img)
         encoded_img = encoded_img.decode('utf8')
         
-        imgs.append({
-            "filename" : xml['annotation']['filename'],
-            "height" : xml['annotation']['size']['height'],
-            "width" : xml['annotation']['size']['width'],
-            "boxes" : xml['annotation']['objects'],
-            "image" :  "data:image;base64," + encoded_img
-        })
+        imgs.append(dict(
+            filename = xml['annotation']['filename'],
+            height = xml['annotation']['size']['height'],
+            width = xml['annotation']['size']['width'],
+            boxes = xml['annotation']['objects'],
+            image =  "data:image;base64," + encoded_img
+        ))
 
     ret = set_json_body({'result': imgs})
 

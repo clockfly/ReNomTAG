@@ -272,7 +272,7 @@ export default {
     state.active_image_review_comment = payload.comment
   },
   set_tagged_images(state, payload) {
-    const imgs = [payload]
+    const imgs = payload
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 125;
 
@@ -288,6 +288,6 @@ export default {
       }
     }
     console.log('load_tagged', imgs);
-    //state.tagged_images = imgs;
+    state.tagged_images = imgs;
   }
 };
