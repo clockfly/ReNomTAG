@@ -1,6 +1,7 @@
 <template>
 <div id="tags"> 
   <form v-if="this.is_admin" id="add-new-label-form">
+    <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <div class="add-new-label-input-area">
       <input  type="text"
               class="label-text"
@@ -15,7 +16,7 @@
               placeholder="key...">
 
     </div>
-    <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
+    <!-- <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div> -->
     <!-- <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button> -->
     <img v-if="is_valid_label" @click.prevent.stop="addNewLabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button">
     <img v-else @click.prevent.stop="addnewlabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button_disabled">
@@ -384,8 +385,7 @@ export default {
   }
 
   #tag-tree {
-    margin-top: 10px;
-    height: calc(100% - 240px);
+    height: calc(100% - 220px);
     overflow-y: auto;
     .tag-list {
       width: 100%;
@@ -441,11 +441,14 @@ export default {
     justify-content: space-between;
     box-sizing: border-box;
     background-color: #fff;
-    margin-top: 5px;
+    
     &:hover {
       background-color: $table-hover-color;
       cursor: pointer;
 
+    }
+    &:not(fast-child){
+      margin-top: 5px;
     }
     .label-color {
       //margin-top: 9px;
@@ -481,7 +484,7 @@ export default {
     height: calc(#{$panel-height} * 0.8);
     line-height: calc(#{$panel-height} * 0.8);
     width: 60%;
-    margin-top: $component-margin-top;
+    margin-top: calc(#{$component-margin-top} *2);
     text-align: center;
     font-family: $content-top-header-font-family;
     font-size: $content-modellist-font-size;
@@ -505,11 +508,11 @@ export default {
     color: #ff1616;
     font-size: 10pt;
     z-index: 9999;
-    background-color: #f2ee63;
-    margin: 5px;
-    padding: 5px;
-    border-radius: 5px;
+    background-color:$table-hover-color;
+    margin: -5px;
     right: 20px;
+    top: 42px;
+
   }
   #delete_labels_button {
     background-color: lighten(#ff1616, 10%);

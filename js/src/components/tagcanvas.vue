@@ -27,7 +27,7 @@
 
         <div class= "col-md-6 row">
           <div class="col-md-12 row clear-padding">
-            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} :</span> 
+            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span> 
             <div class="col-md-12 clear-padding">
               <!-- <div class="btn-wrp float-right ng-button">
                 <button class="check-button" :class="{
@@ -42,14 +42,27 @@
                   @click="set_review_result({result:'ok'})"></button> 
               </div> -->
               <div v-if="this.is_admin" class="btn-wrp">
-              <img :src="NG_BUTTON"
-                    class="img-btn float-right ng-button"
-                    :class="{admin: this.is_admin, review_checked: this.active_image_review_result === 'ng'}"
-                    @click="set_review_result({result:'ng'})">
-              <img :src="OK_BUTTON"
-                    class="img-btn float-right ok-button"
-                    :class="{admin: this.is_admin, review_checked: this.active_image_review_result === 'ok'}"
-                    @click="set_review_result({result:'ok'})">
+                <img v-if="canbesaved && this.active_image_review_result !== 'ng'" :src="NG_BUTTON"
+                      class="img-btn float-right ng-button"
+                      @click="set_review_result({result:'ng'})">
+                
+                <img v-else-if="canbesaved && this.active_image_review_result === 'ng'" :src="NG_BUTTON_PUSH"
+                      class="img-btn float-right ng-button"
+                      @click="set_review_result({result:'ng'})">
+                
+                <img v-else :src="NG_BUTTON"
+                      class="img-btn-disabled float-right ng-button">
+                
+                <img v-if="canbesaved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
+                      class="img-btn float-right ok-button"
+                      :class="{review_checked: this.active_image_review_result === 'ok'}"
+                      @click="set_review_result({result:'ok'})">
+                
+                <img v-else-if="canbesaved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
+                      class="img-btn float-right ok-button"
+                      @click="set_review_result({result:'ok'})">
+                
+                <img v-else :src="OK_BUTTON" class="img-btn-disabled float-right ok-button">
               </div>
             </div>
           </div>
@@ -101,7 +114,10 @@ export default {
       boxes: null,
 
       OK_BUTTON: require("../assets/images/OK_button.png"),
-      NG_BUTTON: require("../assets/images/NG_button.png")
+      NG_BUTTON: require("../assets/images/NG_button.png"),
+      OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
+      NG_BUTTON_PUSH: require("../assets/images/NG_push.png")
+
     };
   },
   created: function() {
@@ -666,7 +682,14 @@ export default {
 
   img.img-btn {
     height: 23px;
-
+    cursor: pointer;
+  }
+  img.img-btn-disabled{
+    height: 23px;
+    
+    &:hover {
+      cursor: not-allowed;;
+    }
   }
   
   .comment-area {

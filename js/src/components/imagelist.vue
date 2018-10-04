@@ -321,7 +321,8 @@ export default {
 }
 
 .number{
-  font-size: calc(#{$content-inner-header-font-size} - 5pt);
+  font-size: calc(#{$content-inner-header-font-size} - 3pt);
+  margin-top: calc((#{$content-inner-header-font-size} - 2pt) * 0.15);
 }
 
 .off {
