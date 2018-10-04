@@ -5,7 +5,7 @@
     </div>
     <div class="title">
       <div class="title-text row">
-        <span class="col-md-8">Images</span> <span class="col number">number</span>
+        <span class="col-md-8">Images</span> <span class="col number">100000</span>
       </div>
     </div>
     <div class="content">
@@ -60,6 +60,7 @@
             <img v-else-if="is_review_result_ok(file) === false" class="img-status" :src="STATUS_CHECK_NG">
           </span>
           <img
+            class="thumbnail"
            :src='get_image_url(file)'
            :data-file='file'
            :class='{selected: is_selected(file)}'
@@ -288,11 +289,14 @@ export default {
 .image_pred_tagbutton_active {
   background-color: $panel-bg-color;
   color: $font-color;
+  height: calc(#{$content-top-header-hight} - 12px);
+  line-height: calc(#{$content-top-header-hight} - 12px);
 }
 .image_pred_reviewbutton_active {
   background-color: $panel-bg-color;
   color: $font-color;
-}
+  height: calc(#{$content-top-header-hight} - 12px);
+  line-height: calc(#{$content-top-header-hight} - 12px);}
 
 .clear-margin {
   margin-right: 0;
@@ -309,7 +313,7 @@ export default {
 
 .fillter-button {
   color: black;
-  height: 20px; //calc(#{$content-top-header-hight} - 2px);
+  height: 20px;
   text-align: center;
   cursor: pointer;
   font-family: $content-top-header-font-family;
@@ -321,8 +325,8 @@ export default {
 }
 
 .off {
-  height: calc(#{$content-top-header-hight} -2px);
-  line-height: calc(#{$content-top-header-hight} -2px);
+  height: calc(#{$content-top-header-hight} - 12px);
+  line-height: calc(#{$content-top-header-hight} - 12px);
   color: black;
   background: #fff;
   &:hover{
@@ -374,7 +378,11 @@ export default {
   margin-top: calc(#{$content-top-margin} * 2);
   align-content: flex-start;
   justify-content: space-evenly;
-  background:#fff;
+  background: #fff;
+
+  .thumbnail {
+    cursor: pointer;
+  }
 
   img {
     box-sizing: border-box;
@@ -397,5 +405,9 @@ export default {
     padding: 0;
     height: 18px;
   }
+}
+
+@function calc_button_size($base_size, $adjustment_size) {
+  @return calc($base_size - $adjustment_size);
 }
 </style>

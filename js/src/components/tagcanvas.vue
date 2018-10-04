@@ -61,8 +61,7 @@
                 Save
               </div>
               <div v-else id="save_xml_btn_disabled"
-                class="float-right"
-                @click='save_annotation'>
+                class="float-right">
                 Save
               </div>
             </div>
@@ -612,7 +611,7 @@ export default {
 
     .box {
       position: absolute;
-      border: solid #73dd00 3px;
+      border: solid #73dd00 1px;
       left: $BOX_MARGIN;
       top: $BOX_MARGIN;
       right: $BOX_MARGIN;
@@ -631,7 +630,7 @@ export default {
   #newtag {
     box-sizing: border-box;
     position: absolute;
-    border: solid red 3px;
+    border: solid red 1px;
   }
 }
 
@@ -666,7 +665,8 @@ export default {
   }
 
   img.img-btn {
-    height: 20px;
+    height: 23px;
+
   }
   
   .comment-area {
@@ -687,7 +687,7 @@ export default {
     background-color: $panel-bg-color;
     color: #fff;
     height: calc(#{$panel-height} * 0.8);
-    width: calc(48px * 2);
+    width: calc(55px * 2);
     line-height: calc(#{$panel-height} * 0.8);
     text-align: center;
     font-family: $content-top-header-font-family;
@@ -700,7 +700,7 @@ export default {
   #save_xml_btn_disabled {
     color: #fff;
     height: calc(#{$panel-height} * 0.8);
-    width: calc(48px * 2);
+    width: calc(55px * 2);
     line-height: calc(#{$panel-height} * 0.8);
     text-align: center;
     background-color:$disabled-color;

@@ -30,7 +30,10 @@ let state = {
   labels: [],
 
   // tagged images
-  tagged_images: []
+  tagged_images: [],
+
+  // label colors
+  label_color: []
 };
 
 export default state;

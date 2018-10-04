@@ -27,8 +27,9 @@
   </div>
   <div id='tag-tree'>
     <ul class='tag-list'>
-        <li v-for='(data, index) in labels' v-bind:key='data.id'
+        <li v-for='(data, index) in labels' v-bind:key='data.id' 
             class='tag-list-item' @click="on_click" :data-label='data.label'>
+            <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
             <input v-if='edit_target[0] === data.label' type="text"
                     class="label-text-update"
                     v-model='edit_label'
@@ -41,7 +42,9 @@
                     @keydown.stop.prevent.self='update_label'
                     @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
-            <div v-else-if='data.shortcut' class="label-shortcut" v-bind:style="{background: color_list[index % 10]}">{{data.shortcut}}</div>
+            <!-- <div v-else-if='data.shortcut' class="label-shortcut" v-bind:style="{background: color_list[index % 10]}">{{data.shortcut}}</div> -->
+            <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
+
             <i v-if="edit_target[0] === data.label" @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_on"></i>
             <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_off"></i>
         </li>
@@ -90,9 +93,11 @@ export default {
       add_new_tag_button: require('../assets/images/addnewtag.png'),
       add_new_tag_button_disabled: require('../assets/images/addnewtag_disabled.png'),
       color_list: [
-        "#E7009A", "#0A20C4", "#3E9AAF",
-        "#FFCC33", "#EF8200", "#9F14C1", "#582396",
-        "#8BAA1A", "#13894B", "#E94C33"
+        "#E7009A",
+        "#9F14C1", "#582396", "#0A20C4",
+        "#3E9AAF", "#13894B", "#8BAA1A",
+        "#FFCC33", "#EF8200", "#E94C33" 
+          
       ]
     };
   },
@@ -404,7 +409,7 @@ export default {
       }
     }
     input.label-text-update {
-      width: 130px; // height 36px
+      width: 130px;
       height: 25px;
       margin-top: 10px;
       border-radius: 0;
@@ -431,28 +436,33 @@ export default {
 
   .tag-list-item {
     width: 100%;
-    padding: 0px 10px;
+    padding-right: 10px;
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
     background-color: #fff;
-
+    margin-top: 5px;
     &:hover {
       background-color: $table-hover-color;
       cursor: pointer;
 
     }
-
+    .label-color {
+      //margin-top: 9px;
+      //height:18px;
+      width: 5px;
+    }
     .label-text,
     .label-shortcut {
       padding: 0;
       margin: 0;
       outline: none;
-      color: #777777;
+      color: $font-color-label;
     }
 
     .label-text {
       flex: 1;
+      margin-left: 10px;
     }
     .label-shortcut {
       width: 35px;
@@ -460,7 +470,7 @@ export default {
       text-align: center;
       margin-top: calc(18px * 0.5);
       line-height: 18px;
-      color: $font-color;
+      color: $font-color-label;
       margin-right: 5px;
       justify-content: center;
       align-items: center;
