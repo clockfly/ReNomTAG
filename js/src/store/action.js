@@ -43,6 +43,14 @@ async function load_label_candidates_dict(context) {
   context.commit("set_labels", response.data);
 }
 
+async function load_tagged_images(context) {
+  let response = await async_func(context, () =>
+    axios.post(utils.build_api_url("/api/load_xml_tagged_images"), {
+      folder: context.state.folder
+    })
+  );
+  context.commit("set_tagged_images", response.data.result);
+}
 export default {
   async load_folder_list(context) {
     let response = await async_func(context, () =>
@@ -61,6 +69,7 @@ export default {
     context.commit("set_file_list", { file_list: [] });
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
+    await load_tagged_images(context);
   },
 
   async load_current_image(context, file) {
@@ -220,6 +229,12 @@ export default {
     context.commit("update_file", {
       filename: cur_filename,
       info: ret.data.result
+    });
+  },
+  async delete_taglist(context, payload) {
+    context.commit("set_labels", []);
+    axios.post(utils.build_api_url("/api/delete_label_candidates_dict"), {
+      folder: context.state.folder
     });
   }
 };

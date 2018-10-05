@@ -4,6 +4,7 @@
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
 
+      <navarrow class="arrow" dir="back"/>
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
@@ -17,41 +18,88 @@
           <div class='taglabel'>{{get_box_label(idx)}}</div>
         </div>
       </div>
+
+      <navarrow class="arrow" dir="forward"/>
     </div>
 
     <div>
-      <div id='imageinfo'>
+      <div id='imageinfo' class="row">
 
-        <div>
-          <div>
-            {{img_file_name}} :
-            <button :class="{
-              admin: this.is_admin,
-              review_checked: this.active_image_review_result === 'ok'}"
-              @click="set_review_result({result:'ok'})">OK &#x1F44C;</button>
-
-            <button :class="{
-              admin: this.is_admin,
-              review_checked: this.active_image_review_result === 'ng'}"
-              @click="set_review_result({result:'ng'})">NG &#x1F44E;</button>
+        <div class= "col-md-6 row">
+          <div class="col-md-12 row clear-padding">
+            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span> 
+            <div class="col-md-12 clear-padding">
+              <!-- <div class="btn-wrp float-right ng-button">
+                <button class="check-button" :class="{
+                  admin: this.is_admin,
+                  review_checked: this.active_image_review_result === 'ng'}"
+                  @click="set_review_result({result:'ng'})">NG</button>
+              </div>
+              <div class="btn-wrp float-right ok-button">
+                <button class="check-button" :class="{
+                  admin: this.is_admin,
+                  review_checked: this.active_image_review_result === 'ok'}"
+                  @click="set_review_result({result:'ok'})"></button> 
+              </div> -->
+              <div v-if="this.is_admin" class="btn-wrp">
+                <img v-if="canbesaved && this.active_image_review_result !== 'ng'" :src="NG_BUTTON"
+                      class="img-btn float-right ng-button"
+                      @click="set_review_result({result:'ng'})">
+                
+                <img v-else-if="canbesaved && this.active_image_review_result === 'ng'" :src="NG_BUTTON_PUSH"
+                      class="img-btn float-right ng-button"
+                      @click="set_review_result({result:'ng'})">
+                
+                <img v-else :src="NG_BUTTON"
+                      class="img-btn-disabled float-right ng-button">
+                
+                <img v-if="canbesaved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
+                      class="img-btn float-right ok-button"
+                      :class="{review_checked: this.active_image_review_result === 'ok'}"
+                      @click="set_review_result({result:'ok'})">
+                
+                <img v-else-if="canbesaved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
+                      class="img-btn float-right ok-button"
+                      @click="set_review_result({result:'ok'})">
+                
+                <img v-else :src="OK_BUTTON" class="img-btn-disabled float-right ok-button">
+              </div>
+            </div>
           </div>
-          <textarea style='width:300px' v-model="active_image_review_comment"></textarea>
+          <div class="col-md-12 button-margin-top row clear-padding">
+            <div class="col-md-12 clear-padding">
+              <div v-if="canbesaved" id="save_xml_btn"
+                class="float-right"
+                @click='save_annotation'>
+                Save
+              </div>
+              <div v-else id="save_xml_btn_disabled"
+                class="float-right">
+                Save
+              </div>
+            </div>
+          </div>
         </div>
-        <button id="save_xml_btn"
-          :disabled="!canbesaved"
-          @click='save_annotation'>
-          Save <span class="save_xml_btn_arrow">&gt;&gt;</span>
-        </button>
+        <div class="col-md-6">
+          <div class="comment-area">
+            <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
+            <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import NavArrow from "@/components/navarrow";
 import { mapState, mapMutations, mapActions } from "vuex";
 import * as utils from "@/utils";
 
 export default {
+  components: {
+    navarrow: NavArrow
+  },
   data: function() {
     return {
       BOX_MARGIN: 2, // margin between box and box-border
@@ -63,10 +111,15 @@ export default {
 
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
-      boxes: null
+      boxes: null,
+
+      OK_BUTTON: require("../assets/images/OK_button.png"),
+      NG_BUTTON: require("../assets/images/NG_button.png"),
+      OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
+      NG_BUTTON_PUSH: require("../assets/images/NG_push.png")
+
     };
   },
-
   created: function() {
     window.addEventListener("resize", this.on_resize);
     window.addEventListener("keyup", this.on_keyup);
@@ -531,16 +584,23 @@ export default {
 <style lang='scss' scoped>
 #canvasblock {
   flex-grow: 1;
+  background: #fff;
 }
-
+.clear-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
 #canvaspanel {
   flex-grow: 1;
   display: flex;
   position: relative;
-  height: calc(100% - 150px);
-
+  height: calc(100% - 150px + calc(#{$component-margin-top}));
+  .arrow{
+    margin-top: 25%;
+  }
   #canvas {
     margin: auto;
+    margin-top: $component-margin-top;
     width: 90%;
     max-width: 90%;
     max-height: 95%;
@@ -565,7 +625,7 @@ export default {
 
     .box {
       position: absolute;
-      border: solid #73dd00 3px;
+      border: solid #73dd00 1px;
       left: $BOX_MARGIN;
       top: $BOX_MARGIN;
       right: $BOX_MARGIN;
@@ -584,7 +644,7 @@ export default {
   #newtag {
     box-sizing: border-box;
     position: absolute;
-    border: solid red 3px;
+    border: solid red 1px;
   }
 }
 
@@ -593,37 +653,85 @@ export default {
   color: #666;
   justify-content: center;
   align-items: center;
+  margin-top: $component-margin-top;
 
-  button {
+  .not-admin {
     cursor: not-allowed;
   }
-
   .admin {
     cursor: pointer;
   }
 
+  .filename {
+    text-align: right;
+  }
+  .check-button {
+    height: $panel-height;
+    width: 38px;
+    background: #fff;
+    border-color: #000;
+  }
+  .ok-button {
+    margin-right: 2px;
+  }
+  .ng-button {
+    margin-left: 2px;
+  }
+
+  img.img-btn {
+    height: 23px;
+    cursor: pointer;
+  }
+  img.img-btn-disabled{
+    height: 23px;
+    
+    &:hover {
+      cursor: not-allowed;;
+    }
+  }
+  
+  .comment-area {
+      padding-right: 20px;
+  }
+  .form-control {
+    resize: none;
+    height: 90px;
+    border-radius: 0px;
+  }
   .review_checked {
     background-color: #a2c84a;
   }
-
+  .button-margin-top {
+    margin-top: calc(#{$content-top-margin} * 0.5);
+  }
   #save_xml_btn {
-    background-color: #326699;
-    border-radius: 5px;
+    background-color: $panel-bg-color;
     color: #fff;
-    padding: 3px 15px;
-    margin-left: 10px;
-    .save_xml_btn_arrow {
-      margin-left: 5px;
-    }
-
+    height: calc(#{$panel-height} * 0.8);
+    width: calc(55px * 2);
+    line-height: calc(#{$panel-height} * 0.8);
+    text-align: center;
+    font-family: $content-top-header-font-family;
+    font-size:$content-modellist-font-size;
     &:hover {
-      background-color: lighten(#326699, 10%);
+      background-color: $panel-bg-color-hover;
       cursor: pointer;
     }
-
-    &:disabled {
-      background-color: #adadad;
-    }
   }
+  #save_xml_btn_disabled {
+    color: #fff;
+    height: calc(#{$panel-height} * 0.8);
+    width: calc(55px * 2);
+    line-height: calc(#{$panel-height} * 0.8);
+    text-align: center;
+    background-color:$disabled-color;
+    font-family: $content-top-header-font-family;
+    font-size:$content-modellist-font-size;
+    cursor: not-allowed;
+  }
+  .btn-wrp {
+    margin-top:$content-top-margin;   
+  }
+  
 }
 </style>

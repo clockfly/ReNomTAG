@@ -1,32 +1,28 @@
 <template>
   <div id="tagged-images">
     <div class="labelbox">
-      <div class="label_text">Labeled<br>Images</div>
-
-
-    </div><div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
-         :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
-         :data-filename='image.filename'
-         @click.stop.prevent='on_click'>
-
-        <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
-           :style='boxstyles(image, box)'>
+      <div class="label_text">Images<br />+Tags</div>
+    </div>
+    <div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
+      :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
+      :data-filename='image.filename'
+      @click.stop.prevent='on_click'>
+      <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
+          :style='boxstyles(image, box)'>
         <div class='taglabel'>{{box.label}}</div>
-
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 
-export const BLOCK_HEIGHT = 200;
+export const BLOCK_HEIGHT = 125;
 
 export default {
   computed: {
-    ...mapState(["tagged_images"])
+    ...mapState(["tagged_images", "toggle_tag_filter"])
   },
 
   methods: {
@@ -61,8 +57,7 @@ export default {
   box-sizing: border-box;
   background-color: #cccccc;
   white-space: nowrap;
-  height: 200px;
-  width: 100%;
+  height: 125px;
   overflow: hidden;
   flex-wrap: wrap;
 
@@ -72,21 +67,22 @@ export default {
     line-height: normal;
     color: white;
     background-color: #1e264d;
-    width: 200px;
-    height: 200px;
+    width: 125px;
+    height: 125px;
     text-align: center;
   }
   .label_text {
     position: absolute;
     margin: auto;
-    width: 200px;
-    margin-top: 60px;
+    width: 125px;
+    /*line-height: 50px;*/
+    margin-top: 40px;
   }
   .tagged-image {
     box-sizing: border-box;
     position: relative;
     display: inline-block;
-    height: 200px;
+    height: 125px;
     background-size: cover;
     margin-top: 0px;
   }

@@ -11,8 +11,9 @@ let state = {
   folder_list: [],
   // image files
   folder_files: {},
-  tag_filter: ["notags"],
-  review_filter: ["ok", "ng", "notreviewed"],
+  tag_filter: ['hastags','notags'],
+  review_filter: ['ok','ng','notreviewed'],
+  filter_method: "All",
   files: [],
   filename_max_display: 0,
 
@@ -30,7 +31,10 @@ let state = {
   labels: [],
 
   // tagged images
-  tagged_images: []
+  tagged_images: [],
+
+  // label colors
+  label_color: []
 };
 
 export default state;

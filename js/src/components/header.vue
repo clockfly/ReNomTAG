@@ -3,16 +3,10 @@
 
     <i id='toggle-menu' class='fa fa-bars' aria-hidden='true'
      @click='toggleMenuVisible'></i>
-    <div class="tool-name"><span class="bold">ReNom</span> TAG</div>
-    <div class='header-buttons'>
-      <div :class='["image_pred_button", is_tag_selected("hastags")]' @click='toggle_tag_filter({filter:"hastags"})'>has tags</div>
-
-      <div :class='["image_pred_button",  is_tag_selected("notags")]' @click='toggle_tag_filter({filter:"notags"})'>no tags</div>
-
-      <div :class='["image_pred_button", is_review_selected("ok")]' @click='toggle_review_filter({filter:"ok"})'>ok</div>
-
-      <div :class='["image_pred_button", is_review_selected("ng")]' @click='toggle_review_filter({filter:"ng"})'>ng</div>
-      <div :class='["image_pred_button", is_review_selected("notreviewed")]' @click='toggle_review_filter({filter:"notreviewed"})'>not reviewed yet</div>
+    <div class="tool-name">
+      <span class="renom">ReNom</span>
+      <span v-if="this.is_admin" class="current-page">TAG &gt; Admin</span>
+      <span v-else class="current-page">TAG &gt; Main</span>
     </div>
   </header>
 </template>
@@ -24,7 +18,10 @@ export default {
   name: "AppHeader",
 
   computed: {
-    ...mapState(["tag_filter", "review_filter"])
+    ...mapState([
+      "tag_filter",
+      "is_admin"
+    ])
   },
 
   methods: {
@@ -48,7 +45,7 @@ export default {
     },
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;
-      this.set_main_menu_visible({ visible: !cur });
+      this.set_main_menu_visible({ visible: !cur })
     }
   }
 };
@@ -57,22 +54,32 @@ export default {
 <style lang='scss'>
 header {
   box-sizing: border-box;
-  width: 100%;
-  height: 50px;
+  height: $application-header-hight;
   margin: 0;
   padding: 0;
-  background-color: #1e264d;
+  background-color: $content-header-color;
   display: flex;
   align-items: center;
-  font-size: 24px;
+  font-family: $header-product-name-font-family;
+  font-size: $font-size;
 
   .tool-name {
     box-sizing: border-box;
-    font-size: 18px;
-    .bold {
-      font-size: 18px;
-      font-weight: bold;
+    .renom,
+    .current-page {
+      line-height: $application-header-hight;
+      vertical-align: middle;
     }
+    .renom {
+      margin-left: $content-top-heder-horizonral-margin;
+      font-family:$header-product-name-font-family;
+      font-size: $header-product-name-font-size;
+    }
+    .current-page {
+      font-family:$header-title-font-family;
+      font-size: $header-title-font-size;
+    }
+    
   }
   .header-buttons {
     display: flex;

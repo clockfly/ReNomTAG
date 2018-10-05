@@ -28,7 +28,7 @@ function select_files(state) {
   function any(preds, f) {
     for (let pred of preds) {
       if (pred(f)) {
-        return true;
+        return true
       }
     }
     return false;
@@ -239,14 +239,14 @@ export default {
   add_tagged_image(state, payload) {
     const imgs = [payload];
     const MAX_WIDTH = 10000;
-    const IMAGE_HEIGHT = 200;
+    const IMAGE_HEIGHT = 125;
 
     let width = 0;
     for (const img of state.tagged_images) {
       if (img.filename !== payload.filename) {
         imgs.push(img);
       }
-      width += img.width * (img.height / IMAGE_HEIGHT);
+      width += img.width * (IMAGE_HEIGHT / img.height);
       if (width > MAX_WIDTH) {
         break;
       }
@@ -261,6 +261,54 @@ export default {
   },
 
   set_review_comment(state, payload) {
-    state.active_image_review_comment = payload.comment;
+    state.active_image_review_comment = payload.comment
+  },
+  set_tagged_images(state, payload) {
+    const imgs = payload
+    const MAX_WIDTH = 10000;
+    const IMAGE_HEIGHT = 125;
+
+    let width = 0;
+    for (const img of state.tagged_images) {
+      if (img.filename !== payload.filename) {
+        imgs.push(img);
+      }
+      width += img.width * (IMAGE_HEIGHT / img.height);
+      if (width > MAX_WIDTH) {
+        break;
+      }
+    }
+    state.tagged_images = imgs;
+  },
+  set_filter(state, payload) {
+
+    switch(payload){
+      case "All":
+        state.tag_filter = ['hastags','notags'];
+        state.review_filter = ['ok','ng','notreviewed']; 
+        break;
+      case "NeedReview":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['notreviewed'];
+        break;
+      case "NoTags":
+        state.tag_filter = ['notags'];
+        state.review_filter = ['notreviewed'];
+        break;
+      case "CHECK_OK":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['ok'];
+        break;
+      case "CHECK_NG":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['ng'];
+        break;
+      default:
+        state.tag_filter = ['hastags','notags'];
+        state.review_filter = ['ok','ng','notreviewed'];
+        break;
+    }
+    state.filter_method = payload;
+    select_files(state);
   }
 };
