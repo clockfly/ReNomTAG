@@ -16,14 +16,12 @@
               placeholder="key...">
 
     </div>
-    <!-- <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div> -->
-    <!-- <button @click.prevent.stop="addNewLabel" type="button" class="add-new-label-btn" :disabled='!is_valid_label'>Add New Tag</button> -->
     <img v-if="is_valid_label" @click.prevent.stop="addNewLabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button">
     <img v-else @click.prevent.stop="addnewlabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button_disabled">
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
     <div class="title-text">
-      Tag List
+      Tag List{{edit_target}}
     </div>
   </div>
   <div id='tag-tree'>
@@ -33,8 +31,7 @@
             <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
             <input v-if='edit_target[0] === data.label' type="text"
                     class="label-text-update"
-                    v-model='edit_label'
-                    
+                    v-model='edit_label' 
                     placeholder="label name...">
             <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
             <input v-if="edit_target[0] === data.label" type="text"
@@ -43,7 +40,6 @@
                     @keydown.stop.prevent.self='update_label'
                     @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
-            <!-- <div v-else-if='data.shortcut' class="label-shortcut" v-bind:style="{background: color_list[index % 10]}">{{data.shortcut}}</div> -->
             <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
 
             <i v-if="edit_target[0] === data.label" @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_on"></i>
