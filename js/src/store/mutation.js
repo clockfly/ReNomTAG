@@ -253,12 +253,10 @@ export default {
         imgs.push(img);
       }
       width += img.width * (IMAGE_HEIGHT / img.height);
-      console.log('width', width);
       if (width > MAX_WIDTH) {
         break;
       }
     }
-    console.log('tagged', imgs)
     state.tagged_images = imgs;
   },
 
@@ -282,12 +280,10 @@ export default {
         imgs.push(img);
       }
       width += img.width * (IMAGE_HEIGHT / img.height);
-      console.log('width', width);
       if (width > MAX_WIDTH) {
         break;
       }
     }
-    console.log('load_tagged', imgs);
     state.tagged_images = imgs;
   },
   set_filter(state, payload) {
@@ -318,9 +314,6 @@ export default {
         state.review_filter = ['ok','ng','notreviewed'];
         break;
     }
-    console.log('after:filter_state', state.filter_method)
-    console.log('tag filter state:', state.tag_filter)
-    console.log('tag filter state:', state.review_filter)
     state.filter_method = payload;
     select_files(state);
   }

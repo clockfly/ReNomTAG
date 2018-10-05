@@ -5,7 +5,8 @@
      @click='toggleMenuVisible'></i>
     <div class="tool-name">
       <span class="renom">ReNom</span>
-      <span class="current-page">TAG &gt; Main</span>
+      <span v-if="this.is_admin" class="current-page">TAG &gt; Admin</span>
+      <span v-else class="current-page">TAG &gt; Main</span>
     </div>
   </header>
 </template>
@@ -20,7 +21,8 @@ export default {
   computed: {
     ...mapState([
       "tag_filter",
-      "review_filter"])
+      "is_admin"
+    ])
   },
 
   methods: {

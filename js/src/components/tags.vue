@@ -21,7 +21,7 @@
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
     <div class="title-text">
-      Tag List{{edit_target}}
+      Tag List
     </div>
   </div>
   <div id='tag-tree'>
@@ -29,12 +29,12 @@
         <li v-for='(data, index) in labels' v-bind:key='data.id' 
             class='tag-list-item' @click="on_click" :data-label='data.label'>
             <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
-            <input v-if='edit_target[0] === data.label' type="text"
+            <input v-if='edit_target[0] === data.label && edit_mode === true ' type="text"
                     class="label-text-update"
                     v-model='edit_label' 
                     placeholder="label name...">
             <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
-            <input v-if="edit_target[0] === data.label" type="text"
+            <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
                     class="label-shortcut-update"
                     v-model='edit_shortcut'
                     @keydown.stop.prevent.self='update_label'
@@ -42,8 +42,9 @@
                     placeholder="key...">
             <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
 
-            <i v-if="edit_target[0] === data.label" @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_on"></i>
-            <i v-else @click.stop.prevent="to_edit_mode" class="fa fa-ellipsis-h edit_icon edit_off"></i>
+            <i v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="fa fa-ellipsis-h edit_icon edit_on"></i>
+            <i v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="fa fa-ellipsis-h edit_icon edit_off"></i>
+
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
@@ -86,6 +87,7 @@ export default {
       edit_label: "", // for update label
       edit_shortcut: "", // for update shortcut
       edit_target: "", // flags
+      edit_mode: false,
       show_delete_dialog: false,
       add_new_tag_button: require('../assets/images/addnewtag.png'),
       add_new_tag_button_disabled: require('../assets/images/addnewtag_disabled.png'),
@@ -211,12 +213,15 @@ export default {
       const label = event.currentTarget.dataset.label;
       this.$store.commit("set_activebox_label", { label });
     },
-
-    to_edit_mode(event) {
-      let children = event.currentTarget.parentNode.children;
-      let label = children[0].innerText;
-      let shortcut = children[1].innerText;
+    edit_toggle() {
+      this.edit_mode = !this.edit_mode;
+    },
+    to_edit_mode(index, tag, tag_shortcut) {
+      
+      let label = tag;
+      let shortcut = tag_shortcut;
       let target = [label, shortcut, true];
+
       this.edit_label = label;
       this.edit_shortcut = shortcut;
       this.edit_target = target;
@@ -256,7 +261,6 @@ export default {
     delete_tags(event) {
       
       this.$store.dispatch('delete_taglist')
-      
       this.show_delete_dialog = false;
     },
     get_tag_name: function(tag_name) {
