@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang='scss'>
-@import "/../node_modules/bootstrap/scss/bootstrap.scss";
+
 @font-face {
   font-family: $header-product-name-font-family;
   src: url("./fonts/OpenSans-Regular.ttf");
