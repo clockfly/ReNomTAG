@@ -379,7 +379,6 @@ def load_xml_tagged_images():
         # extract bounding box
         xml = get_boxes(str(folder), str(tagged_img))
         
-        # filename = str((searchdir / xml['annotation']['filename']))
         filename = check_path(os.path.join(get_folderpath(str(folder)), IMG_DIR), xml['annotation']['filename'])
 
         img = open(filename, "rb").read()
@@ -388,6 +387,7 @@ def load_xml_tagged_images():
 
         boxes = []
         objects = xml['annotation']['objects']
+        # get objects
         for i in range(len(objects)):
             left = objects[i]['bndbox']['xmin']
             right = objects[i]['bndbox']['xmax']
@@ -397,7 +397,7 @@ def load_xml_tagged_images():
             label = objects[i]['name']
             
             boxes.append(dict(left=left,right=right,top=top,bottom=bottom,label=label))
-
+        # add tagged info
         imgs.append(dict(
             filename = xml['annotation']['filename'],
             height = xml['annotation']['size']['height'],

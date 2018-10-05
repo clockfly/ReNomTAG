@@ -26,6 +26,7 @@ async function load_imagefile_list(context) {
       all: false
     })
   );
+  console.log('list', response.data.filename_list);
   context.commit("set_file_list", {
     file_list: response.data.filename_list
   });

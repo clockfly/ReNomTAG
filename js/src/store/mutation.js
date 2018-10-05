@@ -30,7 +30,7 @@ function select_files(state) {
   function any(preds, f) {
     for (let pred of preds) {
       if (pred(f)) {
-          return true
+        return true
       }
     }
     return false
@@ -75,7 +75,7 @@ export function get_reviewresult(d) {
   }
   const ann = d.annotation
   if (!ann) {
-    return "noannotation"
+    return "notreviewed"
   }
   const source = ann.source
   if (!source) {
@@ -289,5 +289,39 @@ export default {
     }
     console.log('load_tagged', imgs);
     state.tagged_images = imgs;
+  },
+  set_filter(state, payload) {
+
+    switch(payload){
+      case "All":
+        state.tag_filter = ['hastags','notags'];
+        state.review_filter = ['ok','ng','notreviewed']; 
+        break;
+      case "NeedReview":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['notreviewed'];
+        break;
+      case "NoTags":
+        state.tag_filter = ['notags'];
+        state.review_filter = ['notreviewed'];
+        break;
+      case "CHECK_OK":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['ok'];
+        break;
+      case "CHECK_NG":
+        state.tag_filter = ['hastags'];
+        state.review_filter = ['ng'];
+        break;
+      default:
+        state.tag_filter = ['hastags','notags'];
+        state.review_filter = ['ok','ng','notreviewed'];
+        break;
+    }
+    console.log('after:filter_state', state.filter_method)
+    console.log('tag filter state:', state.tag_filter)
+    console.log('tag filter state:', state.review_filter)
+    state.filter_method = payload;
+    select_files(state);
   }
 };

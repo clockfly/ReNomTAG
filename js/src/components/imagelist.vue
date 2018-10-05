@@ -5,21 +5,23 @@
     </div>
     <div class="title">
       <div class="title-text row">
-        <span class="col-md-8">Images</span> <span class="col number">100000</span>
+        <span class="col-md-8">Images</span>
+        <span v-if='(this.folder.length != 0) && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
       </div>
     </div>
     <div class="content">
       <div class="row clear-margin first-row">
         <div class="col-md-4 fillter-button left">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("hastags") !== null} ,
-            {"off" : is_tag_selected("hastags") === null}]'
-              @click='toggle_tag_filter({filter:"hastags"})'>
+          <div :class='[{"image_pred_tagbutton_active" : is_selected_filter("All")} ,
+            {"off" : !is_selected_filter("All")}]'
+              @click='set_filter("All")'>
               ALL
           </div>
         </div>
         <div class="col-md-8 fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("notreviewed") !== null}, { "off" : is_review_selected("notreviewed") === null}]' @click='toggle_review_filter({filter:"notreviewed"})'>
-            <img v-if="is_review_selected('notreviewed')" class="button-icon" :src="NO_REVIEW">
+          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("NeedReview")}, 
+            { "off" : !is_selected_filter("NeedReview")}]' @click='set_filter("NeedReview")'>
+            <img v-if='is_selected_filter("NeedReview")' class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
           </div>
         </div>
@@ -27,25 +29,25 @@
       </div>
       <div class="row clear-margin first-row">
         <div class="col fillter-button Notags-fillter">
-          <div :class='[{"image_pred_tagbutton_active" : is_tag_selected("notags") !== null} ,
-            { "off" : is_tag_selected("notags") === null}]'
-              @click='toggle_tag_filter({filter:"notags"})'>
+          <div :class='[{"image_pred_tagbutton_active" : is_selected_filter("NoTags")} ,
+            { "off" : !is_selected_filter("NoTags")}]'
+              @click='set_filter("NoTags")'>
               No Tags
           </div>
         </div>
         <div class="col fillter-button OK-fillter">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ok") !==null },
-            { "off" : is_review_selected("ok") === null}]' 
-            @click='toggle_review_filter({filter:"ok"})'>
-            <img v-if="is_review_selected('ok')" class="button-icon" :src="CHECK_OK">
+          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("CHECK_OK") },
+            { "off" : !is_selected_filter("CHECK_OK")}]' 
+            @click='set_filter("CHECK_OK")'>
+            <img v-if="is_selected_filter('CHECK_OK')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
           </div>
         </div>
         <div class="col fillter-button NG-fillter">
-          <div :class='[{"image_pred_tagbutton_active": is_review_selected("ng") !==null},
-            { "off" : is_review_selected("ng") === null}]'
-            @click='toggle_review_filter({filter:"ng"})'>
-            <img v-if="is_review_selected('ng')" class="ng-button-icon" :src="CHECK_NG">
+          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("CHECK_NG")},
+            { "off" : !is_selected_filter("CHECK_NG")}]'
+            @click='set_filter("CHECK_NG")'>
+            <img v-if="is_selected_filter('CHECK_NG')" class="ng-button-icon" :src="CHECK_NG">
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
           </div>
         </div> 
@@ -55,7 +57,8 @@
       <div v-for="file in file_list_top" :key="file">
         <div style="position:relative">
           <span class="img-status-wrapper">
-            <img v-if="is_need_review(file)" class="img-status" :src="STATUS_NEED_REVIEW">
+            <img v-if="!is_notags(file)">
+            <img v-else-if="is_need_review(file)" class="img-status" :src="STATUS_NEED_REVIEW">
             <img v-else-if="is_review_result_ok(file) === true" class="img-status" :src="STATUS_CHECK_OK">
             <img v-else-if="is_review_result_ok(file) === false" class="img-status" :src="STATUS_CHECK_NG">
           </span>
@@ -65,8 +68,6 @@
            :data-file='file'
            :class='{selected: is_selected(file)}'
            @click.stop.prevent="select_image">
-          <!-- <span style="position:absolute;right:0;bottom:0; color:yellow">{{is_review_result_ok(file)}}</span>-->
-          <span style="position:absolute;right:0;bottom:0; color:yellow">{{is_has_annotation(file)}}</span>
         </div>
       </div>
     </div>
@@ -105,7 +106,8 @@ export default {
       "filename_max_display",
       "active_image_filename",
       "tag_filter",
-      "review_filter"
+      "review_filter",
+      "filter_method"
     ]),
 
     file_list_top: function() {
@@ -147,7 +149,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['set_main_menu_visible', 'toggle_tag_filter', 'toggle_review_filter']),
+    ...mapMutations(['set_main_menu_visible']),
 
     is_tag_selected: function(name) {
       if (this.tag_filter.indexOf(name) != -1) {
@@ -161,9 +163,14 @@ export default {
       }
       return null
     },
-    toggleMenuVisible: function() {
-      let cur = this.$store.state.main_menu_visible;
-      this.set_main_menu_visible({ visible: !cur })
+    is_selected_filter: function(filter_name) {
+      if (this.filter_method === filter_name) {
+        return true;
+      }
+      return false;
+    },
+    set_filter: function (filter_name) {
+      this.$store.commit("set_filter", filter_name);
     },
     get_marks(file) {
       const info = this.folder_files[file]
@@ -182,7 +189,7 @@ export default {
       }
       return true;
     },
-    is_need_review(file) {
+    is_need_review: function(file) {
       const info = this.folder_files[file]
       const review = get_reviewresult(info)
       if (review === 'notreviewed') {
@@ -190,13 +197,10 @@ export default {
       }
       return false;
     },
-    is_has_annotation(file) {
+    is_notags(file) {
       const info = this.folder_files[file]
-      const review = get_reviewresult(info)
-      if (review === 'noannotation') {
-        return false;
-      }
-      return true;
+      const review = has_bndbox(info)
+      return review
     },
     get_image_url(file) {
       return utils.build_api_url("/t/" + this.folder + "/" + file);

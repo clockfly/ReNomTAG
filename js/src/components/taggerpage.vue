@@ -6,6 +6,7 @@
       <image-list class="folder-image" v-if="folder.length !== 0"/>
       <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+      <!-- <tagcanvas></tagcanvas> -->
       <tags></tags>
     </div>
     <tagged-images class="row"/>
