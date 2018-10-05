@@ -344,7 +344,6 @@ def save_xml_from_label_dict():
 
     xml = get_boxes(request.json['folder'], file_name)
     ret = set_json_body({'result': xml})
-    print(ret)
     return ret
 
 @app.route("/api/load_xml_tagged_images", method=["POST"])
