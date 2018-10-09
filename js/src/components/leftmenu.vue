@@ -40,7 +40,6 @@ export default {
         event.target.dataset.folder,
         Infinity
       );
-      console.log(utils.cookies.getItem("tags-foldername"));
       this.closeMenu();
     }
   }

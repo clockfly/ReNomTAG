@@ -7,6 +7,7 @@
       <div class="title-text row">
         <span class="col-md-8">Images</span>
         <span v-if='(this.folder.length != 0) && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
+        <span v-else class="col number">0</span>
       </div>
     </div>
     <div class="content">
