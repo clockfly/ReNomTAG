@@ -1,4 +1,4 @@
-# tagging
+# ReNomTAG
 
 > A Vue.js project
 

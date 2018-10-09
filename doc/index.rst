@@ -1,21 +1,10 @@
-.. renom_tag documentation master file, created by
-   sphinx-quickstart on Tue Oct  9 09:36:44 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to renom_tag's documentation!
-=====================================
+ReNomTAG v1.0
+==============
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+   :maxdepth: 3
 
-   renom_tag
+   rsts/introduction
+   rsts/how_to_use
+   rsts/installation/installation
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
