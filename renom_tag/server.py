@@ -4,6 +4,7 @@ import json
 import xmltodict
 from PIL import Image
 import os
+import argparse
 import pkg_resources
 from bottle import (HTTPResponse, route, run, static_file, request,
                     response, Bottle, hook, get, parse_date)
@@ -346,43 +347,45 @@ def save_xml_from_label_dict():
     ret = set_json_body({'result': xml})
     return ret
 
+
 @app.route("/api/load_xml_tagged_images", method=["POST"])
 def load_xml_tagged_images():
     label_dict = request.json
-    
+
     folder = pathlib.Path(label_dict['folder'])
-    
+
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
 
-    before_sort_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file()) 
-    
+    before_sort_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file())
+
     # use for sort
     sort_info = []
-    
+
     for tagged_img in before_sort_info:
         time = os.stat(str(targetdir / tagged_img)).st_mtime
         sort_info.append(dict(time=time, tagged_img=tagged_img))
-    
+
     # sort by edited time
-    _sort = sorted(sort_info,key=lambda x:x['time'], reverse = False)
-    
-    # remove dictionary key  
+    _sort = sorted(sort_info, key=lambda x: x['time'], reverse=False)
+
+    # remove dictionary key
     tagged_info = [item.pop('tagged_img') for item in sort_info]
 
     imgs = []
     # get tagged images from xml
     for tagged_img in reversed(tagged_info):
-        
-        # load xml file convert to json   
+
+        # load xml file convert to json
         # extract bounding box
         xml = get_boxes(str(folder), str(tagged_img))
-        
-        filename = check_path(os.path.join(get_folderpath(str(folder)), IMG_DIR), xml['annotation']['filename'])
+
+        filename = check_path(os.path.join(get_folderpath(str(folder)),
+                                           IMG_DIR), xml['annotation']['filename'])
 
         img = open(filename, "rb").read()
         encoded_img = base64.b64encode(img)
-        encoded_img = encoded_img.decode('utf8') 
+        encoded_img = encoded_img.decode('utf8')
 
         boxes = []
         objects = xml['annotation']['objects']
@@ -394,15 +397,15 @@ def load_xml_tagged_images():
             bottom = objects[i]['bndbox']['ymax']
 
             label = objects[i]['name']
-            
-            boxes.append(dict(left=left,right=right,top=top,bottom=bottom,label=label))
+
+            boxes.append(dict(left=left, right=right, top=top, bottom=bottom, label=label))
         # add tagged info
         imgs.append(dict(
-            filename = xml['annotation']['filename'],
-            height = xml['annotation']['size']['height'],
-            width = xml['annotation']['size']['width'],
-            boxes = boxes,
-            image =  "data:image;base64," + encoded_img
+            filename=xml['annotation']['filename'],
+            height=xml['annotation']['size']['height'],
+            width=xml['annotation']['size']['width'],
+            boxes=boxes,
+            image="data:image;base64," + encoded_img
         ))
 
     ret = set_json_body({'result': imgs})
@@ -417,12 +420,12 @@ def save_label_candidates_dict():
     label_dict = request.json
     labels = {}
     src_labels = label_dict['labels']
-    
+
     max_id = 0
     for n, d in enumerate(label_dict['labels']):
         label = d['label'].strip()
         shortcut = d['shortcut'].strip()
- 
+
         if not re.match(r"^[0-9a-zA-Z]+$", label):
             raise ValueError("Invalid label")
         if not shortcut:
@@ -430,14 +433,14 @@ def save_label_candidates_dict():
 
         if 'id' in d:
             label_id = d['id']
-            labels[label_id] =  {'label':label, 'shortcut': shortcut}
+            labels[label_id] = {'label': label, 'shortcut': shortcut}
             if max_id < int(label_id):
                 max_id = int(label_id)
         else:
             if n < max_id:
                 n = max_id
 
-            labels[n] =  {'label':label, 'shortcut': shortcut}
+            labels[n] = {'label': label, 'shortcut': shortcut}
 
     json_data = json.dumps(labels)
     folderpath = get_folderpath(label_dict['folder'])
@@ -462,10 +465,10 @@ def load_label_candidates_dict():
         for k, v in json_data.items():
             if 'no_shortcut' in v['shortcut']:
                 v['shortcut'] = ''
-            ret.append({'id': int(k),'label': v['label'],'shortcut': v['shortcut']})
+            ret.append({'id': int(k), 'label': v['label'], 'shortcut': v['shortcut']})
 
     # sort label
-    sort = sorted(ret,key=lambda x:x['id'])
+    sort = sorted(ret, key=lambda x: x['id'])
     body = json.dumps(sort)
     return set_json_body(body)
 
@@ -476,7 +479,7 @@ def delete_label_candidates_dict():
 
     folderpath = get_folderpath(label_dict['folder'])
     jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
-    
+
     if os.path.exists(jsonfile):
         os.remove(jsonfile)
 
@@ -484,7 +487,7 @@ def delete_label_candidates_dict():
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
     folders = []
-    for d in os.listdir(DIR_ROOT):
+    for d in sorted(os.listdir(DIR_ROOT)):
         if not re.match(r"^[a-zA-Z0-9._]+$", d):
             continue
 
@@ -501,7 +504,10 @@ def get_folderlist():
 
 
 def main():
-    run(app, host="0.0.0.0", port=8001)
+    parser = argparse.ArgumentParser(description='ReNomTAG')
+    parser.add_argument('--port', type=int, help='Port Number', default=8080)
+    args = parser.parse_args()
+    run(app, host="0.0.0.0", port=args.port)
 
 
 if __name__ == '__main__':
