@@ -35,4 +35,4 @@ pages:
     - public
 
   only:
-    - beta
+    - /^release\/.*$/
