@@ -5,7 +5,7 @@
     </div>
     <div class="title">
       <div class="title-text row">
-        <span class="col-md-8">Images</span>
+        <span class="col-md-8 text">Images</span>
         <span v-if='(this.folder.length != 0) && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
         <span v-else class="col number">0</span>
       </div>
@@ -270,6 +270,7 @@ export default {
     font-size: $content-top-header-font-size;
     line-height: calc(#{$panel-height} - 7px);
     padding-left: $content-top-heder-horizonral-margin;
+    color: $font-color;
   }
 }
 
