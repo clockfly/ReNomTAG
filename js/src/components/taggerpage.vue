@@ -6,7 +6,7 @@
       <image-list class="folder-image" v-if="folder.length !== 0"/>
       <div v-if="active_image_filename === null" class="filler"></div>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-      <!-- <tagcanvas></tagcanvas> -->
+      <div id="no_active_image" v-else></div>
       <tags></tags>
     </div>
     <tagged-images class="row"/>
@@ -83,6 +83,11 @@ export default {
 #main-container {
   display: flex;
   height: calc(100% - #{$application-header-hight} - 125px - #{$footer-height});
+}
+
+#no_active_image {
+  flex-grow: 1;
+  background: #fff;
 }
 .left {
   text-align: center;

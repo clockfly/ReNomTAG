@@ -1,8 +1,6 @@
 <template>
   <header>
-
-    <i id='toggle-menu' class='fa fa-bars' aria-hidden='true'
-     @click='toggleMenuVisible'></i>
+    <img class="hanburger-menu" :src="Menu" @click='toggleMenuVisible' aria-hidden='true'>
     <div class="tool-name">
       <span class="renom">ReNom</span>
       <span v-if="this.is_admin" class="current-page">TAG &gt; Admin</span>
@@ -17,7 +15,11 @@ import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: "AppHeader",
-
+  data: function() {
+    return {
+      Menu: require('../assets/images/han.png')
+    }
+  },
   computed: {
     ...mapState([
       "tag_filter",
@@ -59,6 +61,12 @@ header {
   align-items: center;
   font-family: $header-product-name-font-family;
   font-size: $font-size;
+
+  .hanburger-menu {
+    margin-left: $component-inner-horizontal-margin;
+    cursor: pointer;
+  }
+
 
   .tool-name {
     box-sizing: border-box;

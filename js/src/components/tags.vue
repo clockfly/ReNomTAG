@@ -24,12 +24,12 @@
       Tag List
     </div>
   </div>
-  <div id='tag-tree'>
+  <div v-if="this.is_admin" id='tag-tree'>
     <ul class='tag-list'>
         <li v-for='(data, index) in labels' v-bind:key='data.id' 
             class='tag-list-item' @click="on_click" :data-label='data.label'>
             <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
-            <input v-if='edit_target[0] === data.label && edit_mode === true ' type="text"
+            <input v-if='edit_target[0] === data.label && edit_mode === true' type="text"
                     class="label-text-update"
                     v-model='edit_label' 
                     placeholder="label name...">
@@ -41,10 +41,32 @@
                     @keyup.stop.prevent.self='updateShortcutKey'
                     placeholder="key...">
             <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
-
-            <i v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="fa fa-ellipsis-h edit_icon edit_on"></i>
-            <i v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="fa fa-ellipsis-h edit_icon edit_off"></i>
-
+            <img v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon">
+            <img v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon"> 
+        </li>
+        <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
+    </ul>
+  </div>
+  <div v-else id='tag-tree'>
+    <ul class='tag-list'>
+        <li v-for='(data, index) in labels' v-bind:key='data.id' 
+            class='tag-list-item' @click="on_click" :data-label='data.label'>
+            <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
+            <input v-if='edit_target[0] === data.label && edit_mode === true' type="text"
+                    class="label-text-update readonly"
+                    v-model='edit_label' 
+                    placeholder="label name..."
+                    readonly>
+            <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
+            <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
+                    class="label-shortcut-update"
+                    v-model='edit_shortcut'
+                    @keydown.stop.prevent.self='update_label'
+                    @keyup.stop.prevent.self='updateShortcutKey'
+                    placeholder="key...">
+            <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
+            <img v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon">
+            <img v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon"> 
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
@@ -91,6 +113,7 @@ export default {
       show_delete_dialog: false,
       add_new_tag_button: require('../assets/images/addnewtag.png'),
       add_new_tag_button_disabled: require('../assets/images/addnewtag_disabled.png'),
+      tag_list_icon: require('../assets/images/taglistIcon.svg'),
       color_list: [
         "#E7009A",
         "#9F14C1", "#582396", "#0A20C4",
@@ -362,16 +385,8 @@ export default {
   }
 
   .add-new-label-btn {
-    // height: $panel-height;
-    // width: 100%;
-    // text-align: center;
-    // padding: 10px 0;
     margin: 10px 0 0 0;
     cursor: pointer;
-    // border: none;
-    // border-radius: 0px;
-    // background-color: $panel-bg-color;
-    // color: #fff;
     &:focus {
       outline: none;
     }
@@ -408,18 +423,7 @@ export default {
         font-size: 13px;
       }
     }
-    input.label-text-update {
-      width: 130px;
-      height: 25px;
-      margin-top: 10px;
-      border-radius: 0;
-    }
-    input.label-shortcut-update {
-      width: 31.125px;
-      height: 25px;
-      margin-top: 10px;
-      border-radius: 0;
-    }
+    
     .edit_on {
       line-height: calc(43px);
     }
@@ -441,13 +445,11 @@ export default {
     justify-content: space-between;
     box-sizing: border-box;
     background-color: #fff;
-    
     &:hover {
       background-color: $table-hover-color;
       cursor: pointer;
-
     }
-    &:not(fast-child){
+    &:not(fast-child) {
       margin-top: 5px;
     }
     .label-color {
@@ -478,13 +480,35 @@ export default {
       justify-content: center;
       align-items: center;
     }
+
+    input.label-text-update {
+      width: 130px;
+      height: 35px;
+      border-radius: 0;
+    }
+
+    input.label-text-update:hover .readonly:hover {
+      pointer: not-allowed;
+    }
+
+
+    input.label-shortcut-update {
+      width: 31.125px;
+      height: 35px;
+      border-radius: 0;
+    }
+
+    .tag_list_icon {
+      margin-top: calc(18px * 0.5);
+      height: 15px;
+    }
   }
 
   #remove-button {
     height: calc(#{$panel-height} * 0.8);
     line-height: calc(#{$panel-height} * 0.8);
     width: 60%;
-    margin-top: calc(#{$component-margin-top} *2);
+    margin-top: calc(#{$component-margin-top} * 2);
     text-align: center;
     font-family: $content-top-header-font-family;
     font-size: $content-modellist-font-size;
