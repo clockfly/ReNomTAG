@@ -19,9 +19,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'renom_tag'
-copyright = '2018, Author'
-author = 'Author'
+project = 'ReNomTAG'
+copyright = '2018, Grid'
+author = 'Grid dev team'
 
 # The short X.Y version
 version = ''
@@ -181,6 +181,8 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+locale_dirs = ['_locale/']
+gettext_compact = False
 
 # -- Options for todo extension ----------------------------------------------
 

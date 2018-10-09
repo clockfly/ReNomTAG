@@ -4,6 +4,7 @@ Installation
 Requirements
 ------------
 
+
 **Python modules**
 
 - argh==0.26.2
@@ -27,6 +28,10 @@ Requirements
 - WebTest==2.0.29
 - xmltodict==0.11.0
 
+**For build web app**
+
+- Node.js >= 10.6.0
+
 
 Install by pip
 --------------
@@ -43,7 +48,10 @@ Install from source
 
 .. code-block:: shell
 
+    # Clone the ReNomTAG repository
     git clone https://github.com/ReNom-dev-team/ReNomTAG.git
+
+    # In the ReNomTAG direcotry
     cd ReNomTAG
     pip install -r requirements.txt
     python setup.py build

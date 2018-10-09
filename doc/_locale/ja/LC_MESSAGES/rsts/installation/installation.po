@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2018, Author
+# This file is distributed under the same license as the renom_tag package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: renom_tag \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-09 15:20+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: ../../rsts/installation/installation.rst:2
+msgid "Installation"
+msgstr "インストール方法"
+
+#: ../../rsts/installation/installation.rst:5
+msgid "Requirements"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:7
+msgid "**Python modules**"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:9
+msgid "argh==0.26.2"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:10
+msgid "attrs==17.4.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:11
+msgid "beautifulsoup4==4.6.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:12
+msgid "bottle==0.12.13"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:13
+msgid "bs4==0.0.1"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:14
+msgid "glob2==0.6"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:15
+msgid "lxml==4.2.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:16
+msgid "more-itertools==4.1.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:17
+msgid "pathtools==0.1.2"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:18
+msgid "Pillow==5.0.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:19
+msgid "pluggy==0.6.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:20
+msgid "py==1.5.3"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:21
+msgid "pytest==3.5.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:22
+msgid "PyYAML==3.12"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:23
+msgid "six==1.11.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:24
+msgid "waitress==1.1.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:25
+msgid "watchdog==0.8.3"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:26
+msgid "WebOb==1.7.4"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:27
+msgid "WebTest==2.0.29"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:28
+msgid "xmltodict==0.11.0"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:32
+msgid "Install by pip"
+msgstr ""
+
+#: ../../rsts/installation/installation.rst:34
+msgid "Linux(Ubuntu) OS: You can install ReNomTAG by pip command."
+msgstr "Linux(Ubuntu) OS: 以下のpipコマンドでインストールすることが可能です."
+
+#: ../../rsts/installation/installation.rst:42
+msgid "Install from source"
+msgstr "ソースからインストールする場合"
+

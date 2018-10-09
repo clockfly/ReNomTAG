@@ -7,7 +7,7 @@ Before starting
 Directory structure
 ~~~~~~~~~~~~~~~~~~~
 
-Before starting ReNomTGA, let me introduce the 
+Before starting ReNomTAG, let me introduce the 
 directory structure.
 
 If you run ReNomTAG in the ``working_directory``, image datasets need to be
@@ -110,7 +110,7 @@ You can put a tag(Bounding box) by dragging.
 Save the tag
 ~~~~~~~~~~~~~~~~~~~~~
 
-For saving the tag, please push the ```save`` button.
+For saving the tag, please push the ``save`` button.
 Or the ``Space`` key acts as a shortcut of save.
 
 
