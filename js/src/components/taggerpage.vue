@@ -1,5 +1,5 @@
 <template>
-  <div id="page" class="col-md-12">
+  <div id="page">
     <app-header class="row"></app-header>
     <div id='main-container'>
       <left-menu></left-menu>
@@ -76,7 +76,7 @@ export default {
 <style lang='scss'>
 #page {
   width: 100%;
-  height:100%;
+  height: 100%;
   background: $body-color;
 }
 

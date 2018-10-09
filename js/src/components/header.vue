@@ -16,14 +16,11 @@ export default {
   name: "AppHeader",
   data: function() {
     return {
-      Menu: require('../assets/images/han.png')
-    }
+      Menu: require("../assets/images/han.png")
+    };
   },
   computed: {
-    ...mapState([
-      "tag_filter",
-      "is_admin"
-    ])
+    ...mapState(["tag_filter", "is_admin"])
   },
 
   methods: {
@@ -47,7 +44,7 @@ export default {
     },
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;
-      this.set_main_menu_visible({ visible: !cur })
+      this.set_main_menu_visible({ visible: !cur });
     }
   }
 };
@@ -70,7 +67,6 @@ header {
     cursor: pointer;
   }
 
-
   .tool-name {
     box-sizing: border-box;
     .renom,
@@ -80,14 +76,13 @@ header {
     }
     .renom {
       margin-left: $content-top-heder-horizonral-margin;
-      font-family:$header-product-name-font-family;
+      font-family: $header-product-name-font-family;
       font-size: $header-product-name-font-size;
     }
     .current-page {
-      font-family:$header-title-font-family;
+      font-family: $header-title-font-family;
       font-size: $header-title-font-size;
     }
-    
   }
   .header-buttons {
     display: flex;

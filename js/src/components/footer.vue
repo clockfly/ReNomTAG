@@ -30,22 +30,20 @@
 </template>
 
 <script>
-
 export default {
-  data () {
+  data() {
     return {
-      version: 'ver.1.0.0',
-      url: require('../assets/renomlogo.png')
-    }
+      version: "ver.1.0.0",
+      url: require("../assets/renomlogo.png")
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
-.clear-padding{
-  padding-right:0;
-  padding-left:0;
+.clear-padding {
+  padding-right: 0;
+  padding-left: 0;
 }
 footer {
   display: block;
@@ -57,7 +55,7 @@ footer {
   .footer-content {
     padding-left: 3%;
     background: $footer-color;
-    margin:0;
+    margin: 0;
     height: calc(#{$footer-height} - #{$footer-copyright-height});
   }
   .copyright {
@@ -65,22 +63,22 @@ footer {
     margin-top: 0;
     .copyright-text {
       line-height: $footer-copyright-height;
-      height:$footer-copyright-height;
+      height: $footer-copyright-height;
       padding-left: 3%;
     }
   }
 }
-.content-margin-top{
+.content-margin-top {
   padding-top: 15px;
   img {
     height: calc(32px * 0.7);
     width: calc(170px * 0.7);
   }
 }
-.media-wrapper{
+.media-wrapper {
   //margin-top: $content-margin;
 }
-.content-margin-top p{
+.content-margin-top p {
   margin: 0;
   display: inline-block;
   vertical-align: middle;

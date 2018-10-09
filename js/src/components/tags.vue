@@ -111,15 +111,20 @@ export default {
       edit_target: "", // flags
       edit_mode: false,
       show_delete_dialog: false,
-      add_new_tag_button: require('../assets/images/addnewtag.png'),
-      add_new_tag_button_disabled: require('../assets/images/addnewtag_disabled.png'),
-      tag_list_icon: require('../assets/images/taglistIcon.svg'),
+      add_new_tag_button: require("../assets/images/addnewtag.png"),
+      add_new_tag_button_disabled: require("../assets/images/addnewtag_disabled.png"),
+      tag_list_icon: require("../assets/images/taglistIcon.svg"),
       color_list: [
         "#E7009A",
-        "#9F14C1", "#582396", "#0A20C4",
-        "#3E9AAF", "#13894B", "#8BAA1A",
-        "#FFCC33", "#EF8200", "#E94C33" 
-          
+        "#9F14C1",
+        "#582396",
+        "#0A20C4",
+        "#3E9AAF",
+        "#13894B",
+        "#8BAA1A",
+        "#FFCC33",
+        "#EF8200",
+        "#E94C33"
       ]
     };
   },
@@ -240,7 +245,6 @@ export default {
       this.edit_mode = !this.edit_mode;
     },
     to_edit_mode(index, tag, tag_shortcut) {
-      
       let label = tag;
       let shortcut = tag_shortcut;
       let target = [label, shortcut, true];
@@ -282,8 +286,7 @@ export default {
     },
 
     delete_tags(event) {
-      
-      this.$store.dispatch('delete_taglist')
+      this.$store.dispatch("delete_taglist");
       this.show_delete_dialog = false;
     },
     get_tag_name: function(tag_name) {
@@ -298,16 +301,16 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 4px;
 }
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   background: $body-color;
   border: none;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background: #aaa;
   border-radius: 4px;
   box-shadow: none;
@@ -318,7 +321,7 @@ export default {
   height: 100%;
   flex-grow: 0;
   flex-shrink: 0;
-  color:$font-color;
+  color: $font-color;
   padding: 0 25px;
   background-color: $body-color;
 
@@ -423,19 +426,18 @@ export default {
         font-size: 13px;
       }
     }
-    
+
     .edit_on {
       line-height: calc(43px);
     }
     .edit_off {
-      line-height:$panel-height; 
+      line-height: $panel-height;
     }
-    .edit_icon{
+    .edit_icon {
       //margin-top: calc(#{$content-top-margin} * 0.5);
       margin-left: $content-top-margin;
       color: $font-color-label;
     }
-
   }
 
   .tag-list-item {
@@ -491,7 +493,6 @@ export default {
       pointer: not-allowed;
     }
 
-
     input.label-shortcut-update {
       width: 31.125px;
       height: 35px;
@@ -522,7 +523,7 @@ export default {
     }
     &:hover {
       background-color: lighten(#ff1616, 10%);
-      color: #FFF;
+      color: #fff;
     }
   }
   .label_errormsg {
@@ -532,16 +533,15 @@ export default {
     color: #ff1616;
     font-size: 10pt;
     z-index: 9999;
-    background-color:$table-hover-color;
+    background-color: $table-hover-color;
     margin: -5px;
     right: 20px;
     top: 42px;
-
   }
   #delete_labels_button {
     background-color: lighten(#ff1616, 10%);
   }
-  
+
   .modal-title {
     color: #000;
   }

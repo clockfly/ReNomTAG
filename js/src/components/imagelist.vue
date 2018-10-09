@@ -78,21 +78,21 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import * as utils from "@/utils";
-import { has_bndbox, get_reviewresult } from "@/store/mutation"
+import { has_bndbox, get_reviewresult } from "@/store/mutation";
 export default {
   data: function() {
     return {
       IMAGE_RELOAD_MARGIN: 100,
       IMAGE_RELOAD_AMOUNT: 300,
-      NO_REVIEW: require('../assets/images/Need_Review_ON.svg'),
-      CHECK_OK:require('../assets/images/OK.svg'),
-      CHECK_NG:require('../assets/images/NG.svg'),
-      NO_REVIEW_OFF: require('../assets/images/Need_Review_Off.svg'),
-      CHECK_OK_OFF: require('../assets/images/OK_hover.svg'),
-      CHECK_NG_OFF: require('../assets/images/NG_hover.svg'),
-      STATUS_NEED_REVIEW: require('../assets/images/Need_Review_icon.svg'),
-      STATUS_CHECK_OK: require('../assets/images/P_OK.svg'),
-      STATUS_CHECK_NG: require('../assets/images/P_NG.svg')
+      NO_REVIEW: require("../assets/images/Need_Review_ON.svg"),
+      CHECK_OK: require("../assets/images/OK.svg"),
+      CHECK_NG: require("../assets/images/NG.svg"),
+      NO_REVIEW_OFF: require("../assets/images/Need_Review_Off.svg"),
+      CHECK_OK_OFF: require("../assets/images/OK_hover.svg"),
+      CHECK_NG_OFF: require("../assets/images/NG_hover.svg"),
+      STATUS_NEED_REVIEW: require("../assets/images/Need_Review_icon.svg"),
+      STATUS_CHECK_OK: require("../assets/images/P_OK.svg"),
+      STATUS_CHECK_NG: require("../assets/images/P_NG.svg")
     };
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
       if (!this.files) {
         return [];
       }
-      return this.files.slice(0, this.filename_max_display)
+      return this.files.slice(0, this.filename_max_display);
     },
 
     file_list: function() {
@@ -148,19 +148,19 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['set_main_menu_visible']),
+    ...mapMutations(["set_main_menu_visible"]),
 
     is_tag_selected: function(name) {
       if (this.tag_filter.indexOf(name) != -1) {
-        return 'image_pred_tagbutton_active'
+        return "image_pred_tagbutton_active";
       }
-      return null
+      return null;
     },
     is_review_selected: function(name) {
       if (this.review_filter.indexOf(name) != -1) {
-        return 'image_pred_reviewbutton_active'
+        return "image_pred_reviewbutton_active";
       }
-      return null
+      return null;
     },
     is_selected_filter: function(filter_name) {
       if (this.filter_method === filter_name) {
@@ -168,7 +168,7 @@ export default {
       }
       return false;
     },
-    set_filter: function (filter_name) {
+    set_filter: function(filter_name) {
       this.$store.commit("set_filter", filter_name);
     },
     get_marks(file) {
@@ -181,25 +181,25 @@ export default {
       return s;
     },
     is_review_result_ok(file) {
-      const info = this.folder_files[file]
-      const review = get_reviewresult(info)
-      if (review === 'ng') {
+      const info = this.folder_files[file];
+      const review = get_reviewresult(info);
+      if (review === "ng") {
         return false;
       }
       return true;
     },
     is_need_review: function(file) {
-      const info = this.folder_files[file]
-      const review = get_reviewresult(info)
-      if (review === 'notreviewed') {
+      const info = this.folder_files[file];
+      const review = get_reviewresult(info);
+      if (review === "notreviewed") {
         return true;
       }
       return false;
     },
     is_notags(file) {
-      const info = this.folder_files[file]
-      const review = has_bndbox(info)
-      return review
+      const info = this.folder_files[file];
+      const review = has_bndbox(info);
+      return review;
     },
     get_image_url(file) {
       return utils.build_api_url("/t/" + this.folder + "/" + file);
@@ -233,7 +233,7 @@ export default {
           });
         }
       }
-    } 
+    }
   }
 };
 </script>
@@ -283,12 +283,11 @@ export default {
   padding-left: 2px;
 }
 
-.ng-button-icon{
+.ng-button-icon {
   height: calc(15px * 0.75);
   padding-left: 5px;
-  margin-bottom:2px;
+  margin-bottom: 2px;
 }
-
 
 .image_pred_tagbutton_active {
   background-color: $panel-bg-color;
@@ -300,15 +299,16 @@ export default {
   background-color: $panel-bg-color;
   color: $font-color;
   height: calc(#{$content-top-header-hight} - 12px);
-  line-height: calc(#{$content-top-header-hight} - 12px);}
+  line-height: calc(#{$content-top-header-hight} - 12px);
+}
 
 .clear-margin {
   margin-right: 0;
   margin-left: 0;
-  height:20px;
+  height: 20px;
 }
-.first-row{
-  margin-top:10px;
+.first-row {
+  margin-top: 10px;
 }
 
 .not-first {
@@ -324,7 +324,7 @@ export default {
   font-size: calc(#{$content-inner-header-font-size} - 2pt);
 }
 
-.number{
+.number {
   font-size: calc(#{$content-inner-header-font-size} - 3pt);
   margin-top: calc((#{$content-inner-header-font-size} - 2pt) * 0.15);
 }
@@ -334,8 +334,8 @@ export default {
   line-height: calc(#{$content-top-header-hight} - 12px);
   color: black;
   background: #fff;
-  &:hover{
-    background: #CCCCCC;
+  &:hover {
+    background: #cccccc;
   }
 }
 
@@ -372,14 +372,16 @@ export default {
   color: #dc3545;
 }
 
-
 #imagelist {
   display: flex;
-  padding-right:6px;
+  padding-right: 6px;
   flex-wrap: wrap;
   overflow: auto;
   box-sizing: border-box;
-  height: calc(100% - #{$component-margin-top} - (#{$content-top-margin} * 3) - #{$content-top-header-hight} - (calc(#{$content-top-header-hight} -2px) * 2 ) );
+  height: calc(
+    100% - #{$component-margin-top} - (#{$content-top-margin} * 3) - #{$content-top-header-hight} -
+      (calc(#{$content-top-header-hight} -2px) * 2)
+  );
   margin-top: calc(#{$content-top-margin} * 2);
   align-content: flex-start;
   justify-content: space-evenly;
@@ -398,7 +400,7 @@ export default {
 
     &.selected {
       box-sizing: border-box;
-      outline: 2px solid #EE7B33;
+      outline: 2px solid #ee7b33;
       outline-offset: -2px;
     }
   }

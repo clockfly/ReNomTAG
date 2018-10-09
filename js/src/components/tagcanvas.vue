@@ -117,7 +117,6 @@ export default {
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
       NG_BUTTON_PUSH: require("../assets/images/NG_push.png")
-
     };
   },
   created: function() {
@@ -595,7 +594,7 @@ export default {
   display: flex;
   position: relative;
   height: calc(100% - 150px + calc(#{$component-margin-top}));
-  .arrow{
+  .arrow {
     margin-top: 25%;
   }
   #canvas {
@@ -682,16 +681,16 @@ export default {
     height: 23px;
     cursor: pointer;
   }
-  img.img-btn-disabled{
+  img.img-btn-disabled {
     height: 23px;
-    
+
     &:hover {
-      cursor: not-allowed;;
+      cursor: not-allowed;
     }
   }
-  
+
   .comment-area {
-      padding-right: 20px;
+    padding-right: 20px;
   }
   .form-control {
     resize: none;
@@ -712,7 +711,7 @@ export default {
     line-height: calc(#{$panel-height} * 0.8);
     text-align: center;
     font-family: $content-top-header-font-family;
-    font-size:$content-modellist-font-size;
+    font-size: $content-modellist-font-size;
     &:hover {
       background-color: $panel-bg-color-hover;
       cursor: pointer;
@@ -724,14 +723,13 @@ export default {
     width: calc(55px * 2);
     line-height: calc(#{$panel-height} * 0.8);
     text-align: center;
-    background-color:$disabled-color;
+    background-color: $disabled-color;
     font-family: $content-top-header-font-family;
-    font-size:$content-modellist-font-size;
+    font-size: $content-modellist-font-size;
     cursor: not-allowed;
   }
   .btn-wrp {
-    margin-top:$content-top-margin;   
+    margin-top: $content-top-margin;
   }
-  
 }
 </style>

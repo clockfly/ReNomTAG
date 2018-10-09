@@ -1,6 +1,6 @@
 <template>
   <div id="app" >
-      <router-view class="container-fluid"/>
+      <router-view/>
   </div>
 </template>
 
@@ -11,7 +11,6 @@ export default {
 </script>
 
 <style lang='scss'>
-
 @font-face {
   font-family: $header-product-name-font-family;
   src: url("./fonts/OpenSans-Regular.ttf");

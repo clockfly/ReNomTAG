@@ -28,7 +28,7 @@ function select_files(state) {
   function any(preds, f) {
     for (let pred of preds) {
       if (pred(f)) {
-        return true
+        return true;
       }
     }
     return false;
@@ -261,10 +261,10 @@ export default {
   },
 
   set_review_comment(state, payload) {
-    state.active_image_review_comment = payload.comment
+    state.active_image_review_comment = payload.comment;
   },
   set_tagged_images(state, payload) {
-    const imgs = payload
+    const imgs = payload;
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 125;
 
@@ -281,31 +281,30 @@ export default {
     state.tagged_images = imgs;
   },
   set_filter(state, payload) {
-
-    switch(payload){
+    switch (payload) {
       case "All":
-        state.tag_filter = ['hastags','notags'];
-        state.review_filter = ['ok','ng','notreviewed']; 
+        state.tag_filter = ["hastags", "notags"];
+        state.review_filter = ["ok", "ng", "notreviewed"];
         break;
       case "NeedReview":
-        state.tag_filter = ['hastags'];
-        state.review_filter = ['notreviewed'];
+        state.tag_filter = ["hastags"];
+        state.review_filter = ["notreviewed"];
         break;
       case "NoTags":
-        state.tag_filter = ['notags'];
-        state.review_filter = ['notreviewed'];
+        state.tag_filter = ["notags"];
+        state.review_filter = ["notreviewed"];
         break;
       case "CHECK_OK":
-        state.tag_filter = ['hastags'];
-        state.review_filter = ['ok'];
+        state.tag_filter = ["hastags"];
+        state.review_filter = ["ok"];
         break;
       case "CHECK_NG":
-        state.tag_filter = ['hastags'];
-        state.review_filter = ['ng'];
+        state.tag_filter = ["hastags"];
+        state.review_filter = ["ng"];
         break;
       default:
-        state.tag_filter = ['hastags','notags'];
-        state.review_filter = ['ok','ng','notreviewed'];
+        state.tag_filter = ["hastags", "notags"];
+        state.review_filter = ["ok", "ng", "notreviewed"];
         break;
     }
     state.filter_method = payload;
