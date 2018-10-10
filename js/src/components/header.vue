@@ -24,24 +24,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
-      "set_main_menu_visible",
-      "toggle_tag_filter",
-      "toggle_review_filter"
-    ]),
+    ...mapMutations(["set_main_menu_visible"]),
 
-    is_tag_selected: function(name) {
-      if (this.tag_filter.indexOf(name) != -1) {
-        return "image_pred_tagbutton_active";
-      }
-      return null;
-    },
-    is_review_selected: function(name) {
-      if (this.review_filter.indexOf(name) != -1) {
-        return "image_pred_reviewbutton_active";
-      }
-      return null;
-    },
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;
       this.set_main_menu_visible({ visible: !cur });
@@ -93,21 +77,6 @@ header {
       font-size: 12px;
       border: solid 1px;
     }
-
-    .image_pred_tagbutton_active {
-      background-color: red;
-    }
-    .image_pred_reviewbutton_active {
-      background-color: green;
-    }
-  }
-  #toggle-menu {
-    box-sizing: border-box;
-    margin: 0 20px;
-  }
-  #toggle-menu:hover {
-    box-sizing: border-box;
-    cursor: pointer;
   }
 }
 </style>

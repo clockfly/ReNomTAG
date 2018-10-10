@@ -22,7 +22,7 @@ export const BLOCK_HEIGHT = 125;
 
 export default {
   computed: {
-    ...mapState(["tagged_images", "toggle_tag_filter"])
+    ...mapState(["tagged_images"])
   },
 
   methods: {
@@ -75,7 +75,6 @@ export default {
     position: absolute;
     margin: auto;
     width: 125px;
-    /*line-height: 50px;*/
     margin-top: 40px;
   }
   .tagged-image {

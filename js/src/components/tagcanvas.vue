@@ -29,18 +29,6 @@
           <div class="col-md-12 row clear-padding">
             <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span> 
             <div class="col-md-12 clear-padding">
-              <!-- <div class="btn-wrp float-right ng-button">
-                <button class="check-button" :class="{
-                  admin: this.is_admin,
-                  review_checked: this.active_image_review_result === 'ng'}"
-                  @click="set_review_result({result:'ng'})">NG</button>
-              </div>
-              <div class="btn-wrp float-right ok-button">
-                <button class="check-button" :class="{
-                  admin: this.is_admin,
-                  review_checked: this.active_image_review_result === 'ok'}"
-                  @click="set_review_result({result:'ok'})"></button> 
-              </div> -->
               <div v-if="this.is_admin" class="btn-wrp">
                 <img v-if="canbesaved && this.active_image_review_result !== 'ng'" :src="NG_BUTTON"
                       class="img-btn float-right ng-button"
@@ -83,7 +71,7 @@
         <div class="col-md-6">
           <div class="comment-area">
             <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
-            <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
+            <textarea v-else class="form-control not-admin" v-model="active_image_review_comment" readonly></textarea>
           </div>
         </div>
       </div>

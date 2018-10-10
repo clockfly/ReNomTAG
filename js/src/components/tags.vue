@@ -33,7 +33,7 @@
                     class="label-text-update"
                     v-model='edit_label' 
                     placeholder="label name...">
-            <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
+            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
             <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
                     class="label-shortcut-update"
                     v-model='edit_shortcut'
@@ -57,7 +57,7 @@
                     v-model='edit_label' 
                     placeholder="label name..."
                     readonly>
-            <div v-else class="label-text edit_off">{{get_tag_name(data.label)}}</div>
+            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
             <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
                     class="label-shortcut-update"
                     v-model='edit_shortcut'
@@ -93,8 +93,6 @@
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
-import * as utils from "@/utils";
 import ModalBox from "@/components/modalbox";
 
 export default {
@@ -115,6 +113,7 @@ export default {
       add_new_tag_button_disabled: require("../assets/images/addnewtag_disabled.png"),
       tag_list_icon: require("../assets/images/taglistIcon.svg"),
       color_list: [
+        // tag list colors
         "#E7009A",
         "#9F14C1",
         "#582396",
@@ -427,17 +426,6 @@ export default {
       }
     }
 
-    .edit_on {
-      line-height: calc(43px);
-    }
-    .edit_off {
-      line-height: $panel-height;
-    }
-    .edit_icon {
-      //margin-top: calc(#{$content-top-margin} * 0.5);
-      margin-left: $content-top-margin;
-      color: $font-color-label;
-    }
   }
 
   .tag-list-item {
@@ -455,8 +443,6 @@ export default {
       margin-top: 5px;
     }
     .label-color {
-      //margin-top: 9px;
-      //height:18px;
       width: 5px;
     }
     .label-text,
@@ -465,6 +451,7 @@ export default {
       margin: 0;
       outline: none;
       color: $font-color-label;
+      line-height: $panel-height;
     }
 
     .label-text {
@@ -472,15 +459,8 @@ export default {
       margin-left: 10px;
     }
     .label-shortcut {
-      width: 35px;
-      height: 18px;
       text-align: center;
-      margin-top: calc(18px * 0.5);
-      line-height: 18px;
-      color: $font-color-label;
       margin-right: 5px;
-      justify-content: center;
-      align-items: center;
     }
 
     input.label-text-update {
@@ -489,9 +469,6 @@ export default {
       border-radius: 0;
     }
 
-    input.label-text-update:hover .readonly:hover {
-      pointer: not-allowed;
-    }
 
     input.label-shortcut-update {
       width: 31.125px;

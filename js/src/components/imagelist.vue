@@ -149,19 +149,6 @@ export default {
   },
   methods: {
     ...mapMutations(["set_main_menu_visible"]),
-
-    is_tag_selected: function(name) {
-      if (this.tag_filter.indexOf(name) != -1) {
-        return "image_pred_tagbutton_active";
-      }
-      return null;
-    },
-    is_review_selected: function(name) {
-      if (this.review_filter.indexOf(name) != -1) {
-        return "image_pred_reviewbutton_active";
-      }
-      return null;
-    },
     is_selected_filter: function(filter_name) {
       if (this.filter_method === filter_name) {
         return true;
@@ -170,15 +157,6 @@ export default {
     },
     set_filter: function(filter_name) {
       this.$store.commit("set_filter", filter_name);
-    },
-    get_marks(file) {
-      const info = this.folder_files[file];
-      let s = "";
-      const review = get_reviewresult(info);
-      if (review === "ng") {
-        s = s + "👎 ";
-      }
-      return s;
     },
     is_review_result_ok(file) {
       const info = this.folder_files[file];

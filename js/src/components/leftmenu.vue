@@ -7,11 +7,10 @@
       </button> 
 
       <hr>
-
       <button v-for="name in folder_list" :key="name"
         class='bar-button'
         :data-folder='name'
-        @click='selectFolder'>
+        @click='selectFolder(name)'>
         <i v-if="folder === name" class="fa fa-folder-open" aria-hidden="true"></i>
         <i v-if="folder !== name" class="fa fa-folder" aria-hidden="true"></i>
         <span class='menu-text'>{{name}}</span>
@@ -33,8 +32,8 @@ export default {
     closeMenu: function() {
       this.$store.commit("set_main_menu_visible", { visible: false });
     },
-    selectFolder: function(event) {
-      this.$store.dispatch("set_folder", event.target.dataset.folder);
+    selectFolder: function(folder) {
+      this.$store.dispatch("set_folder", folder);
       utils.cookies.setItem(
         "tags-foldername",
         event.target.dataset.folder,
