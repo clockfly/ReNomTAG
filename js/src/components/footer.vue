@@ -75,9 +75,7 @@ footer {
     width: calc(170px * 0.7);
   }
 }
-.media-wrapper {
-  //margin-top: $content-margin;
-}
+
 .content-margin-top p {
   margin: 0;
   display: inline-block;
