@@ -7,7 +7,6 @@
       </button> 
 
       <hr>
-      {{folder_list}}
       <button v-for="name in folder_list" :key="name"
         class='bar-button'
         :data-folder='name'
