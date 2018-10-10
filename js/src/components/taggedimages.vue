@@ -75,7 +75,6 @@ export default {
     position: absolute;
     margin: auto;
     width: 125px;
-    /*line-height: 50px;*/
     margin-top: 40px;
   }
   .tagged-image {

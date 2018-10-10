@@ -93,8 +93,6 @@
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
-import * as utils from "@/utils";
 import ModalBox from "@/components/modalbox";
 
 export default {
