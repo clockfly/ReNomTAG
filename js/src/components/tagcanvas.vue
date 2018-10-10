@@ -71,7 +71,7 @@
         <div class="col-md-6">
           <div class="comment-area">
             <textarea v-if="this.is_admin" class="form-control" v-model="active_image_review_comment"></textarea>
-            <textarea v-else class="form-control" v-model="active_image_review_comment" readonly></textarea>
+            <textarea v-else class="form-control not-admin" v-model="active_image_review_comment" readonly></textarea>
           </div>
         </div>
       </div>

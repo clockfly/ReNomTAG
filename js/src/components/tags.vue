@@ -113,6 +113,7 @@ export default {
       add_new_tag_button_disabled: require("../assets/images/addnewtag_disabled.png"),
       tag_list_icon: require("../assets/images/taglistIcon.svg"),
       color_list: [
+        // tag list colors
         "#E7009A",
         "#9F14C1",
         "#582396",
