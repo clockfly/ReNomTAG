@@ -49,26 +49,55 @@ def ensure_folder(folder):
 
 
 def filter_datafilenames(dir, ext):
+
+    # joining public/user/dataset/
     dir = os.path.join(DIR_ROOT, os.path.normpath(dir))
+
+    # add / in the end of "dir" if not exists
     if not dir.endswith(os.path.sep):
         dir = dir + os.path.sep
 
-    isvalid = re.compile(r"^[a-zA-Z0-9./_\%s]+$" % os.path.sep).match
+    # only a-z A-Z 0-9 _ can use as filename
+    # initialze matchObject
+    isvalid = re.compile(r"^[a-zA-Z0-9_.\%s]+$" %os.path.sep).match
 
+    # path for any named files of file-extention=ext
     path = os.path.join(dir, "**", '*.' + ext)
-    names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
 
-    return names
+
+    # 1) for name in glob2.glob(path)
+    # 2) if isvalid(name)
+    # 3) name[len(dir):]
+    # 4) add "name" to list "names"
+    #names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
+    names=[]
+    nonDefNames=[]
+    for name in glob2.glob(path):
+        # all files which exist in the "path"
+        print(name)
+        if isvalid(name):
+            # name[len(dir):] does extract only filename
+            names.append(name[len(dir):])
+
+        if not isvalid(name):
+            nonDefNames.append(name[len(dir):])
+
+    return names, nonDefNames
 
 
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png"]
-    ret = []
+    ret_names = []
+    ret_nonDefNames = []
+
+    # joining user/dataset/
     dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        ret.extend(filter_datafilenames(dir, e))
-    return ret
+        names, nonDefNames = filter_datafilenames(dir, e)
+        ret_names.extend(names)
+        ret_nonDefNames.extend(nonDefNames)
+    return ret_names, ret_nonDefNames
 
 
 def get_xml_files(folder):
@@ -145,6 +174,8 @@ def json2xml(json_obj, line_padding=""):
 def xml2json(xml_file, xml_attribs=True):
     with open(xml_file, "rb") as f:  # notice the "rb" mode
         d = xmltodict.parse(f, xml_attribs=xml_attribs)
+        # print("d")
+        # print(d)
         return json.dumps(d, indent=4)
 
 
@@ -187,7 +218,7 @@ def index():
 def static(file_name):
     return _get_resource('static', file_name)
 
-
+# TODO
 def check_path(path, filename):
     head = os.path.abspath(path)
     if not head.endswith(('/', '\\')):
@@ -233,7 +264,6 @@ def get_boxes(folder, img_filename):
             json_dict['annotation']['source']['reviewresult'] = ''
         if not json_dict['annotation']['source'].get('reviewcomment', False):
             json_dict['annotation']['source']['reviewcomment'] = ''
-
     return json_dict
 
 
@@ -289,13 +319,14 @@ def get_thumbnail(folder, file_name):
     return ret
 
 
+# roothing for get_filename_list
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
-
+    #import pdb;pdb.set_trace()
     folder = request.json['folder']
     folder = strip_foldername(folder)
+    img_paths, nondef_img_path = get_img_files(folder)
 
-    img_paths = get_img_files(folder)
 
     ret = {}
     for img in img_paths:
@@ -357,7 +388,12 @@ def load_xml_tagged_images():
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
 
-    before_sort_info = (p.relative_to(targetdir) for p in targetdir.iterdir() if p.is_file())
+    # keep the path for xml files
+    before_sort_info = []
+    for p in targetdir.iterdir():
+        if (p.is_file()):
+            if str(p).endswith('.xml'):
+                before_sort_info.append(p.relative_to(targetdir))
 
     # use for sort
     sort_info = []
@@ -379,9 +415,8 @@ def load_xml_tagged_images():
         # load xml file convert to json
         # extract bounding box
         xml = get_boxes(str(folder), str(tagged_img))
+        filename = check_path(os.path.join(get_folderpath(str(folder)),IMG_DIR), xml['annotation']['filename'])
 
-        filename = check_path(os.path.join(get_folderpath(str(folder)),
-                                           IMG_DIR), xml['annotation']['filename'])
 
         img = open(filename, "rb").read()
         encoded_img = base64.b64encode(img)
@@ -461,7 +496,6 @@ def load_label_candidates_dict():
     if os.path.exists(jsonfile):
         with open(jsonfile, 'r') as ftpr:
             json_data = json.load(ftpr)
-
         for k, v in json_data.items():
             if 'no_shortcut' in v['shortcut']:
                 v['shortcut'] = ''
@@ -484,6 +518,7 @@ def delete_label_candidates_dict():
         os.remove(jsonfile)
 
 
+# search inside the "bublic" ande get folderlist
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
     folders = []
