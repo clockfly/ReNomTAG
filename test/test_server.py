@@ -9,6 +9,7 @@ from PIL import Image
 import xmltodict
 from webtest import TestApp as testapp
 from renom_tag import server
+import pytest
 
 
 def build_img_dir(tmpdir, folder):
@@ -78,7 +79,7 @@ def test_save_xml_from_label_dict(tmpdir):
         assert ann['folder'] == 'dataset'
         assert ann['filename'] == 'a.jpg'
 
-
+## TODO
 def test_get_filename_list(tmpdir):
     with tmpdir.as_cwd():
 
@@ -95,7 +96,7 @@ def test_get_filename_list(tmpdir):
 
         assert ret.json_body == {
             "success": 0,
-            "filename_list": ["b.jpeg"]
+            "filename_list": ["b.jpg"]
         }
 
 
@@ -129,3 +130,14 @@ def test_load_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
         assert ret.json_body == [{"label": "label", "shortcut": "1"}]
+
+
+
+
+# made　mamually "pablic/user/~" inside the ReNomTAG/test
+def test_get_img_file(tmpdir):
+    tmpdir = "user"
+    file_name_list, nonDef_list = server.get_img_files(tmpdir)
+    print(file_name_list)
+    print(nonDef_list)
+    assert 0
