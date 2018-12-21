@@ -10,9 +10,21 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    // proxyTable: {
+    //   "/api": "http://localhost:8001",
+    //   "/t": "http://localhost:8001"
+    // },
+
+    // require "changeOrigin" to use proxyTable !!!
     proxyTable: {
-      "/api": "http://localhost:8001",
-      "/t": "http://localhost:8001"
+      '/api': {
+        target: 'http://localhost:8001',
+        changeOrigin: true
+      },
+      '/t': {
+        target: 'http://localhost:8001',
+        changeOrigin: true
+      }
     },
 
     // Various Dev Server settings
