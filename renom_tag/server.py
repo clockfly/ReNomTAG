@@ -71,33 +71,33 @@ def filter_datafilenames(dir, ext):
     # 4) add "name" to list "names"
     #names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
     names=[]
-    nonDefNames=[]
+    unDefNames=[]
     for name in glob2.glob(path):
         # all files which exist in the "path"
-        print(name)
+        # print(name)
         if isvalid(name):
             # name[len(dir):] does extract only filename
             names.append(name[len(dir):])
 
         if not isvalid(name):
-            nonDefNames.append(name[len(dir):])
+            unDefNames.append(name[len(dir):])
 
-    return names, nonDefNames
+    return names, unDefNames
 
 
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png"]
     ret_names = []
-    ret_nonDefNames = []
+    ret_unDefNames = []
 
     # joining user/dataset/
     dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        names, nonDefNames = filter_datafilenames(dir, e)
+        names, unDefNames = filter_datafilenames(dir, e)
         ret_names.extend(names)
-        ret_nonDefNames.extend(nonDefNames)
-    return ret_names, ret_nonDefNames
+        ret_unDefNames.extend(unDefNames)
+    return ret_names, ret_unDefNames
 
 
 def get_xml_files(folder):
@@ -325,7 +325,10 @@ def get_filename_list():
     #import pdb;pdb.set_trace()
     folder = request.json['folder']
     folder = strip_foldername(folder)
-    img_paths, nondef_img_path = get_img_files(folder)
+    img_paths, undef_img_path = get_img_files(folder)
+    print("")
+    print("")
+    print(undef_img_path)
 
 
     ret = {}
@@ -336,6 +339,7 @@ def get_filename_list():
 
     body = json.dumps({
         "filename_list": ret,
+        "undef_filename_list": undef_img_path,
     })
     ret = set_json_body(body)
     return ret
@@ -391,9 +395,8 @@ def load_xml_tagged_images():
     # keep the path for xml files
     before_sort_info = []
     for p in targetdir.iterdir():
-        if (p.is_file()):
-            if str(p).endswith('.xml'):
-                before_sort_info.append(p.relative_to(targetdir))
+        if p.is_file() and str(p).endswith('.xml'):
+            before_sort_info.append(p.relative_to(targetdir))
 
     # use for sort
     sort_info = []

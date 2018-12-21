@@ -16,6 +16,7 @@ async function async_func(context, f) {
   return ret;
 }
 
+// TODO
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
     loading_message: "Loading images..."
@@ -29,6 +30,20 @@ async function load_imagefile_list(context) {
   context.commit("set_file_list", {
     file_list: response.data.filename_list
   });
+
+  // TODO here!!!!  I gatta write in state.js ->
+  if (response.data.undef_filename_list.length !== 0){
+    let undef_message = 'error\n\n The following filenames are unavailable, which could not be loaded:\n\n';
+    let length = Math.min(3, response.data.undef_filename_list.length)
+    for (let i = 0; i < length; i++){
+      undef_message = undef_message.concat(response.data.undef_filename_list[i]).concat(', \n')
+    }
+    undef_message = undef_message.concat('etc...')
+    context.commit("set_error_status", {
+      error_status: undef_message
+    });
+  }
+
   if (context.state.files.length > 0) {
     context.dispatch("load_current_image", context.state.files[0]);
   }
@@ -51,6 +66,8 @@ async function load_tagged_images(context) {
   );
   context.commit("set_tagged_images", response.data.result);
 }
+
+// TODO
 export default {
   async load_folder_list(context) {
     let response = await async_func(context, () =>
