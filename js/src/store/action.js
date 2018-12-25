@@ -16,6 +16,23 @@ async function async_func(context, f) {
   return ret;
 }
 
+async function undef_filename_show(undef_filename_list) {
+  let undef_message = 'error\n\n The following filenames are unavailable, which could not be loaded:\n\n';
+  let length = Math.min(3, undef_filename_list.length)
+
+  for (let i = 0; i < length; i++){
+    undef_message = undef_message.concat(undef_filename_list[i])
+    if (i != length-1){
+      undef_message = undef_message.concat(', \n')
+
+    }
+    if (length==3 && i == length-1){
+      undef_message = undef_message.concat('\netc...')
+    }
+  }
+  return undef_message
+}
+
 // TODO
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
@@ -31,18 +48,16 @@ async function load_imagefile_list(context) {
     file_list: response.data.filename_list
   });
 
-  // TODO here!!!!  I gatta write in state.js ->
-  if (response.data.undef_filename_list.length !== 0){
-    let undef_message = 'error\n\n The following filenames are unavailable, which could not be loaded:\n\n';
-    let length = Math.min(3, response.data.undef_filename_list.length)
-    for (let i = 0; i < length; i++){
-      undef_message = undef_message.concat(response.data.undef_filename_list[i]).concat(', \n')
-    }
-    undef_message = undef_message.concat('etc...')
+  // show undef_filename process-----------------------------------
+  if (response.data.undef_filename_list.length > 0){
+
+    // console.log(response.data.undef_filename_list.length);
+    let undef_message = await undef_filename_show(response.data.undef_filename_list);
     context.commit("set_error_status", {
       error_status: undef_message
     });
   }
+  //-----------------------------------
 
   if (context.state.files.length > 0) {
     context.dispatch("load_current_image", context.state.files[0]);
@@ -70,19 +85,20 @@ async function load_tagged_images(context) {
 // TODO
 export default {
   async load_folder_list(context) {
+    // console.log(context.state.folder)
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/folderlist"), {
         folder: context.state.folder
       })
     );
-
     context.commit("set_folder_list", {
       folder_list: response.data.folder_list
     });
   },
 
   async set_folder(context, folder) {
-    context.commit("set_folder", { folder });
+    await context.dispatch('load_folder_list');
+    context.commit("set_folder", { folder: folder });
     context.commit("set_file_list", { file_list: [] });
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
