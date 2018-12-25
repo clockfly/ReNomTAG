@@ -10,10 +10,6 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {
-    //   "/api": "http://localhost:8001",
-    //   "/t": "http://localhost:8001"
-    // },
 
     // require "changeOrigin" to use proxyTable !!!
     proxyTable: {

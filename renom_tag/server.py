@@ -74,7 +74,6 @@ def filter_datafilenames(dir, ext):
     unDefNames=[]
     for name in glob2.glob(path):
         # all files which exist in the "path"
-        # print(name)
         if isvalid(name):
             # name[len(dir):] does extract only filename
             names.append(name[len(dir):])
@@ -174,8 +173,6 @@ def json2xml(json_obj, line_padding=""):
 def xml2json(xml_file, xml_attribs=True):
     with open(xml_file, "rb") as f:  # notice the "rb" mode
         d = xmltodict.parse(f, xml_attribs=xml_attribs)
-        # print("d")
-        # print(d)
         return json.dumps(d, indent=4)
 
 
@@ -326,9 +323,7 @@ def get_filename_list():
     folder = request.json['folder']
     folder = strip_foldername(folder)
     img_paths, undef_img_path = get_img_files(folder)
-    print("")
-    print("")
-    print(undef_img_path)
+
 
 
     ret = {}

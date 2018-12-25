@@ -60,6 +60,26 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
   target.addEventListener(type, fn, useCapture);
 }
 
+
+export function undef_filename_show(undef_filename_list) {
+  let undef_message = 'error\n\n The following filenames are unavailable, which could not be loaded:\n\n';
+  let length = Math.min(3, undef_filename_list.length)
+
+  for (let i = 0; i < length; i++){
+    undef_message = undef_message.concat(undef_filename_list[i])
+    if (i != length-1){
+      undef_message = undef_message.concat(', \n')
+
+    }
+    if (length==3 && i == length-1){
+      undef_message = undef_message.concat('\netc...')
+    }
+  }
+  return undef_message
+}
+
+
+
 /* \
  |*|
  |*|  :: cookies.js ::

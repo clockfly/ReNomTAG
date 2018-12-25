@@ -16,23 +16,6 @@ async function async_func(context, f) {
   return ret;
 }
 
-async function undef_filename_show(undef_filename_list) {
-  let undef_message = 'error\n\n The following filenames are unavailable, which could not be loaded:\n\n';
-  let length = Math.min(3, undef_filename_list.length)
-
-  for (let i = 0; i < length; i++){
-    undef_message = undef_message.concat(undef_filename_list[i])
-    if (i != length-1){
-      undef_message = undef_message.concat(', \n')
-
-    }
-    if (length==3 && i == length-1){
-      undef_message = undef_message.concat('\netc...')
-    }
-  }
-  return undef_message
-}
-
 // TODO
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
@@ -48,16 +31,14 @@ async function load_imagefile_list(context) {
     file_list: response.data.filename_list
   });
 
-  // show undef_filename process-----------------------------------
-  if (response.data.undef_filename_list.length > 0){
 
-    // console.log(response.data.undef_filename_list.length);
-    let undef_message = await undef_filename_show(response.data.undef_filename_list);
+  if (response.data.undef_filename_list.length > 0){
+    let undef_message = utils.undef_filename_show(response.data.undef_filename_list);
     context.commit("set_error_status", {
       error_status: undef_message
     });
   }
-  //-----------------------------------
+
 
   if (context.state.files.length > 0) {
     context.dispatch("load_current_image", context.state.files[0]);
