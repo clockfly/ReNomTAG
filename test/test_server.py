@@ -146,7 +146,7 @@ def test_get_filename_list(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
         print(ret.json_body)
-        assert ret.json == {'filename_list': {'b.jpg': None, 'a.jpeg': {'annotation': {'path': 'a.jpeg', 'source': {'database': 'Unknown', 'reviewresult': '', 'reviewcomment': ''}, 'size': {'width': '275', 'height': '183', 'depth': '3'}, 'segments': '0', 'folder': 'dataset', 'filename': 'a.jpeg', 'objects': [{'name': 'car', 'pose': 'Unspecified', 'truncated': '0', 'difficult': '0', 'bndbox': {'xmin': '26', 'xmax': '247', 'ymin': '27', 'ymax': '162'}}]}}}, 
+        assert ret.json == {'filename_list': {'b.jpg': None, 'a.jpeg': {'annotation': {'path': 'a.jpeg', 'source': {'database': 'Unknown', 'reviewresult': '', 'reviewcomment': ''}, 'size': {'width': '275', 'height': '183', 'depth': '3'}, 'segments': '0', 'folder': 'dataset', 'filename': 'a.jpeg', 'objects': [{'name': 'car', 'pose': 'Unspecified', 'truncated': '0', 'difficult': '0', 'bndbox': {'xmin': '26', 'xmax': '247', 'ymin': '27', 'ymax': '162'}}]}}},
                             'undef_filename_list': ['a-b.png']}
 
 
@@ -188,8 +188,14 @@ def test_load_label_candidates_dict(tmpdir):
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
 def test_get_img_file(tmpdir):
-    tmpdir = "user"
-    file_name_list, unDef_list = server.get_img_files(tmpdir)
-    print(file_name_list)
-    print(unDef_list)
-    assert 1
+    with tmpdir.as_cwd():
+        imgdir = build_img_dir(tmpdir, 'folderx')
+        imgdir.join('a.jpeg').write_binary(b'')
+        imgdir.join('aierf_y832fa.jpg').write_binary(b'')
+        imgdir.join('c-b.png').write_binary(b'')
+        imgdir.join('37oiahfw*.jpeg').write_binary(b'')
+
+        ret_names, ret_undef_names = server.get_img_files('folderx')
+        print("acceptable filename: {}".format(ret_names))
+        print("illegal filename: {}".format(ret_undef_names))
+        assert 1
