@@ -71,7 +71,7 @@ def filter_datafilenames(dir, ext):
     # 4) add "name" to list "names"
     #names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
     names=[]
-    unDefNames=[]
+    undef_names=[]
     for name in glob2.glob(path):
         # all files which exist in the "path"
         if isvalid(name):
@@ -79,24 +79,24 @@ def filter_datafilenames(dir, ext):
             names.append(name[len(dir):])
 
         if not isvalid(name):
-            unDefNames.append(name[len(dir):])
+            undef_names.append(name[len(dir):])
 
-    return names, unDefNames
+    return names, undef_names
 
 
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png"]
     ret_names = []
-    ret_unDefNames = []
+    ret_undef_names = []
 
     # joining user/dataset/
     dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        names, unDefNames = filter_datafilenames(dir, e)
+        names, undef_names = filter_datafilenames(dir, e)
         ret_names.extend(names)
-        ret_unDefNames.extend(unDefNames)
-    return ret_names, ret_unDefNames
+        ret_undef_names.extend(undef_names)
+    return ret_names, ret_undef_names
 
 
 def get_xml_files(folder):
@@ -323,7 +323,6 @@ def get_filename_list():
     folder = request.json['folder']
     folder = strip_foldername(folder)
     img_paths, undef_img_path = get_img_files(folder)
-
 
 
     ret = {}
