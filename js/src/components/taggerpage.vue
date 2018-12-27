@@ -96,8 +96,8 @@ export default {
   text-align: center;
 }
 .error-msg {
-  white-space:pre-line;
-  word-wrap:break-word;
+  white-space: pre-line;
+  word-wrap: break-word;
   text-align: center;
   font-weight: bold;
   margin-bottom: 0;

@@ -31,14 +31,14 @@ async function load_imagefile_list(context) {
     file_list: response.data.filename_list
   });
 
-
-  if (response.data.undef_filename_list.length > 0){
-    let undef_message = utils.undef_filename_show(response.data.undef_filename_list);
+  if (response.data.undef_filename_list.length > 0) {
+    let undef_message = utils.undef_filename_show(
+      response.data.undef_filename_list
+    );
     context.commit("set_error_status", {
       error_status: undef_message
     });
   }
-
 
   if (context.state.files.length > 0) {
     context.dispatch("load_current_image", context.state.files[0]);
@@ -78,7 +78,7 @@ export default {
   },
 
   async set_folder(context, folder) {
-    await context.dispatch('load_folder_list');
+    await context.dispatch("load_folder_list");
     context.commit("set_folder", { folder: folder });
     context.commit("set_file_list", { file_list: [] });
     await load_imagefile_list(context);

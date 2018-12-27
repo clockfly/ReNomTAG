@@ -425,7 +425,6 @@ export default {
         font-size: 13px;
       }
     }
-
   }
 
   .tag-list-item {
@@ -468,7 +467,6 @@ export default {
       height: 35px;
       border-radius: 0;
     }
-
 
     input.label-shortcut-update {
       width: 31.125px;

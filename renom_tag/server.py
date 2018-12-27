@@ -59,19 +59,18 @@ def filter_datafilenames(dir, ext):
 
     # only a-z A-Z 0-9 _ can use as filename
     # initialze matchObject
-    isvalid = re.compile(r"^[a-zA-Z0-9_.\%s]+$" %os.path.sep).match
+    isvalid = re.compile(r"^[a-zA-Z0-9_.\%s]+$" % os.path.sep).match
 
     # path for any named files of file-extention=ext
     path = os.path.join(dir, "**", '*.' + ext)
-
 
     # 1) for name in glob2.glob(path)
     # 2) if isvalid(name)
     # 3) name[len(dir):]
     # 4) add "name" to list "names"
     #names = [name[len(dir):] for name in glob2.glob(path) if isvalid(name)]
-    names=[]
-    undef_names=[]
+    names = []
+    undef_names = []
     for name in glob2.glob(path):
         # all files which exist in the "path"
         if isvalid(name):
@@ -216,6 +215,8 @@ def static(file_name):
     return _get_resource('static', file_name)
 
 # TODO
+
+
 def check_path(path, filename):
     head = os.path.abspath(path)
     if not head.endswith(('/', '\\')):
@@ -324,7 +325,6 @@ def get_filename_list():
     folder = strip_foldername(folder)
     img_paths, undef_img_path = get_img_files(folder)
 
-
     ret = {}
     for img in img_paths:
         xml = get_boxes(folder, img)
@@ -412,8 +412,8 @@ def load_xml_tagged_images():
         # load xml file convert to json
         # extract bounding box
         xml = get_boxes(str(folder), str(tagged_img))
-        filename = check_path(os.path.join(get_folderpath(str(folder)),IMG_DIR), xml['annotation']['filename'])
-
+        filename = check_path(os.path.join(get_folderpath(str(folder)),
+                                           IMG_DIR), xml['annotation']['filename'])
 
         img = open(filename, "rb").read()
         encoded_img = base64.b64encode(img)

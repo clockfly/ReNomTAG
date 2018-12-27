@@ -35,24 +35,24 @@ def create_xml_data():
     folder = ET.SubElement(annotation, 'folder')
     filename = ET.SubElement(annotation, 'filename')
 
-    database = ET.SubElement(source,'database')
-    reviewresult = ET.SubElement(source,'reviewresult')
+    database = ET.SubElement(source, 'database')
+    reviewresult = ET.SubElement(source, 'reviewresult')
     reviewcomment = ET.SubElement(source, 'reviewcomment')
 
     width = ET.SubElement(size, 'width')
     height = ET.SubElement(size, 'height')
     depth = ET.SubElement(size, 'depth')
 
-    name = ET.SubElement(object,'name')
+    name = ET.SubElement(object, 'name')
     pose = ET.SubElement(object, 'pose')
     truncated = ET.SubElement(object, 'truncated')
     difficult = ET.SubElement(object, 'difficult')
     bndbox = ET.SubElement(object, 'bndbox')
 
-    xmin = ET.SubElement(bndbox,'xmin')
-    xmax = ET.SubElement(bndbox,'xmax')
-    ymin = ET.SubElement(bndbox,'ymin')
-    ymax = ET.SubElement(bndbox,'ymax')
+    xmin = ET.SubElement(bndbox, 'xmin')
+    xmax = ET.SubElement(bndbox, 'xmax')
+    ymin = ET.SubElement(bndbox, 'ymin')
+    ymax = ET.SubElement(bndbox, 'ymax')
 
     path.text = 'a.jpeg'
     database.text = 'Unknown'
@@ -60,8 +60,8 @@ def create_xml_data():
     height.text = '183'
     depth.text = '3'
     segments.text = '0'
-    name.text ='car'
-    pose.text ='Unspecified'
+    name.text = 'car'
+    pose.text = 'Unspecified'
     truncated.text = '0'
     difficult.text = '0'
     xmin.text = '26'
@@ -150,7 +150,6 @@ def test_get_filename_list(tmpdir):
                             'undef_filename_list': ['a-b.png']}
 
 
-
 # faital
 def test_save_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
@@ -168,6 +167,8 @@ def test_save_label_candidates_dict(tmpdir):
         assert saved == {'1': {'label': 'label'}}
 
 # faital
+
+
 def test_load_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
@@ -182,8 +183,6 @@ def test_load_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
         assert ret.json_body == [{"label": "label", "shortcut": "1"}]
-
-
 
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
