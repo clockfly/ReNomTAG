@@ -138,6 +138,7 @@ def test_get_filename_list(tmpdir):
         imgdir.join('a.jpeg').write_binary(b'')
         imgdir.join('b.jpg').write_binary(b'')
         imgdir.join('a-b.png').write_binary(b'')
+        imgdir.join('ccc.bmp').write_binary(b'')
 
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
@@ -145,9 +146,10 @@ def test_get_filename_list(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
-        print(ret.json_body)
-        assert ret.json == {'filename_list': {'b.jpg': None, 'a.jpeg': {'annotation': {'path': 'a.jpeg', 'source': {'database': 'Unknown', 'reviewresult': '', 'reviewcomment': ''}, 'size': {'width': '275', 'height': '183', 'depth': '3'}, 'segments': '0', 'folder': 'dataset', 'filename': 'a.jpeg', 'objects': [{'name': 'car', 'pose': 'Unspecified', 'truncated': '0', 'difficult': '0', 'bndbox': {'xmin': '26', 'xmax': '247', 'ymin': '27', 'ymax': '162'}}]}}},
-                            'undef_filename_list': ['a-b.png']}
+        print(ret.json['filename_list'].keys())
+        print(ret.json['undef_filename_list'])
+        assert [*ret.json['filename_list'].keys()]==['b.jpg','a.jpeg','ccc.bmp']
+        assert ret.json['undef_filename_list']==['a-b.png']
 
 
 # faital
@@ -193,8 +195,8 @@ def test_get_img_file(tmpdir):
         imgdir.join('aierf_y832fa.jpg').write_binary(b'')
         imgdir.join('c-b.png').write_binary(b'')
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
+        imgdir.join('aakhk.bmp').write_binary(b'')
 
         ret_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
-        assert 1
