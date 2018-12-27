@@ -145,9 +145,13 @@ def test_get_filename_list(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
-        print(ret.json_body)
-        assert ret.json == {'filename_list': {'b.jpg': None, 'a.jpeg': {'annotation': {'path': 'a.jpeg', 'source': {'database': 'Unknown', 'reviewresult': '', 'reviewcomment': ''}, 'size': {'width': '275', 'height': '183', 'depth': '3'}, 'segments': '0', 'folder': 'dataset', 'filename': 'a.jpeg', 'objects': [{'name': 'car', 'pose': 'Unspecified', 'truncated': '0', 'difficult': '0', 'bndbox': {'xmin': '26', 'xmax': '247', 'ymin': '27', 'ymax': '162'}}]}}},
-                            'undef_filename_list': ['a-b.png']}
+        filename_list = [*ret.json['filename_list']]
+        undef_filename_list = ret.json['undef_filename_list']
+        print(filename_list)
+        print(undef_filename_list)
+        assert filename_list ==['b.jpg','a.jpeg','ccc.bmp']
+        assert undef_filename_list==['a-b.png']
+
 
 
 # faital
@@ -197,4 +201,5 @@ def test_get_img_file(tmpdir):
         ret_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
-        assert 1
+        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg', 'aakhk.bmp']
+        assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
