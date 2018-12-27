@@ -145,7 +145,11 @@ def test_get_filename_list(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
-        filename_list = [*ret.json['filename_list']]
+        #filename_list = [*ret.json['filename_list']]
+        filename_list = []
+        for key in ret.json['filename_list']:
+            filename_list.append(key)
+
         undef_filename_list = ret.json['undef_filename_list']
         print(filename_list)
         print(undef_filename_list)
