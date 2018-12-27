@@ -19,7 +19,7 @@
         <button class='error-button' @click='set_error_status({error_status: ""})'>close</button>
       </div>
     </modal-box>
-    
+
   </div>
 
 </template>
@@ -96,6 +96,8 @@ export default {
   text-align: center;
 }
 .error-msg {
+  white-space:pre-line;
+  word-wrap:break-word;
   text-align: center;
   font-weight: bold;
   margin-bottom: 0;

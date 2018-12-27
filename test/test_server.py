@@ -4,11 +4,13 @@ import json
 import os
 import tempfile
 from contextlib import contextmanager
+import xml.etree.ElementTree as ET
 
 from PIL import Image
 import xmltodict
 from webtest import TestApp as testapp
 from renom_tag import server
+import pytest
 
 
 def build_img_dir(tmpdir, folder):
@@ -23,6 +25,57 @@ def build_xml_dir(tmpdir, folder):
     return xmldir
 
 
+def create_xml_data():
+    annotation = ET.Element('annotation')
+    path = ET.SubElement(annotation, 'path')
+    source = ET.SubElement(annotation, 'source')
+    size = ET.SubElement(annotation, 'size')
+    segments = ET.SubElement(annotation, 'segments')
+    object = ET.SubElement(annotation, 'object')
+    folder = ET.SubElement(annotation, 'folder')
+    filename = ET.SubElement(annotation, 'filename')
+
+    database = ET.SubElement(source,'database')
+    reviewresult = ET.SubElement(source,'reviewresult')
+    reviewcomment = ET.SubElement(source, 'reviewcomment')
+
+    width = ET.SubElement(size, 'width')
+    height = ET.SubElement(size, 'height')
+    depth = ET.SubElement(size, 'depth')
+
+    name = ET.SubElement(object,'name')
+    pose = ET.SubElement(object, 'pose')
+    truncated = ET.SubElement(object, 'truncated')
+    difficult = ET.SubElement(object, 'difficult')
+    bndbox = ET.SubElement(object, 'bndbox')
+
+    xmin = ET.SubElement(bndbox,'xmin')
+    xmax = ET.SubElement(bndbox,'xmax')
+    ymin = ET.SubElement(bndbox,'ymin')
+    ymax = ET.SubElement(bndbox,'ymax')
+
+    path.text = 'a.jpeg'
+    database.text = 'Unknown'
+    width.text = '275'
+    height.text = '183'
+    depth.text = '3'
+    segments.text = '0'
+    name.text ='car'
+    pose.text ='Unspecified'
+    truncated.text = '0'
+    difficult.text = '0'
+    xmin.text = '26'
+    xmax.text = '247'
+    ymin.text = '27'
+    ymax.text = '162'
+    folder.text = 'dataset'
+    filename.text = 'a.jpeg'
+
+    ex_xml = ET.tostring(annotation)
+    return ex_xml
+
+
+# faital
 def test_get_raw_img(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
@@ -81,24 +134,24 @@ def test_save_xml_from_label_dict(tmpdir):
 
 def test_get_filename_list(tmpdir):
     with tmpdir.as_cwd():
-
         imgdir = build_img_dir(tmpdir, 'folderx')
-
         imgdir.join('a.jpeg').write_binary(b'')
-        imgdir.join('b.jpeg').write_binary(b'')
+        imgdir.join('b.jpg').write_binary(b'')
+        imgdir.join('a-b.png').write_binary(b'')
 
         xmldir = build_xml_dir(tmpdir, 'folderx')
-        xmldir.join('a.xml').write_binary(b'')
+        ex_xml = create_xml_data()
+        xmldir.join('a.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
-
-        assert ret.json_body == {
-            "success": 0,
-            "filename_list": ["b.jpeg"]
-        }
+        print(ret.json_body)
+        assert ret.json == {'filename_list': {'b.jpg': None, 'a.jpeg': {'annotation': {'path': 'a.jpeg', 'source': {'database': 'Unknown', 'reviewresult': '', 'reviewcomment': ''}, 'size': {'width': '275', 'height': '183', 'depth': '3'}, 'segments': '0', 'folder': 'dataset', 'filename': 'a.jpeg', 'objects': [{'name': 'car', 'pose': 'Unspecified', 'truncated': '0', 'difficult': '0', 'bndbox': {'xmin': '26', 'xmax': '247', 'ymin': '27', 'ymax': '162'}}]}}},
+                            'undef_filename_list': ['a-b.png']}
 
 
+
+# faital
 def test_save_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
@@ -114,7 +167,7 @@ def test_save_label_candidates_dict(tmpdir):
         saved = json.load(open(jsonfile.strpath))
         assert saved == {'1': {'label': 'label'}}
 
-
+# faital
 def test_load_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
@@ -129,3 +182,20 @@ def test_load_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
         assert ret.json_body == [{"label": "label", "shortcut": "1"}]
+
+
+
+
+# made　mamually "pablic/user/~" inside the ReNomTAG/test
+def test_get_img_file(tmpdir):
+    with tmpdir.as_cwd():
+        imgdir = build_img_dir(tmpdir, 'folderx')
+        imgdir.join('a.jpeg').write_binary(b'')
+        imgdir.join('aierf_y832fa.jpg').write_binary(b'')
+        imgdir.join('c-b.png').write_binary(b'')
+        imgdir.join('37oiahfw*.jpeg').write_binary(b'')
+
+        ret_names, ret_undef_names = server.get_img_files('folderx')
+        print("acceptable filename: {}".format(ret_names))
+        print("illegal filename: {}".format(ret_undef_names))
+        assert 1
