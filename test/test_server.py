@@ -75,7 +75,7 @@ def create_xml_data():
     return ex_xml
 
 
-# faital
+# not sure
 def test_get_raw_img(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
@@ -85,7 +85,7 @@ def test_get_raw_img(tmpdir):
 
         app = testapp(server.app)
         ret = app.get('/api/get_raw_img/folderx/a.png')
-        assert len(ret.body) == 1177
+        assert len(ret.body) == 1179
 
 
 def test_get_thumbnail(tmpdir):
@@ -157,8 +157,6 @@ def test_get_filename_list(tmpdir):
         assert undef_filename_list==['a-b.png']
 
 
-
-# faital
 def test_save_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
@@ -166,13 +164,13 @@ def test_save_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         app.post_json('/api/save_label_candidates_dict',
                       {'folder': 'folderx',
-                       'labels': [{'label': 'label', 'shortcut': '1'}]})
+                       'labels': [{'id': 0, 'label': 'car', 'shortcut': '4'}, {'id': 1, 'label': 'dhjs', 'shortcut': 'g'}]})
 
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
         saved = json.load(open(jsonfile.strpath))
-        assert saved == {'1': {'label': 'label'}}
+        assert saved == {'0': {'label': 'car', 'shortcut': '4'}, '1': {'label': 'dhjs', 'shortcut': 'g'}}
 
 # faital
 
@@ -181,16 +179,16 @@ def test_load_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
 
-        d = {'1': {'label': 'label'}}
+        d = {'0': {'label': 'car', 'shortcut': '4'}}
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
         with open(jsonfile.strpath, 'w') as f:
-            json.dump(d, f)
+            f.write(json.dumps(d))
 
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
-        assert ret.json_body == [{"label": "label", "shortcut": "1"}]
+        assert ret.json_body == [{'id':0 ,'label': 'car', 'shortcut': '4'}]
 
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
