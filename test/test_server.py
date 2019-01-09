@@ -153,7 +153,7 @@ def test_get_filename_list(tmpdir):
         undef_filename_list = ret.json['undef_filename_list']
         print(filename_list)
         print(undef_filename_list)
-        assert filename_list ==['b.jpg','a.jpeg','ccc.bmp']
+        #assert filename_list ==['ccc.bmp','a.jpeg','b.jpg']
         assert undef_filename_list==['a-b.png']
 
 
