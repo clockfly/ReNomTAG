@@ -11,6 +11,29 @@
     </div>
     <tagged-images class="row"/>
     <app-footer class="row" ></app-footer>
+    <modal-box v-if='make_dir_message'>
+      <div slot='contents' >
+        {{make_dir_message}}
+        <input :value="working_dir" v-if='make_dir_message_counter===1' id="input_str" type="text" @input="set_working_dir">
+        <input :value="username" v-if='make_dir_message_counter===2' id="input_str" type="text" @input="set_username">
+      </div>
+      <div slot="okbutton">
+        <button v-if='make_dir_message_counter < 2' class="modal-default-button" @click='set_message(); message_counter()'>
+          OK
+        </button>
+        <button v-if='make_dir_message_counter===2' class="modal-default-button" @click='set_message(); message_counter(); make_dir()'>
+          OK
+        </button>
+        <button v-if='make_dir_message_counter > 2' class="modal-default-button" @click='reload()'>
+          Load
+        </button>
+      </div>
+      <div slot="cancelbutton">
+        <button v-if='make_dir_message_counter <= 2' class="modal-default-button" @click='undo_message(); reset_counter()'>
+          Cancel
+        </button>
+      </div>
+    </modal-box>
     <modal-box v-if='error_status'>
       <div slot='contents' class='error-msg'>
         {{error_status}}
@@ -19,7 +42,6 @@
         <button class='error-button' @click='set_error_status({error_status: ""})'>close</button>
       </div>
     </modal-box>
-
   </div>
 
 </template>
@@ -36,8 +58,10 @@ import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
 import { mapState, mapMutations } from "vuex";
 import AppFooter from "./footer.vue";
+
 export default {
   components: {
+    "modal-box": ModalBox,
     "app-header": AppHeader,
     "left-menu": LeftMenu,
     "image-list": ImageList,
@@ -45,7 +69,6 @@ export default {
     tags: Tags,
     "tagged-images": TaggedImages,
     navarrow: NavArrow,
-    "modal-box": ModalBox,
     "app-footer": AppFooter
   },
   computed: {
@@ -53,11 +76,49 @@ export default {
       "folder",
       "folder_list",
       "active_image_filename",
-      "error_status"
+      "error_status",
+      "make_dir_message",
+      "make_dir_message_counter",
+      "working_dir",
+      "username"
     ])
   },
   methods: {
-    ...mapMutations(["set_error_status"])
+    ...mapMutations(["set_error_status"]),
+    set_message: function(){
+      if (this.make_dir_message_counter==0){
+        this.$store.commit("set_make_dir_message",{make_dir_message: "Select the working directory"});
+      } else if (this.make_dir_message_counter==1) {
+        this.$store.commit("set_make_dir_message",{make_dir_message: "Input your username"});
+      }
+    },
+    undo_message: function(){
+      this.$store.commit("set_make_dir_message",{make_dir_message: ""});
+    },
+    message_counter: function(){
+      var counter = this.make_dir_message_counter;
+      console.log(counter)
+      counter = counter + 1;
+      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: counter});
+    },
+    reset_counter: function(){
+      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: 0});
+    },
+    set_working_dir: function(e){
+      this.$store.commit("set_working_dir", {working_dir: e.target.value});
+    },
+    set_username: function(e) {
+      this.$store.commit("set_username", {username: e.target.value});
+    },
+    make_dir: function(){
+      this.$store.commit("set_make_dir_message",{make_dir_message: "creating directories..."});
+      this.$store.dispatch("make_dir");
+    },
+    reload: function(){
+      location.reload();
+    }
+
+
   },
 
   created: function() {
@@ -88,6 +149,11 @@ export default {
 #no_active_image {
   flex-grow: 1;
   background: #fff;
+}
+#input_str{
+  display: block;
+  width: 200px;
+  height: 10px;
 }
 .left {
   text-align: center;

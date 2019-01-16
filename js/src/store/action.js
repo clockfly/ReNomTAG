@@ -73,9 +73,19 @@ export default {
         folder: context.state.folder
       })
     );
-    context.commit("set_folder_list", {
-      folder_list: response.data.folder_list
-    });
+    if (response.data.folder_list){
+      context.commit("set_folder_list", {
+        folder_list: response.data.folder_list
+      });
+    }
+    else if (response.data.message){
+      context.commit("set_make_dir_message",{
+        make_dir_message: response.data.message
+      });
+      context.commit("set_working_dir",{
+        working_dir: response.data.current_dir
+      });
+    }
   },
 
   async set_folder(context, folder) {
@@ -91,13 +101,17 @@ export default {
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/make_dir"), {
         // TODO
-        working_dir: context.state.working_dir
-        username: context.state.folder
+        working_dir: context.state.working_dir,
+        username: context.state.username
       })
     );
-    context.commit("set_make_dir_message", {
-      make_dir_massage: response.data.message
-    });
+    if (response.data.message){
+      context.commit("set_make_dir_message", {
+        make_dir_message: response.data.message
+      });
+      console.log(response.data.message);
+    }
+
   },
 
   async load_current_image(context, file) {

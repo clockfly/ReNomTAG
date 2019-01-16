@@ -6,7 +6,11 @@ let state = {
   main_menu_visible: false,
 
   loading_message: "Loading images...",
+  make_dir_message: "",
+  make_dir_message_counter: 0,
+  username: "input here",
 
+  working_dir: "",
   folder: "",
   folder_list: [],
   // image files
