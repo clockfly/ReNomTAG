@@ -4,7 +4,7 @@
       <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
         <span class='menu-text'>Detection Label</span>
-      </button> 
+      </button>
 
       <hr>
       <button v-for="name in folder_list" :key="name"
@@ -53,7 +53,7 @@ export default {
   width: 100%;
   left: 0;
   height: calc(100% - #{$application-header-hight});
-  z-index: 9999;
+  z-index: 9997;
   &.open {
     width: 100%;
     display: block;
