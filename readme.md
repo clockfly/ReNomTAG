@@ -20,14 +20,34 @@ The Wheel package contains pre-build js files so you don't have to build manuall
 
 
 ## Install from source
-To install ReNomTAG from source, download this repository and 
-run following command in the root of the repository.
-
+To install ReNomTAG from source, download this repository.
 ```
-$ pip3 install -e .
+git clone https://gitlab.com/grid-devs/ReNomTAG.git
 ```
 
-## Build Javascript
+
+```
+which python
+```
+
+Go to ReNomTAG/js and use following command to install node packages.
+```
+cd js/
+npm install
+```
+
+Check which python env you are using and going to install renom_tag.
+Go to the root of ReNomTAG, install ReNomTAG and requirements.
+```
+cd ../
+pip install -r requirements.txt
+python setup.py build
+pip install -e .
+```
+
+
+## Build Javascript (for developers)
+
 You can build js files with following command.
 
 ```
@@ -35,12 +55,48 @@ $ cd js
 $ npm run start
 ```
 
-## How to start
+## Make working directory for the ReNomTAG app
+A working directory is needed when you want to run ReNomTAG app.
+Note that the directory structure is fixed. Please confirm details in the following page.
+http://renom.jp/packages/renomtag/ja/rsts/how_to_use.html#before-starting
+
+For instance:
+ ```
+ working_directory # Current Working directory
+     │  
+     └── public # This name must be `public`.
+         │  
+         └── user1 # Dataset for user1. You can put any name for this directory.
+             ├── dataset # Directory in which image data put. This name must be `dataset`.
+             │   ├── image1.jpg
+             │   ├── image2.jpg
+             │   ├── ...
+             │   └── imageN.jpg
+             └── label # Directory to which tag data will output. This name must be `label`.
+                 ├── image1.xml
+                 ├── image2.xml
+                 ├── ...
+                 └── imageN.xml
+ ```
+
+The directories above are made by using following commands:
+ ```
+mkdir ~/working_directory
+cd ~/working_directory
+mkdir public
+mkdir public/user1
+mkdir public/user1/label
+mkdir public/user1/dataset
+ ```
+
+
+## How to run the app
 
 Once installed, you can run ReNomTAG as follows.
+Note that you first need to activate the python env which you install the renom_tag.
 
 ```
-$ python3 -m renom_tag
+$ python -m renom_tag
 ```
 
 You can also use `renom_tag` command installed by the wheel.
@@ -48,16 +104,26 @@ You can also use `renom_tag` command installed by the wheel.
 ```
 $ renom_tag
 ```
+Go to browser and listen to the page indicated by the console.
 
+
+## Debugging (for developers)
 You can also use webpack-dev-server for debugging.
+Before start dev-server by following commands,
+make sure that ReNomTAG app is running in the working_directory (do ## How to run the app).
 
+For first time:
 ```
 $ cd js
 $ npm run start
 ```
+From second time:
+```
+$ cd js
+$ npm run dev
+```
 
-
-## How to use
+## How to use in video
 
 The following videos describes how to use ReNomTAG.
 In this video, the Oxford-IIIT Pet Dataset is used.
@@ -78,4 +144,3 @@ http://www.robots.ox.ac.uk/~vgg/data/pets/
 “ReNomTAG” is provided by GRID inc., as subscribed software. By downloading ReNomTAG, you are agreeing to be bound by our ReNom Subscription agreement between you and GRID inc.
 To use ReNomTAG for commercial purposes, you must first obtain a paid license. Please contact us or one of our resellers.  If you are an individual wishing to use ReNomTAG for academic, educational and/or product evaluation purposes, you may use ReNomTAG royalty-free.
 The ReNom Subscription agreements are subject to change without notice. You agree to be bound by any such revisions. You are responsible for visiting www.renom.jp to determine the latest terms to which you are bound.
-
