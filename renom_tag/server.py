@@ -521,20 +521,33 @@ def delete_label_candidates_dict():
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
     # folders = the list of user-folder
-    folders = []
-    for d in sorted(os.listdir(DIR_ROOT)):
-        if not re.match(r"^[a-zA-Z0-9._]+$", d):
-            continue
+    current_dir = os.getcwd()
+    public = os.path.join(current_dir, DIR_ROOT)
 
-        if not os.path.isdir(os.path.join(DIR_ROOT, d)):
-            continue
+    if os.path.exists(public) and os.path.isdir(public):
+        folders = []
+        for d in sorted(os.listdir(DIR_ROOT)):
+            if not re.match(r"^[a-zA-Z0-9._]+$", d):
+                continue
 
-        if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
-            continue
+            if not os.path.isdir(os.path.join(DIR_ROOT, d)):
+                continue
 
-        folders.append(d)
+            if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
+                continue
 
-    ret = set_json_body(json.dumps({'folder_list': folders}))
+            folders.append(d)
+        ret = set_json_body(json.dumps({'folder_list': folders}))
+
+    else:
+        message = 'No folder named "public" in the current directory: \n'+ str(current_dir) + '\n'
+        message = message + 'Wanna create directories?'
+        ret = set_json_body(json.dumps(
+                            {'message': message,
+                             'current_dir': current_dir
+                            }))
+
+
     return ret
 
 
@@ -547,7 +560,7 @@ def make_dir():
         message = 'Error: no such a directory. chose others. ' + working_dir
         print(message)
 
-    else if not re.match(r"^[a-zA-Z0-9._]+$", username):
+    elif not re.match(r"^[a-zA-Z0-9._]+$", username):
         message = 'Error: the username is unavailable. use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_).'
         print(message)
 
@@ -564,6 +577,7 @@ def make_dir():
         message = 'making directory sucessed!'
         print(message)
 
+    message = message + "load again to start."
     ret = set_json_body(json.dumps({'message': message }))
     return ret
 
