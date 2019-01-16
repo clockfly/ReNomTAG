@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as utils from "@/utils";
 
+// TODO
 async function async_func(context, f) {
   let ret;
   try {
@@ -16,7 +17,7 @@ async function async_func(context, f) {
   return ret;
 }
 
-// TODO
+
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
     loading_message: "Loading images..."
@@ -63,7 +64,7 @@ async function load_tagged_images(context) {
   context.commit("set_tagged_images", response.data.result);
 }
 
-// TODO
+
 export default {
   async load_folder_list(context) {
     // console.log(context.state.folder)
@@ -84,6 +85,19 @@ export default {
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
     await load_tagged_images(context);
+  },
+
+  async make_dir(context) {
+    let response = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/make_dir"), {
+        // TODO
+        working_dir: context.state.working_dir
+        username: context.state.folder
+      })
+    );
+    context.commit("set_make_dir_message", {
+      make_dir_massage: response.data.message
+    });
   },
 
   async load_current_image(context, file) {

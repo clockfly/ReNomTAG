@@ -515,9 +515,12 @@ def delete_label_candidates_dict():
         os.remove(jsonfile)
 
 
+# TODO
+# DIR_ROOT = 'public'
 # search inside the "bublic" ande get folderlist
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
+    # folders = the list of user-folder
     folders = []
     for d in sorted(os.listdir(DIR_ROOT)):
         if not re.match(r"^[a-zA-Z0-9._]+$", d):
@@ -532,6 +535,36 @@ def get_folderlist():
         folders.append(d)
 
     ret = set_json_body(json.dumps({'folder_list': folders}))
+    return ret
+
+
+@app.route("/api/make_dir", method=["POST"])
+def make_dir():
+    working_dir = request.json['working_dir']
+    username = request.json['username']
+
+    if not os.path.exists(working_dir):
+        message = 'Error: no such a directory. chose others. ' + working_dir
+        print(message)
+
+    else if not re.match(r"^[a-zA-Z0-9._]+$", username):
+        message = 'Error: the username is unavailable. use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_).'
+        print(message)
+
+    else:
+        # string -> join to path
+        public = os.path.join(working_dir,DIR_ROOT)
+        user_folder = os.path.join(public,username)
+        dataset = os.path.join(user_folder,IMG_DIR)
+        label = os.path.join(user_folder,XML_DIR)
+
+        os.makedirs(user_folder)
+        os.mkdir(dataset)
+        os.mkdir(label)
+        message = 'making directory sucessed!'
+        print(message)
+
+    ret = set_json_body(json.dumps({'message': message }))
     return ret
 
 
