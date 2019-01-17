@@ -203,5 +203,5 @@ def test_get_img_file(tmpdir):
         ret_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
-        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg', 'aakhk.bmp']
+        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
