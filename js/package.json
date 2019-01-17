@@ -8,7 +8,7 @@
     "start": "npm run dev",
     "lint": "eslint --fix --ext .js,.vue src",
     "build": "node build/build.js",
-    "unit": "jest --config test/unit/jest.conf.js --coverage"
+    "unit": "jest --config=test/unit/jest.conf.js --coverage"
   },
   "dependencies": {
     "axios": "^0.18.0",

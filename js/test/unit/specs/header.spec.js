@@ -8,7 +8,7 @@ describe('taggerpage.vue', () => {
     const store = setup_store(s=>{s.state.main_menu_visible = false})
     const wrapper = shallow(Header, store)
 
-    const i = wrapper.find('#toggle-menu');
+    const i = wrapper.find('.hanburger-menu');
     i.trigger('click');
     expect(store.store.state.main_menu_visible).toBe(true)
   })
