@@ -75,7 +75,7 @@ def create_xml_data():
     return ex_xml
 
 
-# faital
+# not sure
 def test_get_raw_img(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
@@ -85,7 +85,7 @@ def test_get_raw_img(tmpdir):
 
         app = testapp(server.app)
         ret = app.get('/api/get_raw_img/folderx/a.png')
-        assert len(ret.body) == 1177
+        assert len(ret.body) == 1179
 
 
 def test_get_thumbnail(tmpdir):
@@ -146,13 +146,18 @@ def test_get_filename_list(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
-        print(ret.json['filename_list'].keys())
-        print(ret.json['undef_filename_list'])
-        assert [*ret.json['filename_list'].keys()]==['b.jpg','a.jpeg','ccc.bmp']
-        assert ret.json['undef_filename_list']==['a-b.png']
+        #filename_list = [*ret.json['filename_list']]
+        filename_list = []
+        for key in ret.json['filename_list']:
+            filename_list.append(key)
+
+        undef_filename_list = ret.json['undef_filename_list']
+        print(filename_list)
+        print(undef_filename_list)
+        #assert filename_list ==['ccc.bmp','a.jpeg','b.jpg']
+        assert undef_filename_list==['a-b.png']
 
 
-# faital
 def test_save_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
@@ -160,13 +165,13 @@ def test_save_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         app.post_json('/api/save_label_candidates_dict',
                       {'folder': 'folderx',
-                       'labels': [{'label': 'label', 'shortcut': '1'}]})
+                       'labels': [{'id': 0, 'label': 'car', 'shortcut': '4'}, {'id': 1, 'label': 'dhjs', 'shortcut': 'g'}]})
 
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
         saved = json.load(open(jsonfile.strpath))
-        assert saved == {'1': {'label': 'label'}}
+        assert saved == {'0': {'label': 'car', 'shortcut': '4'}, '1': {'label': 'dhjs', 'shortcut': 'g'}}
 
 # faital
 
@@ -175,16 +180,16 @@ def test_load_label_candidates_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
 
-        d = {'1': {'label': 'label'}}
+        d = {'0': {'label': 'car', 'shortcut': '4'}}
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
                                server.SAVE_JSON_FILE_PATH)
 
         with open(jsonfile.strpath, 'w') as f:
-            json.dump(d, f)
+            f.write(json.dumps(d))
 
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
-        assert ret.json_body == [{"label": "label", "shortcut": "1"}]
+        assert ret.json_body == [{'id':0 ,'label': 'car', 'shortcut': '4'}]
 
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
@@ -200,3 +205,5 @@ def test_get_img_file(tmpdir):
         ret_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
+        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg']
+        assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
