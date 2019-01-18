@@ -138,6 +138,7 @@ def test_get_filename_list(tmpdir):
         imgdir.join('a.jpeg').write_binary(b'')
         imgdir.join('b.jpg').write_binary(b'')
         imgdir.join('a-b.png').write_binary(b'')
+        imgdir.join('ccc.bmp').write_binary(b'')
 
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
@@ -199,6 +200,7 @@ def test_get_img_file(tmpdir):
         imgdir.join('aierf_y832fa.jpg').write_binary(b'')
         imgdir.join('c-b.png').write_binary(b'')
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
+        imgdir.join('aakhk.bmp').write_binary(b'')
 
         ret_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))

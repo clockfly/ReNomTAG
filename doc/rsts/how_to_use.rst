@@ -7,7 +7,7 @@ Before starting
 Directory structure
 ~~~~~~~~~~~~~~~~~~~
 
-Before starting ReNomTAG, let me introduce the 
+Before starting ReNomTAG, let me introduce the
 directory structure.
 
 If you run ReNomTAG in the ``working_directory``, image datasets need to be
@@ -33,9 +33,9 @@ The role of each directory are below.
 .. code-block:: shell
 
     working_directory # Current Working directory
-        │   
+        │  
         └── public # This name must be `public`.
-            │   
+            │  
             ├── user1 # Dataset for user1. You can put any name for this directory.
             │   ├── dataset # Directory in which image data put. This name must be `dataset`.
             │   │   ├── image1.jpg
@@ -47,11 +47,11 @@ The role of each directory are below.
             │       ├── image2.xml
             │       ├── ...
             │       └── imageN.xml
-            │   
+            │  
             ├── user2 # Dataset for user2
-            │   │   
+            │   │  
            ...   ...
-            │   
+            │  
             └── userN
                 ├── dataset
                 │   ├── image_car1.jpg
@@ -64,6 +64,11 @@ Put Image data
 ~~~~~~~~~~~~~~~
 Please put image data to ``dataset`` directory.
 
+In addition, please note that ReNomTAG is able to load files named with halfwidth-alphanumeric
+
+(0-9, a-z, A-Z) and under-bar (_). Filenames which is used, for example, hyphen (-), asterisk(*), etc
+
+cannot be loaded. For file extension, you are allowed to use ".jpeg", ".jpg", ".png", and ".bmp".
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -124,7 +129,7 @@ You can set a shortcut key to the class tag name.
 Show filtered images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can filter the images to be shown. 
+You can filter the images to be shown.
 
 - **All** : All of images.
 - **Need Review** : Images that are marked neither OK nor NG.
@@ -213,9 +218,9 @@ There are 4 user directories(Alice, Bob, user and user2).
 .. code-block:: shell
 
     working_directory # Current Working directory
-        │   
+        │  
         └── public
-            │   
+            │  
             ├── Alice
             │   ├── dataset
             │   │   ├── image1.jpg
@@ -225,7 +230,7 @@ There are 4 user directories(Alice, Bob, user and user2).
             │       ├── image1.xml
             │       ├── ...
             │       └── imageN.xml
-            │   
+            │  
             ├── Bob
             │   ├── dataset
             │   │   ├── image_car1.jpg
@@ -235,7 +240,7 @@ There are 4 user directories(Alice, Bob, user and user2).
             │       ├── image_car1.xml
             │       ├── ...
             │       └── image_carN.xml
-            │   
+            │  
             ├── user1
             │   ├── dataset
             │   │   ├── image_person1.jpg
@@ -245,7 +250,7 @@ There are 4 user directories(Alice, Bob, user and user2).
             │       ├── image_person1.xml
             │       ├── ...
             │       └── image_personN.xml
-            │   
+            │  
             └── user2
                 ├── dataset
                 │   ├── image_bird1.jpg
@@ -258,5 +263,5 @@ You can work on the any user directory.
 Each data of directory will not be shared.
 
 .. note::
-    The user separated directories are recognised by ReNomTAG if 
+    The user separated directories are recognised by ReNomTAG if
     they contains ``dataset`` and ``label`` directories.
