@@ -200,6 +200,10 @@ export default {
       };
       value.annotation.objects.push(o);
     }
+    if(context.state.active_image_tag_boxes.length== 0){
+      // cur_filenameで対象ファイル名はとれると思います
+      //xmlを消す処理の記載お願いします
+    }
 
     const ret = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
