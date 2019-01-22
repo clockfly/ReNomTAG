@@ -16,7 +16,6 @@ async function async_func(context, f) {
   return ret;
 }
 
-// TODO
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
     loading_message: "Loading images..."
@@ -63,7 +62,6 @@ async function load_tagged_images(context) {
   context.commit("set_tagged_images", response.data.result);
 }
 
-// TODO
 export default {
   async load_folder_list(context) {
     // console.log(context.state.folder)
@@ -156,6 +154,60 @@ export default {
       })
     );
   },
+
+// TODO
+  async delete_xml(context){
+    let target_filename = context.state.active_image_filename;
+    let response = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/delete_xml"), {
+        folder: context.state.folder,
+        target_filename: target_filename
+      })
+    );
+
+    if (respnse.data.result === 0){
+
+      context.commit("set_error_status",{
+        error_status:respnse.data.message
+      });
+
+    }else{
+    // since deliting the xml sucessed, delete the filename from state.tagged_images
+      context.commit("delete_tagged_image", {
+        filename: target_filename
+      });
+
+      // load next image
+      let idx = 0;
+      for (const file of context.state.files) {
+        if (target_filename === file) {
+          break;
+        }
+        idx += 1;
+      }
+
+      if (idx < context.state.files.length - 1) {
+        idx += 1;
+      } else {
+        idx -= 1;
+      }
+
+      if (idx >= 0) {
+        context.dispatch("load_current_image", context.state.files[idx]);
+      } else {
+        context.commit("set_active_image", {
+          file: null
+        });
+      }
+
+      // update image data
+      context.commit("update_file", {
+        filename: target_filename,
+        info: null
+      });
+    }
+  },
+
 
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
