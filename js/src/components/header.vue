@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img class="hanburger-menu" :src="Menu" @click='toggleMenuVisible' aria-hidden='true'>
+    <img v-if="this.is_admin" class="hanburger-menu" :src="Menu" @click='toggleMenuVisible' aria-hidden='true'>
     <div class="tool-name">
       <span class="renom">ReNom</span>
       <span v-if="this.is_admin" class="current-page">TAG &gt; Admin</span>

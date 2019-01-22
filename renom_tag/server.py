@@ -85,7 +85,7 @@ def filter_datafilenames(dir, ext):
 
 def get_img_files(folder):
     ensure_folder(folder)
-    exts = ["jpg", "jpeg", "png"]
+    exts = ["jpg", "jpeg", "png", "bmp"]
     ret_names = []
     ret_undef_names = []
 
