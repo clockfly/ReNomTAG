@@ -384,7 +384,7 @@ def delete_xml():
     folder = pathlib.Path(request.json['folder'])
     print("filename : ", filename)
 
-    targetdir = (DIR_ROOT / pathlib.Path(folder) / pathlib.Path(XML_DIR))
+    targetdir = os.path.join(DIR_ROOT / folder / pathlib.Path(XML_DIR))
     os.chdir(targetdir)
     targetdir = os.getcwd()
     print("change dir: ",targetdir)
