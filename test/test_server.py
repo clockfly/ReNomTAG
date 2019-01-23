@@ -213,7 +213,6 @@ def test_make_dir(tmpdir):
 
 
 
-# made　mamually "pablic/user/~" inside the ReNomTAG/test
 def test_get_img_file(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
@@ -228,3 +227,17 @@ def test_get_img_file(tmpdir):
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg','aakhk.bmp']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
+
+def test_get_filename_for_xml(tmpdir):
+    with tmpdir.as_cwd():
+        xml_filename1 = server._get_file_name_for_xml('a.jpeg')
+        xml_filename2 = server._get_file_name_for_xml('aierf_y832fa.jpg')
+        xml_filename3 = server._get_file_name_for_xml('aakhk.bmp')
+
+        print('xml_filename1 :',xml_filename1)
+        print('xml_filename2 :',xml_filename2)
+        print('xml_filename3 :',xml_filename3)
+
+        assert xml_filename1 == 'a_jpeg'
+        assert xml_filename2 == 'aierf_y832fa_jpg'
+        assert xml_filename3 == 'aakhk_bmp'
