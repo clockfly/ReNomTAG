@@ -157,9 +157,9 @@ export default {
 
 // TODO
   async delete_xml(context){
-    // let target_filename = "context.state.active_image_filename";
-    let target_filename = "350x150.xml";
-    alert(target_filename);
+    let target_filename = context.state.active_image_filename;
+    //let target_filename = "350x150.xml";
+    //alert(target_filename);
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/delete_xml"), {
         folder: context.state.folder,
@@ -167,14 +167,15 @@ export default {
       })
     );
 
-    if (respnse.data.result === 0){
-
+    if (response.data.result === 0){
+      console.log("result : ",response.data.message)
       context.commit("set_error_status",{
-        error_status:respnse.data.message
+        error_status:response.data.message
       });
 
     }else{
     // since deliting the xml sucessed, delete the filename from state.tagged_images
+      console.log("result : ",response.data.message)
       context.commit("delete_tagged_image", {
         filename: target_filename
       });
@@ -205,7 +206,7 @@ export default {
       // update image data
       context.commit("update_file", {
         filename: target_filename,
-        info: null
+        info: "reset"
       });
     }
   },

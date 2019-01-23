@@ -390,22 +390,30 @@ def delete_xml():
     print("current dir :  ",targetdir)
     print("listdir :",os.listdir(targetdir))
 
-
+    result = 100
     for p in os.listdir(targetdir):
         print("p :",p)
         if str(p) == filename:
             os.remove(filename)
             result = 1
             message = "sucessed!"
-            print("xml-file deleting complete!")
+            print("<<<xml-file deleting complete!>>>")
             print("listdir :",os.listdir(targetdir))
+            break
         else:
-            result = 0
-            message = "faital"
-            print("no such xml-file...")
+            result = 100
+            print("not the target file")
 
-    os.chdir("../..")
+    if not result == 1:
+         result = 0
+         message = "faital"
+         print("There was no such xml-file...")
+
+
+    os.chdir("../../..")
     print("current dir : ",os.getcwd())
+    print("result : ",result)
+    print("message : ",message)
 
     body = json.dumps({
         "result": result,

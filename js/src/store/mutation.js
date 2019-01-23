@@ -241,7 +241,7 @@ export default {
     for (const img of state.tagged_images) {
       // push objects except the target filename
       if (img.filename !== payload.filename) {
-        img.push(img);
+        imgs.push(img);
       }
     }
     state.tagged_images = imgs;
