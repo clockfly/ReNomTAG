@@ -192,6 +192,15 @@ def test_load_label_candidates_dict(tmpdir):
         assert ret.json_body == [{'id':0 ,'label': 'car', 'shortcut': '4'}]
 
 
+def test_make_dir(tmpdir):
+    with tmpdir.as_cwd():
+
+        app = testapp(server.app)
+        ret = app.post_json('/api/make_dir', {'working_dir': str(tmpdir), 'username': 'folderx'})
+        assert ret.json_body == {'message': 'making directory sucessed!load again to start.' }
+
+
+
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
 def test_get_img_file(tmpdir):
     with tmpdir.as_cwd():
