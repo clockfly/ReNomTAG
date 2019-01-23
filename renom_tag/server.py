@@ -381,24 +381,41 @@ def save_xml_from_label_dict():
 def delete_xml():
     filename, ext = os.path.splitext(request.json['target_filename'])
     filename = filename + ".xml"
-    folder = pathlib.Path(request.json['folder'])
+    folder = request.json['folder']
+
+    targetdir = (pathlib.Path(DIR_ROOT) / pathlib.Path(folder) / pathlib.Path(XML_DIR))
+    filename = os.path.join( str(targetdir), filename )
     print("filename : ", filename)
 
-    targetdir = os.path.join(DIR_ROOT / folder / pathlib.Path(XML_DIR))
-    os.chdir(targetdir)
-    targetdir = os.getcwd()
+    # os.chdir(targetdir)
+    # targetdir = os.getcwd()
     print("current dir :  ",targetdir)
+<<<<<<< HEAD
     print("listdir :",os.listdir(targetdir))
 
     result = 100
     for p in os.listdir(targetdir):
         print("p :",p)
         if str(p) == filename:
+=======
+    print("listdir :",str(targetdir.iterdir()))
+
+    result = 100
+    # for p in os.listdir(targetdir):
+    for p in targetdir.iterdir():
+        print("p :",str(p))
+        # if str(p) == filename:
+        if p.is_file() and str(p) == filename:
+>>>>>>> k_kimura/#21
             os.remove(filename)
             result = 1
             message = "sucessed!"
             print("<<<xml-file deleting complete!>>>")
+<<<<<<< HEAD
             print("listdir :",os.listdir(targetdir))
+=======
+            print("listdir :",str(targetdir.iterdir()))
+>>>>>>> k_kimura/#21
             break
         else:
             result = 100
@@ -410,8 +427,11 @@ def delete_xml():
          print("There was no such xml-file...")
 
 
+<<<<<<< HEAD
     os.chdir("../../..")
     print("current dir : ",os.getcwd())
+=======
+>>>>>>> k_kimura/#21
     print("result : ",result)
     print("message : ",message)
 

@@ -27,36 +27,36 @@
 
         <div class= "col-md-6 row">
           <div class="col-md-12 row clear-padding">
-            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span> 
+            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span>
             <div class="col-md-12 clear-padding">
               <div v-if="this.is_admin" class="btn-wrp">
-                <img v-if="canbesaved && this.active_image_review_result !== 'ng'" :src="NG_BUTTON"
+                <img v-if="can_be_saved && this.active_image_review_result !== 'ng'" :src="NG_BUTTON"
                       class="img-btn float-right ng-button"
                       @click="set_review_result({result:'ng'})">
-                
-                <img v-else-if="canbesaved && this.active_image_review_result === 'ng'" :src="NG_BUTTON_PUSH"
+
+                <img v-else-if="can_be_saved && this.active_image_review_result === 'ng'" :src="NG_BUTTON_PUSH"
                       class="img-btn float-right ng-button"
                       @click="set_review_result({result:'ng'})">
-                
+
                 <img v-else :src="NG_BUTTON"
                       class="img-btn-disabled float-right ng-button">
-                
-                <img v-if="canbesaved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
+
+                <img v-if="can_be_saved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
                       class="img-btn float-right ok-button"
                       :class="{review_checked: this.active_image_review_result === 'ok'}"
                       @click="set_review_result({result:'ok'})">
-                
-                <img v-else-if="canbesaved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
+
+                <img v-else-if="can_be_saved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
                       class="img-btn float-right ok-button"
                       @click="set_review_result({result:'ok'})">
-                
+
                 <img v-else :src="OK_BUTTON" class="img-btn-disabled float-right ok-button">
               </div>
             </div>
           </div>
           <div class="col-md-12 button-margin-top row clear-padding">
             <div class="col-md-12 clear-padding">
-              <div v-if="canbesaved" id="save_xml_btn"
+              <div v-if="can_be_saved" id="save_xml_btn"
                 class="float-right"
                 @click='save_annotation'>
                 Save
@@ -64,6 +64,11 @@
               <div v-else id="save_xml_btn_disabled"
                 class="float-right">
                 Save
+              </div>
+              <div id="save_xml_btn"
+                class="float-right"
+                @click='delete_xml'>
+                delete
               </div>
             </div>
           </div>
@@ -130,7 +135,8 @@ export default {
       "active_image_tag_boxes",
       "active_image_review_result",
       "active_boxid",
-      "labels"
+      "labels",
+      "tagged_images"
     ]),
 
     image_url: function() {
@@ -143,8 +149,15 @@ export default {
       let idx = this.active_image_filename.search(/[/\\]/);
       return this.active_image_filename.slice(idx + 1);
     },
-    canbesaved: function() {
-      if (this.active_image_tag_boxes.length === 0) {
+    can_be_saved: function() {
+      let has_tag = false;
+      for(let tag of this.tagged_images){
+        if(tag.filename == this.active_image_filename){
+          has_tag = true;
+        }
+      }
+      //tagをもともと持っていた場合はboxesが0でもsaveの対象とする
+      if (this.active_image_tag_boxes.length === 0 && !has_tag) {
         return false;
       }
       for (let box of this.active_image_tag_boxes) {
@@ -170,7 +183,7 @@ export default {
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation"]),
+    ...mapActions(["save_annotation","delete_xml"]),
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
@@ -216,7 +229,7 @@ export default {
     on_keyup: function(event) {
       if (event.target.nodeName === "BODY") {
         if (event.key === " ") {
-          if (this.canbesaved) {
+          if (this.can_be_saved) {
             this.save_annotation();
             event.preventDefault();
             event.stopPropagation();
