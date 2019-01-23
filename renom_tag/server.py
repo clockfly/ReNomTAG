@@ -390,19 +390,19 @@ def delete_xml():
     # os.chdir(targetdir)
     # targetdir = os.getcwd()
     print("current dir :  ",targetdir)
-    print("listdir :",os.listdir(targetdir))
+    print("listdir :",str(targetdir.iterdir()))
 
     result = 100
     # for p in os.listdir(targetdir):
     for p in targetdir.iterdir():
-        print("p :",p)
+        print("p :",str(p))
         # if str(p) == filename:
         if p.is_file() and str(p) == filename:
             os.remove(filename)
             result = 1
             message = "sucessed!"
             print("<<<xml-file deleting complete!>>>")
-            print("listdir :",os.listdir(targetdir))
+            print("listdir :",str(targetdir.iterdir()))
             break
         else:
             result = 100
@@ -414,7 +414,6 @@ def delete_xml():
          print("There was no such xml-file...")
 
 
-    print("current dir : ",os.getcwd())
     print("result : ",result)
     print("message : ",message)
 
