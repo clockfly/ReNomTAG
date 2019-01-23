@@ -26,6 +26,7 @@ app = Bottle()
 DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
+MAX_FOLDER_NAME = 256
 
 # for path in [IMG_DIR, XML_DIR]:
 #    if not os.path.exists(path):
@@ -104,11 +105,22 @@ def get_xml_files(folder):
     return filter_datafilenames(dir, "xml")
 
 
-def _get_file_name(x):
-    return os.path.splitext(os.path.split(x)[1])[0]
+def _get_file_name(path):
+    return os.path.splitext(os.path.split(path)[1])[0]
 
+def _get_file_name_for_xml(path):
+    ext_list = ["jpg", "jpeg", "png", "bmp"]
+    filename_tup = os.path.splitext(os.path.split(path)[1])
+    ext = filename_tup[1][1:]
+    add_to_filename = ""
 
-MAX_FOLDER_NAME = 256
+    for e in ext_list:
+        if e == ext:
+            add_to_filename = "_" + ext
+            break
+    xml_filename = filename_tup[0] + add_to_filename
+    return xml_filename
+
 
 
 def strip_foldername(folder):
@@ -124,8 +136,8 @@ def strip_foldername(folder):
 def get_difference_set(folder):
     folder = strip_foldername(folder)
 
-    img_paths = get_img_files(folder)
-    xml_paths = get_xml_files(folder)
+    img_paths, undef_img_paths = get_img_files(folder)
+    xml_paths, undef_xml_paths = get_xml_files(folder)
     xml_names = list(map(_get_file_name, xml_paths))
 
     def difference_set_paths_filter(img_path):
@@ -214,7 +226,6 @@ def index():
 def static(file_name):
     return _get_resource('static', file_name)
 
-# TODO
 
 
 def check_path(path, filename):
@@ -235,8 +246,7 @@ def get_folderpath(folder):
 
 
 def get_boxes(folder, img_filename):
-    filename = os.path.splitext(os.path.split(img_filename)[1])[0] + '.xml'
-
+    filename = _get_file_name_for_xml(img_filename) + '.xml'
     xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
     xmlfilename = check_path(xmlfolder, filename)
 
@@ -357,7 +367,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['filename'] = file_name
 
     folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
-    save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
+    save_xml_file_name = check_path(folderpath, _get_file_name_for_xml(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -391,7 +401,6 @@ def load_xml_tagged_images():
     for p in targetdir.iterdir():
         if p.is_file() and str(p).endswith('.xml'):
             before_sort_info.append(p.relative_to(targetdir))
-
     # use for sort
     sort_info = []
 
