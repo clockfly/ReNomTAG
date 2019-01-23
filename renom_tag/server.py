@@ -382,56 +382,24 @@ def delete_xml():
     filename, ext = os.path.splitext(request.json['target_filename'])
     filename = filename + ".xml"
     folder = request.json['folder']
+    
+    xmldir = os.path.join(get_folderpath(folder), XML_DIR)
+    file_path = check_path(xmldir, filename)
+    print("current dir :  ",xmldir)
+    print("file_path : ", file_path)
 
-    targetdir = (pathlib.Path(DIR_ROOT) / pathlib.Path(folder) / pathlib.Path(XML_DIR))
-    filename = os.path.join( str(targetdir), filename )
-    print("filename : ", filename)
-
-    # os.chdir(targetdir)
-    # targetdir = os.getcwd()
-    print("current dir :  ",targetdir)
-<<<<<<< HEAD
-    print("listdir :",os.listdir(targetdir))
-
+    print("listdir :",os.listdir(xmldir))
     result = 100
-    for p in os.listdir(targetdir):
-        print("p :",p)
-        if str(p) == filename:
-=======
-    print("listdir :",str(targetdir.iterdir()))
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        result = 1
+        message = "sucessed!"
+        print("<<<xml-file deleting complete!>>>")
+    else:
+        result = 0
+        message = "faital"
+        print("There was no such xml-file...")
 
-    result = 100
-    # for p in os.listdir(targetdir):
-    for p in targetdir.iterdir():
-        print("p :",str(p))
-        # if str(p) == filename:
-        if p.is_file() and str(p) == filename:
->>>>>>> k_kimura/#21
-            os.remove(filename)
-            result = 1
-            message = "sucessed!"
-            print("<<<xml-file deleting complete!>>>")
-<<<<<<< HEAD
-            print("listdir :",os.listdir(targetdir))
-=======
-            print("listdir :",str(targetdir.iterdir()))
->>>>>>> k_kimura/#21
-            break
-        else:
-            result = 100
-            print("not the target file")
-
-    if not result == 1:
-         result = 0
-         message = "faital"
-         print("There was no such xml-file...")
-
-
-<<<<<<< HEAD
-    os.chdir("../../..")
-    print("current dir : ",os.getcwd())
-=======
->>>>>>> k_kimura/#21
     print("result : ",result)
     print("message : ",message)
 
