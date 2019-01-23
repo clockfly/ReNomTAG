@@ -65,6 +65,11 @@
                 class="float-right">
                 Save
               </div>
+              <div id="save_xml_btn"
+                class="float-right"
+                @click='delete_xml("350x150.xml")'>
+                delete
+              </div>
             </div>
           </div>
         </div>
@@ -178,7 +183,7 @@ export default {
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation"]),
+    ...mapActions(["save_annotation","delete_xml"]),
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);

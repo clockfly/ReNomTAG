@@ -157,7 +157,9 @@ export default {
 
 // TODO
   async delete_xml(context){
-    let target_filename = context.state.active_image_filename;
+    // let target_filename = "context.state.active_image_filename";
+    let target_filename = "350x150.xml";
+    alert(target_filename);
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/delete_xml"), {
         folder: context.state.folder,
@@ -252,10 +254,10 @@ export default {
       };
       value.annotation.objects.push(o);
     }
-    if(context.state.active_image_tag_boxes.length== 0){
-      // cur_filenameで対象ファイル名はとれると思います
-      //xmlを消す処理の記載お願いします
-    }
+    // if(context.state.active_image_tag_boxes.length== 0){
+    //   // cur_filenameで対象ファイル名はとれると思います
+    //   //xmlを消す処理の記載お願いします
+    // }
 
     const ret = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
