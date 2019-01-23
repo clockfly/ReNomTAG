@@ -387,7 +387,7 @@ def delete_xml():
     targetdir = os.path.join(DIR_ROOT / folder / pathlib.Path(XML_DIR))
     os.chdir(targetdir)
     targetdir = os.getcwd()
-    print("change dir: ",targetdir)
+    print("current dir :  ",targetdir)
     print("listdir :",os.listdir(targetdir))
 
 
@@ -403,6 +403,9 @@ def delete_xml():
             result = 0
             message = "faital"
             print("no such xml-file...")
+
+    os.chdir("../..")
+    print("current dir : ",os.getcwd())
 
     body = json.dumps({
         "result": result,
