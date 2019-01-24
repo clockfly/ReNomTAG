@@ -58,17 +58,12 @@
             <div class="col-md-12 clear-padding">
               <div v-if="can_be_saved" id="save_xml_btn"
                 class="float-right"
-                @click='save_annotation'>
+                @click='apply_annotation'>
                 Save
               </div>
               <div v-else id="save_xml_btn_disabled"
                 class="float-right">
                 Save
-              </div>
-              <div id="save_xml_btn"
-                class="float-right"
-                @click='delete_xml'>
-                delete
               </div>
             </div>
           </div>
@@ -104,7 +99,6 @@ export default {
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
       boxes: null,
-
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
@@ -220,7 +214,13 @@ export default {
       ]);
       return [l, t, r, b];
     },
-
+    apply_annotation: function(){
+      if(this.active_image_tag_boxes.length == 0){
+        this.delete_xml();
+      }else{
+        this.save_annotation();
+      }
+    },
     on_resize: function() {
       this.arrange_boxes();
       setTimeout(this.arrange_boxes, 10);
