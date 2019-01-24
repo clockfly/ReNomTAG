@@ -205,17 +205,17 @@ def test_delete_xml(tmpdir):
 
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
-# def test_get_img_file(tmpdir):
-#     with tmpdir.as_cwd():
-#         imgdir = build_img_dir(tmpdir, 'folderx')
-#         imgdir.join('a.jpeg').write_binary(b'')
-#         imgdir.join('aierf_y832fa.jpg').write_binary(b'')
-#         imgdir.join('c-b.png').write_binary(b'')
-#         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
-#         imgdir.join('aakhk.bmp').write_binary(b'')
-#
-#         ret_names, ret_undef_names = server.get_img_files('folderx')
-#         print("acceptable filename: {}".format(ret_names))
-#         print("illegal filename: {}".format(ret_undef_names))
-#         assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg']
-#         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
+def test_get_img_file(tmpdir):
+    with tmpdir.as_cwd():
+        imgdir = build_img_dir(tmpdir, 'folderx')
+        imgdir.join('a.jpeg').write_binary(b'')
+        imgdir.join('aierf_y832fa.jpg').write_binary(b'')
+        imgdir.join('c-b.png').write_binary(b'')
+        imgdir.join('37oiahfw*.jpeg').write_binary(b'')
+        imgdir.join('aakhk.bmp').write_binary(b'')
+
+        ret_names, ret_undef_names = server.get_img_files('folderx')
+        print("acceptable filename: {}".format(ret_names))
+        print("illegal filename: {}".format(ret_undef_names))
+        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg','aakhk.bmp']
+        assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
