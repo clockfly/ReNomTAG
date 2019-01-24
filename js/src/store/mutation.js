@@ -145,8 +145,13 @@ export default {
 
   update_file(state, payload) {
     if (payload.info) {
+      if(payload.info== "reset"){
+        state.folder_files[payload.filename] = "";
+      } else {
       state.folder_files[payload.filename] = payload.info;
-    } else {
+      }
+    }
+    else {
       delete state.folder_files[payload.filename];
     }
     select_files(state);

@@ -213,8 +213,8 @@ export default {
 
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
-    
-    if (!value || value=="reset") {
+
+    if (!value) {
       value = {
         annotation: {
           path: cur_filename,
