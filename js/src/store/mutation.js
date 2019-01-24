@@ -145,8 +145,13 @@ export default {
 
   update_file(state, payload) {
     if (payload.info) {
+      if(payload.info== "reset"){
+        state.folder_files[payload.filename] = "";
+      } else {
       state.folder_files[payload.filename] = payload.info;
-    } else {
+      }
+    }
+    else {
       delete state.folder_files[payload.filename];
     }
     select_files(state);
@@ -197,6 +202,7 @@ export default {
     state.active_image_tag_boxes = payload.tagboxes;
   },
 
+// TODO stash the target bo
   remove_tagbox(state, payload) {
     const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
     const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
@@ -235,7 +241,16 @@ export default {
   update_label(state, payload) {
     state.labels = payload;
   },
-
+  delete_tagged_image(state, payload){
+    const imgs = [];
+    for (const img of state.tagged_images) {
+      // push objects except the target filename
+      if (img.filename !== payload.filename) {
+        imgs.push(img);
+      }
+    }
+    state.tagged_images = imgs;
+  },
   add_tagged_image(state, payload) {
     const imgs = [payload];
     const MAX_WIDTH = 10000;

@@ -173,7 +173,6 @@ def test_save_label_candidates_dict(tmpdir):
         saved = json.load(open(jsonfile.strpath))
         assert saved == {'0': {'label': 'car', 'shortcut': '4'}, '1': {'label': 'dhjs', 'shortcut': 'g'}}
 
-# faital
 
 
 def test_load_label_candidates_dict(tmpdir):
@@ -190,6 +189,19 @@ def test_load_label_candidates_dict(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
         assert ret.json_body == [{'id':0 ,'label': 'car', 'shortcut': '4'}]
+
+def test_delete_xml(tmpdir):
+    with tmpdir.as_cwd():
+        xmldir = build_xml_dir(tmpdir, 'folderx')
+        ex_xml = create_xml_data()
+        xmldir.join('target.xml').write(ex_xml)
+
+        app = testapp(server.app)
+        ret = app.post_json('/api/delete_xml',
+                     { 'folder': 'folderx',
+                       'target_filename': 'target.xml'})
+
+        assert ret.json_body == {"result":1,"message":"sucessed!"}
 
 
 # made　mamually "pablic/user/~" inside the ReNomTAG/test
