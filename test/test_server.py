@@ -121,7 +121,7 @@ def test_save_xml_from_label_dict(tmpdir):
         app = testapp(server.app)
         app.post_json('/api/save_xml_from_label_dict', json)
 
-        xml = xmldir.join('a.xml').read_text('utf8')
+        xml = xmldir.join('a_jpg.xml').read_text('utf8')
         d = xmltodict.parse(xml, xml_attribs=True)
 
         ann = d['annotation']
@@ -142,7 +142,7 @@ def test_get_filename_list(tmpdir):
 
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('a.xml').write(ex_xml)
+        xmldir.join('a_jpeg.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
@@ -194,17 +194,16 @@ def test_delete_xml(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('target.xml').write(ex_xml)
+        xmldir.join('target_png.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/delete_xml',
                      { 'folder': 'folderx',
-                       'target_filename': 'target.xml'})
+                       'target_filename': 'target.png'})
 
         assert ret.json_body == {"result":1,"message":"deleting boxes sucessed!"}
 
 
-# made　mamually "pablic/user/~" inside the ReNomTAG/test
 def test_get_img_file(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
@@ -219,3 +218,17 @@ def test_get_img_file(tmpdir):
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg','aakhk.bmp']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
+
+def test_get_filename_for_xml(tmpdir):
+    with tmpdir.as_cwd():
+        xml_filename1 = server._get_file_name_for_xml('a.jpeg')
+        xml_filename2 = server._get_file_name_for_xml('aierf_y832fa.jpg')
+        xml_filename3 = server._get_file_name_for_xml('aakhk.bmp')
+
+        print('xml_filename1 :',xml_filename1)
+        print('xml_filename2 :',xml_filename2)
+        print('xml_filename3 :',xml_filename3)
+
+        assert xml_filename1 == 'a_jpeg'
+        assert xml_filename2 == 'aierf_y832fa_jpg'
+        assert xml_filename3 == 'aakhk_bmp'
