@@ -209,11 +209,8 @@ def test_make_dir(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/make_dir', {'working_dir': str(tmpdir), 'username': 'folderx'})
-<<<<<<< HEAD
-        assert ret.json_body == {'message': 'making directory sucessed!load again to start.' }
-=======
         assert ret.json_body == {'result': 111}
->>>>>>> fcb13c9... #8 modify the unit test for make_dir()
+
 
 
 
