@@ -387,6 +387,39 @@ def save_xml_from_label_dict():
     return ret
 
 
+@app.route("/api/delete_xml",method=["POST"])
+def delete_xml():
+    filename, ext = os.path.splitext(request.json['target_filename'])
+    filename = filename + ".xml"
+    folder = request.json['folder']
+    
+    xmldir = os.path.join(get_folderpath(folder), XML_DIR)
+    file_path = check_path(xmldir, filename)
+    print("current dir :  ",xmldir)
+    print("file_path : ", file_path)
+
+    print("listdir :",os.listdir(xmldir))
+    result = 100
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        result = 1
+        message = "sucessed!"
+        print("<<<xml-file deleting complete!>>>")
+    else:
+        result = 0
+        message = "faital"
+        print("There was no such xml-file...")
+
+    print("result : ",result)
+    print("message : ",message)
+
+    body = json.dumps({
+        "result": result,
+        "message": message
+    })
+    ret = set_json_body(body)
+    return ret
+
 @app.route("/api/load_xml_tagged_images", method=["POST"])
 def load_xml_tagged_images():
     label_dict = request.json

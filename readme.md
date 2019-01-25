@@ -123,10 +123,9 @@ $ cd js
 $ npm run dev
 ```
 
-## How to use in video
+## Try the app
 
-The following videos describes how to use ReNomTAG.
-In this video, the Oxford-IIIT Pet Dataset is used.
+If you want to try the app but don't have a particular dataset to use, the following dataset is available. Please download and set the photos into "public/'user'/dataset" folder.
 
 - Cats and Dogs Classification  
 https://github.com/JDonini/Cats_Dogs_Classification
