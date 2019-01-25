@@ -11,26 +11,22 @@
     </div>
     <tagged-images class="row"/>
     <app-footer class="row" ></app-footer>
-
+    
     <modal-box v-if='make_dir_message' class="modal">
       <div slot='contents' class="modal__contents" >
         {{make_dir_message}}
-        <input :value="working_dir" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text" @input="setWorkingDir">
-        <input :value="username" v-if='make_dir_message_counter===2' class="modal__contents__input" type="text" @input="setUsername">
+        <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter < 2' @click='setMessage(); messageCounter()'>
+        <button v-if='make_dir_message_counter <= 1' @click='setModal()'>
           OK
         </button>
-        <button v-if='make_dir_message_counter===2' @click='setMessage(); messageCounter(); makeDir()'>
-          OK
-        </button>
-        <button v-if='make_dir_message_counter > 2' @click='reload()'>
+        <button v-if='make_dir_message_counter > 1' @click='setModal()'>
           Load
         </button>
       </div>
       <div slot='cancelbutton'>
-        <button v-if='make_dir_message_counter <= 2' @click='undoMessage(); resetCounter()'>
+        <button v-if='make_dir_message_counter <= 1' @click='cancelModal()'>
           Cancel
         </button>
       </div>
@@ -83,41 +79,43 @@ export default {
       "make_dir_message_counter",
       "working_dir",
       "username"
-    ])
+    ]),
+    setUsername: {
+      get(){
+        return this.$store.state.username
+      },
+      set (e){
+        this.$store.commit("set_username", {username: e})
+      }
+    }
   },
   methods: {
     ...mapMutations(["set_error_status"]),
-    setMessage: function(){
-      if (this.make_dir_message_counter==0){
-        this.$store.commit("set_make_dir_message",{make_dir_message: "Select the working directory"});
-      } else if (this.make_dir_message_counter==1) {
-        this.$store.commit("set_make_dir_message",{make_dir_message: "Input your username"});
-      }
-    },
-    undoMessage: function(){
-      this.$store.commit("set_make_dir_message",{make_dir_message: ""});
-    },
     messageCounter: function(){
       var counter = this.make_dir_message_counter;
       console.log(counter)
       counter = counter + 1;
       this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: counter});
     },
-    resetCounter: function(){
-      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: 0});
-    },
-    setWorkingDir: function(e){
-      this.$store.commit("set_working_dir", {working_dir: e.target.value});
-    },
-    setUsername: function(e) {
-      this.$store.commit("set_username", {username: e.target.value});
-    },
     makeDir: function(){
       this.$store.commit("set_make_dir_message",{make_dir_message: "creating directories..."});
       this.$store.dispatch("make_dir");
     },
-    reload: function(){
-      location.reload();
+    setModal: function(){
+      var counter = this.make_dir_message_counter;
+      if (counter === 0){
+        this.$store.commit("set_make_dir_message",{make_dir_message: "Input your username"});
+        this.messageCounter();
+      }else if(counter === 1){
+        this.makeDir();
+        this.messageCounter();
+      }else if(counter > 1){
+        location.reload();
+      }
+    },
+    cancelModal: function(){
+      this.$store.commit("set_make_dir_message",{make_dir_message: ""});
+      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: 0});
     }
 
 
