@@ -121,7 +121,7 @@ def test_save_xml_from_label_dict(tmpdir):
         app = testapp(server.app)
         app.post_json('/api/save_xml_from_label_dict', json)
 
-        xml = xmldir.join('a.xml').read_text('utf8')
+        xml = xmldir.join('a_jpg.xml').read_text('utf8')
         d = xmltodict.parse(xml, xml_attribs=True)
 
         ann = d['annotation']
@@ -142,7 +142,7 @@ def test_get_filename_list(tmpdir):
 
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('a.xml').write(ex_xml)
+        xmldir.join('a_jpeg.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
@@ -194,12 +194,12 @@ def test_delete_xml(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('target.xml').write(ex_xml)
+        xmldir.join('target_png.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/delete_xml',
                      { 'folder': 'folderx',
-                       'target_filename': 'target.xml'})
+                       'target_filename': 'target.png'})
 
         assert ret.json_body == {"result":1,"message":"deleting boxes sucessed!"}
 
