@@ -70,6 +70,7 @@
         </li>
         <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
     </ul>
+    <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
   </div>
   <div v-if="this.is_admin" @click='show_delete_dialog=true' id='remove-button'>Refresh List</div>
 
