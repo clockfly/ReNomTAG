@@ -389,10 +389,10 @@ def save_xml_from_label_dict():
 
 @app.route("/api/delete_xml",method=["POST"])
 def delete_xml():
-    filename, ext = os.path.splitext(request.json['target_filename'])
+    filename = _get_file_name_for_xml(request.json['target_filename'])
     filename = filename + ".xml"
     folder = request.json['folder']
-    
+
     xmldir = os.path.join(get_folderpath(folder), XML_DIR)
     file_path = check_path(xmldir, filename)
     print("current dir :  ",xmldir)
