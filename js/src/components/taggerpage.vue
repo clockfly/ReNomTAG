@@ -11,22 +11,22 @@
     </div>
     <tagged-images class="row"/>
     <app-footer class="row" ></app-footer>
-    
+
     <modal-box v-if='make_dir_message' class="modal">
-      <div slot='contents' class="modal__contents" >
+      <div slot='contents' class='mkdir-msg' >
         {{make_dir_message}}
         <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='setModal()'>
+        <button v-if='make_dir_message_counter <= 1' @click='setModal()' class="ok-button">
           OK
         </button>
-        <button v-if='make_dir_message_counter > 1' @click='setModal()'>
+        <button v-if='make_dir_message_counter > 1' @click='setModal()' class="load-button">
           Load
         </button>
       </div>
       <div slot='cancelbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='cancelModal()'>
+        <button v-if='make_dir_message_counter <= 1' @click='cancelModal()' class="cancel-button">
           Cancel
         </button>
       </div>
@@ -98,13 +98,13 @@ export default {
       this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: counter});
     },
     makeDir: function(){
-      this.$store.commit("set_make_dir_message",{make_dir_message: "creating directories..."});
+      this.$store.commit("set_make_dir_message",{make_dir_message: "message\n\ncreating directories..."});
       this.$store.dispatch("make_dir");
     },
     setModal: function(){
       var counter = this.make_dir_message_counter;
       if (counter === 0){
-        this.$store.commit("set_make_dir_message",{make_dir_message: "Input your username"});
+        this.$store.commit("set_make_dir_message",{make_dir_message: "message\n\nInput your username"});
         this.messageCounter();
       }else if(counter === 1){
         this.makeDir();
@@ -158,18 +158,20 @@ export default {
 }
 .modal__contents__input{
   display: block;
-  width: 200px;
-  height: 10px;
+  margin: auto;
+  text-align: center;
+  width: 150px;
+  height: 25px;
+  margin-top: 8px;
 }
-.error-msg {
+.error-msg, .mkdir-msg{
   white-space: pre-line;
   word-wrap: break-word;
   text-align: center;
   font-weight: bold;
   margin-bottom: 0;
 }
-
-.error-button {
+.error-button, .ok-button, .load-button, .cancel-button{
   margin-bottom: 0;
   text-align: right;
   font-weight: normal;

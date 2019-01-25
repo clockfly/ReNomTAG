@@ -32,7 +32,7 @@ async function load_imagefile_list(context) {
   });
 
   if (response.data.undef_filename_list.length > 0) {
-    let undef_message = utils.undef_filename_show(
+    let undef_message = utils.message_load_imagefile_list(
       response.data.undef_filename_list
     );
     context.commit("set_error_status", {
@@ -70,14 +70,16 @@ export default {
         folder: context.state.folder
       })
     );
-    if (response.data.folder_list){
+    if (response.data.result===1){
       context.commit("set_folder_list", {
         folder_list: response.data.folder_list
       });
     }
-    else if (response.data.message){
+    else if (response.data.result===0){
+      console.log("response.data.result",response.data.result);
+      let message = utils.message_make_dir(response.data.result);
       context.commit("set_make_dir_message",{
-        make_dir_message: response.data.message
+        make_dir_message: message
       });
       context.commit("set_working_dir",{
         working_dir: response.data.current_dir
@@ -97,18 +99,20 @@ export default {
   async make_dir(context) {
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/make_dir"), {
-        // TODO
         working_dir: context.state.working_dir,
         username: context.state.username
       })
     );
-    if (response.data.message){
-      context.commit("set_make_dir_message", {
-        make_dir_message: response.data.message
-      });
-      console.log(response.data.message);
-    }
 
+    if (response.data.result !== null){
+      console.log(response.data.result);
+
+      let message = utils.message_make_dir(response.data.result);
+      context.commit("set_make_dir_message", {
+        make_dir_message: message
+      });
+      console.log(message);
+    }
   },
 
   async load_current_image(context, file) {

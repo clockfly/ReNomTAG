@@ -8,7 +8,7 @@ let state = {
   loading_message: "Loading images...",
   make_dir_message: "",
   make_dir_message_counter: 0,
-  username: "input here",
+  username: "user",
 
   working_dir: "",
   folder: "",
