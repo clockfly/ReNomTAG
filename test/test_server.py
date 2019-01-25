@@ -201,7 +201,7 @@ def test_delete_xml(tmpdir):
                      { 'folder': 'folderx',
                        'target_filename': 'target.xml'})
 
-        assert ret.json_body == {"result":1,"message":"sucessed!"}
+        assert ret.json_body == {"result":1,"message":"deleting boxes sucessed!"}
 
 
 def test_get_img_file(tmpdir):

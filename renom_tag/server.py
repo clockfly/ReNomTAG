@@ -394,24 +394,20 @@ def delete_xml():
     folder = request.json['folder']
 
     xmldir = os.path.join(get_folderpath(folder), XML_DIR)
-    file_path = check_path(xmldir, filename)
-    print("current dir :  ",xmldir)
-    print("file_path : ", file_path)
+    delete_xml_file_name = check_path(xmldir, filename)
 
-    print("listdir :",os.listdir(xmldir))
     result = 100
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    if os.path.exists(delete_xml_file_name):
+        os.remove(delete_xml_file_name)
         result = 1
-        message = "sucessed!"
-        print("<<<xml-file deleting complete!>>>")
+        message = "deleting boxes sucessed!"
+        print('%s is deleted!' % (delete_xml_file_name))
     else:
         result = 0
-        message = "faital"
-        print("There was no such xml-file...")
+        message = "deleting boxes faital!"
+        print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
+        print('it was not deleted. Please check if the xml-file exists!')
 
-    print("result : ",result)
-    print("message : ",message)
 
     body = json.dumps({
         "result": result,
