@@ -17,7 +17,6 @@ async function async_func(context, f) {
   return ret;
 }
 
-
 async function load_imagefile_list(context) {
   context.commit("set_loading_message", {
     loading_message: "Loading images..."
@@ -64,10 +63,8 @@ async function load_tagged_images(context) {
   context.commit("set_tagged_images", response.data.result);
 }
 
-
 export default {
   async load_folder_list(context) {
-    // console.log(context.state.folder)
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/folderlist"), {
         folder: context.state.folder
@@ -185,9 +182,66 @@ export default {
     );
   },
 
+// TODO
+  async delete_xml(context){
+    let target_filename = context.state.active_image_filename;
+    let response = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/delete_xml"), {
+        folder: context.state.folder,
+        target_filename: target_filename
+      })
+    );
+
+    if (response.data.result === 0){
+      console.log("result : ",response.data.message)
+      context.commit("set_error_status",{
+        error_status:response.data.message
+      });
+
+    }else{
+    // since deliting the xml sucessed, delete the filename from state.tagged_images
+      console.log("result : ",response.data.message)
+      context.commit("delete_tagged_image", {
+        filename: target_filename
+      });
+
+      // load next image
+      let idx = 0;
+      for (const file of context.state.files) {
+        if (target_filename === file) {
+          break;
+        }
+        idx += 1;
+      }
+
+      if (idx < context.state.files.length - 1) {
+        idx += 1;
+      } else {
+        idx -= 1;
+      }
+
+      if (idx >= 0) {
+        context.dispatch("load_current_image", context.state.files[idx]);
+      } else {
+        context.commit("set_active_image", {
+          file: null
+        });
+      }
+
+      // update image data
+      context.commit("update_file", {
+        filename: target_filename,
+        info: "reset"
+      });
+    }
+  },
+
+
   async save_annotation(context) {
+
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
+
     if (!value) {
       value = {
         annotation: {
@@ -205,6 +259,7 @@ export default {
         }
       };
     }
+
 
     value.annotation.source.reviewresult =
       context.state.active_image_review_result;
@@ -228,6 +283,7 @@ export default {
       };
       value.annotation.objects.push(o);
     }
+
 
     const ret = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
