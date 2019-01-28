@@ -95,6 +95,19 @@ export default {
     state.loading_message = payload.loading_message;
   },
 
+  set_make_dir_message(state, payload){
+    state.make_dir_message = payload.make_dir_message;
+  },
+  set_make_dir_message_counter(state, payload){
+    state.make_dir_message_counter = payload.make_dir_message_counter;
+  },
+  set_username(state, payload){
+    state.username = payload.username;
+  },
+  set_working_dir(state, payload){
+    state.working_dir = payload.working_dir;
+  },
+
   set_main_menu_visible(state, payload) {
     state.main_menu_visible = payload.visible;
   },

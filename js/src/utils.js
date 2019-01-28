@@ -60,7 +60,7 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
   target.addEventListener(type, fn, useCapture);
 }
 
-export function undef_filename_show(undef_filename_list) {
+export function message_load_imagefile_list(undef_filename_list) {
   let undef_message =
     "error\n\n The following filenames are unavailable, which could not be loaded:\n\n";
   let length = Math.min(3, undef_filename_list.length);
@@ -77,6 +77,25 @@ export function undef_filename_show(undef_filename_list) {
   return undef_message;
 }
 
+export function message_make_dir(result){
+  let message = "";
+
+  if (result === 0){
+    message = "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
+  }
+  if (result === 10){
+    message = 'error\n\n The current directory is unavailable. \n Please choose another directory. \n\n Load again to start.';
+
+  }
+  if (result === 20){
+    message = 'error\n\n The username is unavailable. \n Please use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_). \n\n Load again to start.';
+  }
+  if (result === 111){
+    message = 'message\n\n Successfully created directories!\n\n Load again to start.';
+  }
+
+  return message;
+}
 /* \
  |*|
  |*|  :: cookies.js ::

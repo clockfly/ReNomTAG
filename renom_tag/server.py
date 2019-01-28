@@ -26,6 +26,7 @@ app = Bottle()
 DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
+MAX_FOLDER_NAME = 256
 
 # for path in [IMG_DIR, XML_DIR]:
 #    if not os.path.exists(path):
@@ -104,11 +105,22 @@ def get_xml_files(folder):
     return filter_datafilenames(dir, "xml")
 
 
-def _get_file_name(x):
-    return os.path.splitext(os.path.split(x)[1])[0]
+def _get_file_name(path):
+    return os.path.splitext(os.path.split(path)[1])[0]
 
+def _get_file_name_for_xml(path):
+    ext_list = ["jpg", "jpeg", "png", "bmp"]
+    filename_tup = os.path.splitext(os.path.split(path)[1])
+    ext = filename_tup[1][1:]
+    add_to_filename = ""
 
-MAX_FOLDER_NAME = 256
+    for e in ext_list:
+        if e == ext:
+            add_to_filename = "_" + ext
+            break
+    xml_filename = filename_tup[0] + add_to_filename
+    return xml_filename
+
 
 
 def strip_foldername(folder):
@@ -124,8 +136,8 @@ def strip_foldername(folder):
 def get_difference_set(folder):
     folder = strip_foldername(folder)
 
-    img_paths = get_img_files(folder)
-    xml_paths = get_xml_files(folder)
+    img_paths, undef_img_paths = get_img_files(folder)
+    xml_paths, undef_xml_paths = get_xml_files(folder)
     xml_names = list(map(_get_file_name, xml_paths))
 
     def difference_set_paths_filter(img_path):
@@ -214,7 +226,6 @@ def index():
 def static(file_name):
     return _get_resource('static', file_name)
 
-# TODO
 
 
 def check_path(path, filename):
@@ -235,8 +246,7 @@ def get_folderpath(folder):
 
 
 def get_boxes(folder, img_filename):
-    filename = os.path.splitext(os.path.split(img_filename)[1])[0] + '.xml'
-
+    filename = _get_file_name_for_xml(img_filename) + '.xml'
     xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
     xmlfilename = check_path(xmlfolder, filename)
 
@@ -357,7 +367,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['filename'] = file_name
 
     folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
-    save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
+    save_xml_file_name = check_path(folderpath, _get_file_name_for_xml(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -379,29 +389,25 @@ def save_xml_from_label_dict():
 
 @app.route("/api/delete_xml",method=["POST"])
 def delete_xml():
-    filename, ext = os.path.splitext(request.json['target_filename'])
+    filename = _get_file_name_for_xml(request.json['target_filename'])
     filename = filename + ".xml"
     folder = request.json['folder']
-    
-    xmldir = os.path.join(get_folderpath(folder), XML_DIR)
-    file_path = check_path(xmldir, filename)
-    print("current dir :  ",xmldir)
-    print("file_path : ", file_path)
 
-    print("listdir :",os.listdir(xmldir))
+    xmldir = os.path.join(get_folderpath(folder), XML_DIR)
+    delete_xml_file_name = check_path(xmldir, filename)
+
     result = 100
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    if os.path.exists(delete_xml_file_name):
+        os.remove(delete_xml_file_name)
         result = 1
-        message = "sucessed!"
-        print("<<<xml-file deleting complete!>>>")
+        message = "deleting boxes sucessed!"
+        print('%s is deleted!' % (delete_xml_file_name))
     else:
         result = 0
-        message = "faital"
-        print("There was no such xml-file...")
+        message = "deleting boxes faital!"
+        print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
+        print('it was not deleted. Please check if the xml-file exists!')
 
-    print("result : ",result)
-    print("message : ",message)
 
     body = json.dumps({
         "result": result,
@@ -424,7 +430,6 @@ def load_xml_tagged_images():
     for p in targetdir.iterdir():
         if p.is_file() and str(p).endswith('.xml'):
             before_sort_info.append(p.relative_to(targetdir))
-
     # use for sort
     sort_info = []
 
@@ -548,23 +553,72 @@ def delete_label_candidates_dict():
         os.remove(jsonfile)
 
 
+
+# DIR_ROOT = 'public'
 # search inside the "bublic" ande get folderlist
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
-    folders = []
-    for d in sorted(os.listdir(DIR_ROOT)):
-        if not re.match(r"^[a-zA-Z0-9._]+$", d):
-            continue
+    # folders = the list of user-folder
+    current_dir = os.getcwd()
+    public = os.path.join(current_dir, DIR_ROOT)
 
-        if not os.path.isdir(os.path.join(DIR_ROOT, d)):
-            continue
+    if os.path.exists(public) and os.path.isdir(public):
+        folders = []
+        for d in sorted(os.listdir(DIR_ROOT)):
+            if not re.match(r"^[a-zA-Z0-9._]+$", d):
+                continue
 
-        if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
-            continue
+            if not os.path.isdir(os.path.join(DIR_ROOT, d)):
+                continue
 
-        folders.append(d)
+            if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
+                continue
 
-    ret = set_json_body(json.dumps({'folder_list': folders}))
+            folders.append(d)
+        ret = set_json_body(json.dumps({'result':1,'folder_list': folders}))
+
+    else:
+        #message = 'No folder named "public" in the current directory. \n Wanna create directories?'
+        #message = 'No folder named "public" in the current directory: \n'+ str(current_dir) + '\n'
+        #message = message + 'Wanna create directories?'
+        ret = set_json_body(json.dumps({'result':0,'current_dir': current_dir}))
+
+
+    return ret
+
+
+@app.route("/api/make_dir", method=["POST"])
+def make_dir():
+    working_dir = request.json['working_dir']
+    username = request.json['username']
+    result = 0
+
+    if not os.path.exists(working_dir):
+        result = 10
+        message = '[ERROR] No such a directory. chose others. ' + working_dir
+        print(message)
+
+    elif not re.match(r"^[a-zA-Z0-9._]+$", username):
+        result = 20
+        message = '[ERROR] The username is unavailable. use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_).'
+        print(message)
+
+    else:
+        # string -> join to pat
+        public = os.path.join(working_dir,DIR_ROOT)
+        user_folder = os.path.join(public,username)
+        dataset = os.path.join(user_folder,IMG_DIR)
+        label = os.path.join(user_folder,XML_DIR)
+
+        os.makedirs(user_folder)
+        os.mkdir(dataset)
+        os.mkdir(label)
+        result = 111
+        message = 'Successfully created directories!'
+        print(message)
+
+    #message = message + "load again to start."
+    ret = set_json_body(json.dumps({'result': result }))
     return ret
 
 
