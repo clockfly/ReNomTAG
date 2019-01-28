@@ -8,88 +8,179 @@
               v-model='label'
               placeholder="tag name...">
 
-      <input  type="text"
-              class="label-shortcut"
-              v-model='shortcut'
-              @keydown='keydown'
-              @keyup='setShortcutKey'
-              placeholder="key...">
-
+        <input
+          type="text"
+          class="label-shortcut"
+          v-model="shortcut"
+          @keydown="keydown"
+          @keyup="setShortcutKey"
+          placeholder="key..."
+        >
     </div>
-    <img v-if="is_valid_label" @click.prevent.stop="addNewLabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button">
-    <img v-else @click.prevent.stop="addnewlabel" class="add-new-label-btn" :disabled='!is_valid_label' :src="add_new_tag_button_disabled">
+      <img
+        v-if="is_valid_label"
+        @click.prevent.stop="addNewLabel"
+        class="add-new-label-btn"
+        :disabled="!is_valid_label"
+        :src="add_new_tag_button"
+      >
+      <img
+        v-else
+        @click.prevent.stop="addnewlabel"
+        class="add-new-label-btn"
+        :disabled="!is_valid_label"
+        :src="add_new_tag_button_disabled"
+      >
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
-    <div class="title-text">
-      Tag List
+      <div class="title-text">
+        Tag List
+        <span v-if="is_delete_mode">【delete mode】</span>
     </div>
   </div>
-  <div v-if="this.is_admin" id='tag-tree'>
-    <ul class='tag-list'>
-        <li v-for='(data, index) in labels' v-bind:key='data.id' 
-            class='tag-list-item' @click="on_click" :data-label='data.label'>
-            <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
-            <input v-if='edit_target[0] === data.label && edit_mode === true' type="text"
+    <div v-if="this.is_admin" id="tag-tree">
+      <ul class="tag-list">
+        <li
+          v-for="(data, index) in labels"
+          :key="data.id"
+          class="tag-list-item"
+          @click="on_click"
+          :data-label="data.label"
+        >
+          <div class="label-color" :style="{ background: color_list[index % 10]}"></div>
+          <input
+            v-if="edit_target[0] === data.label && edit_mode === true"
+            type="text"
                     class="label-text-update"
-                    v-model='edit_label' 
-                    placeholder="label name...">
+            v-model="edit_label"
+            placeholder="label name..."
+          >
             <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
-            <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
+          <input
+            v-if="edit_target[0] === data.label && edit_mode === true"
+            type="text"
                     class="label-shortcut-update"
-                    v-model='edit_shortcut'
-                    @keydown.stop.prevent.self='update_label'
-                    @keyup.stop.prevent.self='updateShortcutKey'
-                    placeholder="key...">
-            <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
-            <img v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon">
-            <img v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon"> 
-        </li>
-        <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
-    </ul>
-  </div>
-  <div v-else id='tag-tree'>
-    <ul class='tag-list'>
-        <li v-for='(data, index) in labels' v-bind:key='data.id' 
-            class='tag-list-item' @click="on_click" :data-label='data.label'>
-            <div class="label-color" v-bind:style="{ background: color_list[index % 10]}"></div>
-            <input v-if='edit_target[0] === data.label && edit_mode === true' type="text"
-                    class="label-text-update readonly"
-                    v-model='edit_label' 
-                    placeholder="label name..."
-                    readonly>
-            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
-            <input v-if="edit_target[0] === data.label && edit_mode === true" type="text"
-                    class="label-shortcut-update"
-                    v-model='edit_shortcut'
-                    @keydown.stop.prevent.self='update_label'
-                    @keyup.stop.prevent.self='updateShortcutKey'
-                    placeholder="key...">
-            <div v-else-if='data.shortcut' class="label-shortcut">{{data.shortcut}}</div>
-            <img v-if="edit_target[0] === data.label && edit_mode === true" @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon">
-            <img v-else @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()" class="tag_list_icon" :src="tag_list_icon"> 
-        </li>
-        <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
-    </ul>
-    <div v-if='update_errormsg' class='label_errormsg'>{{update_errormsg}}</div>
-  </div>
-  <div v-if="this.is_admin" @click='show_delete_dialog=true' id='remove-button'>Refresh List</div>
+            v-model="edit_shortcut"
+            @keydown.stop.prevent.self="update_label"
+            @keyup.stop.prevent.self="updateShortcutKey"
+            placeholder="key..."
+          >
+          <div v-else-if="data.shortcut" class="label-shortcut">{{data.shortcut}}</div>
 
-  <modal-box v-if='show_delete_dialog'
-    @ok='delete_tags'
-    @cancel='show_delete_dialog=false' >
-    <div class="modal-title"  slot='contents'>
-      Are you sure flushing class list?
+          <div v-if="is_delete_mode">
+            <input
+              type="checkbox"
+              :value="{name:data.label,index}"
+              class="label-check-box"
+              v-model="delete_item_list"
+            >
+          </div>
+          <div v-else>
+            <img
+              v-if="edit_target[0] === data.label && edit_mode === true"
+              @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+              class="tag_list_icon"
+              :src="tag_list_icon"
+            >
+            <img
+              v-else
+              @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+              class="tag_list_icon"
+              :src="tag_list_icon"
+            >
+          </div>
+        </li>
+        <div v-if="update_errormsg" class="label_errormsg">{{update_errormsg}}</div>
+    </ul>
+  </div>
+    <div v-else id="tag-tree">
+      <ul class="tag-list">
+        <li
+          v-for="(data, index) in labels"
+          :key="data.id"
+          class="tag-list-item"
+          @click="on_click"
+          :data-label="data.label"
+        >
+          <div class="label-color" :style="{ background: color_list[index % 10]}"></div>
+          <input
+            v-if="edit_target[0] === data.label && edit_mode === true"
+            type="text"
+                    class="label-text-update readonly"
+            v-model="edit_label"
+                    placeholder="label name..."
+            readonly
+          >
+            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
+          <input
+            v-if="edit_target[0] === data.label && edit_mode === true"
+            type="text"
+                    class="label-shortcut-update"
+            v-model="edit_shortcut"
+            @keydown.stop.prevent.self="update_label"
+            @keyup.stop.prevent.self="updateShortcutKey"
+            placeholder="key..."
+          >
+          <div v-else-if="data.shortcut" class="label-shortcut">{{data.shortcut}}</div>
+          <img
+            v-if="edit_target[0] === data.label && edit_mode === true"
+            @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+            class="tag_list_icon"
+            :src="tag_list_icon"
+          >
+          <img
+            v-else
+            @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+            class="tag_list_icon"
+            :src="tag_list_icon"
+          >
+        </li>
+    </ul>
+      <div v-if="update_errormsg" class="label_errormsg">{{update_errormsg}}</div>
+  </div>
+
+    <div v-if="this.is_admin">
+      <div v-if="!is_delete_mode">
+        <button
+          id="modify-mode-button"
+          class="buttonfa-trash"
+          @click="is_delete_mode=true"
+        >Delete Tag List</button>
     </div>
-    <span slot="okbutton">
-      <button id="delete_labels_button" class="modal-default-button"
-        @click="delete_tags">
+      <div v-else>
+        <button
+          class="button"
+          @click="show_delete_dialog=true"
+          :disabled="delete_item_list.length == 0"
+        >
         Delete
       </button>
-    </span>
+        
+        <button class="button" @click="is_delete_mode=false">Cancel</button>
+      </div>
+    </div>
 
+    <modal-box
+      v-if="show_delete_dialog"
+      @ok="delete_tags(delete_item_list)"
+      @cancel="show_delete_dialog=false"
+    >
+      <div class="modal-title" slot="contents">
+        <p>Are you sure you want to delete this item(s)?</p>
+        <ul>
+          <li v-for="delete_item in delete_item_list">{{delete_item.name}}</li>
+        </ul>
+      </div>
+      <span slot="okbutton">
+        <button
+          id="delete_labels_button"
+          class="modal-default-button"
+          @click="
+        delete_tags(delete_item_list)"
+        >Delete</button>
+    </span>
   </modal-box>
 </div>
-
 </template>
 
 <script>
@@ -125,7 +216,9 @@ export default {
         "#FFCC33",
         "#EF8200",
         "#E94C33"
-      ]
+      ],
+      is_delete_mode: false,
+      delete_item_list: []
     };
   },
 
@@ -285,9 +378,14 @@ export default {
       this.edit_shortcut = event.key;
     },
 
-    delete_tags(event) {
-      this.$store.dispatch("delete_taglist");
+    delete_tags(delete_item_list) {
+      let delete_item_list_index = [];
+      delete_item_list.filter(element => {
+        delete_item_list_index.push(element.index);
+      });
+      this.$store.dispatch("delete_taglist", delete_item_list_index);
       this.show_delete_dialog = false;
+      this.is_delete_mode = false;
     },
     get_tag_name: function(tag_name) {
       let name_length = 12;
@@ -479,13 +577,25 @@ export default {
       margin-top: calc(18px * 0.5);
       height: 15px;
     }
+    .label-check-box {
+      height: 100%;
+      width: auto;
+      display: block;
+      z-index: 10px;
+      position: static;
+      clip: rect(10 10 10 10);
+      clip-path: inherit;
+    }
   }
-
-  #remove-button {
+  .button {
+    cursor: pointer;
+    border: none;
+    background-color: #fff;
+    color: $font-color-label;
+  }
+  #modify-mode-button {
     height: calc(#{$panel-height} * 0.8);
-    line-height: calc(#{$panel-height} * 0.8);
     width: 60%;
-    margin-top: calc(#{$component-margin-top} * 2);
     text-align: center;
     font-family: $content-top-header-font-family;
     font-size: $content-modellist-font-size;
