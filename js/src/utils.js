@@ -84,7 +84,7 @@ export function message_make_dir(result){
     message = "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
   }
   if (result === 10){
-    message = 'error\n\n The current directory is unavailable. \n Please chose others. \n\n Load again to start.';
+    message = 'error\n\n The current directory is unavailable. \n Please choose another directory. \n\n Load again to start.';
 
   }
   if (result === 20){

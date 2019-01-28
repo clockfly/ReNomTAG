@@ -614,7 +614,7 @@ def make_dir():
         os.mkdir(dataset)
         os.mkdir(label)
         result = 111
-        message = 'Making a directory sucessed!'
+        message = 'Successfully created directories!'
         print(message)
 
     #message = message + "load again to start."
