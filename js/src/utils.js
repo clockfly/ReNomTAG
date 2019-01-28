@@ -81,7 +81,7 @@ export function message_make_dir(result){
   let message = "";
 
   if (result === 0){
-    message = "message\n\n No folder named 'public' in the current directory.\n Want to create directories?";
+    message = "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
   }
   if (result === 10){
     message = 'error\n\n The current directory is unavailable. \n Please chose others. \n\n Load again to start.';
@@ -91,7 +91,7 @@ export function message_make_dir(result){
     message = 'error\n\n The username is unavailable. \n Please use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_). \n\n Load again to start.';
   }
   if (result === 111){
-    message = 'message\n\n making directory sucessed! \n\n Load again to start.';
+    message = 'message\n\n Successfully created directories!\n\n Load again to start.';
   }
 
   return message;
