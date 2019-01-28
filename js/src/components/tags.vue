@@ -11,11 +11,10 @@
         <input
           type="text"
           class="label-shortcut"
-          v-model="shortcut"
-          @keydown="keydown"
-          @keyup="setShortcutKey"
-          placeholder="key..."
-        >
+          v-model='shortcut'
+          @keydown='keydown'
+          @keyup='setShortcutKey'
+          placeholder="key...">
     </div>
       <img
         v-if="is_valid_label"
@@ -38,7 +37,7 @@
         <span v-if="is_delete_mode">【delete mode】</span>
     </div>
   </div>
-    <div v-if="this.is_admin" id="tag-tree">
+    <div id="tag-tree">
       <ul class="tag-list">
         <li
           v-for="(data, index) in labels"
@@ -51,15 +50,16 @@
           <input
             v-if="edit_target[0] === data.label && edit_mode === true"
             type="text"
-                    class="label-text-update"
+            class="label-text-update"
             v-model="edit_label"
             placeholder="label name..."
+            :readonly="!is_admin"
           >
             <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
           <input
             v-if="edit_target[0] === data.label && edit_mode === true"
             type="text"
-                    class="label-shortcut-update"
+            class="label-shortcut-update"
             v-model="edit_shortcut"
             @keydown.stop.prevent.self="update_label"
             @keyup.stop.prevent.self="updateShortcutKey"
@@ -91,53 +91,8 @@
           </div>
         </li>
         <div v-if="update_errormsg" class="label_errormsg">{{update_errormsg}}</div>
-    </ul>
-  </div>
-    <div v-else id="tag-tree">
-      <ul class="tag-list">
-        <li
-          v-for="(data, index) in labels"
-          :key="data.id"
-          class="tag-list-item"
-          @click="on_click"
-          :data-label="data.label"
-        >
-          <div class="label-color" :style="{ background: color_list[index % 10]}"></div>
-          <input
-            v-if="edit_target[0] === data.label && edit_mode === true"
-            type="text"
-                    class="label-text-update readonly"
-            v-model="edit_label"
-                    placeholder="label name..."
-            readonly
-          >
-            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
-          <input
-            v-if="edit_target[0] === data.label && edit_mode === true"
-            type="text"
-                    class="label-shortcut-update"
-            v-model="edit_shortcut"
-            @keydown.stop.prevent.self="update_label"
-            @keyup.stop.prevent.self="updateShortcutKey"
-            placeholder="key..."
-          >
-          <div v-else-if="data.shortcut" class="label-shortcut">{{data.shortcut}}</div>
-          <img
-            v-if="edit_target[0] === data.label && edit_mode === true"
-            @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
-            class="tag_list_icon"
-            :src="tag_list_icon"
-          >
-          <img
-            v-else
-            @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
-            class="tag_list_icon"
-            :src="tag_list_icon"
-          >
-        </li>
-    </ul>
-      <div v-if="update_errormsg" class="label_errormsg">{{update_errormsg}}</div>
-  </div>
+      </ul>
+    </div>
 
     <div v-if="this.is_admin">
       <div v-if="!is_delete_mode">
