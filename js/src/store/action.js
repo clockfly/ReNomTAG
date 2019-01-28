@@ -74,9 +74,7 @@ export default {
       context.commit("set_folder_list", {
         folder_list: response.data.folder_list
       });
-    }
-    else if (response.data.result===0){
-      console.log("response.data.result",response.data.result);
+    } else if (response.data.result===0){
       let message = utils.message_make_dir(response.data.result);
       context.commit("set_make_dir_message",{
         make_dir_message: message

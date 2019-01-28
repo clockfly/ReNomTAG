@@ -12,7 +12,7 @@
     <tagged-images class="row"/>
     <app-footer class="row" ></app-footer>
 
-    <modal-box v-if='make_dir_message' class="modal">
+    <modal-box v-if='make_dir_message'>
       <div slot='contents' class='mkdir-msg' >
         {{make_dir_message}}
         <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">

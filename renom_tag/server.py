@@ -575,20 +575,13 @@ def get_folderlist():
                 continue
 
             folders.append(d)
-        ret = set_json_body(json.dumps(
-                            {'result':1,
-                            'folder_list': folders
-                            }))
+        ret = set_json_body(json.dumps({'result':1,'folder_list': folders}))
 
     else:
         #message = 'No folder named "public" in the current directory. \n Wanna create directories?'
         #message = 'No folder named "public" in the current directory: \n'+ str(current_dir) + '\n'
         #message = message + 'Wanna create directories?'
-        ret = set_json_body(json.dumps(
-                            # {'message': message,
-                            {'result':0,
-                             'current_dir': current_dir
-                            }))
+        ret = set_json_body(json.dumps({'result':0,'current_dir': current_dir}))
 
 
     return ret
