@@ -204,6 +204,16 @@ def test_delete_xml(tmpdir):
         assert ret.json_body == {"result":1,"message":"deleting boxes sucessed!"}
 
 
+def test_make_dir(tmpdir):
+    with tmpdir.as_cwd():
+
+        app = testapp(server.app)
+        ret = app.post_json('/api/make_dir', {'working_dir': str(tmpdir), 'username': 'folderx'})
+        assert ret.json_body == {'result': 111}
+
+
+
+
 def test_get_img_file(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')

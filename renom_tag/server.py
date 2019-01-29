@@ -556,23 +556,72 @@ def delete_label_candidates_dict():
         os.remove(jsonfile)
 
 
+
+# DIR_ROOT = 'public'
 # search inside the "bublic" ande get folderlist
 @app.route("/api/folderlist", method=["POST"])
 def get_folderlist():
-    folders = []
-    for d in sorted(os.listdir(DIR_ROOT)):
-        if not re.match(r"^[a-zA-Z0-9._]+$", d):
-            continue
+    # folders = the list of user-folder
+    current_dir = os.getcwd()
+    public = os.path.join(current_dir, DIR_ROOT)
 
-        if not os.path.isdir(os.path.join(DIR_ROOT, d)):
-            continue
+    if os.path.exists(public) and os.path.isdir(public):
+        folders = []
+        for d in sorted(os.listdir(DIR_ROOT)):
+            if not re.match(r"^[a-zA-Z0-9._]+$", d):
+                continue
 
-        if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
-            continue
+            if not os.path.isdir(os.path.join(DIR_ROOT, d)):
+                continue
 
-        folders.append(d)
+            if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
+                continue
 
-    ret = set_json_body(json.dumps({'folder_list': folders}))
+            folders.append(d)
+        ret = set_json_body(json.dumps({'result':1,'folder_list': folders}))
+
+    else:
+        #message = 'No folder named "public" in the current directory. \n Wanna create directories?'
+        #message = 'No folder named "public" in the current directory: \n'+ str(current_dir) + '\n'
+        #message = message + 'Wanna create directories?'
+        ret = set_json_body(json.dumps({'result':0,'current_dir': current_dir}))
+
+
+    return ret
+
+
+@app.route("/api/make_dir", method=["POST"])
+def make_dir():
+    working_dir = request.json['working_dir']
+    username = request.json['username']
+    result = 0
+
+    if not os.path.exists(working_dir):
+        result = 10
+        message = '[ERROR] No such a directory. chose others. ' + working_dir
+        print(message)
+
+    elif not re.match(r"^[a-zA-Z0-9._]+$", username):
+        result = 20
+        message = '[ERROR] The username is unavailable. use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_).'
+        print(message)
+
+    else:
+        # string -> join to pat
+        public = os.path.join(working_dir,DIR_ROOT)
+        user_folder = os.path.join(public,username)
+        dataset = os.path.join(user_folder,IMG_DIR)
+        label = os.path.join(user_folder,XML_DIR)
+
+        os.makedirs(user_folder)
+        os.mkdir(dataset)
+        os.mkdir(label)
+        result = 111
+        message = 'Successfully created directories!'
+        print(message)
+
+    #message = message + "load again to start."
+    ret = set_json_body(json.dumps({'result': result }))
     return ret
 
 
