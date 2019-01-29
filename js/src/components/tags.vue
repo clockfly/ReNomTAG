@@ -66,7 +66,6 @@
             placeholder="key..."
           >
           <div v-else-if="data.shortcut" class="label-shortcut">{{data.shortcut}}</div>
-
           <div v-if="is_delete_mode">
             <input
               type="checkbox"
@@ -98,7 +97,7 @@
       <div v-if="!is_delete_mode">
         <button
           id="modify-mode-button"
-          class="buttonfa-trash"
+          class="button"
           @click="is_delete_mode=true"
         >Delete Tag List</button>
     </div>
@@ -342,6 +341,7 @@ export default {
         delete_item_list_index.push(element.index);
       });
       this.$store.dispatch("delete_taglist", delete_item_list_index);
+      this.delete_item_list = [];
       this.show_delete_dialog = false;
       this.is_delete_mode = false;
     },
@@ -552,7 +552,6 @@ export default {
     color: $font-color-label;
   }
   #modify-mode-button {
-    height: calc(#{$panel-height} * 0.8);
     width: 60%;
     text-align: center;
     font-family: $content-top-header-font-family;
