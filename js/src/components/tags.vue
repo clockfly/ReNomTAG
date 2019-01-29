@@ -54,6 +54,7 @@
             v-model="edit_label"
             placeholder="label name..."
             :readonly="!is_admin"
+            @keyup="update_label"
           >
             <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
           <input
@@ -242,6 +243,9 @@ export default {
       });
       this.label = this.shortcut = "";
       document.body.focus();
+    },
+    test(){
+      console.log("input")
     },
 
     is_control_key(k) {
