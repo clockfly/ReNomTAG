@@ -132,7 +132,10 @@
           class="modal-default-button"
           @click="
         delete_tags(delete_item_list)"
-        >Delete</button>
+        >
+        <fa-icon icon="fas fa-trash-alt" />
+        Delete
+        </button>
     </span>
   </modal-box>
 </div>
