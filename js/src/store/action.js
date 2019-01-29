@@ -332,9 +332,21 @@ export default {
     });
   },
   async delete_taglist(context, payload) {
-    context.commit("set_labels", []);
-    axios.post(utils.build_api_url("/api/delete_label_candidates_dict"), {
-      folder: context.state.folder
+    let labels = context.state.labels;
+    let filtered_labels = [];
+    for(let i in payload){
+      delete labels[payload[i]];
+    }
+    filtered_labels = labels.filter(function(x){
+      return !( x === ""); 
     });
+
+    context.commit("set_labels", filtered_labels);
+    await async_func(context, () =>
+    axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
+      folder: context.state.folder,
+      labels: context.state.labels
+    })
+  );
   }
 };
