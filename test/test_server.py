@@ -226,10 +226,10 @@ def test_get_img_file(tmpdir):
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
         imgdir.join('aakhk.bmp').write_binary(b'')
 
-        ret_names, ret_undef_names, ret_dup_names = server.get_img_files('folderx')
+        ret_names, ret_dup_names, ret_undef_names  = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
-        assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg','aakhk.bmp']
+        assert ret_names == ['a.jpeg', 'aakhk.bmp', 'aierf_y832fa.jpg']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
 
 # def test_get_filename_for_xml(tmpdir):
