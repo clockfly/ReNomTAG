@@ -108,18 +108,18 @@ def get_xml_files(folder):
 def _get_file_name(path):
     return os.path.splitext(os.path.split(path)[1])[0]
 
-def _get_file_name_for_xml(path):
-    ext_list = ["jpg", "jpeg", "png", "bmp"]
-    filename_tup = os.path.splitext(os.path.split(path)[1])
-    ext = filename_tup[1][1:]
-    add_to_filename = ""
-
-    for e in ext_list:
-        if e == ext:
-            add_to_filename = "_" + ext
-            break
-    xml_filename = filename_tup[0] + add_to_filename
-    return xml_filename
+# def _get_file_name_for_xml(path):
+#     ext_list = ["jpg", "jpeg", "png", "bmp"]
+#     filename_tup = os.path.splitext(os.path.split(path)[1])
+#     ext = filename_tup[1][1:]
+#     add_to_filename = ""
+#
+#     for e in ext_list:
+#         if e == ext:
+#             add_to_filename = "_" + ext
+#             break
+#     xml_filename = filename_tup[0] + add_to_filename
+#     return xml_filename
 
 
 
@@ -246,7 +246,7 @@ def get_folderpath(folder):
 
 
 def get_boxes(folder, img_filename):
-    filename = _get_file_name_for_xml(img_filename) + '.xml'
+    filename = _get_file_name(img_filename) + '.xml'
     xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
     xmlfilename = check_path(xmlfolder, filename)
 
@@ -369,7 +369,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['filename'] = file_name
 
     folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
-    save_xml_file_name = check_path(folderpath, _get_file_name_for_xml(file_name)) + '.xml'
+    save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -391,7 +391,7 @@ def save_xml_from_label_dict():
 
 @app.route("/api/delete_xml",method=["POST"])
 def delete_xml():
-    filename = _get_file_name_for_xml(request.json['target_filename'])
+    filename = _get_file_name(request.json['target_filename'])
     filename = filename + ".xml"
     folder = request.json['folder']
 
