@@ -50,7 +50,6 @@ def ensure_folder(folder):
 
 
 def filter_datafilenames(dir, ext):
-
     # joining public/user/dataset/
     dir = os.path.join(DIR_ROOT, os.path.normpath(dir))
 
@@ -83,20 +82,85 @@ def filter_datafilenames(dir, ext):
 
     return names, undef_names
 
+#TODO
+def filter_duplicate_filenames(filename_list, exts):
+    filenames_no_ext = []
+    for name in filename_list:
+        only_name = os.path.splitext(os.path.split(name)[1])[0]
+        print("only_name", only_name)
+        filenames_no_ext.append(only_name)
+
+    duplication_list = []
+    for name in filenames_no_ext:
+        if filenames_no_ext.count(name) >= 2:
+            print("dup name :",name)
+            duplication_list.append(name)
+
+    #print("filenames_no_ext :",filenames_no_ext)
+    duplication_set = list(set(duplication_list))
+    print("duplication :", duplication_set)
+
+    for i in range(len(duplication_set)):
+        compare_list = []
+        print("len  :",len(filename_list))
+
+        for j in range(len(filename_list)):
+            filename = str(filename_list[j])
+            compare = str(duplication_set[i])
+            print("filename :",filename)
+            print("compare :",compare)
+            if compare in filename:
+                compare_list.append(filename_list[j])
+
+        print("compare_list :",compare_list)
+        load_this = ''
+        for l in compare_list:
+            #e = os.path.splitext(l)[1][:1]
+            if exts[0] in l:
+                load_this = l
+                break
+            elif exts[1] in l:
+                load_this = l
+                break
+            elif exts[2] in l:
+                load_this = l
+                break
+            elif exts[3] in l:
+                load_this = l
+                break
+
+        print("load_this :",load_this)
+        print("compare_list :",compare_list)
+
+        not_load_files = []
+        for l in compare_list:
+            if not load_this in l:
+                not_load_files.append(l)
+
+    print("not_load_files :",not_load_files)
+    load_files = list(set(filename_list) - set(not_load_files))
+    print("load_files :",load_files)
+    load_files = sorted(load_files)
+    not_load_files = sorted(not_load_files)
+
+    return load_files, not_load_files
 
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png", "bmp"]
-    ret_names = []
-    ret_undef_names = []
+    ret_def_files = []
+    ret_undef_files = []
 
     # joining user/dataset/
     dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        names, undef_names = filter_datafilenames(dir, e)
-        ret_names.extend(names)
-        ret_undef_names.extend(undef_names)
-    return ret_names, ret_undef_names
+        def_files, undef_files = filter_datafilenames(dir, e)
+        ret_def_files.extend(def_files)
+        ret_undef_files.extend(undef_files)
+
+    ret_load_files, ret_not_load_files = filter_duplicate_filenames(ret_def_files, exts)
+
+    return ret_load_files, ret_not_load_files, ret_undef_files
 
 
 def get_xml_files(folder):
@@ -328,14 +392,14 @@ def get_thumbnail(folder, file_name):
 
     return ret
 
-
+# TODO
 # roothing for get_filename_list
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
     #import pdb;pdb.set_trace()
     folder = request.json['folder']
     folder = strip_foldername(folder)
-    img_paths, undef_img_path = get_img_files(folder)
+    img_paths, dup_img_path, undef_img_path = get_img_files(folder)
 
     ret = {}
     for img in img_paths:
@@ -346,8 +410,10 @@ def get_filename_list():
     body = json.dumps({
         "filename_list": ret,
         "undef_filename_list": undef_img_path,
+        "dup_filename_list": dup_img_path,
     })
     ret = set_json_body(body)
+    print("ret :",ret)
     return ret
 
 
