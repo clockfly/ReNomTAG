@@ -78,6 +78,7 @@
           <div v-else>
             <img
               v-if="edit_target[0] === data.label && edit_mode === true"
+              @click="update_label('edit_off')"
               @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
               class="tag_list_icon"
               :src="tag_list_icon"
@@ -244,11 +245,7 @@ export default {
       this.label = this.shortcut = "";
       document.body.focus();
     },
-    test(){
-      console.log("input")
-    },
-
-    is_control_key(k) {
+      is_control_key(k) {
       const keys = [
         13, // Enter(ten key)
         32, // Space
@@ -309,7 +306,7 @@ export default {
     },
 
     update_label(event) {
-      if (event.keyCode === 13) {
+      if (event.keyCode === 13 || event == 'edit_off') {
         if (this.update_errormsg === "") {
           if (this.edit_label === "") {
             this.edit_label = this.edit_target[0];
