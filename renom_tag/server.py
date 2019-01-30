@@ -263,8 +263,10 @@ def get_boxes(folder, img_filename):
         except KeyError:
             json_dict['annotation']['object'] = []
 
+
         # revert `object` to original name(`objects`)
         json_dict['annotation']['objects'] = json_dict['annotation']['object']
+
         del json_dict['annotation']['object']
 
         # None を空文字列に変換
@@ -459,6 +461,7 @@ def load_xml_tagged_images():
 
         boxes = []
         objects = xml['annotation']['objects']
+
         # get objects
         for i in range(len(objects)):
             left = objects[i]['bndbox']['xmin']
