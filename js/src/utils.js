@@ -62,7 +62,7 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
 
 export function message_load_undeffile_list(undef_filename_list) {
   let undef_message =
-    "error\n\n The following filenames are unavailable, which could not be loaded:\n\n";
+    "error\n\n The following filenames are unavailable, which could not be loaded. \n\n Please change the filename of: \n";
   let length = Math.min(3, undef_filename_list.length);
 
   for (let i = 0; i < length; i++) {
@@ -79,7 +79,7 @@ export function message_load_undeffile_list(undef_filename_list) {
 
 export function message_load_dupfile_list(dup_filename_list){
   let dup_message =
-    'error\n\n The following files could not be loaded, because there are some files which have the same name as the shown files but different extentions. Only one file can be loaded among same-name files and the priority is "jpg > jpeg > png > bmp" \n\n';
+    'error\n\n The following files could not be loaded, because there are files which have the same name but different extensions.  \n\n Only one file can be loaded with the same filename base and the priority is   \n\n "jpg > jpeg > png > bmp"   \n\n Please change the filename of: \n';
   let length = Math.min(3, dup_filename_list.length);
 
   for (let i = 0; i < length; i++) {

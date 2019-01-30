@@ -468,11 +468,11 @@ def delete_xml():
     if os.path.exists(delete_xml_file_name):
         os.remove(delete_xml_file_name)
         result = 1
-        message = "deleting boxes sucessed!"
+        message = "Box deletion successful!"
         print('%s is deleted!' % (delete_xml_file_name))
     else:
         result = 0
-        message = "deleting boxes faital!"
+        message = "Box deletion failed!"
         print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
         print('it was not deleted. Please check if the xml-file exists!')
 
