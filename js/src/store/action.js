@@ -240,7 +240,6 @@ export default {
 
 
   async save_annotation(context) {
-
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
 
@@ -262,12 +261,12 @@ export default {
       };
     }
 
-
     value.annotation.source.reviewresult =
       context.state.active_image_review_result;
     value.annotation.source.reviewcomment =
       context.state.active_image_review_comment;
 
+    value.annotation.objects = []
     for (let box of context.state.active_image_tag_boxes) {
       let o = {
         object: {
@@ -285,7 +284,6 @@ export default {
       };
       value.annotation.objects.push(o);
     }
-
 
     const ret = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
