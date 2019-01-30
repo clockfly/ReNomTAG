@@ -121,7 +121,7 @@ def test_save_xml_from_label_dict(tmpdir):
         app = testapp(server.app)
         app.post_json('/api/save_xml_from_label_dict', json)
 
-        xml = xmldir.join('a_jpg.xml').read_text('utf8')
+        xml = xmldir.join('a.xml').read_text('utf8')
         d = xmltodict.parse(xml, xml_attribs=True)
 
         ann = d['annotation']
@@ -135,14 +135,15 @@ def test_save_xml_from_label_dict(tmpdir):
 def test_get_filename_list(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
-        imgdir.join('a.jpeg').write_binary(b'')
-        imgdir.join('b.jpg').write_binary(b'')
+        imgdir.join('abc.jpeg').write_binary(b'')
+        imgdir.join('abc.jpg').write_binary(b'')
         imgdir.join('a-b.png').write_binary(b'')
         imgdir.join('ccc.bmp').write_binary(b'')
 
+
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('a_jpeg.xml').write(ex_xml)
+        xmldir.join('a.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
@@ -152,10 +153,12 @@ def test_get_filename_list(tmpdir):
             filename_list.append(key)
 
         undef_filename_list = ret.json['undef_filename_list']
+        dup_filename_list = ret.json['dup_filename_list']
         print(filename_list)
         print(undef_filename_list)
         #assert filename_list ==['ccc.bmp','a.jpeg','b.jpg']
         assert undef_filename_list==['a-b.png']
+        assert dup_filename_list==['abc.jpeg']
 
 
 def test_save_label_candidates_dict(tmpdir):
@@ -194,14 +197,14 @@ def test_delete_xml(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
-        xmldir.join('target_png.xml').write(ex_xml)
+        xmldir.join('target.xml').write(ex_xml)
 
         app = testapp(server.app)
         ret = app.post_json('/api/delete_xml',
                      { 'folder': 'folderx',
                        'target_filename': 'target.png'})
 
-        assert ret.json_body == {"result":1,"message":"deleting boxes sucessed!"}
+        assert ret.json_body == {"result":1,"message":"Box deletion successful!"}
 
 
 def test_make_dir(tmpdir):
@@ -223,22 +226,22 @@ def test_get_img_file(tmpdir):
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
         imgdir.join('aakhk.bmp').write_binary(b'')
 
-        ret_names, ret_undef_names = server.get_img_files('folderx')
+        ret_names, ret_undef_names, ret_dup_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['aierf_y832fa.jpg', 'a.jpeg','aakhk.bmp']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
 
-def test_get_filename_for_xml(tmpdir):
-    with tmpdir.as_cwd():
-        xml_filename1 = server._get_file_name_for_xml('a.jpeg')
-        xml_filename2 = server._get_file_name_for_xml('aierf_y832fa.jpg')
-        xml_filename3 = server._get_file_name_for_xml('aakhk.bmp')
-
-        print('xml_filename1 :',xml_filename1)
-        print('xml_filename2 :',xml_filename2)
-        print('xml_filename3 :',xml_filename3)
-
-        assert xml_filename1 == 'a_jpeg'
-        assert xml_filename2 == 'aierf_y832fa_jpg'
-        assert xml_filename3 == 'aakhk_bmp'
+# def test_get_filename_for_xml(tmpdir):
+#     with tmpdir.as_cwd():
+#         xml_filename1 = server._get_file_name_for_xml('a.jpeg')
+#         xml_filename2 = server._get_file_name_for_xml('aierf_y832fa.jpg')
+#         xml_filename3 = server._get_file_name_for_xml('aakhk.bmp')
+#
+#         print('xml_filename1 :',xml_filename1)
+#         print('xml_filename2 :',xml_filename2)
+#         print('xml_filename3 :',xml_filename3)
+#
+#         assert xml_filename1 == 'a_jpeg'
+#         assert xml_filename2 == 'aierf_y832fa_jpg'
+#         assert xml_filename3 == 'aakhk_bmp'
