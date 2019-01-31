@@ -162,19 +162,6 @@ def get_xml_files(folder):
 def _get_file_name(path):
     return os.path.splitext(os.path.split(path)[1])[0]
 
-# def _get_file_name_for_xml(path):
-#     ext_list = ["jpg", "jpeg", "png", "bmp"]
-#     filename_tup = os.path.splitext(os.path.split(path)[1])
-#     ext = filename_tup[1][1:]
-#     add_to_filename = ""
-#
-#     for e in ext_list:
-#         if e == ext:
-#             add_to_filename = "_" + ext
-#             break
-#     xml_filename = filename_tup[0] + add_to_filename
-#     return xml_filename
-
 
 
 def strip_foldername(folder):
