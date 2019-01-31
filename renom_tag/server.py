@@ -82,33 +82,34 @@ def filter_datafilenames(dir, ext):
 
     return names, undef_names
 
-#TODO
+# extract not-load files from def_files
 def filter_duplicate_filenames(filename_list, exts):
+# 1. Extract duplicate names
     filenames_no_ext = []
     for name in filename_list:
-        only_name = os.path.splitext(os.path.split(name)[1])[0]
+        only_name = os.path.splitext(name)[0]
         filenames_no_ext.append(only_name)
 
     duplication_list = []
     for name in filenames_no_ext:
         if filenames_no_ext.count(name) >= 2:
             duplication_list.append(name)
-
-    #print("filenames_no_ext :",filenames_no_ext)
     duplication_set = list(set(duplication_list))
+
+# 2. Allocate same_name_files "load" or "not_load"
     not_load_files = []
     for i in range(len(duplication_set)):
-        compare_list = []
-
+        # 1) Get files which have same name from duplication_set
+        same_name_files = []
         for j in range(len(filename_list)):
-            filename = str(filename_list[j])
+            filename = os.path.splitext(str(filename_list[j]))[0]
             compare = str(duplication_set[i])
-            if compare in filename:
-                compare_list.append(filename_list[j])
+            if compare == filename:
+                same_name_files.append(filename_list[j])
 
+        # 2) Choose file which would be loaded
         load_this = ''
-        for l in compare_list:
-            #e = os.path.splitext(l)[1][:1]
+        for l in same_name_files:
             if exts[0] in l:
                 load_this = l
                 break
@@ -122,11 +123,12 @@ def filter_duplicate_filenames(filename_list, exts):
                 load_this = l
                 break
 
-        for l in compare_list:
-            if not load_this in l:
+        # 3) Choose file which would "not" be loaded
+        for l in same_name_files:
+            if not load_this == l:
                 not_load_files.append(l)
 
-
+    # 4) Take the difference between "not_load_files" and the original filename_list
     load_files = list(set(filename_list) - set(not_load_files))
     load_files = sorted(load_files)
     not_load_files = sorted(not_load_files)
@@ -380,7 +382,7 @@ def get_thumbnail(folder, file_name):
 
     return ret
 
-# TODO
+
 # roothing for get_filename_list
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
