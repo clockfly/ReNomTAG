@@ -36,11 +36,11 @@ Requirements
 Install by pip
 --------------
 
-- Linux(Ubuntu) OS: You can install ReNomTAG by pip command.
+- Linux(Ubuntu) OS: You can install ReNomTAG via the pip command.
 
 .. code-block:: shell
 
-    pip install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-VERSION-cp35-cp35m-linux_x86_64.whl
+    pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.0.2-py3-none-any.whl
 
 
 Install from source
