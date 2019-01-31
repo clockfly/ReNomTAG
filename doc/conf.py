@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'ReNomTAG'
-copyright = '2018, Grid'
+copyright = '2019, Grid'
 author = 'Grid dev team'
 
 # The short X.Y version
