@@ -60,9 +60,9 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
   target.addEventListener(type, fn, useCapture);
 }
 
-export function message_load_imagefile_list(undef_filename_list) {
+export function message_load_undeffile_list(undef_filename_list) {
   let undef_message =
-    "error\n\n The following filenames are unavailable, which could not be loaded:\n\n";
+    "error\n\n The following filenames are unavailable, which could not be loaded. \n\n Please change the filename of: \n";
   let length = Math.min(3, undef_filename_list.length);
 
   for (let i = 0; i < length; i++) {
@@ -75,6 +75,23 @@ export function message_load_imagefile_list(undef_filename_list) {
     }
   }
   return undef_message;
+}
+
+export function message_load_dupfile_list(dup_filename_list){
+  let dup_message =
+    'error\n\n The following files could not be loaded, because there are files which have the same name but different extensions.  \n\n Only one file can be loaded with the same filename base and the priority is   \n\n "jpg > jpeg > png > bmp"   \n\n Please change the filename of: \n';
+  let length = Math.min(3, dup_filename_list.length);
+
+  for (let i = 0; i < length; i++) {
+      dup_message  = dup_message.concat(dup_filename_list[i]);
+    if (i != length - 1) {
+      dup_message  = dup_message.concat(", \n");
+    }
+    if (length == 3 && i == length - 1) {
+      dup_message  = dup_message.concat("\netc...");
+    }
+  }
+  return dup_message;
 }
 
 export function message_make_dir(result){

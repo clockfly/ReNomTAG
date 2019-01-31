@@ -32,6 +32,24 @@
       </div>
     </modal-box>
 
+    <modal-box v-if='undef_file_message'>
+      <div slot='contents' class='error-msg'>
+        {{undef_file_message}}
+      </div>
+      <div slot='footer'>
+        <button class='error-button' @click='set_undef_file_message({dundef_file_message: ""})'>close</button>
+      </div>
+    </modal-box>
+
+    <modal-box v-if='dup_file_message'>
+      <div slot='contents' class='error-msg'>
+        {{dup_file_message}}
+      </div>
+      <div slot='footer'>
+        <button class='error-button' @click='set_dup_file_message({dup_file_message: ""})'>close</button>
+      </div>
+    </modal-box>
+
     <modal-box v-if='error_status'>
       <div slot='contents' class='error-msg'>
         {{error_status}}
@@ -77,6 +95,8 @@ export default {
       "error_status",
       "make_dir_message",
       "make_dir_message_counter",
+      "undef_file_message",
+      "dup_file_message",
       "working_dir",
       "username"
     ]),
@@ -91,6 +111,8 @@ export default {
   },
   methods: {
     ...mapMutations(["set_error_status"]),
+    ...mapMutations(["set_undef_file_message"]),
+    ...mapMutations(["set_dup_file_message"]),
     messageCounter: function(){
       var counter = this.make_dir_message_counter;
       console.log(counter)
