@@ -101,6 +101,12 @@ export default {
   set_make_dir_message_counter(state, payload){
     state.make_dir_message_counter = payload.make_dir_message_counter;
   },
+  set_undef_file_message(state, payload){
+    state.undef_file_message = payload.undef_file_message;
+  },
+  set_dup_file_message(state, payload){
+    state.dup_file_message = payload.dup_file_message;
+  },
   set_username(state, payload){
     state.username = payload.username;
   },
