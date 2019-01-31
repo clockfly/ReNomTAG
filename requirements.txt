@@ -4,3 +4,4 @@ xmltodict==0.11.0
 setuptools==39.2.0
 Pillow==5.4.1
 beautifulsoup4==4.7.1
+pytest==3.5.0
