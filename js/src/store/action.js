@@ -260,7 +260,6 @@ export default {
         }
       };
     }
-
     value.annotation.source.reviewresult =
       context.state.active_image_review_result;
     value.annotation.source.reviewcomment =
@@ -329,6 +328,138 @@ export default {
       info: ret.data.result
     });
   },
+
+  //ここから
+  async copy_annotation(context) {
+    const cur_filename = context.state.active_image_filename;
+    const has_tag = context.state.tagged_images.find( tag => tag.filename === cur_filename );
+    //activeなimageにタグが入っていないとわかった時の処理
+    // コピーの対象を選ぶアルゴリズム
+    const exist_files = context.state.files;
+    const tagged_images = context.state.tagged_images;
+    //このままではタグ付けした名前順なのでソートをかける
+    if(tagged_images.length == 0){
+      // 英語に直す必要あり
+      alert("コピー対象のファイルがありません");
+      return false;
+    }
+    let sort_tagged_images = tagged_images.sort(function(a, b){
+      if (a.filename > b.filename) return 1;
+      if (a.filename < b.filename) return -1;
+      return 0;
+    });
+    let copy_target = "";
+    // const tagged_images_namelist = context.state.tagged_images.find( tag => tag.filename === cur_filename );
+    //今のファイルは全体の何番目か？
+    let x = exist_files.findIndex(value=> value === cur_filename );
+    // console.log(exist_files[x]);
+    if(has_tag){
+      var answer = confirm("タグの上書きを行います。よろしいですか？");
+      if(answer) {
+      window.alert("この入力内容で登録します。");
+      }else{
+        return false;
+      }
+    }
+    // if(has_tag === undefined){
+      //target_set_loopは2重ループを抜けるためのタグ
+      target_set_loop:
+      for (var i = x; i > 0; i--) {
+        //ひとつずつ前を調べていく
+        // console.log("いまの検索対象は" + exist_files[i-1]);
+        for(var k = sort_tagged_images.length -1; k > -1; k--) {
+          // console.log("いまの被検索対象は" + sort_tagged_images[k].filename);
+          if(sort_tagged_images[k].filename == exist_files[i-1]){
+            // console.log("一致した時"+ k + "exist_files[x-i]は"+sort_tagged_images[k].filename);
+            copy_target = sort_tagged_images[k].filename;
+        //     console.log("kは"+ k + "file名は"+sort_tagged_images[k].filename+ "exist_files[x-i]は"+ exist_files[x-i]);
+             break target_set_loop;
+          }
+        }
+      }
+    // }
+    // console.log("コピー対象は" + copy_target);
+
+    //value関係の値をとりあえずセット
+    let value = context.state.folder_files[copy_target];
+    
+    // 初期化
+    value = {
+      annotation: {
+        path: cur_filename,
+        source: {
+          database: "Unknown"
+        },
+        size: {
+          width: context.state.active_image_width,
+          height: context.state.active_image_height,
+          depth: 3
+        },
+        segments: 0,
+        objects: []
+      }
+    };
+
+    value.annotation.source.reviewresult =
+    context.state.active_image_review_result;
+    value.annotation.source.reviewcomment =
+      context.state.active_image_review_comment;
+
+      var ind = 0;
+      //個々のボックスデータを格納
+      for (let box of context.state.tagged_images[ind].boxes) {
+        let o = {
+          object: {
+            name: box.label,
+            pose: "Unspecified",
+            truncated: 0,
+            difficult: 0,
+            bndbox: {
+              //このロジック要検討
+              xmin: box.left,
+              xmax: utils.min(box.right,context.state.active_image_width),
+              ymin: box.top,
+              ymax: utils.min(box.bottom,context.state.active_image_height)
+            }
+          }
+        };
+        value.annotation.objects.push(o);  
+      }
+      console.dir(value.annotation.objects);
+    //ここでどうやらファイルを作成してアップデートしている
+    const ret = await async_func(context, () =>
+      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
+        folder: context.state.folder,
+        value
+      })
+    );
+
+    //これでタグイメージに画像追加は解決、その後ボックスをどう追加するか？
+    context.commit("add_tagged_image", {
+      filename: cur_filename,
+      width: context.state.active_image_width,
+      height: context.state.active_image_height,
+      image: context.state.active_image,
+      boxes: context.state.tagged_images[ind].boxes
+    });
+
+    // update image data
+    context.commit("update_file", {
+      filename: cur_filename,
+      info: ret.data.result
+    });
+    let idx = 0;
+    for (const file of context.state.files) {
+      if (cur_filename === file) {
+        break;
+      }
+      idx += 1;
+    }
+    context.dispatch("load_current_image", context.state.files[idx]);
+
+  },
+  //今回作成分ここまで
+  
   async delete_taglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];

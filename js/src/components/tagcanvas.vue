@@ -1,14 +1,15 @@
 <template>
   <div id='canvasblock'>
+  
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'>
-
+        @mousemove.stop.prevent='on_mousemove'
+        @keyup.ctrl.66='copy_annotation'
+        tabindex="1">
       <navarrow class="arrow" dir="back"/>
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
@@ -130,6 +131,7 @@ export default {
       "active_image_review_result",
       "active_boxid",
       "labels",
+      "files",
       "tagged_images"
     ]),
 
@@ -177,7 +179,7 @@ export default {
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation","delete_xml"]),
+    ...mapActions(["save_annotation","delete_xml","copy_annotation"]),
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
@@ -575,7 +577,23 @@ export default {
         return "reviewng";
       }
       return "notreviewed";
-    }
+    },
+    // copy_beforearea: function(event) {
+    //   let tagged_images = this.$store.state.tagged_images;
+    //   let has_tag = false;
+    //   //もともとタグがあるかどうかの判定
+    //   for(var property1 in tagged_images){
+    //     console.log(tagged_images[property1].filename);
+    //     if(tagged_images[property1].filename == this.$store.state.active_image_filename){
+    //       console.log("今アクティブなのは" + tagged_images[property1].filename);
+    //       console.log("ほしいのは" + tagged_images[property1-1].filename);
+    //       has_tag = true;
+    //     }
+    //   }
+    //   // ファイルコピー時もしもproperty1-1が0より小さいなら頭に戻る必要がある
+    //   console.log(this.$store.state.files),
+    //   console.log(this.$store.state.active_image_filename)
+    // },
   }
 };
 </script>
@@ -594,6 +612,7 @@ export default {
   display: flex;
   position: relative;
   height: calc(100% - 150px + calc(#{$component-margin-top}));
+  outline: none;
   .arrow {
     margin-top: 25%;
   }
