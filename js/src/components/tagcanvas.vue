@@ -682,20 +682,21 @@ export default {
     border-color: #000;
   }
   .ok-button {
-    margin-right: 2px;
+    margin-right: 7px;
   }
   .ng-button {
-    margin-left: 2px;
+    margin-left: 7px;
   }
   p.ng-button,p.ok-button{
     cursor: pointer;
     background-color: #999;
     padding:10px;
     color: #fff;
-    width: 44px;
+    width: 48px;
     font-size:0.8rem;
     text-align: center;
     line-height:5px;
+    margin-top: 0;
     
     &-push{
       background-color: #0a7bb1;
