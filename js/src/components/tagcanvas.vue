@@ -681,11 +681,12 @@ export default {
     background: #fff;
     border-color: #000;
   }
-  .ok-button {
+  p.ok-button {
     margin-right: 7px;
   }
-  .ng-button {
+  p.ng-button {
     margin-left: 7px;
+    margin-right: 0px;
   }
   p.ng-button,p.ok-button{
     cursor: pointer;
