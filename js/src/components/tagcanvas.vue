@@ -698,6 +698,7 @@ export default {
     text-align: center;
     line-height:5px;
     margin-top: 0;
+    margin-bottom: 0;
     
     &-push{
       background-color: #0a7bb1;
