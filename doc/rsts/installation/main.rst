@@ -15,7 +15,7 @@ Requirements
 - beautifulsoup4==4.7.1
 
 
-**For build web app**
+**For building the web app**
 
 - Node.js >= 10.6.0
 
