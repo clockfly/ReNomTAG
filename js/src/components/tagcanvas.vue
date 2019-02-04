@@ -25,7 +25,12 @@
     <div>
       <div id='imageinfo' class="row">
 
-        <div class= "col-md-6 row">
+        <div class="col-md-6 col-md-offset-2">
+          <div class="comment-area">
+            <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_review_comment" :readonly="!this.is_admin"></textarea>
+          </div>
+        </div>
+        <div class= "col-md-3 row">
           <div class="col-md-12 row clear-padding">
             <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span>
             <div class="col-md-12 clear-padding">
@@ -75,11 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="comment-area">
-            <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_review_comment" :readonly="!this.is_admin"></textarea>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
