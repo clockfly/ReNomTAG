@@ -20,13 +20,12 @@
           </div>
         </div>
         <div class="col-md-8 fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("NeedReview")}, 
+          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("NeedReview")},
             { "off" : !is_selected_filter("NeedReview")}]' @click='set_filter("NeedReview")'>
             <img v-if='is_selected_filter("NeedReview")' class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
           </div>
         </div>
-        
       </div>
       <div class="row clear-margin first-row">
         <div class="col fillter-button Notags-fillter">
@@ -38,7 +37,7 @@
         </div>
         <div class="col fillter-button OK-fillter">
           <div :class='[{"image_pred_tagbutton_active": is_selected_filter("CHECK_OK") },
-            { "off" : !is_selected_filter("CHECK_OK")}]' 
+            { "off" : !is_selected_filter("CHECK_OK")}]'
             @click='set_filter("CHECK_OK")'>
             <img v-if="is_selected_filter('CHECK_OK')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
@@ -51,8 +50,8 @@
             <img v-if="is_selected_filter('CHECK_NG')" class="ng-button-icon" :src="CHECK_NG">
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
           </div>
-        </div> 
-      </div> 
+        </div>
+      </div>
     </div>
     <div id="imagelist" @scroll="on_scroll">
       <div v-for="file in file_list_top" :key="file">
@@ -196,19 +195,21 @@ export default {
         if (n <= 0) {
           n = 1;
         }
-        let img = this.$el.querySelector(`#imagelist img:nth-child(${n})`);
-        if (img === null) {
+        let loaded_img = this.$el.querySelectorAll(`#imagelist img.thumbnail`)
+        if (loaded_img[n] !== null){
+          let img = loaded_img[n];
+
+          let imgrc = img.getBoundingClientRect();
+          let wrapper = this.$el.querySelector(`#imagelist`);
+          let wrapperrc = wrapper.getBoundingClientRect();
+
+          if (imgrc.top <= wrapperrc.top) {
+            this.$store.commit("set_filename_max_display", {
+              max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
+            });
+          }
+        }else if (loaded_img[n] === null) {
           return;
-        }
-
-        let imgrc = img.getBoundingClientRect();
-        let wrapper = this.$el.querySelector(`#imagelist`);
-        let wrapperrc = wrapper.getBoundingClientRect();
-
-        if (imgrc.top <= wrapperrc.top) {
-          this.$store.commit("set_filename_max_display", {
-            max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
-          });
         }
       }
     }
