@@ -17,22 +17,13 @@
           placeholder="key...">
     </div>
     <div class="add-new-label-btn-wrapper">
-      <p
-        v-if="is_valid_label"
+      <button
         @click.prevent.stop="addNewLabel"
         class="add-new-label-btn"
         :disabled="!is_valid_label"
       >
       Add New Tag
-      </p>
-      <p
-        v-else
-        @click.prevent.stop="addnewlabel"
-        class="add-new-label-btn add_new_tag_button_disabled"
-        :disabled="!is_valid_label"
-      >
-      Add New Tag
-      </p>
+      </button>
     </div>
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
@@ -454,9 +445,11 @@ export default {
     flex-direction: row;
   }
   .add-new-label-btn {
+    color:#fff;
     margin: 10px 0 0 0;
     cursor: pointer;
-    background-color: #989898;
+    background-color: $panel-bg-color-hover;
+    // background-color: #989898;
     width: 100%;
     padding:10px;
     vertical-align: middle;
@@ -471,13 +464,10 @@ export default {
     &:focus {
       outline: none;
     }
-    &:hover {
-      background-color: $panel-bg-color-hover;
+    &:disabled {
+      background-color: $disabled-color;
+      cursor: default
     }
-  }
-
-  .add-new-label-btn:disabled {
-    background-color: $disabled-color;
   }
 
   #tag-tree {
