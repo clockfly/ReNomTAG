@@ -322,10 +322,11 @@ export default {
       if (event.keyCode === 46 || event.keyCode === 8) {
         // delete or backspace
         this.shortcut = "";
+        this.edit_shortcut = "";
         event.preventDefault();
         return;
       }
-      if (this.is_control_key(event.keyCode)) {
+      else if (this.is_control_key(event.keyCode)) {
         return;
       }
       this.edit_shortcut = event.key;
