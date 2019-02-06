@@ -221,7 +221,6 @@ export default {
     state.active_image_tag_boxes = payload.tagboxes;
   },
 
-// TODO stash the target bo
   remove_tagbox(state, payload) {
     const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
     const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
@@ -229,7 +228,6 @@ export default {
     state.active_image_tag_boxes = [...pri, ...follow];
     state.active_boxid = null;
   },
-
   set_activebox_label(state, payload) {
     const boxid = state.active_boxid;
     if (boxid === null) {
