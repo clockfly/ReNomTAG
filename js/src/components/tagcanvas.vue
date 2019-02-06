@@ -8,7 +8,7 @@
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-
+<!-- TODO -->
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
@@ -21,6 +21,7 @@
 
       <navarrow class="arrow" dir="forward"/>
     </div>
+    <p id="demo"></p>
 
     <div>
       <div id='imageinfo' class="row">
@@ -44,17 +45,17 @@
                       class="img-btn float-right ng-button ng-button-push"
                       @click="set_review_result({result:'ng'})">
                   NG
-                </p>      
+                </p>
                 <p v-else :src="NG_BUTTON"
                       class="img-btn-disabled float-right ng-button">
                   NG
-                </p>      
+                </p>
                 <p v-if="can_be_saved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
                       class="img-btn float-right ok-button"
                       :class="{review_checked: this.active_image_review_result === 'ok'}"
                       @click="set_review_result({result:'ok'})">
                   OK
-                </p>      
+                </p>
                 <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
                       class="img-btn float-right ok-button ok-button-push"
                       @click="set_review_result({result:'ok'})">
@@ -251,59 +252,68 @@ export default {
             event.stopPropagation();
             return false;
           }
-          for (let label of this.labels) {
-            if (label.shortcut === event.key) {
-              this.$store.commit("set_activebox_label", label);
-              event.preventDefault();
-              event.stopPropagation();
-              return false;
-            }
-          }
         }
       }
     },
+
     on_keydown: function(event) {
-      if (this.has_image && this.active_boxid !== null) {
-        if (!this.has_image) {
-          return;
-        }
-        let [ratio, imgrc] = this.calc_image_rect();
-
-        let boxid = this.active_boxid;
-        let box = this.get_box(boxid);
-
-        switch (event.key) {
-          case "ArrowUp":
-            if (box.top > 0) {
-              box.top -= 1;
-              box.bottom -= 1;
-            }
-            break;
-          case "ArrowDown":
-            if (this.active_image_height > box.bottom) {
-              box.top += 1;
-              box.bottom += 1;
-            }
-            break;
-          case "ArrowLeft":
-            if (box.left > 0) {
-              box.left -= 1;
-              box.right -= 1;
-            }
-            break;
-          case "ArrowRight":
-            if (box.right < this.active_image_width) {
-              box.left += 1;
-              box.right += 1;
-            }
-            break;
-          default:
+      if (event.target.nodeName === "BODY") {
+        if (this.has_image && this.active_boxid !== null) {
+          if (!this.has_image) {
             return;
+          }
+
+          if((event.key === "ArrowUp") || (event.key === "ArrowDown") || (event.key === "ArrowLeft") || (event.key === "ArrowRight")){
+            let [ratio, imgrc] = this.calc_image_rect();
+
+            let boxid = this.active_boxid;
+            let box = this.get_box(boxid);
+
+            switch (event.key) {
+              case "ArrowUp":
+                if (box.top > 0) {
+                  box.top -= 1;
+                  box.bottom -= 1;
+                }
+                break;
+              case "ArrowDown":
+                if (this.active_image_height > box.bottom) {
+                  box.top += 1;
+                  box.bottom += 1;
+                }
+                break;
+              case "ArrowLeft":
+                if (box.left > 0) {
+                  box.left -= 1;
+                  box.right -= 1;
+                }
+                break;
+              case "ArrowRight":
+                if (box.right < this.active_image_width) {
+                  box.left += 1;
+                  box.right += 1;
+                }
+                break;
+              default:
+                return;
+            }
+            this.$store.commit("set_tagbox", {
+              boxid: boxid,
+              box: box
+            });
+
+          }else{
+            for (let label of this.labels) {
+              if (label.shortcut === event.key) {
+                this.$store.commit("set_activebox_label", label);
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+              }
+            }
+          }
+
         }
-        this.$store.commit("set_tagbox", {
-          boxid: boxid,
-          box: box
-        });
       }
     },
     size_style: function(rc) {
@@ -460,6 +470,7 @@ export default {
       } else {
         this.status = resize;
       }
+      // TODO
       this.set_active_boxid({ boxid: parseInt(boxid) });
       const box = this.get_box(this.active_boxid);
       this.org_boxrc = this.box_to_client(box);
@@ -700,7 +711,7 @@ export default {
     line-height:5px;
     margin-top: 0;
     margin-bottom: 0;
-    
+
     &-push{
       background-color: #0a7bb1;
     }
