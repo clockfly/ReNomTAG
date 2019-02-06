@@ -46,22 +46,21 @@
                       @click="set_review_result({result:'ng'})">
                   NG
                 </p>
-                <p v-else :src="NG_BUTTON"
-                      class="img-btn-disabled float-right ng-button">
+                <p v-else class="img-btn-disabled float-right ng-button">
                   NG
                 </p>
-                <p v-if="can_be_saved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
+                <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
                       class="img-btn float-right ok-button"
                       :class="{review_checked: this.active_image_review_result === 'ok'}"
                       @click="set_review_result({result:'ok'})">
                   OK
                 </p>
-                <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
+                <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
                       class="img-btn float-right ok-button ok-button-push"
                       @click="set_review_result({result:'ok'})">
                   OK
                 </p>
-                <p v-else :src="OK_BUTTON" class="img-btn-disabled float-right ok-button">
+                <p v-else class="img-btn-disabled float-right ok-button">
                   OK
                 </p>
               </div>
@@ -693,16 +692,23 @@ export default {
     background: #fff;
     border-color: #000;
   }
-  p.ok-button {
+  .ok-button {
     margin-right: 7px;
+    &:hover,
+    &-push {
+      background: #ff4949!important
+    }
   }
-  p.ng-button {
+  .ng-button {
     margin-left: 7px;
     margin-right: 0px;
+    &:hover,&-push {
+      background: #000!important
+    }
   }
-  p.ng-button,p.ok-button{
+  .ng-button,.ok-button{
     cursor: pointer;
-    background-color: #999;
+    background: #999;
     padding:10px;
     color: #fff;
     width: 48px;
@@ -711,21 +717,18 @@ export default {
     line-height:5px;
     margin-top: 0;
     margin-bottom: 0;
-
-    &-push{
-      background-color: #0a7bb1;
-    }
   }
 
-  img.img-btn {
+  .img-btn {
     height: 23px;
     cursor: pointer;
   }
-  img.img-btn-disabled {
+  .img-btn-disabled {
     height: 23px;
 
     &:hover {
       cursor: not-allowed;
+      background: #999!important;
     }
   }
 
