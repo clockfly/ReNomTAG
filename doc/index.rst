@@ -7,4 +7,5 @@ ReNomTAG v1.0
 
    rsts/introduction
    rsts/how_to_use
+   rsts/change_log
 

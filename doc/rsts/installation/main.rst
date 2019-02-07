@@ -7,28 +7,15 @@ Requirements
 
 **Python modules**
 
-- argh==0.26.2
-- attrs==17.4.0
-- beautifulsoup4==4.6.0
+- b2==0.6
 - bottle==0.12.13
-- bs4==0.0.1
-- glob2==0.6
-- lxml==4.2.0
-- more-itertools==4.1.0
-- pathtools==0.1.2
-- Pillow==5.0.0
-- pluggy==0.6.0
-- py==1.5.3
-- pytest==3.5.0
-- PyYAML==3.12
-- six==1.11.0
-- waitress==1.1.0
-- watchdog==0.8.3
-- WebOb==1.7.4
-- WebTest==2.0.29
 - xmltodict==0.11.0
+- setuptools==39.2.0
+- Pillow==5.4.1
+- beautifulsoup4==4.7.1
 
-**For build web app**
+
+**For building the web app**
 
 - Node.js >= 10.6.0
 
@@ -36,11 +23,11 @@ Requirements
 Install by pip
 --------------
 
-- Linux(Ubuntu) OS: You can install ReNomTAG by pip command.
+- Linux(Ubuntu) OS: You can install ReNomTAG via the pip command.
 
 .. code-block:: shell
 
-    pip install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-VERSION-cp35-cp35m-linux_x86_64.whl
+    pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.0.2-py3-none-any.whl
 
 
 Install from source

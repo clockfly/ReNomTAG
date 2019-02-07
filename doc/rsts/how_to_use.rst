@@ -7,28 +7,28 @@ Before starting
 Directory structure
 ~~~~~~~~~~~~~~~~~~~
 
-Before starting ReNomTAG, let me introduce the
+Before starting ReNomTAG, we will introduce the
 directory structure.
 
-If you run ReNomTAG in the ``working_directory``, image datasets need to be
-aligned as following directory structure.
+Assuming that you run ReNomTAG in ``working_directory``, image datasets need to be
+aligned according to the following directory structure.
 
-Do not change the directory name of ``public``, ``dataset`` and ``label``.
+Do not change the directory name of ``public``, ``dataset`` or ``label``.
 
-The role of each directory are below.
+The role of each directory is described below.
 
 - public
-    This is the root directory of datasets. The directory name ``public`` must not be changed.
+    This is the root directory for datasets. The directory name ``public`` must not be changed.
 
 - user1, user2...
-    These directories contain image data and created label data for each user.
+    These directories contain image data and user-created label data for each user.
     These directories' names can be changed.
 
 - dataset
     This directory contains image data for tagging.
 
 - label
-    Created label data will be put into this directory.
+    User-created label data will be automatically saved into this directory.
 
 .. code-block:: shell
 
@@ -36,13 +36,13 @@ The role of each directory are below.
         │  
         └── public # This name must be `public`.
             │  
-            ├── user1 # Dataset for user1. You can put any name for this directory.
-            │   ├── dataset # Directory in which image data put. This name must be `dataset`.
+            ├── user1 # Dataset for user1. You can use any name for this directory.
+            │   ├── dataset # Directory in which image data is placed. This name must be `dataset`.
             │   │   ├── image1.jpg
             │   │   ├── image2.jpg
             │   │   ├── ...
             │   │   └── imageN.jpg
-            │   └── label # Directory to which tag data will output. This name must be `label`.
+            │   └── label # Directory to which tag data will be output. This name must be `label`.
             │       ├── image1.xml
             │       ├── image2.xml
             │       ├── ...
@@ -60,15 +60,15 @@ The role of each directory are below.
                     ├── image_car1.xml
                     └── image_car2.xml
 
-Put Image data
+Provide image data
 ~~~~~~~~~~~~~~~
-Please put image data to ``dataset`` directory.
+Please place the image data into the ``dataset`` directory.
 
-In addition, please note that ReNomTAG is able to load files named with halfwidth-alphanumeric
+In addition, please note that ReNomTAG is only able to load file names with halfwidth-alphanumeric
 
-(0-9, a-z, A-Z) and under-bar (_). Filenames which is used, for example, hyphen (-), asterisk(*), etc
+(0-9, a-z, A-Z) and under-bar (_) characters. Filenames with, for example, hyphen (-), asterisk(*), etc
 
-cannot be loaded. For file extension, you are allowed to use ".jpeg", ".jpg", ".png", and ".bmp".
+cannot be loaded. For file extensions, you are allowed to use ".jpeg", ".jpg", ".png", and ".bmp".
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -81,61 +81,61 @@ For running ReNomTAG, please use following command in your ``working directory``
 
     renom_tag
 
-This command has following options.
+This command has the following options.
 
 .. code-block:: shell
 
     # Run with port 8081
     renom_tag --port 8081
 
-And put the following URL to your web browser.
+Then type the following URL into your web browser.
 
 .. image:: /_static/image/how_to_use02.png
 
-Then the ``public`` directory will be loaded and following screen.
+The ``public`` directory will be loaded and following screen will be displayed.
 
 .. image:: /_static/image/how_to_use01.png
 
 
-Put tags to images
+Add tags to images
 -------------------
 
-Put a tag(Bounding Box)
+Create tags (bounding boxes)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-You can put a tag(Bounding box) by dragging.
+You can create a tag (bounding box) by dragging the cursor inside the image.
 
 .. image:: /_static/image/how_to_use08.png
 
 .. note::
 
-    For saving the tag(a pair of bounding boxes and tag name), ``class tag name`` are required.
+    For saving the tag (a pair of bounding boxes and tag name), a ``class tag name`` is required.
 
 
-Save the tag
+Save tags
 ~~~~~~~~~~~~~~~~~~~~~
 
-For saving the tag, please push the ``save`` button.
-Or the ``Space`` key acts as a shortcut of save.
+To save the tag, please click the ``save`` button.
+The ``Space`` key also acts as a shortcut for saving.
 
 
-Set a shortcut key to class tag
+Set shortcut keys for class tags
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can set a shortcut key to the class tag name.
+You can set a shortcut key for each class tag name.
 
 
 
-Show filtered images
+Filter images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can filter the images to be shown.
 
-- **All** : All of images.
-- **Need Review** : Images that are marked neither OK nor NG.
-- **No Tags** : Images that has no tags.
-- **OK** : Images that are marked as ``OK`` by admin user.
-- **NG** : Images that are marked as ``NG`` by admin user.
+- **All** : Show all images.
+- **Need Review** : Show images marked neither OK nor NG.
+- **No Tags** : Show images with no tags.
+- **OK** : Show images marked as ``OK`` by admin user.
+- **NG** : Show images marked as ``NG`` by admin user.
 
 .. image:: /_static/image/how_to_use07.png
 
@@ -146,20 +146,20 @@ You can filter the images to be shown.
 Admin mode
 -----------
 
-Admin mode has following functions.
+Admin mode has the following functions.
 
 - Create new class tags.
-- Mark the tagged image ``OK`` or ``NG``.
-- Put comments to the tagged image.
+- Mark tagged images as ``OK`` or ``NG``.
+- Add comments to tagged images.
 
 Enter admin mode
 ~~~~~~~~~~~~~~~~~
 
-To enter the admin mode, please put ``admin`` to the URL like this.
+To enter admin mode, please add ``admin`` to the URL as shown below.
 
 .. image:: /_static/image/how_to_use03.png
 
-Then you will see the title has changed to ``Admin``.
+The title of the page should change to ``Admin``.
 
 .. image:: /_static/image/how_to_use04.png
 
@@ -167,53 +167,53 @@ Then you will see the title has changed to ``Admin``.
 Add new class tag
 ~~~~~~~~~~~~~~~~~
 
-When you are in the admin mode, you can add new class tag.
-To do this, input new class tag name to the following form.
+If you are in admin mode, you can add new class tags.
+To do this, type the new class tag name into the form shown below.
 
-And push the ``Add New Tag`` button.
+Next, click the ``Add New Tag`` button.
 
 You can also add a shortcut key. The shortcut key can be changed
-if you are in the normal mode.
+in either admin or normal mode.
 
 .. image:: /_static/image/how_to_use05.png
 
-Put a mark to the image
+Apply marks to images
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Admin mode also provides marking function.
+Admin mode also provides a marking function.
 You can mark tagged images as ``OK`` or ``NG``.
 
-For doing this, please push the following OK, NG button.
+To apply a mark, please click the OK or NG button.
 
 .. image:: /_static/image/how_to_use06.png
 
-And then pushing the ``save`` button, the mark will be saved.
+After clicking the ``save`` button, the mark will be saved.
 
 
-Put a comment to the image
+Add comments to images
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also put a comment to the image.
-The user in normal mode can see the comment but they can't change this.
+You can also add comments to images.
+Users in normal mode can view comments but they cannot edit or add them.
 
 
-Back to normal mode
+Return to normal mode
 ~~~~~~~~~~~~~~~~~~~
 
-To go back to normal mode, please remove ``admin`` from the URL.
+To return to normal mode, please remove ``admin`` from the URL.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use ReNomTAG with multiple user
+Use ReNomTAG with multiple users
 -------------------------------
 
-You can add user directory under the public folder and
-you can choose the directory you work on.
+You can add multiple user directories under the public folder and
+then choose which directory you would like to work on.
 
 .. image:: /_static/image/how_to_use09.png
 
-Above image represents following directory structure.
-There are 4 user directories(Alice, Bob, user and user2).
+The image above represents the following directory structure.
+There are 4 user directories (Alice, Bob, user1 and user2).
 
 .. code-block:: shell
 
@@ -259,9 +259,9 @@ There are 4 user directories(Alice, Bob, user and user2).
                     ├── image_bird1.xml
                     └── image_bird2.xml
 
-You can work on the any user directory.
-Each data of directory will not be shared.
+You can access and work in any user directory.
+The data in each directory is not shared with other directories.
 
 .. note::
-    The user separated directories are recognised by ReNomTAG if
-    they contains ``dataset`` and ``label`` directories.
+    The user-separated directories are recognised by ReNomTAG if
+    they contain the ``dataset`` and ``label`` sub-directories.

@@ -50,7 +50,6 @@ def ensure_folder(folder):
 
 
 def filter_datafilenames(dir, ext):
-
     # joining public/user/dataset/
     dir = os.path.join(DIR_ROOT, os.path.normpath(dir))
 
@@ -83,20 +82,75 @@ def filter_datafilenames(dir, ext):
 
     return names, undef_names
 
+# extract not-load files from def_files
+def filter_duplicate_filenames(filename_list, exts):
+# 1. Extract duplicate names
+    filenames_no_ext = []
+    for name in filename_list:
+        only_name = os.path.splitext(name)[0]
+        filenames_no_ext.append(only_name)
+
+    duplication_list = []
+    for name in filenames_no_ext:
+        if filenames_no_ext.count(name) >= 2:
+            duplication_list.append(name)
+    duplication_set = list(set(duplication_list))
+
+# 2. Allocate same_name_files "load" or "not_load"
+    not_load_files = []
+    for i in range(len(duplication_set)):
+        # 1) Get files which have same name from duplication_set
+        same_name_files = []
+        for j in range(len(filename_list)):
+            filename = os.path.splitext(str(filename_list[j]))[0]
+            compare = str(duplication_set[i])
+            if compare == filename:
+                same_name_files.append(filename_list[j])
+
+        # 2) Choose file which would be loaded
+        load_this = ''
+        for l in same_name_files:
+            if exts[0] in l:
+                load_this = l
+                break
+            elif exts[1] in l:
+                load_this = l
+                break
+            elif exts[2] in l:
+                load_this = l
+                break
+            elif exts[3] in l:
+                load_this = l
+                break
+
+        # 3) Choose file which would "not" be loaded
+        for l in same_name_files:
+            if not load_this == l:
+                not_load_files.append(l)
+
+    # 4) Take the difference between "not_load_files" and the original filename_list
+    load_files = list(set(filename_list) - set(not_load_files))
+    load_files = sorted(load_files)
+    not_load_files = sorted(not_load_files)
+
+    return load_files, not_load_files
 
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png", "bmp"]
-    ret_names = []
-    ret_undef_names = []
+    ret_def_files = []
+    ret_undef_files = []
 
     # joining user/dataset/
     dir = os.path.join(folder, IMG_DIR)
     for e in exts:
-        names, undef_names = filter_datafilenames(dir, e)
-        ret_names.extend(names)
-        ret_undef_names.extend(undef_names)
-    return ret_names, ret_undef_names
+        def_files, undef_files = filter_datafilenames(dir, e)
+        ret_def_files.extend(def_files)
+        ret_undef_files.extend(undef_files)
+
+    ret_load_files, ret_not_load_files = filter_duplicate_filenames(ret_def_files, exts)
+
+    return ret_load_files, ret_not_load_files, ret_undef_files
 
 
 def get_xml_files(folder):
@@ -107,19 +161,6 @@ def get_xml_files(folder):
 
 def _get_file_name(path):
     return os.path.splitext(os.path.split(path)[1])[0]
-
-def _get_file_name_for_xml(path):
-    ext_list = ["jpg", "jpeg", "png", "bmp"]
-    filename_tup = os.path.splitext(os.path.split(path)[1])
-    ext = filename_tup[1][1:]
-    add_to_filename = ""
-
-    for e in ext_list:
-        if e == ext:
-            add_to_filename = "_" + ext
-            break
-    xml_filename = filename_tup[0] + add_to_filename
-    return xml_filename
 
 
 
@@ -246,7 +287,7 @@ def get_folderpath(folder):
 
 
 def get_boxes(folder, img_filename):
-    filename = _get_file_name_for_xml(img_filename) + '.xml'
+    filename = _get_file_name(img_filename) + '.xml'
     xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
     xmlfilename = check_path(xmlfolder, filename)
 
@@ -335,7 +376,7 @@ def get_filename_list():
     #import pdb;pdb.set_trace()
     folder = request.json['folder']
     folder = strip_foldername(folder)
-    img_paths, undef_img_path = get_img_files(folder)
+    img_paths, dup_img_path, undef_img_path = get_img_files(folder)
 
     ret = {}
     for img in img_paths:
@@ -346,6 +387,7 @@ def get_filename_list():
     body = json.dumps({
         "filename_list": ret,
         "undef_filename_list": undef_img_path,
+        "dup_filename_list": dup_img_path,
     })
     ret = set_json_body(body)
     return ret
@@ -369,7 +411,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['filename'] = file_name
 
     folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
-    save_xml_file_name = check_path(folderpath, _get_file_name_for_xml(file_name)) + '.xml'
+    save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
 
     # convert dict to xml
     xml_data = json2xml(label_dict)
@@ -391,7 +433,7 @@ def save_xml_from_label_dict():
 
 @app.route("/api/delete_xml",method=["POST"])
 def delete_xml():
-    filename = _get_file_name_for_xml(request.json['target_filename'])
+    filename = _get_file_name(request.json['target_filename'])
     filename = filename + ".xml"
     folder = request.json['folder']
 
@@ -402,11 +444,11 @@ def delete_xml():
     if os.path.exists(delete_xml_file_name):
         os.remove(delete_xml_file_name)
         result = 1
-        message = "deleting boxes sucessed!"
+        message = "Box deletion successful!"
         print('%s is deleted!' % (delete_xml_file_name))
     else:
         result = 0
-        message = "deleting boxes faital!"
+        message = "Box deletion failed!"
         print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
         print('it was not deleted. Please check if the xml-file exists!')
 

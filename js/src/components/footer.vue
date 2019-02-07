@@ -22,7 +22,7 @@
   <div class="col-md-12 copyright clear-padding">
     <div class="col-md-12 align-middle clear-padding">
       <div class="copyright-text">
-        <small>&copy; 2018 GRID INC. ALL rights reserved.</small>
+        <small>&copy; 2019 GRID INC. ALL rights reserved.</small>
       </div>
     </div>
   </div>
@@ -33,7 +33,7 @@
 export default {
   data() {
     return {
-      version: "ver.1.0.1",
+      version: "ver.1.0.2",
       url: require("../assets/renomlogo.png")
     };
   }

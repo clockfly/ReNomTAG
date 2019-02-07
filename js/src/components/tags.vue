@@ -16,20 +16,15 @@
           @keyup='setShortcutKey'
           placeholder="key...">
     </div>
-      <img
-        v-if="is_valid_label"
+    <div class="add-new-label-btn-wrapper">
+      <button
         @click.prevent.stop="addNewLabel"
         class="add-new-label-btn"
         :disabled="!is_valid_label"
-        :src="add_new_tag_button"
       >
-      <img
-        v-else
-        @click.prevent.stop="addnewlabel"
-        class="add-new-label-btn"
-        :disabled="!is_valid_label"
-        :src="add_new_tag_button_disabled"
-      >
+      Add New Tag
+      </button>
+    </div>
   </form>
   <div class="title" :class="{ 'top' : !this.is_admin}">
       <div class="title-text">
@@ -443,20 +438,36 @@ export default {
       border-radius: 0;
     }
   }
-
+  .add-new-label-btn-wrapper {
+    display: inline-flex;
+    width: 100%;
+    align-items: middle;
+    flex-direction: row;
+  }
   .add-new-label-btn {
+    color:#fff;
     margin: 10px 0 0 0;
     cursor: pointer;
+    background-color: $panel-bg-color-hover;
+    // background-color: #989898;
+    width: 100%;
+    padding:10px;
+    vertical-align: middle;
+    text-align: center;
+    &:before{
+      display: inline-block;
+      content: '＋';
+      font-size: 1.2rem;
+      line-height:0;
+      vertical-align: middle;
+    }
     &:focus {
       outline: none;
     }
-    &:hover {
-      background-color: $panel-bg-color-hover;
+    &:disabled {
+      background-color: $disabled-color;
+      cursor: default
     }
-  }
-
-  .add-new-label-btn:disabled {
-    background-color: $disabled-color;
   }
 
   #tag-tree {

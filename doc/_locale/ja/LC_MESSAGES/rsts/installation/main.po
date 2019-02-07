@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReNomTAG \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-18 15:59+0900\n"
+"POT-Creation-Date: 2019-02-01 09:17+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,106 +25,108 @@ msgstr "インストール方法"
 msgid "Requirements"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:8
+#: ../../rsts/installation/main.rst:8
 msgid "**Python modules**"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:10
-msgid "argh==0.26.2"
+#: ../../rsts/installation/main.rst:10
+msgid "b2==0.6"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:11
-msgid "attrs==17.4.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:12
-msgid "beautifulsoup4==4.6.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:13
+#: ../../rsts/installation/main.rst:11
 msgid "bottle==0.12.13"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:14
-msgid "bs4==0.0.1"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:15
-msgid "glob2==0.6"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:16
-msgid "lxml==4.2.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:17
-msgid "more-itertools==4.1.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:18
-msgid "pathtools==0.1.2"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:19
-msgid "Pillow==5.0.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:20
-msgid "pluggy==0.6.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:21
-msgid "py==1.5.3"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:22
-msgid "pytest==3.5.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:23
-msgid "PyYAML==3.12"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:24
-msgid "six==1.11.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:25
-msgid "waitress==1.1.0"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:26
-msgid "watchdog==0.8.3"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:27
-msgid "WebOb==1.7.4"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:28
-msgid "WebTest==2.0.29"
-msgstr ""
-
-#: ../../rsts/installation/installation.rst:29
+#: ../../rsts/installation/main.rst:12
 msgid "xmltodict==0.11.0"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:31
-msgid "**For build web app**"
+#: ../../rsts/installation/main.rst:13
+msgid "setuptools==39.2.0"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:33
+#: ../../rsts/installation/main.rst:14
+msgid "Pillow==5.4.1"
+msgstr ""
+
+#: ../../rsts/installation/main.rst:15
+msgid "beautifulsoup4==4.7.1"
+msgstr ""
+
+#: ../../rsts/installation/main.rst:18
+msgid "**For building the web app**"
+msgstr ""
+
+#: ../../rsts/installation/main.rst:20
 msgid "Node.js >= 10.6.0"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:37
+#: ../../rsts/installation/main.rst:24
 msgid "Install by pip"
 msgstr ""
 
-#: ../../rsts/installation/installation.rst:39
-msgid "Linux(Ubuntu) OS: You can install ReNomTAG by pip command."
+#: ../../rsts/installation/main.rst:26
+msgid "Linux(Ubuntu) OS: You can install ReNomTAG via the pip command."
 msgstr "Linux(Ubuntu) OS: 以下のpipコマンドでインストールすることが可能です."
 
-#: ../../rsts/installation/installation.rst:47
+#: ../../rsts/installation/main.rst:34
 msgid "Install from source"
 msgstr "ソースからインストールする場合"
+
+#~ msgid "argh==0.26.2"
+#~ msgstr ""
+
+#~ msgid "attrs==17.4.0"
+#~ msgstr ""
+
+#~ msgid "beautifulsoup4==4.6.0"
+#~ msgstr ""
+
+#~ msgid "bs4==0.0.1"
+#~ msgstr ""
+
+#~ msgid "glob2==0.6"
+#~ msgstr ""
+
+#~ msgid "lxml==4.2.0"
+#~ msgstr ""
+
+#~ msgid "more-itertools==4.1.0"
+#~ msgstr ""
+
+#~ msgid "pathtools==0.1.2"
+#~ msgstr ""
+
+#~ msgid "Pillow==5.0.0"
+#~ msgstr ""
+
+#~ msgid "pluggy==0.6.0"
+#~ msgstr ""
+
+#~ msgid "py==1.5.3"
+#~ msgstr ""
+
+#~ msgid "pytest==3.5.0"
+#~ msgstr ""
+
+#~ msgid "PyYAML==3.12"
+#~ msgstr ""
+
+#~ msgid "six==1.11.0"
+#~ msgstr ""
+
+#~ msgid "waitress==1.1.0"
+#~ msgstr ""
+
+#~ msgid "watchdog==0.8.3"
+#~ msgstr ""
+
+#~ msgid "WebOb==1.7.4"
+#~ msgstr ""
+
+#~ msgid "WebTest==2.0.29"
+#~ msgstr ""
+
+#~ msgid "**For build web app**"
+#~ msgstr ""
+

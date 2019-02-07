@@ -32,11 +32,20 @@ async function load_imagefile_list(context) {
   });
 
   if (response.data.undef_filename_list.length > 0) {
-    let undef_message = utils.message_load_imagefile_list(
+    let undef_message = utils.message_load_undeffile_list(
       response.data.undef_filename_list
     );
-    context.commit("set_error_status", {
-      error_status: undef_message
+    context.commit("set_undef_file_message", {
+      undef_file_message: undef_message
+    });
+  }
+
+  if (response.data.dup_filename_list.length > 0){
+    let dup_message = utils.message_load_dupfile_list(
+      response.data.dup_filename_list
+    );
+    context.commit("set_dup_file_message", {
+      dup_file_message: dup_message
     });
   }
 
@@ -467,7 +476,7 @@ export default {
       delete labels[payload[i]];
     }
     filtered_labels = labels.filter(function(x){
-      return !( x === ""); 
+      return !( x === "");
     });
 
     context.commit("set_labels", filtered_labels);

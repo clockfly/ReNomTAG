@@ -9,6 +9,8 @@ let state = {
   make_dir_message: "",
   make_dir_message_counter: 0,
   username: "user",
+  undef_file_message:"",
+  dup_file_message: "",
 
   working_dir: "",
   folder: "",
