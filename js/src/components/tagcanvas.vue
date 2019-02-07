@@ -10,6 +10,7 @@
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
+<!-- TODO -->
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
@@ -22,6 +23,7 @@
 
       <navarrow class="arrow" dir="forward"/>
     </div>
+    <p id="demo"></p>
 
     <div>
       <div id='imageinfo' class="row">
@@ -45,23 +47,22 @@
                       class="img-btn float-right ng-button ng-button-push"
                       @click="set_review_result({result:'ng'})">
                   NG
-                </p>      
-                <p v-else :src="NG_BUTTON"
-                      class="img-btn-disabled float-right ng-button">
+                </p>
+                <p v-else class="img-btn-disabled float-right ng-button">
                   NG
-                </p>      
-                <p v-if="can_be_saved && this.active_image_review_result !== 'ok'" :src="OK_BUTTON"
+                </p>
+                <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
                       class="img-btn float-right ok-button"
                       :class="{review_checked: this.active_image_review_result === 'ok'}"
                       @click="set_review_result({result:'ok'})">
                   OK
-                </p>      
-                <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'" :src="OK_BUTTON_PUSH"
+                </p>
+                <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
                       class="img-btn float-right ok-button ok-button-push"
                       @click="set_review_result({result:'ok'})">
                   OK
                 </p>
-                <p v-else :src="OK_BUTTON" class="img-btn-disabled float-right ok-button">
+                <p v-else class="img-btn-disabled float-right ok-button">
                   OK
                 </p>
               </div>
@@ -253,59 +254,68 @@ export default {
             event.stopPropagation();
             return false;
           }
-          for (let label of this.labels) {
-            if (label.shortcut === event.key) {
-              this.$store.commit("set_activebox_label", label);
-              event.preventDefault();
-              event.stopPropagation();
-              return false;
-            }
-          }
         }
       }
     },
+
     on_keydown: function(event) {
-      if (this.has_image && this.active_boxid !== null) {
-        if (!this.has_image) {
-          return;
-        }
-        let [ratio, imgrc] = this.calc_image_rect();
-
-        let boxid = this.active_boxid;
-        let box = this.get_box(boxid);
-
-        switch (event.key) {
-          case "ArrowUp":
-            if (box.top > 0) {
-              box.top -= 1;
-              box.bottom -= 1;
-            }
-            break;
-          case "ArrowDown":
-            if (this.active_image_height > box.bottom) {
-              box.top += 1;
-              box.bottom += 1;
-            }
-            break;
-          case "ArrowLeft":
-            if (box.left > 0) {
-              box.left -= 1;
-              box.right -= 1;
-            }
-            break;
-          case "ArrowRight":
-            if (box.right < this.active_image_width) {
-              box.left += 1;
-              box.right += 1;
-            }
-            break;
-          default:
+      if (event.target.nodeName === "BODY") {
+        if (this.has_image && this.active_boxid !== null) {
+          if (!this.has_image) {
             return;
+          }
+
+          if((event.key === "ArrowUp") || (event.key === "ArrowDown") || (event.key === "ArrowLeft") || (event.key === "ArrowRight")){
+            let [ratio, imgrc] = this.calc_image_rect();
+
+            let boxid = this.active_boxid;
+            let box = this.get_box(boxid);
+
+            switch (event.key) {
+              case "ArrowUp":
+                if (box.top > 0) {
+                  box.top -= 1;
+                  box.bottom -= 1;
+                }
+                break;
+              case "ArrowDown":
+                if (this.active_image_height > box.bottom) {
+                  box.top += 1;
+                  box.bottom += 1;
+                }
+                break;
+              case "ArrowLeft":
+                if (box.left > 0) {
+                  box.left -= 1;
+                  box.right -= 1;
+                }
+                break;
+              case "ArrowRight":
+                if (box.right < this.active_image_width) {
+                  box.left += 1;
+                  box.right += 1;
+                }
+                break;
+              default:
+                return;
+            }
+            this.$store.commit("set_tagbox", {
+              boxid: boxid,
+              box: box
+            });
+
+          }else{
+            for (let label of this.labels) {
+              if (label.shortcut === event.key) {
+                this.$store.commit("set_activebox_label", label);
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+              }
+            }
+          }
+
         }
-        this.$store.commit("set_tagbox", {
-          boxid: boxid,
-          box: box
-        });
       }
     },
     size_style: function(rc) {
@@ -462,6 +472,7 @@ export default {
       } else {
         this.status = resize;
       }
+      // TODO
       this.set_active_boxid({ boxid: parseInt(boxid) });
       const box = this.get_box(this.active_boxid);
       this.org_boxrc = this.box_to_client(box);
@@ -586,22 +597,6 @@ export default {
       }
       return "notreviewed";
     },
-    // copy_beforearea: function(event) {
-    //   let tagged_images = this.$store.state.tagged_images;
-    //   let has_tag = false;
-    //   //もともとタグがあるかどうかの判定
-    //   for(var property1 in tagged_images){
-    //     console.log(tagged_images[property1].filename);
-    //     if(tagged_images[property1].filename == this.$store.state.active_image_filename){
-    //       console.log("今アクティブなのは" + tagged_images[property1].filename);
-    //       console.log("ほしいのは" + tagged_images[property1-1].filename);
-    //       has_tag = true;
-    //     }
-    //   }
-    //   // ファイルコピー時もしもproperty1-1が0より小さいなら頭に戻る必要がある
-    //   console.log(this.$store.state.files),
-    //   console.log(this.$store.state.active_image_filename)
-    // },
   }
 };
 </script>
@@ -701,16 +696,23 @@ export default {
     background: #fff;
     border-color: #000;
   }
-  p.ok-button {
+  .ok-button {
     margin-right: 7px;
+    &:hover,
+    &-push {
+      background: #ff4949!important
+    }
   }
-  p.ng-button {
+  .ng-button {
     margin-left: 7px;
     margin-right: 0px;
+    &:hover,&-push {
+      background: #000!important
+    }
   }
-  p.ng-button,p.ok-button{
+  .ng-button,.ok-button{
     cursor: pointer;
-    background-color: #999;
+    background: #999;
     padding:10px;
     color: #fff;
     width: 48px;
@@ -719,21 +721,18 @@ export default {
     line-height:5px;
     margin-top: 0;
     margin-bottom: 0;
-    
-    &-push{
-      background-color: #0a7bb1;
-    }
   }
 
-  img.img-btn {
+  .img-btn {
     height: 23px;
     cursor: pointer;
   }
-  img.img-btn-disabled {
+  .img-btn-disabled {
     height: 23px;
 
     &:hover {
       cursor: not-allowed;
+      background: #999!important;
     }
   }
 
