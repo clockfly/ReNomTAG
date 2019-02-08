@@ -1,7 +1,16 @@
 <template>
   <div id="imagelistblock">
-    <div v-if='(this.folder.length != 0) && (file_list.length === 0)' id=msg_no_image>
+    <div v-if='(this.folder.length != 0) && (file_list.length === 0) && (this.loading_message!= "Loading images...")' id="msg_no_image">
       {{loading_message}}
+    </div>
+    <div v-else-if='(this.folder.length != 0) && (file_list.length === 0) &&(this.loading_message==="Loading images...")' id="msg_no_image">
+      <div class="sk-wave">
+        <div class="sk-rect sk-rect1"></div>
+        <div class="sk-rect sk-rect2"></div>
+        <div class="sk-rect sk-rect3"></div>
+        <div class="sk-rect sk-rect4"></div>
+        <div class="sk-rect sk-rect5"></div>
+      </div>
     </div>
     <div class="title">
       <div class="title-text row">
@@ -229,7 +238,6 @@ export default {
   font-family: $content-top-header-font-family;
   margin-top: $component-margin-top;
 }
-
 #msg_no_image {
   position: absolute;
   top: 0;
@@ -238,7 +246,7 @@ export default {
   right: 0;
   width: 200px;
   height: 100px;
-  margin: auto;
+  margin: 15% auto 85%;
 }
 
 .title {
