@@ -17,9 +17,9 @@ let state = {
   folder_list: [],
   // image files
   folder_files: {},
-  tag_filter: ["hastags", "notags"],
-  review_filter: ["ok", "ng", "notreviewed"],
-  filter_method: "All",
+  tag_filter: ["notags"],
+  review_filter: ["notreviewed"],
+  filter_method: "NoTags",
   files: [],
   filename_max_display: 0,
 
