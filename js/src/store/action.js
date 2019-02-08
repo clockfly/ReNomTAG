@@ -391,7 +391,7 @@ export default {
 
     //value関係の値をとりあえずセット
     let value = context.state.folder_files[copy_target];
-    
+
     // 初期化
     value = {
       annotation: {

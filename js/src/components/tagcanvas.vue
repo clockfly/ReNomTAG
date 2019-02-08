@@ -3,9 +3,7 @@
   
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'
-        @keyup.ctrl.66='copy_annotation'
-        tabindex="1">
+        @mousemove.stop.prevent='on_mousemove'>
       <navarrow class="arrow" dir="back"/>
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
@@ -189,7 +187,6 @@ export default {
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
     ...mapActions(["save_annotation","delete_xml","copy_annotation"]),
-
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
       return this.size_style(ret);
@@ -253,6 +250,15 @@ export default {
             event.preventDefault();
             event.stopPropagation();
             return false;
+          }
+        }
+        // ショートカット系のイベントの記載
+        if (event.ctrlKey) {
+          switch(event.key){
+            case "b":
+              this.copy_annotation()
+              break;
+
           }
         }
       }
