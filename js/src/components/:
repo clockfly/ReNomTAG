@@ -19,8 +19,6 @@
               <div class='taglabel'>{{get_box_label(idx)}}</div>
             </div>
           </div>
-          <div id="zoom-button">
-          </div>
         </div>
       <navarrow class="arrow" dir="forward"/>
     </div>
@@ -115,9 +113,9 @@ export default {
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
       NG_BUTTON_PUSH: require("../assets/images/NG_push.png"),
 
-      zoom_x: 0, // The coordinate x the image
+      zoom_x: 0, // The coordinate x the image 
       zoom_y: 0,
-      zoom_scale: 1.0
+      zoom_scale: 1.0,
     };
   },
   created: function() {
@@ -160,12 +158,12 @@ export default {
     },
     can_be_saved: function() {
       let has_tag = false;
-      for (let tag of this.tagged_images) {
-        if (tag.filename == this.active_image_filename) {
+      for(let tag of this.tagged_images){
+        if(tag.filename == this.active_image_filename){
           has_tag = true;
         }
       }
-      // tagをもともと持っていた場合はboxesが0でもsaveの対象とする
+      //tagをもともと持っていた場合はboxesが0でもsaveの対象とする
       if (this.active_image_tag_boxes.length === 0 && !has_tag) {
         return false;
       }
@@ -185,34 +183,34 @@ export default {
       }
     },
     canvas_style: function() {
-      const imgrc = this.$refs.wrapper;
-      let parent_top = 0;
-      let parent_left = 0;
+      const imgrc = this.$refs.wrapper
+      let parent_top = 0
+      let parent_left = 0
       if (imgrc) {
         const rect = imgrc.getBoundingClientRect();
-        parent_top = rect.top;
-        parent_left = rect.left;
+        parent_top = rect.top
+        parent_left = rect.left
       }
-      const z = this.zoom_scale;
+      const z = this.zoom_scale
       return {
-        width: 100.0 * z + "%",
-        height: 100.0 * z + "%",
-        top: this.zoom_y + "px",
-        left: this.zoom_x + "px"
-      };
+        width: 100.0 * z + '%',
+        height: 100.0 * z + '%',
+        top: this.zoom_y - parent_top + 'px',
+        left: this.zoom_x - parent_left + 'px',
+      }
     }
   },
   watch: {
     active_image_tag_boxes: function() {
       this.arrange_boxes();
     },
-    zoom_scale: function() {
+    zoom_scale: function () {
       this.arrange_boxes();
     }
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation", "delete_xml"]),
+    ...mapActions(["save_annotation","delete_xml"]),
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
@@ -249,10 +247,10 @@ export default {
       ]);
       return [l, t, r, b];
     },
-    apply_annotation: function() {
-      if (this.active_image_tag_boxes.length == 0) {
+    apply_annotation: function(){
+      if(this.active_image_tag_boxes.length == 0){
         this.delete_xml();
-      } else {
+      }else{
         this.save_annotation();
       }
     },
@@ -289,12 +287,7 @@ export default {
             return;
           }
 
-          if (
-            event.key === "ArrowUp" ||
-            event.key === "ArrowDown" ||
-            event.key === "ArrowLeft" ||
-            event.key === "ArrowRight"
-          ) {
+          if((event.key === "ArrowUp") || (event.key === "ArrowDown") || (event.key === "ArrowLeft") || (event.key === "ArrowRight")){
             let [ratio, imgrc] = this.calc_image_rect();
 
             let boxid = this.active_boxid;
@@ -332,7 +325,8 @@ export default {
               boxid: boxid,
               box: box
             });
-          } else {
+
+          }else{
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
                 this.$store.commit("set_activebox_label", label);
@@ -342,6 +336,7 @@ export default {
               }
             }
           }
+
         }
       }
     },
@@ -617,9 +612,8 @@ export default {
 
       this.status = "";
     },
-
     get_reviewstatus: function() {
-      const prior_scale = this.zoom_scale;
+      const prior_scale = this.zoom_scale
       if (this.active_image_review_result === "ok") {
         return "reviewok";
       } else if (this.active_image_review_result === "nh") {
@@ -628,49 +622,42 @@ export default {
       return "notreviewed";
     },
     zoom_image: function(e) {
-      let z = 0;
+      const prior_scale = this.zoom_scale
       if (e.deltaY > 0) {
-        this.zoom_scale -= 0.05;
-        z = -0.05;
+        this.zoom_scale -= 0.05
       } else {
-        this.zoom_scale += 0.05;
-        z = 0.05;
+        this.zoom_scale += 0.05
       }
+      this.zoom_scale = Math.min(Math.max(0.5, this.zoom_scale), 2.0)
 
-      let candidate_x = this.zoom_x;
-      let candidate_y = this.zoom_y;
-      const [_, rect] = this.calc_image_rect();
+      const [_, rect] = this.calc_image_rect()
       const imgrc = this.$refs.canvas.getBoundingClientRect();
       const wrapper = this.$refs.wrapper.getBoundingClientRect();
+      // let deltX = e.clientX - wrapper.left
+      // let deltY = e.clientY - wrapper.top
+      let deltX = (e.clientX - imgrc.left)/prior_scale
+      let deltY = (e.clientY - imgrc.top)/prior_scale
+      console.log(e.clientX - this.zoom_x, e.clientX, this.zoom_x)
 
-      let deltX =
-        (e.clientX - imgrc.left) /
-        (imgrc.right - imgrc.left) *
-        (wrapper.right - wrapper.left);
-      let deltY =
-        (e.clientY - imgrc.top) /
-        (imgrc.bottom - imgrc.top) *
-        (wrapper.bottom - wrapper.top);
-      candidate_x -= deltX * z;
-      candidate_y -= deltY * z;
+      this.zoom_x = wrapper.left - deltX*(this.zoom_scale - 1)
+      this.zoom_y = wrapper.top - deltY*(this.zoom_scale - 1)
+      return
 
       if (
-        true ||
-        (wrapper.left < rect[0] &&
-          wrapper.top < rect[1] &&
-          wrapper.right > rect[2] &&
-          wrapper.bottom > rect[3])
+        imgrc.left < rect[0] &&
+        imgrc.top < rect[1] &&
+        imgrc.right > rect[2] &&
+        imgrc.bottom > rect[3]
       ) {
-        this.zoom_y = candidate_y;
-        this.zoom_x = candidate_x;
-      } else if (wrapper.left >= rect[0]) {
-        this.zoom_x = candidate_x;
-      } else if (wrapper.top >= rect[1]) {
-        this.zoom_y = candidate_y;
-      } else if (wrapper.right <= rect[2]) {
-        this.zoom_x = candidate_x;
-      } else if (wrapper.bottom <= rect[3]) {
-        this.zoom_y = candidate_y;
+
+      } else if (imgrc.left <= rect[0]) {
+        this.zoom_x = imgrc.left
+      } else if (imgrc.top < rect[1]) {
+        this.zoom_y = imgrc.top
+      } else if (imgrc.right > rect[2]) {
+        this.zoom_x = imgrc.right - (rect[2] - rect[0])
+      } else if (imgrc.bottom > rect[3]) {
+        this.zoom_y = imgrc.bottom - (rect[3] - rect[1])
       }
     }
   }
@@ -758,11 +745,11 @@ export default {
   margin-top: $component-margin-top;
 
   .not_admin {
-    border: none;
+    border:none;
     background: #fff;
   }
   .form-control.not_admin:focus {
-    box-shadow: none;
+      box-shadow: none;
   }
   .admin {
     cursor: pointer;
@@ -781,27 +768,25 @@ export default {
     margin-right: 7px;
     &:hover,
     &-push {
-      background: #ff4949 !important;
+      background: #ff4949!important
     }
   }
   .ng-button {
     margin-left: 7px;
     margin-right: 0px;
-    &:hover,
-    &-push {
-      background: #000 !important;
+    &:hover,&-push {
+      background: #000!important
     }
   }
-  .ng-button,
-  .ok-button {
+  .ng-button,.ok-button{
     cursor: pointer;
     background: #999;
-    padding: 10px;
+    padding:10px;
     color: #fff;
     width: 48px;
-    font-size: 0.8rem;
+    font-size:0.8rem;
     text-align: center;
-    line-height: 5px;
+    line-height:5px;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -815,7 +800,7 @@ export default {
 
     &:hover {
       cursor: not-allowed;
-      background: #999 !important;
+      background: #999!important;
     }
   }
 

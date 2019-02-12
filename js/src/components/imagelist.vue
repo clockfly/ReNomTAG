@@ -195,8 +195,8 @@ export default {
         if (n <= 0) {
           n = 1;
         }
-        let loaded_img = this.$el.querySelectorAll(`#imagelist img.thumbnail`)
-        if (loaded_img[n] !== null){
+        let loaded_img = this.$el.querySelectorAll(`#imagelist img.thumbnail`);
+        if (loaded_img[n] !== null) {
           let img = loaded_img[n];
 
           let imgrc = img.getBoundingClientRect();
@@ -208,8 +208,7 @@ export default {
               max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }
-        }else if (loaded_img[n] === null) {
-          return;
+        } else if (loaded_img[n] === null) {
         }
       }
     }

@@ -77,38 +77,41 @@ export function message_load_undeffile_list(undef_filename_list) {
   return undef_message;
 }
 
-export function message_load_dupfile_list(dup_filename_list){
+export function message_load_dupfile_list(dup_filename_list) {
   let dup_message =
     'error\n\n The following files could not be loaded, because there are files which have the same name but different extensions.  \n\n Only one file can be loaded with the same filename base and the priority is   \n\n "jpg > jpeg > png > bmp"   \n\n Please change the filename of: \n';
   let length = Math.min(3, dup_filename_list.length);
 
   for (let i = 0; i < length; i++) {
-      dup_message  = dup_message.concat(dup_filename_list[i]);
+    dup_message = dup_message.concat(dup_filename_list[i]);
     if (i != length - 1) {
-      dup_message  = dup_message.concat(", \n");
+      dup_message = dup_message.concat(", \n");
     }
     if (length == 3 && i == length - 1) {
-      dup_message  = dup_message.concat("\netc...");
+      dup_message = dup_message.concat("\netc...");
     }
   }
   return dup_message;
 }
 
-export function message_make_dir(result){
+export function message_make_dir(result) {
   let message = "";
 
-  if (result === 0){
-    message = "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
+  if (result === 0) {
+    message =
+      "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
   }
-  if (result === 10){
-    message = 'error\n\n The current directory is unavailable. \n Please choose another directory. \n\n Load again to start.';
-
+  if (result === 10) {
+    message =
+      "error\n\n The current directory is unavailable. \n Please choose another directory. \n\n Load again to start.";
   }
-  if (result === 20){
-    message = 'error\n\n The username is unavailable. \n Please use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_). \n\n Load again to start.';
+  if (result === 20) {
+    message =
+      "error\n\n The username is unavailable. \n Please use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_). \n\n Load again to start.";
   }
-  if (result === 111){
-    message = 'message\n\n Successfully created directories!\n\n Load again to start.';
+  if (result === 111) {
+    message =
+      "message\n\n Successfully created directories!\n\n Load again to start.";
   }
 
   return message;
