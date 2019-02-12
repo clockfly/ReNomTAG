@@ -1,20 +1,23 @@
 <template>
   <div id='canvasblock'>
     <div id="canvaspanel" ref="canvaspanel"
-        @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'>
+        @mousedown.middle.ctrl='on_down_middle'
+        @mousemove.ctrl='on_move_middle'
+        @mouseup.middle='on_up_middle'
+        @mousedown.left.stop='on_click'
+        @mousemove.left.stop.prevent='on_mousemove'>
 
       <navarrow class="arrow" dir="back"/>
         <div id="canvas-wrapper" @wheel.ctrl.prevent="zoom_image" ref="wrapper">
           <div id="pad"/>
           <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
-           @dragstart.stop.prevent="on_drag_start">
+           @dragstart.left.stop.prevent="on_drag_start">
           <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
           <div v-for="(tagstyle, idx) in boxes" :key="idx"
               :style='tagstyle'
               class='box-border'
-              :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
-              @mousemove='on_boxmousemove'>
+              :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
+              @mousemove.left='on_boxmousemove'>
             <div :class="['box', is_active_box(idx) ? 'box-active':'']">
               <div class='taglabel'>{{get_box_label(idx)}}</div>
             </div>
@@ -117,7 +120,10 @@ export default {
 
       zoom_x: 0, // The coordinate x the image
       zoom_y: 0,
-      zoom_scale: 1.0
+      zoom_scale: 1.0,
+      image_drag_status: false,
+      image_dragform_x: 0,
+      image_dragform_y: 0,
     };
   },
   created: function() {
@@ -424,6 +430,22 @@ export default {
         }
       }
       this.$store.commit("set_tagboxes", { tagboxes });
+    },
+    on_down_middle: function (e) {
+      this.image_drag_status = true
+      this.image_dragform_x = e.clientX
+      this.image_dragform_y = e.clientY
+    },
+    on_move_middle: function (e) {
+      if (this.image_drag_status) {
+        // TODO: Absolute corrdinate transform.
+        this.zoom_x += (e.clientX - this.image_dragform_x - this.zoom_x)
+        this.zoom_y += (e.clientY - this.image_dragform_y - this.zoom_y)
+        this.arrange_boxes()
+      }
+    },
+    on_up_middle: function (e) {
+      this.image_drag_status = false
     },
 
     on_click: function(event) {
