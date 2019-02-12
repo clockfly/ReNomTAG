@@ -1,5 +1,12 @@
 <template>
   <div id='canvasblock'>
+    <!-- TODO -->
+    <div id='toggle'>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider" v-on:click="toggle"></span>
+      </label>
+    </div>
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
@@ -8,7 +15,6 @@
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-<!-- TODO -->
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
@@ -606,6 +612,52 @@ export default {
 .clear-padding {
   padding-left: 0;
   padding-right: 0;
+}
+//  TODO:
+#toggle {
+  height: 30px;
+  display: flex;
+  position: relative;
+  .switch {
+    position: absolute;
+    display: inline-block;
+    width: 55px;
+    height: 28px;
+    input[type=checkbox]{
+      opacity:0;
+      width:0;
+      height:0;
+      &:checked+.slider{
+        background-color:#006ea1;
+        &:before{
+          transform: translateX(26px);
+        }
+      }
+    }
+
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+    }
+  }
+
 }
 #canvaspanel {
   flex-grow: 1;
