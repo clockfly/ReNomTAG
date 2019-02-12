@@ -4,7 +4,7 @@
     <div id='toggle'>
       <label class="switch">
         <input type="checkbox">
-        <span class="slider" v-on:click="toggle"></span>
+        <span class="slider" v-on:click="show_box_toggle"></span>
       </label>
     </div>
     <div id="canvaspanel" ref="canvaspanel"
@@ -15,7 +15,10 @@
       <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-      <div v-for="(tagstyle, idx) in boxes" :key="idx"
+
+      <!-- TODO -->
+      <div v-show="show_box"
+          v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
           :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
@@ -113,6 +116,7 @@ export default {
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
       boxes: null,
+      show_box: true,
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
@@ -211,11 +215,15 @@ export default {
       return this.active_boxid === idx;
     },
 
+    show_box_toggle: function (){
+      this.show_box = !this.show_box
+    },
+
     get_box: function(id) {
       return this.active_image_tag_boxes[id];
     },
 
-    get_box_label(id) {
+    get_box_label: function(id) {
       return this.get_box(id).label;
     },
 
