@@ -7,7 +7,9 @@
         <span class="slider" v-on:click="show_box_toggle"></span>
       </label>
     </div>
-    <div id="canvaspanel" ref="canvaspanel"
+    <button id='select' v-on:click="push_selected_boxid"> select </button>
+    <div v-if="show_box"
+        id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
 
@@ -17,8 +19,7 @@
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
 
       <!-- TODO -->
-      <div v-show="show_box"
-          v-for="(tagstyle, idx) in boxes" :key="idx"
+      <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
           :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
@@ -27,7 +28,29 @@
           <div class='taglabel'>{{get_box_label(idx)}}</div>
         </div>
       </div>
+      <navarrow class="arrow" dir="forward"/>
+    </div>
 
+    <div v-if="!show_box"
+        id="canvaspanel" ref="canvaspanel"
+        @mousedown.stop='on_click'
+        @mousemove.stop.prevent='on_mousemove'>
+
+      <navarrow class="arrow" dir="back"/>
+      <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
+       @dragstart.stop.prevent="on_drag_start">
+      <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
+
+      <!-- TODO -->
+      <div v-for="(tagstyle, idx) in selected_boxes" :key="idx"
+          :style='tagstyle'
+          class='box-border'
+          :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
+          @mousemove='on_boxmousemove'>
+        <div :class="['box', is_active_box(idx) ? 'box-active':'']">
+          <div class='taglabel'>{{get_box_label(idx)}}</div>
+        </div>
+      </div>
       <navarrow class="arrow" dir="forward"/>
     </div>
     <p id="demo"></p>
@@ -117,6 +140,8 @@ export default {
       org_boxrc: null,
       boxes: null,
       show_box: true,
+      selected_boxes: {},
+      selected_boxid: [],
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
@@ -149,6 +174,7 @@ export default {
       "active_boxid",
       "labels",
       "tagged_images"
+      // "selected_boxes"
     ]),
 
     image_url: function() {
@@ -188,6 +214,7 @@ export default {
       }
     }
   },
+  // TODO
   watch: {
     active_image_tag_boxes: function() {
       this.arrange_boxes();
@@ -213,6 +240,42 @@ export default {
 
     is_active_box: function(idx) {
       return this.active_boxid === idx;
+    },
+
+    push_selected_boxid: function(){
+      var active_boxid = this.$store.state.active_boxid;
+      var selected_box = this.boxes[active_boxid];
+      var s_boxes = this.selected_boxes;
+      var s_boxid = this.selected_boxid;
+      var len_box = s_boxes.length;
+      var len_id = s_boxid.length;
+
+      console.log("")
+      console.log("s_boxes first",s_boxes)
+
+      selected_box=JSON.parse(JSON.stringify(selected_box));
+      console.log(selected_box);
+
+      if (len_id === 0){
+        s_boxes[active_boxid] = selected_box ;
+        console.log("s_boxes when added",s_boxes)
+
+      }else{
+        for(let id of s_boxid){
+          if(id == active_boxid){
+            break;
+          }
+          if(id == s_boxid[len_id-1]){
+            s_boxes[active_boxid] = selected_box ;
+            console.log("s_boxes when added",s_boxes)
+
+          }
+        }
+      }
+      s_boxid.push(active_boxid);
+      this.selected_boxid = s_boxid;
+      this.selected_boxes = s_boxes;
+      console.log("selected_boxes = {} :",this.selected_boxes);
     },
 
     show_box_toggle: function (){
@@ -379,9 +442,10 @@ export default {
 
       return { left, top, right, bottom };
     },
-
+// TODO
     arrange_boxes: function() {
       const boxes = [];
+      const selected_boxes = this.selected_boxes;
       if (!this.$refs.canvas || !this.active_image_tag_boxes) {
         return;
       }
@@ -397,6 +461,7 @@ export default {
         );
       }
       this.boxes = boxes;
+      this.selected_boxes = selected_boxes;
     },
 
     _clean_boxes: function() {
@@ -623,9 +688,11 @@ export default {
 }
 //  TODO:
 #toggle {
-  height: 30px;
-  display: flex;
+  display: inline-block;
   position: relative;
+  margin: 0;
+  width: 55px;
+  height: 28px;
   .switch {
     position: absolute;
     display: inline-block;
@@ -666,6 +733,9 @@ export default {
     }
   }
 
+}
+#select{
+  margin: 0;
 }
 #canvaspanel {
   flex-grow: 1;
