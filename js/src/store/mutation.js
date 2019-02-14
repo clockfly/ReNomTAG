@@ -47,6 +47,9 @@ function select_files(state) {
   }
   files.sort();
   state.files = files;
+  if (!state.files || state.files.length === 0) {
+    state.loading_message = "No images found.";
+  }
 }
 
 export function has_bndbox(d) {
@@ -150,7 +153,6 @@ export default {
     }
     select_files(state);
   },
-
   set_file_list(state, payload) {
     state.folder_files = payload.file_list;
     state.filename_max_display = 100;

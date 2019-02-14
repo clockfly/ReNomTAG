@@ -155,6 +155,7 @@ export default {
       return false;
     },
     set_filter: function(filter_name) {
+      this.$store.commit("set_active_image", { file: null });
       this.$store.commit("set_filter", filter_name);
     },
     is_review_result_ok(file) {
