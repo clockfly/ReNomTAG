@@ -1,5 +1,19 @@
 <template>
-  <div id='canvasblock'>
+  <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+    <div v-if='this.loading_message!= "Loading images..."' id="msg_no_image">
+      {{loading_message}}
+    </div>
+    <div v-else-if='this.loading_message==="Loading images..."' id="msg_no_image">
+      <div class="sk-wave">
+        <div class="sk-rect sk-rect1"></div>
+        <div class="sk-rect sk-rect2"></div>
+        <div class="sk-rect sk-rect3"></div>
+        <div class="sk-rect sk-rect4"></div>
+        <div class="sk-rect sk-rect5"></div>
+      </div>
+    </div>
+  </div>
+  <div id='canvasblock' v-else-if='(this.folder.length != 0) && (this.image_list.length !== 0)'>
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
@@ -138,7 +152,10 @@ export default {
       "active_image_review_result",
       "active_boxid",
       "labels",
-      "tagged_images"
+      "tagged_images",
+      "folder",
+      "loading_message",
+      "image_list"
     ]),
 
     image_url: function() {
@@ -599,6 +616,21 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+#loading {
+  flex-grow: 1;
+  background: #fff;
+  #msg_no_image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: inline-block;
+    width: 200px;
+    height: 100px;
+    margin: 15% auto 85%;
+  }
+}
 #canvasblock {
   flex-grow: 1;
   background: #fff;

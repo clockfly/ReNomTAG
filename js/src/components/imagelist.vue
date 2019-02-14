@@ -1,6 +1,6 @@
 <template>
   <div id="imagelistblock">
-    <div v-if='(this.folder.length != 0) && (file_list.length === 0) && (this.loading_message!= "Loading images...")' id="msg_no_image">
+    <!-- <div v-if='(this.folder.length != 0) && (file_list.length === 0) && (this.loading_message!= "Loading images...")' id="msg_no_image">
       {{loading_message}}
     </div>
     <div v-else-if='(this.folder.length != 0) && (file_list.length === 0) &&(this.loading_message==="Loading images...")' id="msg_no_image">
@@ -11,7 +11,7 @@
         <div class="sk-rect sk-rect4"></div>
         <div class="sk-rect sk-rect5"></div>
       </div>
-    </div>
+    </div> -->
     <div class="title">
       <div class="title-text row">
         <span class="col-md-8 text">Images</span>
@@ -128,6 +128,7 @@ export default {
       let keys = Object.keys(this.files).sort((l, r) => l - r);
       let ret = [];
       keys.forEach(k => ret.push(this.files[k]));
+      this.$store.commit("set_image_list",ret);
       return ret;
     }
   },

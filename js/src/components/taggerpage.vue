@@ -4,9 +4,11 @@
     <div id='main-container'>
       <left-menu></left-menu>
       <image-list class="folder-image" v-if="folder.length !== 0"/>
-      <div v-if="active_image_filename === null" class="filler"></div>
-      <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-      <div id="no_active_image" v-else></div>
+      <tagcanvas></tagcanvas>
+
+      <!-- <div v-if="active_image_filename === null" class="filler"></div> -->
+      <!-- <tagcanvas v-if="active_image_filename != null" ></tagcanvas> -->
+      <!-- <div id="no_active_image" v-else></div> -->
       <tags></tags>
     </div>
     <tagged-images class="row"/>

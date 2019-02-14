@@ -21,6 +21,7 @@ let state = {
   review_filter: ["notreviewed"],
   filter_method: "NoTags",
   files: [],
+  image_list: [],
   filename_max_display: 0,
 
   // active image
