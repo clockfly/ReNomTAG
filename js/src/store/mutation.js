@@ -176,6 +176,10 @@ export default {
     select_files(state);
   },
 
+  set_image_list(state, payload){
+    state.image_list = payload;
+  },
+
   set_filename_max_display(state, payload) {
     state.filename_max_display = payload.max_display;
   },

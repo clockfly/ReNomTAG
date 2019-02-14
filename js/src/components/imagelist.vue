@@ -1,8 +1,5 @@
 <template>
   <div id="imagelistblock">
-    <div v-if='(this.folder.length != 0) && (file_list.length === 0)' id=msg_no_image>
-      {{loading_message}}
-    </div>
     <div class="title">
       <div class="title-text row">
         <span class="col-md-8 text">Images</span>
@@ -119,6 +116,7 @@ export default {
       let keys = Object.keys(this.files).sort((l, r) => l - r);
       let ret = [];
       keys.forEach(k => ret.push(this.files[k]));
+      this.$store.commit("set_image_list",ret);
       return ret;
     }
   },
@@ -229,18 +227,6 @@ export default {
   font-family: $content-top-header-font-family;
   margin-top: $component-margin-top;
 }
-
-#msg_no_image {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 200px;
-  height: 100px;
-  margin: auto;
-}
-
 .title {
   background: $content-header-color;
   height: calc(#{$panel-height} - 7px);
