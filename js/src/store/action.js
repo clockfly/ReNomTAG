@@ -93,11 +93,11 @@ export default {
       });
     }
   },
-
   async set_folder(context, folder) {
     await context.dispatch("load_folder_list");
     context.commit("set_folder", { folder: folder });
     context.commit("set_file_list", { file_list: [] });
+    context.commit("set_active_image", { file: null });
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
     await load_tagged_images(context);
