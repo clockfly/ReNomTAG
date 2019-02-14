@@ -5,7 +5,7 @@
       <left-menu></left-menu>
       <image-list class="folder-image" v-if="folder.length !== 0"/>
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-      <div id="no_active_image" v-else>
+      <div v-else id="no_active_image" class="filler">
         <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
           <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
             {{loading_message}}
