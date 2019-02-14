@@ -4,11 +4,23 @@
     <div id='main-container'>
       <left-menu></left-menu>
       <image-list class="folder-image" v-if="folder.length !== 0"/>
-      <tagcanvas></tagcanvas>
-
-      <!-- <div v-if="active_image_filename === null" class="filler"></div> -->
-      <!-- <tagcanvas v-if="active_image_filename != null" ></tagcanvas> -->
-      <!-- <div id="no_active_image" v-else></div> -->
+      <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+      <div id="no_active_image" v-else>
+        <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+          <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
+            {{loading_message}}
+          </div>
+          <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+            <div class="sk-wave">
+              <div class="sk-rect sk-rect1"></div>
+              <div class="sk-rect sk-rect2"></div>
+              <div class="sk-rect sk-rect3"></div>
+              <div class="sk-rect sk-rect4"></div>
+              <div class="sk-rect sk-rect5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <tags></tags>
     </div>
     <tagged-images class="row"/>
@@ -100,7 +112,10 @@ export default {
       "undef_file_message",
       "dup_file_message",
       "working_dir",
-      "username"
+      "username",
+      "folder",
+      "loading_message",
+      "image_list"
     ]),
     setUsername: {
       get(){
@@ -171,9 +186,23 @@ export default {
 }
 
 #no_active_image {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
   background: #fff;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #loading {
+    .msg_no_image {
+      display: inline-block;
+      width: 50px;
+      height: 40px;
+    }
+  }
 }
+
 .left {
   text-align: center;
 }
