@@ -273,6 +273,9 @@ export default {
       this.zoom_y = 0;
       this.zoom_x = 0;
       this.zoom_scale = 1.0;
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
     },
 
     on_zoom_in_button: function() {
