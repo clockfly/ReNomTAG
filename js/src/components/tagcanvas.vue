@@ -234,12 +234,19 @@ export default {
       let z = 0;
       if (in_out > 0) {
         this.zoom_scale -= scale_delt;
-        z = -scale_delt;
+        if (this.zoom_scale >= 0.5) {
+          z = -scale_delt;
+        } else {
+          this.zoom_scale = 0.5;
+        }
       } else {
         this.zoom_scale += scale_delt;
-        z = scale_delt;
+        if (this.zoom_scale <= 1.5) {
+          z = scale_delt;
+        } else {
+          this.zoom_scale = 1.5;
+        }
       }
-
       let candidate_x = this.zoom_x;
       let candidate_y = this.zoom_y;
       const [_, rect] = this.calc_image_rect();
@@ -737,7 +744,6 @@ export default {
       return "notreviewed";
     },
     zoom_image: function(e) {
-      console.log(e);
       this._zoom(e.clientX, e.clientY, 0.05, e.deltaY > 0);
     }
   }
