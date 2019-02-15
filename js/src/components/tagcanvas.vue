@@ -1,8 +1,8 @@
 <template>
   <div id='canvasblock'>
     <div id="canvaspanel" ref="canvaspanel"
-        @mousedown.middle.ctrl='on_down_middle'
-        @mousemove.ctrl='on_move_middle'
+        @mousedown.middle='on_down_middle'
+        @mousemove='on_move_middle'
         @mouseup.middle='on_up_middle'
         @mousedown.left.stop='on_click'
         @mousemove.left.stop.prevent='on_mousemove'>
@@ -22,9 +22,20 @@
               <div class='taglabel'>{{get_box_label(idx)}}</div>
             </div>
           </div>
-          <div id="zoom-button">
-          </div>
         </div>
+        <transition name="fade">
+          <div id="zoom-button" v-if="zoom_scale!=1.0 || zoom_x != 0 || zoom_y != 0">
+            <div id="zoom-out-button" @click="on_zoom_out_button">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+            <div id="zoom-reset-button" @click="on_zoom_reset_button">
+              <i class="fa fa-expand" aria-hidden="true"></i>
+            </div>
+            <div id="zoom-in-button" @click="on_zoom_in_button">
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </div>
+          </div>
+        </transition>
       <navarrow class="arrow" dir="forward"/>
     </div>
     <p id="demo"></p>
@@ -123,7 +134,7 @@ export default {
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
-      image_dragform_y: 0,
+      image_dragform_y: 0
     };
   },
   created: function() {
@@ -210,15 +221,64 @@ export default {
   },
   watch: {
     active_image_tag_boxes: function() {
-      this.arrange_boxes();
-    },
-    zoom_scale: function() {
-      this.arrange_boxes();
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
     }
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
     ...mapActions(["save_annotation", "delete_xml"]),
+
+    _zoom: function(x, y, scale_delt, in_out) {
+      let z = 0;
+      if (in_out > 0) {
+        this.zoom_scale -= scale_delt;
+        z = -scale_delt;
+      } else {
+        this.zoom_scale += scale_delt;
+        z = scale_delt;
+      }
+
+      let candidate_x = this.zoom_x;
+      let candidate_y = this.zoom_y;
+      const [_, rect] = this.calc_image_rect();
+      const imgrc = this.$refs.canvas.getBoundingClientRect();
+      const wrapper = this.$refs.wrapper.getBoundingClientRect();
+
+      let deltX =
+        (x - imgrc.left) /
+        (imgrc.right - imgrc.left) *
+        (wrapper.right - wrapper.left);
+      let deltY =
+        (y - imgrc.top) /
+        (imgrc.bottom - imgrc.top) *
+        (wrapper.bottom - wrapper.top);
+      candidate_x -= deltX * z;
+      candidate_y -= deltY * z;
+      this.zoom_y = candidate_y;
+      this.zoom_x = candidate_x;
+
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
+    },
+
+    on_zoom_out_button: function() {
+      const rect = this.$refs.canvaspanel.getBoundingClientRect();
+      this._zoom(rect.right / 2, rect.bottom / 2, 0.05, false);
+    },
+
+    on_zoom_reset_button: function() {
+      this.zoom_y = 0;
+      this.zoom_x = 0;
+      this.zoom_scale = 1.0;
+    },
+
+    on_zoom_in_button: function() {
+      const rect = this.$refs.canvaspanel.getBoundingClientRect();
+      this._zoom(rect.right / 2, rect.bottom / 2, 0.05, true);
+    },
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
@@ -431,21 +491,45 @@ export default {
       }
       this.$store.commit("set_tagboxes", { tagboxes });
     },
-    on_down_middle: function (e) {
-      this.image_drag_status = true
-      this.image_dragform_x = e.clientX
-      this.image_dragform_y = e.clientY
+    on_down_middle: function(e) {
+      this.image_drag_status = true;
+      this.image_dragform_x = e.clientX;
+      this.image_dragform_y = e.clientY;
     },
-    on_move_middle: function (e) {
+    on_move_middle: function(e) {
       if (this.image_drag_status) {
-        // TODO: Absolute corrdinate transform.
-        this.zoom_x += (e.clientX - this.image_dragform_x - this.zoom_x)
-        this.zoom_y += (e.clientY - this.image_dragform_y - this.zoom_y)
-        this.arrange_boxes()
+        const [ratio, rect] = this.calc_image_rect();
+        const imgrc = this.$refs.canvas.getBoundingClientRect();
+        const wrapper = this.$refs.wrapper.getBoundingClientRect();
+        const candidate_x = this.zoom_x + (e.clientX - this.image_dragform_x);
+        const candidate_y = this.zoom_y + (e.clientY - this.image_dragform_y);
+        const candidate_imgrc_x = rect[0] + (e.clientX - this.image_dragform_x);
+        const candidate_imgrc_y = rect[1] + (e.clientY - this.image_dragform_y);
+        const movable = 300;
+        const will_out_side_left = candidate_imgrc_x + movable > wrapper.right;
+        const will_out_side_right =
+          candidate_imgrc_x + rect[2] - rect[0] - movable < wrapper.left;
+        const will_out_side_top = candidate_imgrc_y + movable > wrapper.bottom;
+        const will_out_side_bottom =
+          candidate_imgrc_y + rect[3] - rect[1] - movable < wrapper.top;
+        this.image_dragform_x = e.clientX;
+        this.image_dragform_y = e.clientY;
+
+        if (will_out_side_left || will_out_side_right) {
+          this.zoom_y = candidate_y;
+        } else if (will_out_side_top || will_out_side_bottom) {
+          this.zoom_x = candidate_x;
+        } else {
+          this.zoom_y = candidate_y;
+          this.zoom_x = candidate_x;
+        }
+        this.$nextTick(() => {
+          this.arrange_boxes();
+        });
       }
     },
-    on_up_middle: function (e) {
-      this.image_drag_status = false
+    on_up_middle: function(e) {
+      this.image_drag_status = false;
     },
 
     on_click: function(event) {
@@ -650,50 +734,8 @@ export default {
       return "notreviewed";
     },
     zoom_image: function(e) {
-      let z = 0;
-      if (e.deltaY > 0) {
-        this.zoom_scale -= 0.05;
-        z = -0.05;
-      } else {
-        this.zoom_scale += 0.05;
-        z = 0.05;
-      }
-
-      let candidate_x = this.zoom_x;
-      let candidate_y = this.zoom_y;
-      const [_, rect] = this.calc_image_rect();
-      const imgrc = this.$refs.canvas.getBoundingClientRect();
-      const wrapper = this.$refs.wrapper.getBoundingClientRect();
-
-      let deltX =
-        (e.clientX - imgrc.left) /
-        (imgrc.right - imgrc.left) *
-        (wrapper.right - wrapper.left);
-      let deltY =
-        (e.clientY - imgrc.top) /
-        (imgrc.bottom - imgrc.top) *
-        (wrapper.bottom - wrapper.top);
-      candidate_x -= deltX * z;
-      candidate_y -= deltY * z;
-
-      if (
-        true ||
-        (wrapper.left < rect[0] &&
-          wrapper.top < rect[1] &&
-          wrapper.right > rect[2] &&
-          wrapper.bottom > rect[3])
-      ) {
-        this.zoom_y = candidate_y;
-        this.zoom_x = candidate_x;
-      } else if (wrapper.left >= rect[0]) {
-        this.zoom_x = candidate_x;
-      } else if (wrapper.top >= rect[1]) {
-        this.zoom_y = candidate_y;
-      } else if (wrapper.right <= rect[2]) {
-        this.zoom_x = candidate_x;
-      } else if (wrapper.bottom <= rect[3]) {
-        this.zoom_y = candidate_y;
-      }
+      console.log(e);
+      this._zoom(e.clientX, e.clientY, 0.05, e.deltaY > 0);
     }
   }
 };
@@ -731,6 +773,36 @@ export default {
       flex-shrink: 0;
       object-fit: contain;
       max-width: none;
+    }
+  }
+  #zoom-button {
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    width: 120px;
+    height: 30px;
+    top: calc(100% - 30px);
+    left: calc(50% - 60px);
+    #zoom-out-button {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    #zoom-in-button {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+    div {
+      display: flex;
+      width: 33.33%;
+      i-align: center;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      background-color: #00000088;
+      &:hover {
+        cursor: pointer;
+        background-color: #00000033;
+      }
     }
   }
 
@@ -882,6 +954,14 @@ export default {
   }
   .btn-wrp {
     margin-top: $content-top-margin;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 }
 </style>
