@@ -11,11 +11,8 @@ if sys.version_info < (3, 4):
 
 DIR = str(pathlib.Path(__file__).resolve().parent)
 
-requires = [
-    "bs4", "bottle", "glob2", "lxml", "Pillow",
-    "PyYAML", "watchdog", "xmltodict"
-]
-
+with open("requirements.txt") as reader:
+    requires = [line for line in reader.readlines() if not line.startswith("git+")]
 
 entry_points = {
     'console_scripts': [
