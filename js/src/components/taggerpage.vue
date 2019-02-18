@@ -118,11 +118,11 @@ export default {
       "image_list"
     ]),
     setUsername: {
-      get(){
-        return this.$store.state.username
+      get() {
+        return this.$store.state.username;
       },
-      set (e){
-        this.$store.commit("set_username", {username: e})
+      set(e) {
+        this.$store.commit("set_username", { username: e });
       }
     }
   },
@@ -130,34 +130,40 @@ export default {
     ...mapMutations(["set_error_status"]),
     ...mapMutations(["set_undef_file_message"]),
     ...mapMutations(["set_dup_file_message"]),
-    messageCounter: function(){
+    messageCounter: function() {
       var counter = this.make_dir_message_counter;
-      console.log(counter)
+      console.log(counter);
       counter = counter + 1;
-      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: counter});
+      this.$store.commit("set_make_dir_message_counter", {
+        make_dir_message_counter: counter
+      });
     },
-    makeDir: function(){
-      this.$store.commit("set_make_dir_message",{make_dir_message: "message\n\ncreating directories..."});
+    makeDir: function() {
+      this.$store.commit("set_make_dir_message", {
+        make_dir_message: "message\n\ncreating directories..."
+      });
       this.$store.dispatch("make_dir");
     },
-    setModal: function(){
+    setModal: function() {
       var counter = this.make_dir_message_counter;
-      if (counter === 0){
-        this.$store.commit("set_make_dir_message",{make_dir_message: "message\n\nInput your username"});
+      if (counter === 0) {
+        this.$store.commit("set_make_dir_message", {
+          make_dir_message: "message\n\nInput your username"
+        });
         this.messageCounter();
-      }else if(counter === 1){
+      } else if (counter === 1) {
         this.makeDir();
         this.messageCounter();
-      }else if(counter > 1){
+      } else if (counter > 1) {
         location.reload();
       }
     },
-    cancelModal: function(){
-      this.$store.commit("set_make_dir_message",{make_dir_message: ""});
-      this.$store.commit("set_make_dir_message_counter",{make_dir_message_counter: 0});
+    cancelModal: function() {
+      this.$store.commit("set_make_dir_message", { make_dir_message: "" });
+      this.$store.commit("set_make_dir_message_counter", {
+        make_dir_message_counter: 0
+      });
     }
-
-
   },
 
   created: function() {
@@ -209,7 +215,7 @@ export default {
 .right {
   text-align: center;
 }
-.modal__contents__input{
+.modal__contents__input {
   display: block;
   margin: auto;
   text-align: center;
@@ -217,14 +223,18 @@ export default {
   height: 25px;
   margin-top: 8px;
 }
-.error-msg, .mkdir-msg{
+.error-msg,
+.mkdir-msg {
   white-space: pre-line;
   word-wrap: break-word;
   text-align: center;
   font-weight: bold;
   margin-bottom: 0;
 }
-.error-button, .ok-button, .load-button, .cancel-button{
+.error-button,
+.ok-button,
+.load-button,
+.cancel-button {
   margin-bottom: 0;
   text-align: right;
   font-weight: normal;
