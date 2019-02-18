@@ -87,6 +87,10 @@ export function get_reviewresult(d) {
 }
 
 export default {
+  set_copy_boxes(state, payload){
+    //ここに適切な値を入れるような処理をかけば完了
+    // state.active_image_tag_boxes = payload.boxes;
+  },
   set_error_status(state, payload) {
     state.error_status = payload.error_status;
   },
@@ -196,8 +200,8 @@ export default {
     state.active_image_height = payload.height;
     state.active_image = payload.image;
     state.active_image_tag_boxes = payload.boxes;
-    state.active_image_review_result = payload.review_result;
-    state.active_image_review_comment = payload.review_comment;
+    // state.active_image_review_result = payload.review_result;
+    // state.active_image_review_comment = payload.review_comment;
 
     state.active_boxid = null;
   },

@@ -1,6 +1,5 @@
 <template>
   <div id='canvasblock'>
-  
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.stop='on_click'
         @mousemove.stop.prevent='on_mousemove'>
@@ -9,6 +8,7 @@
        @dragstart.stop.prevent="on_drag_start">
       <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
 <!-- TODO -->
+
       <div v-for="(tagstyle, idx) in boxes" :key="idx"
           :style='tagstyle'
           class='box-border'
@@ -256,9 +256,18 @@ export default {
         if (event.ctrlKey) {
           switch(event.key){
             case "b":
-              this.copy_annotation()
+              
+              console.dir("変化前" + this.boxes);
+              //ここに適切な値をまず静的に入れてみる
+              // これをどうすれば動的にできるかを考える。
+              // let all_tag_files =this.tagged_images.sort(); 
+              // let all_img_files = Object.keys(this.folder_files).sort();
+              // console.dir(all_tag_files);
+              console.dir(this.active_image_tag_boxes[0]);
+              // return false;
+              this.boxes = [{"left":"270px","top":"105px","width":"225px","height":"129px"},{"left":"170px","top":"5px","width":"225px","height":"129px"}]
+              console.dir("変化後" + this.boxes);
               break;
-
           }
         }
       }
