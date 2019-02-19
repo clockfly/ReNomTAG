@@ -8,20 +8,20 @@
         @mousemove.left.stop.prevent='on_mousemove'>
 
       <navarrow class="arrow" dir="back"/>
-
-      <div id="canvas-wrapper" @wheel.ctrl.prevent="zoom_image" ref="wrapper">
-        <div id="pad"/>
-        <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
-         @dragstart.left.stop.prevent="on_drag_start">
-        <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-
-      <div v-for="(tagstyle, idx) in fileter_selected_boxes" :key="idx"
-          :style='tagstyle'
-          class='box-border'
-          :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
-          @mousemove='on_boxmousemove'>
-        <div v-if="tagstyle!=null" :class="['box', is_active_box(idx) ? 'box-active':'']">
-          <div class='taglabel'>{{get_box_label(idx)}}</div>
+        <div id="canvas-wrapper" @wheel.ctrl.prevent="zoom_image" ref="wrapper">
+          <div id="pad"/>
+          <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
+           @dragstart.left.stop.prevent="on_drag_start">
+          <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
+          <div v-for="(tagstyle, idx) in fileter_selected_boxes" :key="idx"
+              :style='tagstyle'
+              class='box-border'
+              :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
+              @mousemove.left='on_boxmousemove'>
+            <div v-if="tagstyle!=null" :class="['box', is_active_box(idx) ? 'box-active':'']">
+              <div class='taglabel'>{{get_box_label(idx)}}</div>
+            </div>
+          </div>
         </div>
         <transition name="fade">
           <div id="zoom-button" v-if="zoom_scale!=1.0 || zoom_x != 0 || zoom_y != 0">
@@ -107,6 +107,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import NavArrow from "@/components/navarrow";
