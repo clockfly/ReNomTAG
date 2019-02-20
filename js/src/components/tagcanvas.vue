@@ -1,6 +1,5 @@
 <template>
   <div id='canvasblock'>
-<<<<<<< HEAD
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.middle='on_down_middle'
         @mousemove='on_move_middle'
@@ -37,59 +36,6 @@
             </div>
           </div>
         </transition>
-=======
-    <!-- TODO -->
-    <div id='toggle'>
-      <label class="switch">
-        <input type="checkbox">
-        <span class="slider" v-on:click="show_box_toggle"></span>
-      </label>
-    </div>
-    <button id='select' v-on:click="push_selected_boxid"> select </button>
-    <div v-if="show_box"
-        id="canvaspanel" ref="canvaspanel"
-        @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'>
-
-      <navarrow class="arrow" dir="back"/>
-      <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
-       @dragstart.stop.prevent="on_drag_start">
-      <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-
-      <!-- TODO -->
-      <div v-for="(tagstyle, idx) in boxes" :key="idx"
-          :style='tagstyle'
-          class='box-border'
-          :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
-          @mousemove='on_boxmousemove'>
-        <div :class="['box', is_active_box(idx) ? 'box-active':'']">
-          <div class='taglabel'>{{get_box_label(idx)}}</div>
-        </div>
-      </div>
-      <navarrow class="arrow" dir="forward"/>
-    </div>
-
-    <div v-if="!show_box"
-        id="canvaspanel" ref="canvaspanel"
-        @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'>
-
-      <navarrow class="arrow" dir="back"/>
-      <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
-       @dragstart.stop.prevent="on_drag_start">
-      <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-
-      <!-- TODO -->
-      <div v-for="(tagstyle, idx) in selected_boxes" :key="idx"
-          :style='tagstyle'
-          class='box-border'
-          :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
-          @mousemove='on_boxmousemove'>
-        <div :class="['box', is_active_box(idx) ? 'box-active':'']">
-          <div class='taglabel'>{{get_box_label(idx)}}</div>
-        </div>
-      </div>
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
       <navarrow class="arrow" dir="forward"/>
     </div>
     <p id="demo"></p>
@@ -184,13 +130,7 @@ export default {
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
       boxes: null,
-<<<<<<< HEAD
       show_selected_boxes: false,
-=======
-      show_box: true,
-      selected_boxes: {},
-      selected_boxid: [],
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
@@ -405,7 +345,6 @@ export default {
       return this.active_boxid === idx;
     },
 
-<<<<<<< HEAD
     show_selected_boxes_toggle: function (){
       this.show_selected_boxes = !this.show_selected_boxes;
       this.$nextTick(() => {
@@ -455,46 +394,6 @@ export default {
         }
       }
       return boxes
-=======
-    push_selected_boxid: function(){
-      var active_boxid = this.$store.state.active_boxid;
-      var selected_box = this.boxes[active_boxid];
-      var s_boxes = this.selected_boxes;
-      var s_boxid = this.selected_boxid;
-      var len_box = s_boxes.length;
-      var len_id = s_boxid.length;
-
-      console.log("")
-      console.log("s_boxes first",s_boxes)
-
-      selected_box=JSON.parse(JSON.stringify(selected_box));
-      console.log(selected_box);
-
-      if (len_id === 0){
-        s_boxes[active_boxid] = selected_box ;
-        console.log("s_boxes when added",s_boxes)
-
-      }else{
-        for(let id of s_boxid){
-          if(id == active_boxid){
-            break;
-          }
-          if(id == s_boxid[len_id-1]){
-            s_boxes[active_boxid] = selected_box ;
-            console.log("s_boxes when added",s_boxes)
-
-          }
-        }
-      }
-      s_boxid.push(active_boxid);
-      this.selected_boxid = s_boxid;
-      this.selected_boxes = s_boxes;
-      console.log("selected_boxes = {} :",this.selected_boxes);
-    },
-
-    show_box_toggle: function (){
-      this.show_box = !this.show_box
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
     },
 
     get_box: function(id) {
@@ -655,15 +554,8 @@ export default {
 
       return { left, top, right, bottom };
     },
-<<<<<<< HEAD
     arrange_boxes: function() {
       let boxes = [];
-=======
-// TODO
-    arrange_boxes: function() {
-      const boxes = [];
-      const selected_boxes = this.selected_boxes;
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
       if (!this.$refs.canvas || !this.active_image_tag_boxes) {
         return;
       }
@@ -678,7 +570,6 @@ export default {
           ])
         );
       }
-<<<<<<< HEAD
       if (this.boxes===null){
         boxes=this.set_selected_flag(boxes);
         this.boxes = boxes;
@@ -693,11 +584,6 @@ export default {
             boxes=this.set_selected_flag(boxes);
           }
           this.boxes = boxes;
-=======
-      this.boxes = boxes;
-      this.selected_boxes = selected_boxes;
-    },
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
 
         }
       }
@@ -971,61 +857,7 @@ export default {
   padding-left: 0;
   padding-right: 0;
 }
-<<<<<<< HEAD
 
-=======
-//  TODO:
-#toggle {
-  display: inline-block;
-  position: relative;
-  margin: 0;
-  width: 55px;
-  height: 28px;
-  .switch {
-    position: absolute;
-    display: inline-block;
-    width: 55px;
-    height: 28px;
-    input[type=checkbox]{
-      opacity:0;
-      width:0;
-      height:0;
-      &:checked+.slider{
-        background-color:#006ea1;
-        &:before{
-          transform: translateX(26px);
-        }
-      }
-    }
-
-  }
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-
-    &:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-    }
-  }
-
-}
-#select{
-  margin: 0;
-}
->>>>>>> 2df58f9d4c362a5a642aef99f98a105e47886543
 #canvaspanel {
   flex-grow: 1;
   display: flex;
