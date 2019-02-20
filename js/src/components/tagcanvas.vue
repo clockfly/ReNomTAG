@@ -19,7 +19,7 @@
               :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
               @mousemove.left='on_boxmousemove'>
             <div v-if="tagstyle!=null" :class="['box', is_active_box(idx) ? 'box-active':'']">
-              <div class='taglabel'>{{get_box_label(idx)}}</div>
+              <div  class='taglabel'>{{get_box_label(idx)}}</div>
             </div>
           </div>
         </div>
@@ -345,6 +345,9 @@ export default {
 
     show_selected_boxes_toggle: function (){
       this.show_selected_boxes = !this.show_selected_boxes;
+      this.$nextTick(() => {
+       this.arrange_boxes();
+      });
     },
     set_selected_flag: function(boxes){
       for (let box of boxes){
@@ -352,19 +355,31 @@ export default {
       }
       return boxes
     },
+    _clean_boxes_in_selected_mode:function(nolabel_idx){
+      let pri = this.boxes.slice(0, nolabel_idx);
+      let follow = this.boxes.slice(nolabel_idx + 1);
+      this.boxes =  [...pri, ...follow];
+
+    },
+    // delete box : modify this.boxes when key.event happen ( in on_keyup: )
+    delete_boxes_in_selected_mode:function(active_boxid){
+      let pri = this.boxes.slice(0, active_boxid);
+      let follow = this.boxes.slice(active_boxid + 1);
+      this.boxes =  [...pri, ...follow];
+    },
     // when(selected-mode) once the box became "active" store the id sothat fefer as "selected : true"
     select_flag_when_selected_mode: function(active_boxid, boxes){
-       // when box deleted or created
-        // new box
-        if(active_boxid === this.boxes.length){
-          boxes[active_boxid].selected = true;
-        }
-        // delete box : modify this.boxes when key.event happen ( in on_keyup: )
-        // refer privious state of this.box.selected
-        for (var i=0; i<this.boxes.length; i++){
-          boxes[`${i}`].selected = this.boxes[`${i}`].selected;
-        }
-        return boxes
+       // new box
+       if(active_boxid!=null){
+         if(active_boxid === this.boxes.length){
+           boxes[active_boxid].selected = true;
+         }
+       }
+      // refer privious state of this.box.selected
+      for (var i=0; i<this.boxes.length; i++){
+        boxes[`${i}`].selected = this.boxes[`${i}`].selected;
+      }
+      return boxes
     },
     // when(original-mode to selected-mode) toggle is one to chatch thi function.
     select_flag_from_original: function(active_boxid, boxes){
@@ -383,6 +398,9 @@ export default {
       return this.active_image_tag_boxes[id];
     },
     get_box_label: function(id) {
+      if(!this.boxes[id]){
+        return false;
+      }
       return this.get_box(id).label;
     },
 
@@ -403,7 +421,6 @@ export default {
       }
     },
     on_resize: function() {
-      this.arrange_boxes();
       setTimeout(this.arrange_boxes, 10);
     },
 
@@ -418,9 +435,7 @@ export default {
         }
         if (this.has_image && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
-            let pri = this.boxes.slice(0, this.active_boxid);
-            let follow = this.boxes.slice(this.active_boxid + 1);
-            this.boxes =  [...pri, ...follow];
+            this.delete_boxes_in_selected_mode(this.active_boxid);
 
             this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
             event.preventDefault();
@@ -557,13 +572,9 @@ export default {
         boxes=this.set_selected_flag(boxes);
         this.boxes = boxes;
       }else{
-        if (this.show_selected_boxes){
-          if (this.active_boxid!=null) {
-            boxes = this.select_flag_when_selected_mode(this.active_boxid, boxes);
-            this.boxes = boxes;
-          }else{
-            // nothin change
-          }
+        if (this.show_selected_boxes===true){
+          boxes = this.select_flag_when_selected_mode(this.active_boxid, boxes);
+          this.boxes = boxes;
         }else{
           if (this.active_boxid!=null) {
             boxes = this.select_flag_from_original(this.active_boxid,boxes);
@@ -577,9 +588,11 @@ export default {
     },
     _clean_boxes: function() {
       const tagboxes = [];
-      for (let box of this.active_image_tag_boxes) {
-        if (box.label) {
+      for (const [i, box] of this.active_image_tag_boxes.entries()){
+        if(box.label){
           tagboxes.push(box);
+        }else{
+          this._clean_boxes_in_selected_mode(i);
         }
       }
       this.$store.commit("set_tagboxes", { tagboxes });
@@ -629,11 +642,6 @@ export default {
       if (!this.has_image) {
         return;
       }
-      if (this.active_boxid!=null){
-        this.set_active_boxid({
-          boxid: null
-        });
-      }
 
       const [, rc] = this.calc_image_rect();
       rc[2] = rc[2] - 1;
@@ -642,6 +650,11 @@ export default {
       }
       this._clean_boxes();
 
+      if (this.active_boxid!=null){
+        this.set_active_boxid({
+          boxid: null
+        });
+      }
       [this.dragfrom_x, this.dragfrom_y] = [event.clientX, event.clientY];
       this.status = "new";
 
@@ -1089,7 +1102,7 @@ export default {
     #save_xml_btn_disabled {
       color: #fff;
       height: calc(#{$panel-height} * 0.8);
-      width: calc(50px * 2);
+      width: calc(55px * 2);
       line-height: calc(#{$panel-height} * 0.8);
       text-align: center;
       background-color: $disabled-color;
