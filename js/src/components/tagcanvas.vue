@@ -50,7 +50,7 @@
           <div class="col-sm-3 clear-padding" style="position:relative; display:inline-block;">
             <div id='toggle' >
               <label class="switch ">
-                <input type="checkbox">
+                <input type="checkbox" :class="{checked : show_selected_boxes}">
                 <span class="slider" v-on:click="show_selected_boxes_toggle"></span>
               </label>
             </div>
@@ -255,7 +255,6 @@ export default {
       };
     }
   },
-  // TODO
   watch: {
     active_image_tag_boxes: function() {
       this.$nextTick(() => {
@@ -444,6 +443,10 @@ export default {
             event.stopPropagation();
             return false;
           }
+        }
+        if(event.ctrlKey === true && event.key === "d"){
+          this.show_selected_boxes_toggle();
+          console.log("hello!");
         }
     },
 
@@ -998,7 +1001,6 @@ export default {
     position: absolute;
     bottom: 0;
     right: 10px;
-
     .switch {
       height: calc(#{$panel-height} * 0.8);
       width: 55px;
@@ -1007,7 +1009,7 @@ export default {
         opacity:0;
         width:0;
         height:0;
-        &:checked+.slider{
+        &.checked+.slider{
           background-color:#006ea1;
           &:before{
             transform: translateX(26px);
