@@ -446,7 +446,6 @@ export default {
         }
         if(event.ctrlKey === true && event.key === "d"){
           this.show_selected_boxes_toggle();
-          console.log("hello!");
         }
     },
 

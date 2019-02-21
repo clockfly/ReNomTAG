@@ -119,6 +119,14 @@ To save the tag, please click the ``save`` button.
 The ``Space`` key also acts as a shortcut for saving.
 
 
+Show a tag, only the one you selected
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can choose to show only one box by selecting it then clicking the ``toggle button``.
+``Ctrl+d`` can also be used as a shortcut for this.
+New boxes can still be added in this mode.
+Return to the normal view by clicking the toggle button again.
+
+
 Set shortcut keys for class tags
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
