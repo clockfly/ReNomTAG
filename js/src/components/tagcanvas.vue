@@ -428,7 +428,7 @@ export default {
     on_keyup: function(event) {
         if (event.key === " ") {
           if (this.can_be_saved) {
-            this.save_annotation();
+            this.apply_annotation();
             event.preventDefault();
             event.stopPropagation();
           }
