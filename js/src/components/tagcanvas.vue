@@ -1,24 +1,41 @@
 <template>
   <div id='canvasblock'>
     <div id="canvaspanel" ref="canvaspanel"
-        @mousedown.stop='on_click'
-        @mousemove.stop.prevent='on_mousemove'>
+        @mousedown.middle='on_down_middle'
+        @mousemove='on_move_middle'
+        @mouseup.middle='on_up_middle'
+        @mousedown.left.stop='on_click'
+        @mousemove.left.stop.prevent='on_mousemove'>
+
       <navarrow class="arrow" dir="back"/>
-      <img v-if="has_image" id="canvas" ref="canvas" :src="image_url"
-       @dragstart.stop.prevent="on_drag_start">
-      <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-<!-- TODO -->
-
-      <div v-for="(tagstyle, idx) in boxes" :key="idx"
-          :style='tagstyle'
-          class='box-border'
-          :data-boxid='idx' @mousedown.stop.prevent='on_boxclick'
-          @mousemove='on_boxmousemove'>
-        <div :class="['box', is_active_box(idx) ? 'box-active':'']">
-          <div class='taglabel'>{{get_box_label(idx)}}</div>
+        <div id="canvas-wrapper" @wheel.ctrl.prevent="zoom_image" ref="wrapper">
+          <div id="pad"/>
+          <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
+           @dragstart.left.stop.prevent="on_drag_start">
+          <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
+          <div v-for="(tagstyle, idx) in boxes" :key="idx"
+              :style='tagstyle'
+              class='box-border'
+              :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
+              @mousemove.left='on_boxmousemove'>
+            <div :class="['box', is_active_box(idx) ? 'box-active':'']">
+              <div class='taglabel'>{{get_box_label(idx)}}</div>
+            </div>
+          </div>
         </div>
-      </div>
-
+        <transition name="fade">
+          <div id="zoom-button" v-if="zoom_scale!=1.0 || zoom_x != 0 || zoom_y != 0">
+            <div id="zoom-out-button" @click="on_zoom_out_button">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+            <div id="zoom-reset-button" @click="on_zoom_reset_button">
+              <i class="fa fa-expand" aria-hidden="true"></i>
+            </div>
+            <div id="zoom-in-button" @click="on_zoom_in_button">
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </div>
+          </div>
+        </transition>
       <navarrow class="arrow" dir="forward"/>
     </div>
     <p id="demo"></p>
@@ -108,7 +125,14 @@ export default {
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
-      NG_BUTTON_PUSH: require("../assets/images/NG_push.png")
+      NG_BUTTON_PUSH: require("../assets/images/NG_push.png"),
+
+      zoom_x: 0, // The coordinate x the image
+      zoom_y: 0,
+      zoom_scale: 1.0,
+      image_drag_status: false,
+      image_dragform_x: 0,
+      image_dragform_y: 0
     };
   },
   created: function() {
@@ -153,12 +177,12 @@ export default {
     },
     can_be_saved: function() {
       let has_tag = false;
-      for(let tag of this.tagged_images){
-        if(tag.filename == this.active_image_filename){
+      for (let tag of this.tagged_images) {
+        if (tag.filename == this.active_image_filename) {
           has_tag = true;
         }
       }
-      //tagをもともと持っていた場合はboxesが0でもsaveの対象とする
+      // tagをもともと持っていた場合はboxesが0でもsaveの対象とする
       if (this.active_image_tag_boxes.length === 0 && !has_tag) {
         return false;
       }
@@ -176,16 +200,96 @@ export default {
       set(value) {
         this.$store.commit("set_review_comment", { comment: value });
       }
+    },
+    canvas_style: function() {
+      const imgrc = this.$refs.wrapper;
+      let parent_top = 0;
+      let parent_left = 0;
+      if (imgrc) {
+        const rect = imgrc.getBoundingClientRect();
+        parent_top = rect.top;
+        parent_left = rect.left;
+      }
+      const z = this.zoom_scale;
+      return {
+        width: 100.0 * z + "%",
+        height: 100.0 * z + "%",
+        top: this.zoom_y + "px",
+        left: this.zoom_x + "px"
+      };
     }
   },
   watch: {
     active_image_tag_boxes: function() {
-      this.arrange_boxes();
-    },
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
+    }
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation","delete_xml","paste_annotation"]),
+    ...mapActions(["save_annotation", "delete_xml","paste_annotation"]),
+
+    _zoom: function(x, y, scale_delt, in_out) {
+      let z = 0;
+      if (in_out > 0) {
+        this.zoom_scale -= scale_delt;
+        if (this.zoom_scale >= 0.5) {
+          z = -scale_delt;
+        } else {
+          this.zoom_scale = 0.5;
+        }
+      } else {
+        this.zoom_scale += scale_delt;
+        if (this.zoom_scale <= 1.5) {
+          z = scale_delt;
+        } else {
+          this.zoom_scale = 1.5;
+        }
+      }
+      let candidate_x = this.zoom_x;
+      let candidate_y = this.zoom_y;
+      const [_, rect] = this.calc_image_rect();
+      const imgrc = this.$refs.canvas.getBoundingClientRect();
+      const wrapper = this.$refs.wrapper.getBoundingClientRect();
+
+      let deltX =
+        (x - imgrc.left) /
+        (imgrc.right - imgrc.left) *
+        (wrapper.right - wrapper.left);
+      let deltY =
+        (y - imgrc.top) /
+        (imgrc.bottom - imgrc.top) *
+        (wrapper.bottom - wrapper.top);
+      candidate_x -= deltX * z;
+      candidate_y -= deltY * z;
+      this.zoom_y = candidate_y;
+      this.zoom_x = candidate_x;
+
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
+    },
+
+    on_zoom_out_button: function() {
+      const rect = this.$refs.canvaspanel.getBoundingClientRect();
+      this._zoom(rect.right / 2, rect.bottom / 2, 0.05, false);
+    },
+
+    on_zoom_reset_button: function() {
+      this.zoom_y = 0;
+      this.zoom_x = 0;
+      this.zoom_scale = 1.0;
+      this.$nextTick(() => {
+        this.arrange_boxes();
+      });
+    },
+
+    on_zoom_in_button: function() {
+      const rect = this.$refs.canvaspanel.getBoundingClientRect();
+      this._zoom(rect.right / 2, rect.bottom / 2, 0.05, true);
+    },
+
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
       return this.size_style(ret);
@@ -221,10 +325,10 @@ export default {
       ]);
       return [l, t, r, b];
     },
-    apply_annotation: function(){
-      if(this.active_image_tag_boxes.length == 0){
+    apply_annotation: function() {
+      if (this.active_image_tag_boxes.length == 0) {
         this.delete_xml();
-      }else{
+      } else {
         this.save_annotation();
       }
     },
@@ -272,7 +376,12 @@ export default {
             return;
           }
 
-          if((event.key === "ArrowUp") || (event.key === "ArrowDown") || (event.key === "ArrowLeft") || (event.key === "ArrowRight")){
+          if (
+            event.key === "ArrowUp" ||
+            event.key === "ArrowDown" ||
+            event.key === "ArrowLeft" ||
+            event.key === "ArrowRight"
+          ) {
             let [ratio, imgrc] = this.calc_image_rect();
 
             let boxid = this.active_boxid;
@@ -310,8 +419,7 @@ export default {
               boxid: boxid,
               box: box
             });
-
-          }else{
+          } else {
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
                 this.$store.commit("set_activebox_label", label);
@@ -321,10 +429,10 @@ export default {
               }
             }
           }
-
         }
       }
     },
+
     size_style: function(rc) {
       const left = `${rc[0]}px`;
       const top = `${rc[1]}px`;
@@ -403,6 +511,46 @@ export default {
         }
       }
       this.$store.commit("set_tagboxes", { tagboxes });
+    },
+    on_down_middle: function(e) {
+      this.image_drag_status = true;
+      this.image_dragform_x = e.clientX;
+      this.image_dragform_y = e.clientY;
+    },
+    on_move_middle: function(e) {
+      if (this.image_drag_status) {
+        const [ratio, rect] = this.calc_image_rect();
+        const imgrc = this.$refs.canvas.getBoundingClientRect();
+        const wrapper = this.$refs.wrapper.getBoundingClientRect();
+        const candidate_x = this.zoom_x + (e.clientX - this.image_dragform_x);
+        const candidate_y = this.zoom_y + (e.clientY - this.image_dragform_y);
+        const candidate_imgrc_x = rect[0] + (e.clientX - this.image_dragform_x);
+        const candidate_imgrc_y = rect[1] + (e.clientY - this.image_dragform_y);
+        const movable = 300;
+        const will_out_side_left = candidate_imgrc_x + movable > wrapper.right;
+        const will_out_side_right =
+          candidate_imgrc_x + rect[2] - rect[0] - movable < wrapper.left;
+        const will_out_side_top = candidate_imgrc_y + movable > wrapper.bottom;
+        const will_out_side_bottom =
+          candidate_imgrc_y + rect[3] - rect[1] - movable < wrapper.top;
+        this.image_dragform_x = e.clientX;
+        this.image_dragform_y = e.clientY;
+
+        if (will_out_side_left || will_out_side_right) {
+          this.zoom_y = candidate_y;
+        } else if (will_out_side_top || will_out_side_bottom) {
+          this.zoom_x = candidate_x;
+        } else {
+          this.zoom_y = candidate_y;
+          this.zoom_x = candidate_x;
+        }
+        this.$nextTick(() => {
+          this.arrange_boxes();
+        });
+      }
+    },
+    on_up_middle: function(e) {
+      this.image_drag_status = false;
     },
 
     on_click: function(event) {
@@ -596,7 +744,9 @@ export default {
 
       this.status = "";
     },
+
     get_reviewstatus: function() {
+      const prior_scale = this.zoom_scale;
       if (this.active_image_review_result === "ok") {
         return "reviewok";
       } else if (this.active_image_review_result === "nh") {
@@ -604,6 +754,9 @@ export default {
       }
       return "notreviewed";
     },
+    zoom_image: function(e) {
+      this._zoom(e.clientX, e.clientY, 0.05, e.deltaY > 0);
+    }
   }
 };
 </script>
@@ -626,15 +779,52 @@ export default {
   .arrow {
     margin-top: 25%;
   }
-  #canvas {
-    margin: auto;
-    margin-top: $component-margin-top;
-    width: 90%;
-    max-width: 90%;
-    max-height: 95%;
-    flex-grow: 0;
-    flex-shrink: 0;
-    object-fit: contain;
+  #canvas-wrapper {
+    width: calc(100% - 60px);
+    height: 100%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    #pad {
+      width: 100%;
+      height: $component-margin-top;
+    }
+    #canvas {
+      position: relative;
+      margin: auto;
+      flex-grow: 0;
+      flex-shrink: 0;
+      object-fit: contain;
+      max-width: none;
+    }
+  }
+  #zoom-button {
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    width: 120px;
+    height: 30px;
+    top: calc(100% - 30px);
+    left: calc(50% - 60px);
+    #zoom-out-button {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    #zoom-in-button {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+    div {
+      display: flex;
+      width: 33.33%;
+      i-align: center;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      background-color: #00000088;
+      &:hover {
+        cursor: pointer;
+        background-color: #00000033;
+      }
+    }
   }
 
   .box-border {
@@ -650,7 +840,6 @@ export default {
       color: white;
       background-color: #73dd00;
     }
-
     .box {
       position: absolute;
       border: solid #73dd00 1px;
@@ -684,11 +873,11 @@ export default {
   margin-top: $component-margin-top;
 
   .not_admin {
-    border:none;
+    border: none;
     background: #fff;
   }
   .form-control.not_admin:focus {
-      box-shadow: none;
+    box-shadow: none;
   }
   .admin {
     cursor: pointer;
@@ -707,25 +896,27 @@ export default {
     margin-right: 7px;
     &:hover,
     &-push {
-      background: #ff4949!important
+      background: #ff4949 !important;
     }
   }
   .ng-button {
     margin-left: 7px;
     margin-right: 0px;
-    &:hover,&-push {
-      background: #000!important
+    &:hover,
+    &-push {
+      background: #000 !important;
     }
   }
-  .ng-button,.ok-button{
+  .ng-button,
+  .ok-button {
     cursor: pointer;
     background: #999;
-    padding:10px;
+    padding: 10px;
     color: #fff;
     width: 48px;
-    font-size:0.8rem;
+    font-size: 0.8rem;
     text-align: center;
-    line-height:5px;
+    line-height: 5px;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -739,7 +930,7 @@ export default {
 
     &:hover {
       cursor: not-allowed;
-      background: #999!important;
+      background: #999 !important;
     }
   }
 
@@ -784,6 +975,14 @@ export default {
   }
   .btn-wrp {
     margin-top: $content-top-margin;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 }
 </style>
