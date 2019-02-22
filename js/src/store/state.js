@@ -5,11 +5,12 @@ let state = {
   // menu state
   main_menu_visible: false,
 
+  // loading_message: = "No images found." or "Loading images..."
   loading_message: "Loading images...",
   make_dir_message: "",
   make_dir_message_counter: 0,
   username: "user",
-  undef_file_message:"",
+  undef_file_message: "",
   dup_file_message: "",
 
   working_dir: "",
@@ -21,6 +22,7 @@ let state = {
   review_filter: ["notreviewed"],
   filter_method: "NoTags",
   files: [],
+  image_list: [],
   filename_max_display: 0,
 
   // active image

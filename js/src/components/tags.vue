@@ -240,7 +240,7 @@ export default {
       this.label = this.shortcut = "";
       document.body.focus();
     },
-      is_control_key(k) {
+    is_control_key(k) {
       const keys = [
         13, // Enter(ten key)
         32, // Space
@@ -301,7 +301,7 @@ export default {
     },
 
     update_label(event) {
-      if (event.keyCode === 13 || event == 'edit_off') {
+      if (event.keyCode === 13 || event == "edit_off") {
         if (this.update_errormsg === "") {
           if (this.edit_label === "") {
             this.edit_label = this.edit_target[0];
@@ -325,8 +325,7 @@ export default {
         this.edit_shortcut = "";
         event.preventDefault();
         return;
-      }
-      else if (this.is_control_key(event.keyCode)) {
+      } else if (this.is_control_key(event.keyCode)) {
         return;
       }
       this.edit_shortcut = event.key;
@@ -446,20 +445,20 @@ export default {
     flex-direction: row;
   }
   .add-new-label-btn {
-    color:#fff;
+    color: #fff;
     margin: 10px 0 0 0;
     cursor: pointer;
     background-color: $panel-bg-color-hover;
     // background-color: #989898;
     width: 100%;
-    padding:10px;
+    padding: 10px;
     vertical-align: middle;
     text-align: center;
-    &:before{
+    &:before {
       display: inline-block;
-      content: '＋';
+      content: "＋";
       font-size: 1.2rem;
-      line-height:0;
+      line-height: 0;
       vertical-align: middle;
     }
     &:focus {
@@ -467,7 +466,7 @@ export default {
     }
     &:disabled {
       background-color: $disabled-color;
-      cursor: default
+      cursor: default;
     }
   }
 

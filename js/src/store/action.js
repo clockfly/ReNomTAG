@@ -40,7 +40,7 @@ async function load_imagefile_list(context) {
     });
   }
 
-  if (response.data.dup_filename_list.length > 0){
+  if (response.data.dup_filename_list.length > 0) {
     let dup_message = utils.message_load_dupfile_list(
       response.data.dup_filename_list
     );
@@ -79,25 +79,25 @@ export default {
         folder: context.state.folder
       })
     );
-    if (response.data.result===1){
+    if (response.data.result === 1) {
       context.commit("set_folder_list", {
         folder_list: response.data.folder_list
       });
-    } else if (response.data.result===0){
+    } else if (response.data.result === 0) {
       let message = utils.message_make_dir(response.data.result);
-      context.commit("set_make_dir_message",{
+      context.commit("set_make_dir_message", {
         make_dir_message: message
       });
-      context.commit("set_working_dir",{
+      context.commit("set_working_dir", {
         working_dir: response.data.current_dir
       });
     }
   },
-
   async set_folder(context, folder) {
     await context.dispatch("load_folder_list");
     context.commit("set_folder", { folder: folder });
     context.commit("set_file_list", { file_list: [] });
+    context.commit("set_active_image", { file: null });
     await load_imagefile_list(context);
     await load_label_candidates_dict(context);
     await load_tagged_images(context);
@@ -111,7 +111,7 @@ export default {
       })
     );
 
-    if (response.data.result !== null){
+    if (response.data.result !== null) {
       console.log(response.data.result);
 
       let message = utils.message_make_dir(response.data.result);
@@ -193,8 +193,8 @@ export default {
     );
   },
 
-// TODO
-  async delete_xml(context){
+  // TODO
+  async delete_xml(context) {
     let target_filename = context.state.active_image_filename;
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/delete_xml"), {
@@ -203,15 +203,14 @@ export default {
       })
     );
 
-    if (response.data.result === 0){
-      console.log("result : ",response.data.message)
-      context.commit("set_error_status",{
-        error_status:response.data.message
+    if (response.data.result === 0) {
+      console.log("result : ", response.data.message);
+      context.commit("set_error_status", {
+        error_status: response.data.message
       });
-
-    }else{
-    // since deliting the xml sucessed, delete the filename from state.tagged_images
-      console.log("result : ",response.data.message)
+    } else {
+      // since deliting the xml sucessed, delete the filename from state.tagged_images
+      console.log("result : ", response.data.message);
       context.commit("delete_tagged_image", {
         filename: target_filename
       });
@@ -247,7 +246,6 @@ export default {
     }
   },
 
-
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
@@ -274,7 +272,7 @@ export default {
     value.annotation.source.reviewcomment =
       context.state.active_image_review_comment;
 
-    value.annotation.objects = []
+    value.annotation.objects = [];
     for (let box of context.state.active_image_tag_boxes) {
       let o = {
         object: {
@@ -349,19 +347,19 @@ export default {
   async delete_taglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];
-    for(let i in payload){
+    for (let i in payload) {
       delete labels[payload[i]];
     }
-    filtered_labels = labels.filter(function(x){
-      return !( x === "");
+    filtered_labels = labels.filter(function(x) {
+      return !(x === "");
     });
 
     context.commit("set_labels", filtered_labels);
     await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-      folder: context.state.folder,
-      labels: context.state.labels
-    })
-  );
+      axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
+        folder: context.state.folder,
+        labels: context.state.labels
+      })
+    );
   }
 };

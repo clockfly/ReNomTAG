@@ -27,7 +27,7 @@ describe('tagcanvas.vue', () => {
     set_image_rect(wrapper);
 
     const panel = wrapper.find('#canvaspanel');
-    panel.trigger('mousedown', {clientX:30, clientY:50});
+    panel.trigger('mousedown.left', {clientX:30, clientY:50});
     expect(wrapper.vm.newbox_rect).toEqual([30, 50, 30, 50]);
   })
 
@@ -51,7 +51,7 @@ describe('tagcanvas.vue', () => {
     set_image_rect(wrapper);
 
     const panel = wrapper.find('#canvaspanel');
-    panel.trigger('mousemove', {clientX:30, clientY:50});
+    panel.trigger('mousemove.left', {clientX:30, clientY:50});
 
     expect(wrapper.vm.newbox_rect).toEqual([10, 10, 30, 50]);
   })
@@ -64,7 +64,7 @@ describe('tagcanvas.vue', () => {
 
   
     const panel = wrapper.find('#canvaspanel');
-    panel.trigger('mousemove', {clientX:20, clientY:10});
+    panel.trigger('mousemove.left', {clientX:20, clientY:10});
 
     const rc = store.state.active_image_tag_boxes[0];
     expect([rc.left, rc.top, rc.right, rc.bottom]).toEqual([10, 10, 15, 20]);
@@ -79,7 +79,7 @@ describe('tagcanvas.vue', () => {
       set_image_rect(wrapper);
     
       const panel = wrapper.find('#canvaspanel');
-      panel.trigger('mousemove', {clientX:20, clientY:10});
+      panel.trigger('mousemove.left', {clientX:20, clientY:10});
   
       return store.state.active_image_tag_boxes[0];
     }
@@ -102,7 +102,7 @@ describe('tagcanvas.vue', () => {
     return Vue.nextTick()
     .then(function () {
       const box = wrapper.find('[data-boxid="0"]');
-      box.trigger('mousedown', {clientX:30, clientY:50});
+      box.trigger('mousedown.left', {clientX:30, clientY:50});
       expect([wrapper.vm.dragfrom_x, wrapper.vm.dragfrom_y]).toEqual([30, 50]);
     })
   })
@@ -115,7 +115,7 @@ describe('tagcanvas.vue', () => {
     return Vue.nextTick()
     .then(function () {
       const box = wrapper.find('[data-boxid="0"]');
-      box.trigger('mousemove', {clientX:30, clientY:50});
+      box.trigger('mousemove.left', {clientX:30, clientY:50});
       expect(box.element.style.cursor).toEqual("nwse-resize");
     })
   })

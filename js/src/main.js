@@ -5,6 +5,7 @@ require("@/css/reset.css");
 require("mini.css/dist/mini-default.min.css");
 require("font-awesome/css/font-awesome.css");
 require("@/css/common.css");
+require("@/css/3-wave.css");
 
 import Vue from "vue";
 import App from "@/App";
