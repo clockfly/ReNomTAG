@@ -1,5 +1,5 @@
 <template>
-  <div id='canvasblock'>
+  <div id='canvasblock' :class="{all_image_mode : this.all_image_mode === true, original : this.all_image_mode === false}">
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.middle='on_down_middle'
         @mousemove='on_move_middle'
@@ -38,9 +38,9 @@
         </transition>
       <navarrow class="arrow" dir="forward"/>
     </div>
-    <p id="demo"></p>
+    <p  v-show="this.all_image_mode === false" id="demo"></p>
 
-    <div>
+    <div  v-show="this.all_image_mode === false">
       <div id='imageinfo' class="row">
 
         <div class="col-md-6 col-md-offset-2">
@@ -153,6 +153,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "all_image_mode",
       "is_admin",
       "active_image_filename",
       "active_image",
@@ -751,226 +752,336 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-#canvasblock {
+.original{
+// #canvasblock
   flex-grow: 1;
   background: #fff;
-}
-.clear-padding {
-  padding-left: 0;
-  padding-right: 0;
-}
-#canvaspanel {
-  flex-grow: 1;
-  display: flex;
-  position: relative;
-  height: calc(100% - 150px + calc(#{$component-margin-top}));
-  .arrow {
-    margin-top: 25%;
+  padding:5px 15px;
+
+  .clear-padding {
+    padding-left: 0;
+    padding-right: 0;
   }
-  #canvas-wrapper {
-    width: calc(100% - 60px);
-    height: 100%;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    #pad {
-      width: 100%;
-      height: $component-margin-top;
-    }
-    #canvas {
-      position: relative;
-      margin: auto;
-      flex-grow: 0;
-      flex-shrink: 0;
-      object-fit: contain;
-      max-width: none;
-    }
-  }
-  #zoom-button {
+  #canvaspanel {
+    flex-grow: 1;
     display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    width: 120px;
-    height: 30px;
-    top: calc(100% - 30px);
-    left: calc(50% - 60px);
-    #zoom-out-button {
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+    position: relative;
+    height: calc(100% - 150px + calc(#{$component-margin-top}));
+    .arrow {
+      margin-top: 25%;
     }
-    #zoom-in-button {
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-    }
-    div {
-      display: flex;
-      width: 33.33%;
-      i-align: center;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #00000088;
-      &:hover {
-        cursor: pointer;
-        background-color: #00000033;
+    #canvas-wrapper {
+      width: calc(100% - 60px);
+      height: 100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      #pad {
+        width: 100%;
+        height: $component-margin-top;
+      }
+      #canvas {
+        position: relative;
+        margin: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+        object-fit: contain;
+        max-width: none;
       }
     }
-  }
-
-  .box-border {
-    box-sizing: border-box;
-    position: absolute;
-
-    $BOX_MARGIN: 2px;
-
-    .taglabel {
+    #zoom-button {
+      display: flex;
+      flex-wrap: wrap;
       position: absolute;
-      right: 0;
-      top: 0;
-      color: white;
-      background-color: #73dd00;
+      width: 120px;
+      height: 30px;
+      top: calc(100% - 30px);
+      left: calc(50% - 60px);
+      #zoom-out-button {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      #zoom-in-button {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      div {
+        display: flex;
+        width: 33.33%;
+        i-align: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: #00000088;
+        &:hover {
+          cursor: pointer;
+          background-color: #00000033;
+        }
+      }
     }
-    .box {
+
+    .box-border {
+      box-sizing: border-box;
       position: absolute;
-      border: solid #73dd00 1px;
-      left: $BOX_MARGIN;
-      top: $BOX_MARGIN;
-      right: $BOX_MARGIN;
-      bottom: $BOX_MARGIN;
-    }
-    .box-active {
-      border-color: red;
-      background-color: rgba(255, 255, 255, 0.7);
+
+      $BOX_MARGIN: 2px;
 
       .taglabel {
-        background-color: red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white;
+        background-color: #73dd00;
+      }
+      .box {
+        position: absolute;
+        border: solid #73dd00 1px;
+        left: $BOX_MARGIN;
+        top: $BOX_MARGIN;
+        right: $BOX_MARGIN;
+        bottom: $BOX_MARGIN;
+      }
+      .box-active {
+        border-color: red;
+        background-color: rgba(255, 255, 255, 0.7);
+
+        .taglabel {
+          background-color: red;
+        }
       }
     }
-  }
 
-  #newtag {
-    box-sizing: border-box;
-    position: absolute;
-    border: solid red 1px;
-  }
-}
-
-#imageinfo {
-  display: flex;
-  color: #666;
-  justify-content: center;
-  align-items: center;
-  margin-top: $component-margin-top;
-
-  .not_admin {
-    border: none;
-    background: #fff;
-  }
-  .form-control.not_admin:focus {
-    box-shadow: none;
-  }
-  .admin {
-    cursor: pointer;
-  }
-
-  .filename {
-    text-align: right;
-  }
-  .check-button {
-    height: $panel-height;
-    width: 38px;
-    background: #fff;
-    border-color: #000;
-  }
-  .ok-button {
-    margin-right: 7px;
-    &:hover,
-    &-push {
-      background: #ff4949 !important;
-    }
-  }
-  .ng-button {
-    margin-left: 7px;
-    margin-right: 0px;
-    &:hover,
-    &-push {
-      background: #000 !important;
-    }
-  }
-  .ng-button,
-  .ok-button {
-    cursor: pointer;
-    background: #999;
-    padding: 10px;
-    color: #fff;
-    width: 48px;
-    font-size: 0.8rem;
-    text-align: center;
-    line-height: 5px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  .img-btn {
-    height: 23px;
-    cursor: pointer;
-  }
-  .img-btn-disabled {
-    height: 23px;
-
-    &:hover {
-      cursor: not-allowed;
-      background: #999 !important;
+    #newtag {
+      box-sizing: border-box;
+      position: absolute;
+      border: solid red 1px;
     }
   }
 
-  .comment-area {
-    padding-right: 20px;
-  }
-  .form-control {
-    resize: none;
-    height: 90px;
-    border-radius: 0px;
-  }
-  .review_checked {
-    background-color: #a2c84a;
-  }
-  .button-margin-top {
-    margin-top: calc(#{$content-top-margin} * 0.5);
-  }
-  #save_xml_btn {
-    background-color: $panel-bg-color;
-    color: #fff;
-    height: calc(#{$panel-height} * 0.8);
-    width: calc(55px * 2);
-    line-height: calc(#{$panel-height} * 0.8);
-    text-align: center;
-    font-family: $content-top-header-font-family;
-    font-size: $content-modellist-font-size;
-    &:hover {
-      background-color: $panel-bg-color-hover;
+  #imageinfo {
+    display: flex;
+    color: #666;
+    justify-content: center;
+    align-items: center;
+    margin-top: $component-margin-top;
+
+    .not_admin {
+      border: none;
+      background: #fff;
+    }
+    .form-control.not_admin:focus {
+      box-shadow: none;
+    }
+    .admin {
       cursor: pointer;
     }
-  }
-  #save_xml_btn_disabled {
-    color: #fff;
-    height: calc(#{$panel-height} * 0.8);
-    width: calc(55px * 2);
-    line-height: calc(#{$panel-height} * 0.8);
-    text-align: center;
-    background-color: $disabled-color;
-    font-family: $content-top-header-font-family;
-    font-size: $content-modellist-font-size;
-    cursor: not-allowed;
-  }
-  .btn-wrp {
-    margin-top: $content-top-margin;
-  }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
+    .filename {
+      text-align: right;
+    }
+    .check-button {
+      height: $panel-height;
+      width: 38px;
+      background: #fff;
+      border-color: #000;
+    }
+    .ok-button {
+      margin-right: 7px;
+      &:hover,
+      &-push {
+        background: #ff4949 !important;
+      }
+    }
+    .ng-button {
+      margin-left: 7px;
+      margin-right: 0px;
+      &:hover,
+      &-push {
+        background: #000 !important;
+      }
+    }
+    .ng-button,
+    .ok-button {
+      cursor: pointer;
+      background: #999;
+      padding: 10px;
+      color: #fff;
+      width: 48px;
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 5px;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .img-btn {
+      height: 23px;
+      cursor: pointer;
+    }
+    .img-btn-disabled {
+      height: 23px;
+
+      &:hover {
+        cursor: not-allowed;
+        background: #999 !important;
+      }
+    }
+
+    .comment-area {
+      padding-right: 20px;
+    }
+    .form-control {
+      resize: none;
+      height: 90px;
+      border-radius: 0px;
+    }
+    .review_checked {
+      background-color: #a2c84a;
+    }
+    .button-margin-top {
+      margin-top: calc(#{$content-top-margin} * 0.5);
+    }
+    #save_xml_btn {
+      background-color: $panel-bg-color;
+      color: #fff;
+      height: calc(#{$panel-height} * 0.8);
+      width: calc(55px * 2);
+      line-height: calc(#{$panel-height} * 0.8);
+      text-align: center;
+      font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
+      &:hover {
+        background-color: $panel-bg-color-hover;
+        cursor: pointer;
+      }
+    }
+    #save_xml_btn_disabled {
+      color: #fff;
+      height: calc(#{$panel-height} * 0.8);
+      width: calc(55px * 2);
+      line-height: calc(#{$panel-height} * 0.8);
+      text-align: center;
+      background-color: $disabled-color;
+      font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
+      cursor: not-allowed;
+    }
+    .btn-wrp {
+      margin-top: $content-top-margin;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
+}
+.all_image_mode{
+// #canvasblock
+  flex-grow: 1;
+  background: #2e2f30;
+  height: 100%;
+  padding:15px 30px;
+
+  .clear-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #canvaspanel {
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+    height:100%;
+    .arrow {
+      margin-top: 25%;
+    }
+    #canvas-wrapper {
+      display: inline-block;
+      width: calc(100% - 60px);
+      height:100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
+      .pad {
+        width: 100%;
+        height: $component-margin-top;
+      }
+      #canvas {
+        position: relative;
+        margin: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+        object-fit: contain;
+        max-width: none;
+      }
+    }
+    #zoom-button {
+      display: flex;
+      flex-wrap: wrap;
+      position: absolute;
+      width: 120px;
+      height: 30px;
+      top: calc(100% - 60px);
+      left: calc(50% - 60px);
+      #zoom-out-button {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      #zoom-in-button {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      div {
+        display: flex;
+        width: 33.33%;
+        i-align: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: #00000088;
+        &:hover {
+          cursor: pointer;
+          background-color: #00000033;
+        }
+      }
+    }
+
+    .box-border {
+      box-sizing: border-box;
+      position: absolute;
+
+      $BOX_MARGIN: 2px;
+
+      .taglabel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white;
+        background-color: #73dd00;
+      }
+      .box {
+        position: absolute;
+        border: solid #73dd00 1px;
+        left: $BOX_MARGIN;
+        top: $BOX_MARGIN;
+        right: $BOX_MARGIN;
+        bottom: $BOX_MARGIN;
+      }
+      .box-active {
+        border-color: red;
+        background-color: rgba(255, 255, 255, 0.7);
+
+        .taglabel {
+          background-color: red;
+        }
+      }
+    }
+
+    #newtag {
+      box-sizing: border-box;
+      position: absolute;
+      border: solid red 1px;
+    }
   }
 }
 </style>

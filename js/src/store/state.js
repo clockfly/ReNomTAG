@@ -1,5 +1,7 @@
 let state = {
   is_admin: window.location.pathname.startsWith("/admin"),
+  all_image_mode: false,
+
   // error state
   error_status: "",
   // menu state

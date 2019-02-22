@@ -1,9 +1,33 @@
 <template>
   <div id="page">
-    <app-header class="row"></app-header>
-    <div id='main-container'>
-      <left-menu></left-menu>
-      <image-list class="folder-image" v-if="folder.length !== 0"/>
+    <div id="all-elements" v-show="this.all_image_mode === false">
+      <app-header class="row"></app-header>
+      <div id='main-container'>
+        <left-menu></left-menu>
+        <image-list class="folder-image" v-if="folder.length !== 0"/>
+        <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+        <div v-else id="no_active_image" class="filler">
+          <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
+              {{loading_message}}
+            </div>
+            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+              <div class="sk-wave">
+                <div class="sk-rect sk-rect1"></div>
+                <div class="sk-rect sk-rect2"></div>
+                <div class="sk-rect sk-rect3"></div>
+                <div class="sk-rect sk-rect4"></div>
+                <div class="sk-rect sk-rect5"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <tags></tags>
+      </div>
+      <tagged-images class="row"/>
+      <app-footer class="row" ></app-footer>
+    </div>
+    <div id="all-image"  v-show="this.all_image_mode === true">
       <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
       <div v-else id="no_active_image" class="filler">
         <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
@@ -21,10 +45,7 @@
           </div>
         </div>
       </div>
-      <tags></tags>
     </div>
-    <tagged-images class="row"/>
-    <app-footer class="row" ></app-footer>
 
     <modal-box v-if='make_dir_message'>
       <div slot='contents' class='mkdir-msg' >
@@ -103,6 +124,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "all_image_mode",
       "folder",
       "folder_list",
       "active_image_filename",
@@ -163,9 +185,15 @@ export default {
       this.$store.commit("set_make_dir_message_counter", {
         make_dir_message_counter: 0
       });
+    },
+    on_keyup: function(event){
+      if(event.ctrlKey === true && event.key === "w"){
+        console.log("hello")
+        let shift = !this.all_image_mode
+        this.$store.commit("set_all_image_mode", {all_image_mode : shift});
+      }
     }
   },
-
   created: function() {
     this.$store.dispatch("load_folder_list").then(() => {
       const foldername = utils.cookies.getItem("tags-foldername");
@@ -176,9 +204,14 @@ export default {
         }
       }
     });
+    window.addEventListener("keyup", this.on_keyup);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keyup", this.on_keyup);
   }
 };
 </script>
+
 <style lang='scss'>
 #page {
   width: 100%;
@@ -186,10 +219,28 @@ export default {
   background: $body-color;
 }
 
+#all-elements{
+  height: 100%;
+}
+#all-image{
+  height: 100%;
+  transition-delay: 2s;
+}
 #main-container {
   display: flex;
-  height: calc(100% - #{$application-header-hight} - 125px - #{$footer-height});
+  height: calc(100% - #{$application-header-hight} - #{$footer-height} - 125px);
 }
+
+// .fade-enter-active {
+//   transition: all  ease;
+// }
+// .fade-leave-active {
+//   transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+// }
+
+// .fade_page-enter, .fade_page-leave-to /* .fade-leave-active below version 2.1.8 */ {
+//   opacity: 0;
+// }
 
 #no_active_image {
   -webkit-box-flex: 1;
