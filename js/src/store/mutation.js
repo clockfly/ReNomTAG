@@ -210,14 +210,12 @@ export default {
   set_active_boxid(state, payload) {
     state.active_boxid = payload.boxid;
   },
-
   new_tagbox(state, payload) {
     state.active_image_tag_boxes = [
       ...state.active_image_tag_boxes,
       payload.box
     ];
   },
-
   set_tagbox(state, payload) {
     _set_tagbox(state, payload);
   },
