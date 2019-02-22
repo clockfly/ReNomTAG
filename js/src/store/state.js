@@ -40,7 +40,10 @@ let state = {
   tagged_images: [],
 
   // label colors
-  label_color: []
+  label_color: [],
+  
+  //全画面でコピーしたものを貼り付けるために追記
+  pre_save_boxes_data: []
 };
 
 export default state;

@@ -22,7 +22,6 @@
       <navarrow class="arrow" dir="forward"/>
     </div>
     <p id="demo"></p>
-
     <div>
       <div id='imageinfo' class="row">
 
@@ -80,7 +79,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -139,7 +137,8 @@ export default {
       "active_boxid",
       "labels",
       "files",
-      "tagged_images"
+      "tagged_images",
+      "pre_save_boxes_data"
     ]),
 
     image_url: function() {
@@ -182,11 +181,11 @@ export default {
   watch: {
     active_image_tag_boxes: function() {
       this.arrange_boxes();
-    }
+    },
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation","delete_xml","copy_annotation"]),
+    ...mapActions(["save_annotation","delete_xml","paste_annotation"]),
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
       return this.size_style(ret);
@@ -256,17 +255,10 @@ export default {
         if (event.ctrlKey) {
           switch(event.key){
             case "b":
-              
-              console.dir("変化前" + this.boxes);
-              //ここに適切な値をまず静的に入れてみる
-              // これをどうすれば動的にできるかを考える。
-              // let all_tag_files =this.tagged_images.sort(); 
-              // let all_img_files = Object.keys(this.folder_files).sort();
-              // console.dir(all_tag_files);
-              console.dir(this.active_image_tag_boxes[0]);
-              // return false;
-              this.boxes = [{"left":"270px","top":"105px","width":"225px","height":"129px"},{"left":"170px","top":"5px","width":"225px","height":"129px"}]
-              console.dir("変化後" + this.boxes);
+              if(this.pre_save_boxes_data.length == 0){
+                alert("コピー対象は無いです");
+              }
+              this.paste_annotation();
               break;
           }
         }

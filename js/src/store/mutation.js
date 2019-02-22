@@ -87,10 +87,27 @@ export function get_reviewresult(d) {
 }
 
 export default {
-  set_copy_boxes(state, payload){
-    //ここに適切な値を入れるような処理をかけば完了
-    // state.active_image_tag_boxes = payload.boxes;
+  set_copy_boxes(state,payload){
+    state.pre_save_boxes_data = [];
+    state.pre_save_boxes_data = state.active_image_tag_boxes;
   },
+  paste_copied_boxes(state){
+
+    let arr_len = 0;
+    let is_size_error = false;
+    // ペーストが適切かをチェック
+    for(arr_len in state.pre_save_boxes_data){
+      state.active_image_width < state.pre_save_boxes_data[arr_len].left? is_size_error=true:"";
+      state.active_image_height < state.pre_save_boxes_data[arr_len].top? is_size_error=true:"";
+    }
+    if(is_size_error){
+      alert("貼り付けサイズが適切ではないです");
+      return false;
+    }
+    else(state.active_image_tag_boxes.push(...state.pre_save_boxes_data))
+  },
+
+
   set_error_status(state, payload) {
     state.error_status = payload.error_status;
   },
@@ -200,8 +217,8 @@ export default {
     state.active_image_height = payload.height;
     state.active_image = payload.image;
     state.active_image_tag_boxes = payload.boxes;
-    // state.active_image_review_result = payload.review_result;
-    // state.active_image_review_comment = payload.review_comment;
+    state.active_image_review_result = payload.review_result;
+    state.active_image_review_comment = payload.review_comment;
 
     state.active_boxid = null;
   },

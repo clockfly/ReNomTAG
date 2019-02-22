@@ -251,7 +251,7 @@ export default {
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
-
+    
     if (!value) {
       value = {
         annotation: {
@@ -291,6 +291,7 @@ export default {
         }
       };
       value.annotation.objects.push(o);
+    
     }
 
     const ret = await async_func(context, () =>
@@ -307,6 +308,9 @@ export default {
       image: context.state.active_image,
       boxes: context.state.active_image_tag_boxes
     });
+
+    // ctrl + b用の処理
+    context.commit("set_copy_boxes");
 
     // load next image
     let idx = 0;
@@ -338,55 +342,9 @@ export default {
     });
   },
 
-  //ここから
-  async copy_annotation(context) {
-
-    // 追加中
-    // fileを適切なものに変えたい
-    var copy_target_file = "";
-    let all_tag_files =context.state.tagged_images.sort(); 
-    let all_img_files = Object.keys(context.state.folder_files).sort();
-    console.dir(all_img_files);
-    
-    let current_file = context.state.active_image_filename;
-    let num = all_img_files.findIndex(filename_in_array => filename_in_array == current_file);
-    // let num = all_img_files.findIndex(filename_in_array => console.log(filename_in_array));
-    console.dir("all_tag_files"+all_tag_files);
-    // console.log(num);
-    //targetを探すための繰り返し処理
-    while(num){
-      // まずは一個前のファイル名を持ってくる
-      // console.log(all_img_files[num-1]);
-      all_img_files[num-1];
-      let tag_num = all_tag_files.findIndex(tag_file_name=> tag_file_name.filename == all_img_files[num-1])
-      if(tag_num!= -1){
-        console.log("ターゲットあり、ターゲット名" + all_tag_files[tag_num].filename);
-        copy_target_file = all_tag_files[tag_num].filename;
-        break;
-      }
-      num--;
-    }
-    
-    let response = await async_func(context, () =>
-      axios.get(
-        utils.build_api_url(
-          "/api/get_raw_img/" + context.state.folder + "/" + copy_target_file
-        )
-      )
-    );
-    console.dir(response.data);
-    // context.commit("set_copy_boxes",{
-    //     // filename: current_file,
-    //     // width: response.data.width,
-    //     // height: response.data.height,
-    //     // image: "data:image;base64," + response.data.img,
-    //     boxes:response.data.boxes,
-    //     // review_result,
-    //     // review_comment
-    // })
-
+  async paste_annotation(context) {
+    context.commit("paste_copied_boxes");
   },
-  //今回作成分ここまで
   
   async delete_taglist(context, payload) {
     let labels = context.state.labels;
