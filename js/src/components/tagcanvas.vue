@@ -426,6 +426,7 @@ export default {
     },
 
     on_keyup: function(event) {
+      if (event.target.nodeName === "BODY") {
         if (event.key === " ") {
           if (this.can_be_saved) {
             this.apply_annotation();
@@ -447,9 +448,11 @@ export default {
         if(event.ctrlKey === true && event.key === "d"){
           this.show_selected_boxes_toggle();
         }
+      }
     },
 
     on_keydown: function(event) {
+      if (event.target.nodeName === "BODY") {
         if (this.has_image && this.active_boxid !== null) {
           if (!this.has_image) {
             return;
@@ -509,6 +512,7 @@ export default {
             }
           }
         }
+      }
     },
 
     size_style: function(rc) {
