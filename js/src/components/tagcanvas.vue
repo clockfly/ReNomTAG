@@ -13,13 +13,13 @@
           <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
            @dragstart.left.stop.prevent="on_drag_start">
           <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-          <div v-for="(tagstyle, idx) in boxes" :key="idx"
+          <div v-for="(tagstyle, idx) in fileter_selected_boxes" :key="idx"
               :style='tagstyle'
               class='box-border'
               :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
               @mousemove.left='on_boxmousemove'>
-            <div :class="['box', is_active_box(idx) ? 'box-active':'']">
-              <div class='taglabel'>{{get_box_label(idx)}}</div>
+            <div v-if="tagstyle!=null" :class="['box', is_active_box(idx) ? 'box-active':'']">
+              <div  class='taglabel'>{{get_box_label(idx)}}</div>
             </div>
           </div>
         </div>
@@ -40,58 +40,65 @@
     </div>
     <p id="demo"></p>
     <div>
-      <div id='imageinfo' class="row">
-
-        <div class="col-md-6 col-md-offset-2">
-          <div class="comment-area">
+      <div id='imageinfo' class="row  clear-padding">
+        <div class="col-sm-5 col-sm-offset-2 clear-padding">
+          <div class="comment-area float-right">
             <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_review_comment" :readonly="!this.is_admin"></textarea>
           </div>
         </div>
-        <div class= "col-md-3 row">
-          <div class="col-md-12 row clear-padding">
-            <span class="col-md-12 text-right clear-padding"> {{img_file_name}} </span>
-            <div class="col-md-12 clear-padding">
-              <div v-if="this.is_admin" class="btn-wrp">
-                <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
-                      class="img-btn float-right ng-button"
-                      @click="set_review_result({result:'ng'})">
-                      NG
-                </p>
-                <p v-else-if="can_be_saved && this.active_image_review_result === 'ng'"
-                      class="img-btn float-right ng-button ng-button-push"
-                      @click="set_review_result({result:'ng'})">
-                  NG
-                </p>
-                <p v-else class="img-btn-disabled float-right ng-button">
-                  NG
-                </p>
-                <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
-                      class="img-btn float-right ok-button"
-                      :class="{review_checked: this.active_image_review_result === 'ok'}"
-                      @click="set_review_result({result:'ok'})">
-                  OK
-                </p>
-                <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
-                      class="img-btn float-right ok-button ok-button-push"
-                      @click="set_review_result({result:'ok'})">
-                  OK
-                </p>
-                <p v-else class="img-btn-disabled float-right ok-button">
-                  OK
-                </p>
-              </div>
+        <div class= "col-sm-4 row clear-padding">
+          <div class="col-sm-3 clear-padding" style="position:relative; display:inline-block;">
+            <div id='toggle' >
+              <label class="switch ">
+                <input type="checkbox" :class="{checked : show_selected_boxes}">
+                <span class="slider" v-on:click="show_selected_boxes_toggle"></span>
+              </label>
             </div>
           </div>
-          <div class="col-md-12 button-margin-top row clear-padding">
-            <div class="col-md-12 clear-padding">
-              <div v-if="can_be_saved" id="save_xml_btn"
-                class="float-right"
-                @click='apply_annotation'>
-                Save
+          <div class="col-sm-6 clear-padding">
+            <div id='buttons' class="float-right row">
+              <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
+              <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
+                  <div v-if="this.is_admin" class="btn-wrp">
+                    <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
+                          class="img-btn   float-left  ng-button"
+                          @click="set_review_result({result:'ng'})">
+                          NG
+                    </p>
+                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ng'"
+                          class="img-btn   float-left  ng-button ng-button-push"
+                          @click="set_review_result({result:'ng'})">
+                      NG
+                    </p>
+                    <p v-else class="img-btn-disabled   float-left ng-button">
+                      NG
+                    </p>
+                    <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
+                          class="img-btn   float-right ok-button"
+                          :class="{review_checked: this.active_image_review_result === 'ok'}"
+                          @click="set_review_result({result:'ok'})">
+                      OK
+                    </p>
+                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
+                          class="img-btn   float-right ok-button ok-button-push"
+                          @click="set_review_result({result:'ok'})">
+                      OK
+                    </p>
+                    <p v-else class="img-btn-disabled   float-right ok-button">
+                      OK
+                    </p>
+                  </div>
               </div>
-              <div v-else id="save_xml_btn_disabled"
-                class="float-right">
-                Save
+              <div class="col-md-10 clear-padding" style="margin:3px 0px 0px;">
+                <div v-if="can_be_saved" id="save_xml_btn"
+                  class="float-left"
+                  @click='apply_annotation'>
+                  Save
+                </div>
+                <div v-else id="save_xml_btn_disabled"
+                  class="float-left">
+                  Save
+                </div>
               </div>
             </div>
           </div>
@@ -100,6 +107,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import NavArrow from "@/components/navarrow";
@@ -122,6 +130,7 @@ export default {
       newbox_rect: null, // rect of new box in client coord
       org_boxrc: null,
       boxes: null,
+      show_selected_boxes: false,
       OK_BUTTON: require("../assets/images/OK_button.png"),
       NG_BUTTON: require("../assets/images/NG_button.png"),
       OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
@@ -147,7 +156,7 @@ export default {
     window.removeEventListener("keydown", this.on_keydown);
   },
   mounted: function() {
-    setTimeout(this.arrange_boxes, 20);
+    setTimeout(this.arrange_boxes, 10);
   },
   computed: {
     ...mapState([
@@ -164,7 +173,6 @@ export default {
       "tagged_images",
       "pre_save_boxes_data"
     ]),
-
     image_url: function() {
       return this.active_image;
     },
@@ -192,6 +200,35 @@ export default {
         }
       }
       return true;
+    },
+    fileter_selected_boxes: function(){
+      if ((this.boxes === null) || (this.boxes === undefined)){
+        return false;
+      }
+
+      var size_style_boxes = [];
+      switch(this.show_selected_boxes){
+        case true:
+          var id = 0;
+          for (let box of this.boxes){
+            if (box.selected === true){
+              size_style_boxes[`${id}`] = box.size_style;
+            }else{
+              size_style_boxes[`${id}`] = null;
+            }
+            id = id + 1;
+          }
+          return size_style_boxes
+
+        case false:
+          var id = 0;
+          for (let box of this.boxes){
+            size_style_boxes[`${id}`] = box.size_style;
+            id = id + 1;
+          }
+          return size_style_boxes
+      }
+
     },
     active_image_review_comment: {
       get() {
@@ -292,7 +329,7 @@ export default {
 
     newtag_style: function() {
       let ret = this.to_canvas_rect(this.newbox_rect);
-      return this.size_style(ret);
+      return this.size_style(ret).size_style;
     },
 
     on_drag_start: function(idx) {
@@ -308,11 +345,64 @@ export default {
       return this.active_boxid === idx;
     },
 
+    show_selected_boxes_toggle: function (){
+      this.show_selected_boxes = !this.show_selected_boxes;
+      this.$nextTick(() => {
+       this.arrange_boxes();
+      });
+    },
+    set_selected_flag: function(boxes){
+      for (let box of boxes){
+        box.selected =false;
+      }
+      return boxes
+    },
+    _clean_boxes_in_selected_mode:function(nolabel_idx){
+      let pri = this.boxes.slice(0, nolabel_idx);
+      let follow = this.boxes.slice(nolabel_idx + 1);
+      this.boxes =  [...pri, ...follow];
+
+    },
+    // delete box : modify this.boxes when key.event happen ( in on_keyup: )
+    delete_boxes_in_selected_mode:function(active_boxid){
+      let pri = this.boxes.slice(0, active_boxid);
+      let follow = this.boxes.slice(active_boxid + 1);
+      this.boxes =  [...pri, ...follow];
+    },
+    // when(selected-mode) once the box became "active" store the id sothat fefer as "selected : true"
+    select_flag_when_selected_mode: function(active_boxid, boxes){
+       // new box
+       if(active_boxid!=null){
+         if(active_boxid === this.boxes.length){
+           boxes[active_boxid].selected = true;
+         }
+       }
+      // refer privious state of this.box.selected
+      for (var i=0; i<this.boxes.length; i++){
+        boxes[`${i}`].selected = this.boxes[`${i}`].selected;
+      }
+      return boxes
+    },
+    // when(original-mode to selected-mode) toggle is one to chatch thi function.
+    select_flag_from_original: function(active_boxid, boxes){
+      if (boxes[active_boxid]){
+        for (let box of boxes){
+          box.selected =false;
+          if (box === boxes[active_boxid]){
+            box.selected = true;
+          }
+        }
+      }
+      return boxes
+    },
+
     get_box: function(id) {
       return this.active_image_tag_boxes[id];
     },
-
-    get_box_label(id) {
+    get_box_label: function(id) {
+      if(!this.boxes[id]){
+        return false;
+      }
       return this.get_box(id).label;
     },
 
@@ -333,7 +423,6 @@ export default {
       }
     },
     on_resize: function() {
-      this.arrange_boxes();
       setTimeout(this.arrange_boxes, 10);
     },
 
@@ -341,7 +430,7 @@ export default {
       if (event.target.nodeName === "BODY") {
         if (event.key === " ") {
           if (this.can_be_saved) {
-            this.save_annotation();
+            this.apply_annotation();
             event.preventDefault();
             event.stopPropagation();
           }
@@ -349,6 +438,8 @@ export default {
         }
         if (this.has_image && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
+            this.delete_boxes_in_selected_mode(this.active_boxid);
+
             this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
             event.preventDefault();
             event.stopPropagation();
@@ -434,16 +525,12 @@ export default {
     },
 
     size_style: function(rc) {
-      const left = `${rc[0]}px`;
-      const top = `${rc[1]}px`;
-      const width = `${rc[2] - rc[0]}px`;
-      const height = `${rc[3] - rc[1]}px`;
-      return {
-        left,
-        top,
-        width,
-        height
-      };
+      const size_style = {};
+      size_style.left = `${rc[0]}px`;
+      size_style.top = `${rc[1]}px`;
+      size_style.width = `${rc[2] - rc[0]}px`;
+      size_style.height = `${rc[3] - rc[1]}px`;
+      return {size_style}
     },
 
     calc_image_rect: function() {
@@ -472,7 +559,6 @@ export default {
       const b = Math.floor(box.bottom * ratio + imgrc[1]);
       return [l, t, r, b];
     },
-
     client_to_box: function(rect) {
       let [left, top, right, bottom] = utils.normalize_rect(rect);
       let [ratio, imgrc] = this.calc_image_rect();
@@ -483,9 +569,8 @@ export default {
 
       return { left, top, right, bottom };
     },
-
     arrange_boxes: function() {
-      const boxes = [];
+      let boxes = [];
       if (!this.$refs.canvas || !this.active_image_tag_boxes) {
         return;
       }
@@ -500,14 +585,31 @@ export default {
           ])
         );
       }
-      this.boxes = boxes;
-    },
+      if (this.boxes===null){
+        boxes=this.set_selected_flag(boxes);
+        this.boxes = boxes;
+      }else{
+        if (this.show_selected_boxes===true){
+          boxes = this.select_flag_when_selected_mode(this.active_boxid, boxes);
+          this.boxes = boxes;
+        }else{
+          if (this.active_boxid!=null) {
+            boxes = this.select_flag_from_original(this.active_boxid,boxes);
+          }else{
+            boxes=this.set_selected_flag(boxes);
+          }
+          this.boxes = boxes;
 
+        }
+      }
+    },
     _clean_boxes: function() {
       const tagboxes = [];
-      for (let box of this.active_image_tag_boxes) {
-        if (box.label) {
+      for (const [i, box] of this.active_image_tag_boxes.entries()){
+        if(box.label){
           tagboxes.push(box);
+        }else{
+          this._clean_boxes_in_selected_mode(i);
         }
       }
       this.$store.commit("set_tagboxes", { tagboxes });
@@ -565,8 +667,12 @@ export default {
       }
       this._clean_boxes();
 
+      if (this.active_boxid!=null){
+        this.set_active_boxid({
+          boxid: null
+        });
+      }
       [this.dragfrom_x, this.dragfrom_y] = [event.clientX, event.clientY];
-
       this.status = "new";
 
       // creating new box
@@ -607,7 +713,6 @@ export default {
       }
       return "";
     },
-
     on_boxclick: function(event) {
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
@@ -627,7 +732,6 @@ export default {
       } else {
         this.status = resize;
       }
-      // TODO
       this.set_active_boxid({ boxid: parseInt(boxid) });
       const box = this.get_box(this.active_boxid);
       this.org_boxrc = this.box_to_client(box);
@@ -665,7 +769,6 @@ export default {
       }
       event.target.style.cursor = cursor;
     },
-
     on_mousemove: function(event) {
       if (!this.has_image) {
         return;
@@ -726,7 +829,6 @@ export default {
         });
       }
     },
-
     end_drag: function() {
       if (this.status === "new") {
         const box = this.client_to_box(this.newbox_rect);
@@ -770,6 +872,7 @@ export default {
   padding-left: 0;
   padding-right: 0;
 }
+
 #canvaspanel {
   flex-grow: 1;
   display: flex;
@@ -872,70 +975,26 @@ export default {
   align-items: center;
   margin-top: $component-margin-top;
 
-  .not_admin {
-    border: none;
-    background: #fff;
-  }
-  .form-control.not_admin:focus {
-    box-shadow: none;
-  }
-  .admin {
-    cursor: pointer;
-  }
-
-  .filename {
-    text-align: right;
-  }
   .check-button {
     height: $panel-height;
     width: 38px;
     background: #fff;
     border-color: #000;
   }
-  .ok-button {
-    margin-right: 7px;
-    &:hover,
-    &-push {
-      background: #ff4949 !important;
-    }
+  .not_admin {
+    border:none;
+    background: #fff;
   }
-  .ng-button {
-    margin-left: 7px;
-    margin-right: 0px;
-    &:hover,
-    &-push {
-      background: #000 !important;
-    }
+  .form-control.not_admin:focus {
+      box-shadow: none;
   }
-  .ng-button,
-  .ok-button {
+  .admin {
     cursor: pointer;
-    background: #999;
-    padding: 10px;
-    color: #fff;
-    width: 48px;
-    font-size: 0.8rem;
-    text-align: center;
-    line-height: 5px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  .img-btn {
-    height: 23px;
-    cursor: pointer;
-  }
-  .img-btn-disabled {
-    height: 23px;
-
-    &:hover {
-      cursor: not-allowed;
-      background: #999 !important;
-    }
   }
 
   .comment-area {
     padding-right: 20px;
+    width: 300px;
   }
   .form-control {
     resize: none;
@@ -945,36 +1004,130 @@ export default {
   .review_checked {
     background-color: #a2c84a;
   }
-  .button-margin-top {
-    margin-top: calc(#{$content-top-margin} * 0.5);
+  .align-bottom{
+    display: inline-block;
+    vertical-align: bottom;
   }
-  #save_xml_btn {
-    background-color: $panel-bg-color;
-    color: #fff;
+  #toggle {
+    display: inline-block;
     height: calc(#{$panel-height} * 0.8);
-    width: calc(55px * 2);
-    line-height: calc(#{$panel-height} * 0.8);
-    text-align: center;
-    font-family: $content-top-header-font-family;
-    font-size: $content-modellist-font-size;
-    &:hover {
-      background-color: $panel-bg-color-hover;
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    .switch {
+      height: calc(#{$panel-height} * 0.8);
+      width: 55px;
+      input[type=checkbox]{
+        line-height: calc(#{$panel-height} * 0.8);
+        opacity:0;
+        width:0;
+        height:0;
+        &.checked+.slider{
+          background-color:#006ea1;
+          &:before{
+            transform: translateX(26px);
+          }
+        }
+      }
+
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #999;
+      transition: .4s;
+
+      &:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+      }
+    }
+
+  }
+  #buttons{
+    margin: auto;
+    .filename {
+      text-align: right;
+    }
+    .btn-wrp {
+      display: inline-block;
+      width: calc(55px * 2);
+
+    }
+    .btn-wrp > p{
+        display: inline-block;
+        margin: 0px;
+    }
+    .ok-button {
+      &:hover,
+      &-push {
+        background: #ff4949!important
+      }
+    }
+    .ng-button {
+      &:hover,&-push {
+        background: #000!important
+      }
+    }
+    .ng-button,.ok-button{
+      cursor: pointer;
+      background: #999;
+      padding:10px;
+      color: #fff;
+      width: 53px;
+      font-size:0.8rem;
+      text-align: center;
+      line-height:5px;
+    }
+
+    .img-btn {
+      height: 23px;
       cursor: pointer;
     }
-  }
-  #save_xml_btn_disabled {
-    color: #fff;
-    height: calc(#{$panel-height} * 0.8);
-    width: calc(55px * 2);
-    line-height: calc(#{$panel-height} * 0.8);
-    text-align: center;
-    background-color: $disabled-color;
-    font-family: $content-top-header-font-family;
-    font-size: $content-modellist-font-size;
-    cursor: not-allowed;
-  }
-  .btn-wrp {
-    margin-top: $content-top-margin;
+    .img-btn-disabled {
+      height: 23px;
+
+      &:hover {
+        cursor: not-allowed;
+        background: #999!important;
+      }
+    }
+    #save_xml_btn {
+      background-color: $panel-bg-color;
+      color: #fff;
+      height: calc(#{$panel-height} * 0.8);
+      width: calc(55px * 2);
+      line-height: calc(#{$panel-height} * 0.8);
+      text-align: center;
+      font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
+      &:hover {
+        background-color: $panel-bg-color-hover;
+        cursor: pointer;
+      }
+    }
+    #save_xml_btn_disabled {
+      color: #fff;
+      height: calc(#{$panel-height} * 0.8);
+      width: calc(55px * 2);
+      line-height: calc(#{$panel-height} * 0.8);
+      text-align: center;
+      background-color: $disabled-color;
+      font-family: $content-top-header-font-family;
+      font-size: $content-modellist-font-size;
+      cursor: not-allowed;
+    }
+
   }
 
   .fade-enter-active,
