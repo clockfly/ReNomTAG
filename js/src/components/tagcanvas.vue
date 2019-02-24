@@ -478,6 +478,10 @@ export default {
 
             let boxid = this.active_boxid;
             let box = this.get_box(boxid);
+            box.top = parseInt(box.top);
+            box.bottom = parseInt(box.bottom);
+            box.right = parseInt(box.right);
+            box.left = parseInt(box.left);
 
             switch (event.key) {
               case "ArrowUp":
