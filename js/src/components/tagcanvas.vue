@@ -31,6 +31,9 @@
             <div id="zoom-reset-button" @click="on_zoom_reset_button">
               <i class="fa fa-expand" aria-hidden="true"></i>
             </div>
+            <div id="expand-wide" @click="expand_image_mode">
+              <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+            </div>
             <div id="zoom-in-button" @click="on_zoom_in_button">
               <i class="fa fa-minus" aria-hidden="true"></i>
             </div>
@@ -268,6 +271,11 @@ export default {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
     ...mapActions(["save_annotation", "delete_xml"]),
 
+    expand_image_mode: function(){
+      let shift = !this.all_image_mode;
+      this.$store.commit("set_all_image_mode", {all_image_mode : shift});
+    },
+
     _zoom: function(x, y, scale_delt, in_out) {
       let z = 0;
       if (in_out > 0) {
@@ -429,6 +437,9 @@ export default {
 
     on_keyup: function(event) {
       if (event.target.nodeName === "BODY") {
+        if(event.ctrlKey === true && event.key === "w"){
+          this.expand_image_mode();
+        }
         if (event.key === " ") {
           if (this.can_be_saved) {
             this.apply_annotation();
@@ -456,9 +467,6 @@ export default {
     on_keydown: function(event) {
       if (event.target.nodeName === "BODY") {
         if (this.has_image && this.active_boxid !== null) {
-          if (!this.has_image) {
-            return;
-          }
 
           if (
             event.key === "ArrowUp" ||
@@ -910,7 +918,7 @@ export default {
       }
       div {
         display: flex;
-        width: 33.33%;
+        width: 25%;
         i-align: center;
         justify-content: center;
         align-items: center;
@@ -1006,7 +1014,7 @@ export default {
       height: calc(#{$panel-height} * 0.8);
       position: absolute;
       bottom: 0;
-      right: 10px;
+      right: 5px;
       .switch {
         height: calc(#{$panel-height} * 0.8);
         width: 55px;

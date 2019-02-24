@@ -191,13 +191,6 @@ export default {
       this.$store.commit("set_make_dir_message_counter", {
         make_dir_message_counter: 0
       });
-    },
-    on_keyup: function(event){
-      if(event.ctrlKey === true && event.key === "w"){
-        console.log("hello")
-        let shift = !this.all_image_mode
-        this.$store.commit("set_all_image_mode", {all_image_mode : shift});
-      }
     }
   },
   created: function() {
@@ -210,10 +203,6 @@ export default {
         }
       }
     });
-    window.addEventListener("keyup", this.on_keyup);
-  },
-  beforeDestroy() {
-    window.removeEventListener("keyup", this.on_keyup);
   }
 };
 </script>
@@ -222,11 +211,12 @@ export default {
 #page {
   width: 100%;
   height: 100%;
-  background: $body-color;
+  background: #2e2f30;
 }
 
 #all-elements{
   height: 100%;
+  background: $body-color;
 }
 #all-image{
   height: 100%;
