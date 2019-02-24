@@ -41,12 +41,19 @@
     <p id="demo"></p>
     <div>
       <div id='imageinfo' class="row  clear-padding">
-        <div class="col-sm-5 col-sm-offset-2 clear-padding">
-          <div class="comment-area float-right">
-            <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_review_comment" :readonly="!this.is_admin"></textarea>
+        <div class="col-md-8 row  clear-padding comment-wrapper">
+          <div class="col-sm-6 ">
+            <div class="comment-area ">
+              <textarea class="form-control" :class="{admin: is_admin}" v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="comment-area">
+              <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
+            </div>
           </div>
         </div>
-        <div class= "col-sm-4 row clear-padding">
+        <div class= "col-md-4 row clear-padding">
           <div class="col-sm-3 clear-padding" style="position:relative; display:inline-block;">
             <div id='toggle' >
               <label class="switch ">
@@ -56,7 +63,7 @@
             </div>
           </div>
           <div class="col-sm-6 clear-padding">
-            <div id='buttons' class="float-right row">
+            <div id='buttons' class="row">
               <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
                   <div v-if="this.is_admin" class="btn-wrp">
@@ -229,12 +236,29 @@ export default {
       }
 
     },
-    active_image_review_comment: {
+    active_image_comment_admin: {
       get() {
-        return this.$store.state.active_image_review_comment;
+        return this.$store.state.active_image_comment_admin;
       },
       set(value) {
-        this.$store.commit("set_review_comment", { comment: value });
+        if(value){
+          this.$store.commit("set_comment_admin", { comment: value });
+
+        }else{
+          this.$store.commit("set_comment_admin", { comment: "" });
+        }
+      }
+    },
+    active_image_comment_subord: {
+      get() {
+        return this.$store.state.active_image_comment_subord;
+      },
+      set(value) {
+        if(value){
+          this.$store.commit("set_comment_subord", { comment: value });
+        }else{
+          this.$store.commit("set_comment_subord", { comment: "" });
+        }
       }
     },
     canvas_style: function() {
@@ -959,11 +983,12 @@ export default {
 }
 
 #imageinfo {
-  display: flex;
+  // display: flex;
   color: #666;
   justify-content: center;
   align-items: center;
-  margin-top: $component-margin-top;
+  width: 100%;
+  // margin-top: $component-margin-top;
 
   .check-button {
     height: $panel-height;
@@ -971,21 +996,25 @@ export default {
     background: #fff;
     border-color: #000;
   }
-  .not_admin {
-    border:none;
-    background: #fff;
-  }
+
   .form-control.not_admin:focus {
       box-shadow: none;
   }
-  .admin {
+  .admin,.not_admin {
     cursor: pointer;
   }
-
-  .comment-area {
-    padding-right: 20px;
-    width: 300px;
+  .not_admin {
+    // border:none;
+    // background: #fff;
   }
+  .comment-wrapper{
+    padding: 0 50px;
+    width: 70%;
+    .comment-area {
+      width: 100%;
+    }
+  }
+
   .form-control {
     resize: none;
     height: 90px;
