@@ -41,7 +41,15 @@
     <p id="demo"></p>
     <div>
       <div id='imageinfo' class="row">
-        <div class="col-md-4 row  clear-padding "></div>
+        <div class="col-md-2 row  clear-padding ">
+          <h4 class="shortcut-text-title">【short cut key】</h4>
+          <ul class="shortcut-text-list">
+            <li class="shortcut-text-item">Ctrl+d: Hide/show selected boxes</li>
+            <li class="shortcut-text-item">Ctrl+w: Full-screen mode</li>
+            <li class="shortcut-text-item">Space: Save changes</li>
+          </ul>
+        </div>
+        <div class="col-md-2 row  clear-padding "></div>
         <div class="col-md-5 row  clear-padding comment-wrapper">
           <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
             <span>admin >> </span>
@@ -988,6 +996,17 @@ export default {
   align-items: center;
   width: 100%;
   margin: $component-margin-top 0 0;
+
+  .shortcut-text-title{
+    font-size:0.75rem;
+    color:#aaa;
+    margin-bottom: 0;
+  }
+  .shortcut-text-list{
+    font-size:0.6rem;
+    color:#aaa;
+    list-style-type: disc
+  }
 
   .check-button {
     height: $panel-height;
