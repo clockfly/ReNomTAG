@@ -202,7 +202,8 @@ export default {
     state.active_image = payload.image;
     state.active_image_tag_boxes = payload.boxes;
     state.active_image_review_result = payload.review_result;
-    state.active_image_review_comment = payload.review_comment;
+    state.active_image_comment_admin = payload.comment_admin;
+    state.active_image_comment_subord = payload.comment_subord;
 
     state.active_boxid = null;
   },
@@ -295,9 +296,13 @@ export default {
     }
   },
 
-  set_review_comment(state, payload) {
-    state.active_image_review_comment = payload.comment;
+  set_comment_admin(state, payload) {
+    state.active_image_comment_admin =payload.comment;
   },
+  set_comment_subord(state, payload){
+    state.active_image_comment_subord =payload.comment;
+  },
+
   set_tagged_images(state, payload) {
     const imgs = payload;
     const MAX_WIDTH = 10000;
