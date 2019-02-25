@@ -43,11 +43,13 @@
       <div id='imageinfo' class="row">
         <div class="col-md-8 row  clear-padding comment-wrapper">
           <!-- TODO -->
-          <div class="comment-area col-md-6" :class="{second:is_admin, first:!is_admin}">
-            <textarea class="form-control" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}" v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
+          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
+            <span>From admin</span>
+            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
           </div>
-          <div class="comment-area col-md-6" :class="{second:!is_admin, first:is_admin}">
-            <textarea class="form-control" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
+          <div class="comment-area col-md-6" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}">
+            <span>From user</span>
+            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
           </div>
         </div>
         <div class= "col-md-4 row clear-padding">
@@ -998,46 +1000,35 @@ export default {
     padding: 0 50px;
     width: 70%;
     display: flex;
-    .first{
-      order: 1;
-    }
-    .second{
-      order: 2;
-    }
     .comment-area {
       width: 100%;
-      padding: 0;
-
       .form-control {
+        padding: 0 5px;
+        margin: 10px 0 0;
+        font-size: 90%;
         resize: none;
-        height: 90px;
+        height: 70px;
         border-radius: 0px;
+        overflow-y: scroll;
       }
-      .form-control.nonactive-textarea:focus {
-        box-shadow: none;
-      }
-      .active_textarea{
-        order: 2;
+    }
+    .active_textarea{
+      order: 2;
+      .form-control{
         cursor: pointer;
       }
-      .inactive_textarea{
-        order: 1;
-        pointer-events: none;
+    }
+    .inactive_textarea{
+      order: 1;
+      .form-control{
         border:none;
         background: #fff;
       }
+      & :focus {
+        box-shadow: none;
+      }
     }
   }
-  // .form-control.not_admin:focus {
-  //   box-shadow: none;
-  // }
-
-  // .admin,.not_admin {
-  // }
-  // .not_admin {
-  //   border:none;
-  //   background: #fff;
-  // }
 
 
   .review_checked {
