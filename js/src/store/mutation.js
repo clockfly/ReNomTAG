@@ -203,7 +203,7 @@ export default {
     state.active_image_tag_boxes = payload.boxes;
     state.active_image_review_result = payload.review_result;
     state.active_image_comment_admin = payload.comment_admin;
-    state.active_image_commrnt_subord = payload.comment_subord;
+    state.active_image_comment_subord = payload.comment_subord;
 
     state.active_boxid = null;
   },

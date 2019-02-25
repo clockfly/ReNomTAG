@@ -40,21 +40,18 @@
     </div>
     <p id="demo"></p>
     <div>
-      <div id='imageinfo' class="row  clear-padding">
+      <div id='imageinfo' class="row">
         <div class="col-md-8 row  clear-padding comment-wrapper">
-          <div class="col-sm-6 ">
-            <div class="comment-area ">
-              <textarea class="form-control" :class="{admin: is_admin}" v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
-            </div>
+          <!-- TODO -->
+          <div class="comment-area col-md-6" :class="{second:is_admin, first:!is_admin}">
+            <textarea class="form-control" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}" v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
           </div>
-          <div class="col-sm-6">
-            <div class="comment-area">
-              <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
-            </div>
+          <div class="comment-area col-md-6" :class="{second:!is_admin, first:is_admin}">
+            <textarea class="form-control" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
           </div>
         </div>
         <div class= "col-md-4 row clear-padding">
-          <div class="col-sm-3 clear-padding" style="position:relative; display:inline-block;">
+          <div class="col-md-4 clear-padding toggle-wrapper">
             <div id='toggle' >
               <label class="switch ">
                 <input type="checkbox" :class="{checked : show_selected_boxes}">
@@ -62,7 +59,7 @@
               </label>
             </div>
           </div>
-          <div class="col-sm-6 clear-padding">
+          <div class="col-md-8 clear-padding">
             <div id='buttons' class="row">
               <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
@@ -983,12 +980,12 @@ export default {
 }
 
 #imageinfo {
-  // display: flex;
+  display: flex;
   color: #666;
   justify-content: center;
   align-items: center;
   width: 100%;
-  // margin-top: $component-margin-top;
+  margin: $component-margin-top 0 0;
 
   .check-button {
     height: $panel-height;
@@ -996,30 +993,53 @@ export default {
     background: #fff;
     border-color: #000;
   }
-
-  .form-control.not_admin:focus {
-      box-shadow: none;
-  }
-  .admin,.not_admin {
-    cursor: pointer;
-  }
-  .not_admin {
-    // border:none;
-    // background: #fff;
-  }
+// TODO
   .comment-wrapper{
     padding: 0 50px;
     width: 70%;
+    display: flex;
+    .first{
+      order: 1;
+    }
+    .second{
+      order: 2;
+    }
     .comment-area {
       width: 100%;
+      padding: 0;
+
+      .form-control {
+        resize: none;
+        height: 90px;
+        border-radius: 0px;
+      }
+      .form-control.nonactive-textarea:focus {
+        box-shadow: none;
+      }
+      .active_textarea{
+        order: 2;
+        cursor: pointer;
+      }
+      .inactive_textarea{
+        order: 1;
+        pointer-events: none;
+        border:none;
+        background: #fff;
+      }
     }
   }
+  // .form-control.not_admin:focus {
+  //   box-shadow: none;
+  // }
 
-  .form-control {
-    resize: none;
-    height: 90px;
-    border-radius: 0px;
-  }
+  // .admin,.not_admin {
+  // }
+  // .not_admin {
+  //   border:none;
+  //   background: #fff;
+  // }
+
+
   .review_checked {
     background-color: #a2c84a;
   }
@@ -1027,51 +1047,55 @@ export default {
     display: inline-block;
     vertical-align: bottom;
   }
-  #toggle {
-    display: inline-block;
-    height: calc(#{$panel-height} * 0.8);
-    position: absolute;
-    bottom: 0;
-    right: 10px;
-    .switch {
+  .toggle-wrapper{
+    position:relative;
+    display:inline-block;
+    #toggle {
+      display: inline-block;
       height: calc(#{$panel-height} * 0.8);
-      width: 55px;
-      input[type=checkbox]{
-        line-height: calc(#{$panel-height} * 0.8);
-        opacity:0;
-        width:0;
-        height:0;
-        &.checked+.slider{
-          background-color:#006ea1;
-          &:before{
-            transform: translateX(26px);
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+      .switch {
+        height: calc(#{$panel-height} * 0.8);
+        width: 55px;
+        input[type=checkbox]{
+          line-height: calc(#{$panel-height} * 0.8);
+          opacity:0;
+          width:0;
+          height:0;
+          &.checked+.slider{
+            background-color:#006ea1;
+            &:before{
+              transform: translateX(26px);
+            }
           }
+        }
+
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #999;
+        transition: .4s;
+
+        &:before {
+          position: absolute;
+          content: "";
+          height: 20px;
+          width: 20px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
         }
       }
 
     }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #999;
-      transition: .4s;
-
-      &:before {
-        position: absolute;
-        content: "";
-        height: 20px;
-        width: 20px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-      }
-    }
-
   }
   #buttons{
     margin: auto;
