@@ -1188,7 +1188,7 @@ export default {
       position: absolute;
       width: 120px;
       height: 30px;
-      top: calc(100% - 60px);
+      top: calc(100% - 30px);
       left: calc(50% - 60px);
       #zoom-out-button {
         border-top-left-radius: 5px;
@@ -1200,7 +1200,7 @@ export default {
       }
       div {
         display: flex;
-        width: 33.33%;
+        width: 25%;
         i-align: center;
         justify-content: center;
         align-items: center;
@@ -1212,7 +1212,6 @@ export default {
         }
       }
     }
-
     .box-border {
       box-sizing: border-box;
       position: absolute;
