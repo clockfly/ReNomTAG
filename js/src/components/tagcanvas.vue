@@ -41,18 +41,18 @@
     <p id="demo"></p>
     <div>
       <div id='imageinfo' class="row">
-        <div class="col-md-8 row  clear-padding comment-wrapper">
-          <!-- TODO -->
+        <div class="col-md-4 row  clear-padding "></div>
+        <div class="col-md-5 row  clear-padding comment-wrapper">
           <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
-            <span>From admin</span>
+            <span>admin >> </span>
             <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
           </div>
           <div class="comment-area col-md-6" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}">
-            <span>From user</span>
+            <span>user >></span>
             <textarea class="form-control" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
           </div>
         </div>
-        <div class= "col-md-4 row clear-padding">
+        <div class= "col-md-3 row clear-padding">
           <div class="col-md-4 clear-padding toggle-wrapper">
             <div id='toggle' >
               <label class="switch ">
@@ -995,19 +995,23 @@ export default {
     background: #fff;
     border-color: #000;
   }
-// TODO
   .comment-wrapper{
-    padding: 0 50px;
-    width: 70%;
+    margin: 0 5px;
     display: flex;
+    font-size: 95%;
+    position: relative;
+
     .comment-area {
       width: 100%;
+      padding-right: 8px;
+      padding-left: 0;
       .form-control {
+        width: 100%;
+        height: 80px;
         padding: 0 5px;
-        margin: 10px 0 0;
+        margin: 3px 0 0;
         font-size: 90%;
         resize: none;
-        height: 70px;
         border-radius: 0px;
         overflow-y: scroll;
       }
@@ -1021,7 +1025,7 @@ export default {
     .inactive_textarea{
       order: 1;
       .form-control{
-        border:none;
+        // border:none;
         background: #fff;
       }
       & :focus {
