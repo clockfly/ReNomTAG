@@ -44,7 +44,7 @@
         <div class="col-md-3 row  clear-padding ">
           <h4 class="shortcut-text-title">【Shortcut keys】</h4>
           <ul class="shortcut-text-list">
-            <li class="shortcut-text-item">Ctrl+d: Hide/show selected boxes</li>
+            <li class="shortcut-text-item">Ctrl+d: Hide/show unselected boxes</li>
             <li class="shortcut-text-item">Ctrl+w: Full-screen mode</li>
             <li class="shortcut-text-item">Space: Save changes</li>
           </ul>
