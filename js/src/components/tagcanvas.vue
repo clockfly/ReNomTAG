@@ -24,7 +24,7 @@
           </div>
         </div>
         <transition name="fade">
-          <div id="zoom-button" v-if="zoom_scale!=1.0 || zoom_x != 0 || zoom_y != 0">
+          <div id="zoom-button" >
             <div id="zoom-out-button" @click="on_zoom_out_button">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </div>
