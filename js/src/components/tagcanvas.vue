@@ -41,7 +41,7 @@
     <p id="demo"></p>
     <div>
       <div id='imageinfo' class="row">
-        <div class="col-md-2 row  clear-padding ">
+        <div class="col-md-3 row  clear-padding ">
           <h4 class="shortcut-text-title">【Shortcut keys】</h4>
           <ul class="shortcut-text-list">
             <li class="shortcut-text-item">Ctrl+d: Hide/show selected boxes</li>
@@ -49,7 +49,7 @@
             <li class="shortcut-text-item">Space: Save changes</li>
           </ul>
         </div>
-        <div class="col-md-2 row  clear-padding "></div>
+        <div class="col-md-1 row  clear-padding "></div>
         <div class="col-md-5 row  clear-padding comment-wrapper">
           <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
             <span>admin >> </span>

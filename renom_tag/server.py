@@ -285,7 +285,6 @@ def check_path(path, filename):
 def get_folderpath(folder):
     return check_path(DIR_ROOT, folder)
 
-
 def get_boxes(folder, img_filename):
     filename = _get_file_name(img_filename) + '.xml'
     xmlfolder = os.path.join(get_folderpath(folder), XML_DIR)
@@ -313,8 +312,10 @@ def get_boxes(folder, img_filename):
         # None を空文字列に変換
         if not json_dict['annotation']['source'].get('reviewresult', False):
             json_dict['annotation']['source']['reviewresult'] = ''
-        if not json_dict['annotation']['source'].get('reviewcomment', False):
-            json_dict['annotation']['source']['reviewcomment'] = ''
+        if not json_dict['annotation']['source']['comment'].get('admin', False):
+            json_dict['annotation']['source']['comment']['admin'] = ''
+        if not json_dict['annotation']['source']['comment'].get('subord', False):
+            json_dict['annotation']['source']['comment']['subord'] = ''
     return json_dict
 
 
