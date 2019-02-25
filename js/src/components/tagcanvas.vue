@@ -171,7 +171,7 @@ export default {
       "labels",
       "files",
       "tagged_images",
-      "pre_save_boxes_data"
+      "pre_save_boxes_data" // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)
     ]),
     image_url: function() {
       return this.active_image;
@@ -420,6 +420,16 @@ export default {
         this.delete_xml();
       } else {
         this.save_annotation();
+        
+        ////// New lines
+        this.pre_saved_images = this.active_image_tag_boxes.map((box) => {
+            let x, y, w, h = box;
+            let normed_x, normed_w = x/this.active_image_width, w/this.active_image_width
+            let normed_y, normed_h = y/this.active_image_height, h/this.active_image_height
+            return [normed_x, normed_y, normed_w, normed_h]
+        });
+        ////////////
+        
       }
     },
     on_resize: function() {
@@ -453,7 +463,18 @@ export default {
               if(this.pre_save_boxes_data.length == 0){
                 alert("コピー対象は無いです");
               }
+              
               this.paste_annotation();
+              
+              ////// New lines
+              let saved_boxes = this.pre_saved_images.map((norm_box) => {
+                  let norm_x, norm_y, norm_w, norm_h = norm_box;
+                  let x, w = norm_x*this.active_image_width, norm_w*this.active_image_width
+                  let y, h = norm_y*this.active_image_height, norm_h*this.active_image_height
+                  return [x, y, w, h]
+              });
+              this.active_image_box = [...this.active_image_box, ...saved_boxes]
+              //////////
               break;
           }
         }
