@@ -107,7 +107,14 @@ def test_save_xml_from_label_dict(tmpdir):
         json = {'folder': 'folderx',
                 'value': {'annotation':
                           {'path': 'a.jpg',
-                           'source': {'database': 'Unknown'},
+                           'source':{
+                                     'database':'Unknown',
+                                     'comment':{
+                                        'admin':'',
+                                        'subord':''
+                                     },
+                                     'reviewresult':''
+                                  },
                            'size': {'width': 500, 'height': 375, 'depth': 3},
                            'segments': 0,
                            'objects': [
@@ -231,4 +238,3 @@ def test_get_img_file(tmpdir):
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['a.jpeg', 'aakhk.bmp', 'aierf_y832fa.jpg']
         assert ret_undef_names == ['37oiahfw*.jpeg', 'c-b.png']
-
