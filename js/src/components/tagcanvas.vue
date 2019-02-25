@@ -41,17 +41,30 @@
         </transition>
       <navarrow class="arrow" dir="forward"/>
     </div>
-
-    <p v-show="this.all_image_mode === false" id="demo"></p>
-    <div v-show="this.all_image_mode === false">
-      <div id='imageinfo' class="row  clear-padding">
-        <div class="col-sm-5 col-sm-offset-2 clear-padding">
-          <div class="comment-area float-right">
-            <textarea class="form-control" :class="{not_admin: !is_admin}" v-model="active_image_review_comment" :readonly="!this.is_admin"></textarea>
+    <p id="demo"></p>
+    <div>
+      <div id='imageinfo' class="row">
+        <div class="col-md-2 row  clear-padding ">
+          <h4 class="shortcut-text-title">【short cut key】</h4>
+          <ul class="shortcut-text-list">
+            <li class="shortcut-text-item">Ctrl+d: Hide/show selected boxes</li>
+            <li class="shortcut-text-item">Ctrl+w: Full-screen mode</li>
+            <li class="shortcut-text-item">Space: Save changes</li>
+          </ul>
+        </div>
+        <div class="col-md-2 row  clear-padding "></div>
+        <div class="col-md-5 row  clear-padding comment-wrapper">
+          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
+            <span>admin >> </span>
+            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
+          </div>
+          <div class="comment-area col-md-6" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}">
+            <span>user >></span>
+            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
           </div>
         </div>
-        <div class= "col-sm-4 row clear-padding">
-          <div class="col-sm-3 clear-padding" style="position:relative; display:inline-block;">
+        <div class= "col-md-3 row clear-padding">
+          <div class="col-md-4 clear-padding toggle-wrapper">
             <div id='toggle' >
               <label class="switch ">
                 <input type="checkbox" :class="{checked : show_selected_boxes}">
@@ -59,8 +72,8 @@
               </label>
             </div>
           </div>
-          <div class="col-sm-6 clear-padding">
-            <div id='buttons' class="float-right row">
+          <div class="col-md-8 clear-padding">
+            <div id='buttons' class="row">
               <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
                   <div v-if="this.is_admin" class="btn-wrp">
@@ -234,12 +247,29 @@ export default {
       }
 
     },
-    active_image_review_comment: {
+    active_image_comment_admin: {
       get() {
-        return this.$store.state.active_image_review_comment;
+        return this.$store.state.active_image_comment_admin;
       },
       set(value) {
-        this.$store.commit("set_review_comment", { comment: value });
+        if(value){
+          this.$store.commit("set_comment_admin", { comment: value });
+
+        }else{
+          this.$store.commit("set_comment_admin", { comment: "" });
+        }
+      }
+    },
+    active_image_comment_subord: {
+      get() {
+        return this.$store.state.active_image_comment_subord;
+      },
+      set(value) {
+        if(value){
+          this.$store.commit("set_comment_subord", { comment: value });
+        }else{
+          this.$store.commit("set_comment_subord", { comment: "" });
+        }
       }
     },
     canvas_style: function() {
@@ -978,7 +1008,19 @@ export default {
     color: #666;
     justify-content: center;
     align-items: center;
-    margin-top: $component-margin-top;
+    width: 100%;
+    margin: $component-margin-top 0 0;
+
+    .shortcut-text-title{
+      font-size:0.75rem;
+      color:#aaa;
+      margin-bottom: 0;
+    }
+    .shortcut-text-list{
+      font-size:0.6rem;
+      color:#aaa;
+      list-style-type: disc
+    }
 
     .check-button {
       height: $panel-height;
@@ -986,26 +1028,46 @@ export default {
       background: #fff;
       border-color: #000;
     }
-    .not_admin {
-      border:none;
-      background: #fff;
-    }
-    .form-control.not_admin:focus {
-        box-shadow: none;
-    }
-    .admin {
-      cursor: pointer;
+    .comment-wrapper{
+      margin: 0 5px;
+      display: flex;
+      font-size: 95%;
+      position: relative;
+
+      .comment-area {
+        width: 100%;
+        padding-right: 8px;
+        padding-left: 0;
+        .form-control {
+          width: 100%;
+          height: 80px;
+          padding: 0 5px;
+          margin: 3px 0 0;
+          font-size: 90%;
+          resize: none;
+          border-radius: 0px;
+          overflow-y: scroll;
+        }
+      }
+      .active_textarea{
+        order: 2;
+        .form-control{
+          cursor: pointer;
+        }
+      }
+      .inactive_textarea{
+        order: 1;
+        .form-control{
+          // border:none;
+          background: #fff;
+        }
+        & :focus {
+          box-shadow: none;
+        }
+      }
     }
 
-    .comment-area {
-      padding-right: 20px;
-      width: 300px;
-    }
-    .form-control {
-      resize: none;
-      height: 90px;
-      border-radius: 0px;
-    }
+
     .review_checked {
       background-color: #a2c84a;
     }
@@ -1013,136 +1075,141 @@ export default {
       display: inline-block;
       vertical-align: bottom;
     }
-    #toggle {
-      display: inline-block;
-      height: calc(#{$panel-height} * 0.8);
-      position: absolute;
-      bottom: 0;
-      right: 5px;
-      .switch {
+    .toggle-wrapper{
+      position:relative;
+      display:inline-block;
+      #toggle {
+        display: inline-block;
         height: calc(#{$panel-height} * 0.8);
-        width: 55px;
-        input[type=checkbox]{
-          line-height: calc(#{$panel-height} * 0.8);
-          opacity:0;
-          width:0;
-          height:0;
-          &.checked+.slider{
-            background-color:#006ea1;
-            &:before{
-              transform: translateX(26px);
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        .switch {
+          height: calc(#{$panel-height} * 0.8);
+          width: 55px;
+          input[type=checkbox]{
+            line-height: calc(#{$panel-height} * 0.8);
+            opacity:0;
+            width:0;
+            height:0;
+            &.checked+.slider{
+              background-color:#006ea1;
+              &:before{
+                transform: translateX(26px);
+              }
             }
+          }
+
+        }
+    }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #999;
+          transition: .4s;
+
+          &:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
           }
         }
 
       }
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #999;
-        transition: .4s;
-
-        &:before {
-          position: absolute;
-          content: "";
-          height: 20px;
-          width: 20px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          transition: .4s;
+      #buttons{
+        margin: auto;
+        .filename {
+          text-align: right;
         }
-      }
-
-    }
-    #buttons{
-      margin: auto;
-      .filename {
-        text-align: right;
-      }
-      .btn-wrp {
-        display: inline-block;
-        width: calc(55px * 2);
-
-      }
-      .btn-wrp > p{
+        .btn-wrp {
           display: inline-block;
-          margin: 0px;
-      }
-      .ok-button {
-        &:hover,
-        &-push {
-          background: #ff4949!important
-        }
-      }
-      .ng-button {
-        &:hover,&-push {
-          background: #000!important
-        }
-      }
-      .ng-button,.ok-button{
-        cursor: pointer;
-        background: #999;
-        padding:10px;
-        color: #fff;
-        width: 53px;
-        font-size:0.8rem;
-        text-align: center;
-        line-height:5px;
-      }
+          width: calc(55px * 2);
 
-      .img-btn {
-        height: 23px;
-        cursor: pointer;
-      }
-      .img-btn-disabled {
-        height: 23px;
-
-        &:hover {
-          cursor: not-allowed;
-          background: #999!important;
         }
-      }
-      #save_xml_btn {
-        background-color: $panel-bg-color;
-        color: #fff;
-        height: calc(#{$panel-height} * 0.8);
-        width: calc(55px * 2);
-        line-height: calc(#{$panel-height} * 0.8);
-        text-align: center;
-        font-family: $content-top-header-font-family;
-        font-size: $content-modellist-font-size;
-        &:hover {
-          background-color: $panel-bg-color-hover;
+        .btn-wrp > p{
+            display: inline-block;
+            margin: 0px;
+        }
+        .ok-button {
+          &:hover,
+          &-push {
+            background: #ff4949!important
+          }
+        }
+        .ng-button {
+          &:hover,&-push {
+            background: #000!important
+          }
+        }
+        .ng-button,.ok-button{
+          cursor: pointer;
+          background: #999;
+          padding:10px;
+          color: #fff;
+          width: 53px;
+          font-size:0.8rem;
+          text-align: center;
+          line-height:5px;
+        }
+
+        .img-btn {
+          height: 23px;
           cursor: pointer;
         }
+        .img-btn-disabled {
+          height: 23px;
+
+          &:hover {
+            cursor: not-allowed;
+            background: #999!important;
+          }
+        }
+        #save_xml_btn {
+          background-color: $panel-bg-color;
+          color: #fff;
+          height: calc(#{$panel-height} * 0.8);
+          width: calc(55px * 2);
+          line-height: calc(#{$panel-height} * 0.8);
+          text-align: center;
+          font-family: $content-top-header-font-family;
+          font-size: $content-modellist-font-size;
+          &:hover {
+            background-color: $panel-bg-color-hover;
+            cursor: pointer;
+          }
+        }
+        #save_xml_btn_disabled {
+          color: #fff;
+          height: calc(#{$panel-height} * 0.8);
+          width: calc(55px * 2);
+          line-height: calc(#{$panel-height} * 0.8);
+          text-align: center;
+          background-color: $disabled-color;
+          font-family: $content-top-header-font-family;
+          font-size: $content-modellist-font-size;
+          cursor: not-allowed;
+        }
       }
-      #save_xml_btn_disabled {
-        color: #fff;
-        height: calc(#{$panel-height} * 0.8);
-        width: calc(55px * 2);
-        line-height: calc(#{$panel-height} * 0.8);
-        text-align: center;
-        background-color: $disabled-color;
-        font-family: $content-top-header-font-family;
-        font-size: $content-modellist-font-size;
-        cursor: not-allowed;
+    }
+
+
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
       }
 
-    }
-  }
-
-    .fade-enter-active,
-    .fade-leave-active {
-      transition: opacity 0.5s;
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-      opacity: 0;
-    }
 }
 .all_image_mode{
 // #canvasblock
