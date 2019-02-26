@@ -1,6 +1,6 @@
 <template>
   <div id="page">
-    <div id="all-elements" v-if="this.all_image_mode === false">
+    <div id="all-elements" v-if="!this.is_all_image_mode">
       <app-header class="row"></app-header>
       <div id='main-container'>
         <left-menu></left-menu>
@@ -29,7 +29,7 @@
     </div>
 
     <transition name="fade">
-      <div id="all-image"  v-if="this.all_image_mode === true">
+      <div id="all-image"  v-if="this.is_all_image_mode">
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
@@ -152,6 +152,12 @@ export default {
       set(e) {
         this.$store.commit("set_username", { username: e });
       }
+    },
+    is_all_image_mode: function() {
+      return (
+        ![null, undefined].includes(this.active_image_filename) &&
+        this.all_image_mode
+      );
     }
   },
   methods: {
@@ -214,11 +220,11 @@ export default {
   background: #2e2f30;
 }
 
-#all-elements{
+#all-elements {
   height: 100%;
   background: $body-color;
 }
-#all-image{
+#all-image {
   height: 100%;
   background: #2e2f30;
 }
@@ -228,12 +234,11 @@ export default {
 }
 
 .fade-enter-active {
-  transition: all .4s ease-out;
+  transition: all 0.4s ease-out;
 }
 .fade-leave-active {
-  transition: all .4s ease;
+  transition: all 0.4s ease;
 }
-
 
 #no_active_image {
   -webkit-box-flex: 1;

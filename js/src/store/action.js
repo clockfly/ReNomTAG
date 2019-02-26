@@ -237,7 +237,14 @@ export default {
         context.dispatch("load_current_image", context.state.files[idx]);
       } else {
         context.commit("set_active_image", {
-          file: null
+          filename: null,
+          width: null,
+          height: null,
+          image: null,
+          boxes: null,
+          review_result: null,
+          comment_admin: null,
+          comment_subord: null
         });
       }
 
@@ -259,7 +266,7 @@ export default {
           path: cur_filename,
           source: {
             database: "Unknown",
-            comment:{}
+            comment: {}
           },
           size: {
             width: context.state.active_image_width,
