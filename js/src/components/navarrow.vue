@@ -10,14 +10,14 @@ import { mapState } from "vuex";
 export default {
   name: "NavArrow",
   props: ["dir"],
-  created(){
+  created() {
     window.addEventListener("keydown", this.on_keydown);
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.on_keydown);
   },
   computed: {
-    ...mapState(["files", "active_image_filename","active_boxid"]),
+    ...mapState(["files", "active_image_filename", "active_boxid"]),
     next_file: function() {
       if (this.dir === "back") {
         return this.get_back_name();
@@ -47,9 +47,9 @@ export default {
         this.$store.dispatch("load_current_image", next);
       }
     },
-    on_keydown: function(event){
-      if (this.active_boxid===null) {
-        switch(event.key){
+    on_keydown: function(event) {
+      if (this.active_boxid === null) {
+        switch (event.key) {
           case "ArrowLeft":
             const back = this.get_back_name();
             if (back) {

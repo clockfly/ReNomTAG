@@ -116,7 +116,7 @@ export default {
       let keys = Object.keys(this.files).sort((l, r) => l - r);
       let ret = [];
       keys.forEach(k => ret.push(this.files[k]));
-      this.$store.commit("set_image_list",ret);
+      this.$store.commit("set_image_list", ret);
       return ret;
     }
   },

@@ -218,44 +218,42 @@ export default {
       }
       return true;
     },
-    fileter_selected_boxes: function(){
-      if ((this.boxes === null) || (this.boxes === undefined)){
+    fileter_selected_boxes: function() {
+      if (this.boxes === null || this.boxes === undefined) {
         return false;
       }
 
       var size_style_boxes = [];
-      switch(this.show_selected_boxes){
+      switch (this.show_selected_boxes) {
         case true:
           var id = 0;
-          for (let box of this.boxes){
-            if (box.selected === true){
+          for (let box of this.boxes) {
+            if (box.selected === true) {
               size_style_boxes[`${id}`] = box.size_style;
-            }else{
+            } else {
               size_style_boxes[`${id}`] = null;
             }
             id = id + 1;
           }
-          return size_style_boxes
+          return size_style_boxes;
 
         case false:
           var id = 0;
-          for (let box of this.boxes){
+          for (let box of this.boxes) {
             size_style_boxes[`${id}`] = box.size_style;
             id = id + 1;
           }
-          return size_style_boxes
+          return size_style_boxes;
       }
-
     },
     active_image_comment_admin: {
       get() {
         return this.$store.state.active_image_comment_admin;
       },
       set(value) {
-        if(value){
+        if (value) {
           this.$store.commit("set_comment_admin", { comment: value });
-
-        }else{
+        } else {
           this.$store.commit("set_comment_admin", { comment: "" });
         }
       }
@@ -265,9 +263,9 @@ export default {
         return this.$store.state.active_image_comment_subord;
       },
       set(value) {
-        if(value){
+        if (value) {
           this.$store.commit("set_comment_subord", { comment: value });
-        }else{
+        } else {
           this.$store.commit("set_comment_subord", { comment: "" });
         }
       }
@@ -288,6 +286,12 @@ export default {
         top: this.zoom_y + "px",
         left: this.zoom_x + "px"
       };
+    },
+    is_all_image_mode: function() {
+      return (
+        this.all_image_mode &&
+        ![null, undefined].inculudes(this.active_image_filename)
+      );
     }
   },
   watch: {
@@ -301,9 +305,9 @@ export default {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
     ...mapActions(["save_annotation", "delete_xml"]),
 
-    expand_image_mode: function(){
+    expand_image_mode: function() {
       let shift = !this.all_image_mode;
-      this.$store.commit("set_all_image_mode", {all_image_mode : shift});
+      this.$store.commit("set_all_image_mode", { all_image_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -384,62 +388,61 @@ export default {
       return this.active_boxid === idx;
     },
 
-    show_selected_boxes_toggle: function (){
+    show_selected_boxes_toggle: function() {
       this.show_selected_boxes = !this.show_selected_boxes;
       this.$nextTick(() => {
-       this.arrange_boxes();
+        this.arrange_boxes();
       });
     },
-    set_selected_flag: function(boxes){
-      for (let box of boxes){
-        box.selected =false;
+    set_selected_flag: function(boxes) {
+      for (let box of boxes) {
+        box.selected = false;
       }
-      return boxes
+      return boxes;
     },
-    _clean_boxes_in_selected_mode:function(nolabel_idx){
+    _clean_boxes_in_selected_mode: function(nolabel_idx) {
       let pri = this.boxes.slice(0, nolabel_idx);
       let follow = this.boxes.slice(nolabel_idx + 1);
-      this.boxes =  [...pri, ...follow];
-
+      this.boxes = [...pri, ...follow];
     },
     // delete box : modify this.boxes when key.event happen ( in on_keyup: )
-    delete_boxes_in_selected_mode:function(active_boxid){
+    delete_boxes_in_selected_mode: function(active_boxid) {
       let pri = this.boxes.slice(0, active_boxid);
       let follow = this.boxes.slice(active_boxid + 1);
-      this.boxes =  [...pri, ...follow];
+      this.boxes = [...pri, ...follow];
     },
     // when(selected-mode) once the box became "active" store the id sothat fefer as "selected : true"
-    select_flag_when_selected_mode: function(active_boxid, boxes){
-       // new box
-       if(active_boxid!=null){
-         if(active_boxid === this.boxes.length){
-           boxes[active_boxid].selected = true;
-         }
-       }
+    select_flag_when_selected_mode: function(active_boxid, boxes) {
+      // new box
+      if (active_boxid != null) {
+        if (active_boxid === this.boxes.length) {
+          boxes[active_boxid].selected = true;
+        }
+      }
       // refer privious state of this.box.selected
-      for (var i=0; i<this.boxes.length; i++){
+      for (var i = 0; i < this.boxes.length; i++) {
         boxes[`${i}`].selected = this.boxes[`${i}`].selected;
       }
-      return boxes
+      return boxes;
     },
     // when(original-mode to selected-mode) toggle is one to chatch thi function.
-    select_flag_from_original: function(active_boxid, boxes){
-      if (boxes[active_boxid]){
-        for (let box of boxes){
-          box.selected =false;
-          if (box === boxes[active_boxid]){
+    select_flag_from_original: function(active_boxid, boxes) {
+      if (boxes[active_boxid]) {
+        for (let box of boxes) {
+          box.selected = false;
+          if (box === boxes[active_boxid]) {
             box.selected = true;
           }
         }
       }
-      return boxes
+      return boxes;
     },
 
     get_box: function(id) {
       return this.active_image_tag_boxes[id];
     },
     get_box_label: function(id) {
-      if(!this.boxes[id]){
+      if (!this.boxes[id]) {
         return false;
       }
       return this.get_box(id).label;
@@ -467,7 +470,7 @@ export default {
 
     on_keyup: function(event) {
       if (event.target.nodeName === "BODY") {
-        if(event.ctrlKey === true && event.key === "w"){
+        if (event.ctrlKey === true && event.key === "w") {
           this.expand_image_mode();
         }
         if (event.key === " ") {
@@ -488,7 +491,7 @@ export default {
             return false;
           }
         }
-        if(event.ctrlKey === true && event.key === "d"){
+        if (event.ctrlKey === true && event.key === "d") {
           this.show_selected_boxes_toggle();
         }
       }
@@ -497,7 +500,6 @@ export default {
     on_keydown: function(event) {
       if (event.target.nodeName === "BODY") {
         if (this.has_image && this.active_boxid !== null) {
-
           if (
             event.key === "ArrowUp" ||
             event.key === "ArrowDown" ||
@@ -565,7 +567,7 @@ export default {
       size_style.top = `${rc[1]}px`;
       size_style.width = `${rc[2] - rc[0]}px`;
       size_style.height = `${rc[3] - rc[1]}px`;
-      return {size_style}
+      return { size_style };
     },
 
     calc_image_rect: function() {
@@ -620,30 +622,29 @@ export default {
           ])
         );
       }
-      if (this.boxes===null){
-        boxes=this.set_selected_flag(boxes);
+      if (this.boxes === null) {
+        boxes = this.set_selected_flag(boxes);
         this.boxes = boxes;
-      }else{
-        if (this.show_selected_boxes===true){
+      } else {
+        if (this.show_selected_boxes === true) {
           boxes = this.select_flag_when_selected_mode(this.active_boxid, boxes);
           this.boxes = boxes;
-        }else{
-          if (this.active_boxid!=null) {
-            boxes = this.select_flag_from_original(this.active_boxid,boxes);
-          }else{
-            boxes=this.set_selected_flag(boxes);
+        } else {
+          if (this.active_boxid != null) {
+            boxes = this.select_flag_from_original(this.active_boxid, boxes);
+          } else {
+            boxes = this.set_selected_flag(boxes);
           }
           this.boxes = boxes;
-
         }
       }
     },
     _clean_boxes: function() {
       const tagboxes = [];
-      for (const [i, box] of this.active_image_tag_boxes.entries()){
-        if(box.label){
+      for (const [i, box] of this.active_image_tag_boxes.entries()) {
+        if (box.label) {
           tagboxes.push(box);
-        }else{
+        } else {
           this._clean_boxes_in_selected_mode(i);
         }
       }
@@ -702,7 +703,7 @@ export default {
       }
       this._clean_boxes();
 
-      if (this.active_boxid!=null){
+      if (this.active_boxid != null) {
         this.set_active_boxid({
           boxid: null
         });
@@ -899,11 +900,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.original{
-// #canvasblock
+.original {
+  // #canvasblock
   flex-grow: 1;
   background: #fff;
-  padding:5px 15px;
+  padding: 5px 15px;
 
   .clear-padding {
     padding-left: 0;
@@ -1011,15 +1012,15 @@ export default {
     width: 100%;
     margin: $component-margin-top 0 0;
 
-    .shortcut-text-title{
-      font-size:0.75rem;
-      color:#aaa;
+    .shortcut-text-title {
+      font-size: 0.75rem;
+      color: #aaa;
       margin-bottom: 0;
     }
-    .shortcut-text-list{
-      font-size:0.6rem;
-      color:#aaa;
-      list-style-type: disc
+    .shortcut-text-list {
+      font-size: 0.6rem;
+      color: #aaa;
+      list-style-type: disc;
     }
 
     .check-button {
@@ -1028,7 +1029,7 @@ export default {
       background: #fff;
       border-color: #000;
     }
-    .comment-wrapper{
+    .comment-wrapper {
       margin: 0 5px;
       display: flex;
       font-size: 95%;
@@ -1049,15 +1050,15 @@ export default {
           overflow-y: scroll;
         }
       }
-      .active_textarea{
+      .active_textarea {
         order: 2;
-        .form-control{
+        .form-control {
           cursor: pointer;
         }
       }
-      .inactive_textarea{
+      .inactive_textarea {
         order: 1;
-        .form-control{
+        .form-control {
           // border:none;
           background: #fff;
         }
@@ -1067,17 +1068,16 @@ export default {
       }
     }
 
-
     .review_checked {
       background-color: #a2c84a;
     }
-    .align-bottom{
+    .align-bottom {
       display: inline-block;
       vertical-align: bottom;
     }
-    .toggle-wrapper{
-      position:relative;
-      display:inline-block;
+    .toggle-wrapper {
+      position: relative;
+      display: inline-block;
       #toggle {
         display: inline-block;
         height: calc(#{$panel-height} * 0.8);
@@ -1087,136 +1087,133 @@ export default {
         .switch {
           height: calc(#{$panel-height} * 0.8);
           width: 55px;
-          input[type=checkbox]{
+          input[type="checkbox"] {
             line-height: calc(#{$panel-height} * 0.8);
-            opacity:0;
-            width:0;
-            height:0;
-            &.checked+.slider{
-              background-color:#006ea1;
-              &:before{
+            opacity: 0;
+            width: 0;
+            height: 0;
+            &.checked + .slider {
+              background-color: #006ea1;
+              &:before {
                 transform: translateX(26px);
               }
             }
           }
-
         }
-    }
-        .slider {
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #999;
+        transition: 0.4s;
+
+        &:before {
           position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #999;
-          transition: .4s;
-
-          &:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-          }
-        }
-
-      }
-      #buttons{
-        margin: auto;
-        .filename {
-          text-align: right;
-        }
-        .btn-wrp {
-          display: inline-block;
-          width: calc(55px * 2);
-
-        }
-        .btn-wrp > p{
-            display: inline-block;
-            margin: 0px;
-        }
-        .ok-button {
-          &:hover,
-          &-push {
-            background: #ff4949!important
-          }
-        }
-        .ng-button {
-          &:hover,&-push {
-            background: #000!important
-          }
-        }
-        .ng-button,.ok-button{
-          cursor: pointer;
-          background: #999;
-          padding:10px;
-          color: #fff;
-          width: 53px;
-          font-size:0.8rem;
-          text-align: center;
-          line-height:5px;
-        }
-
-        .img-btn {
-          height: 23px;
-          cursor: pointer;
-        }
-        .img-btn-disabled {
-          height: 23px;
-
-          &:hover {
-            cursor: not-allowed;
-            background: #999!important;
-          }
-        }
-        #save_xml_btn {
-          background-color: $panel-bg-color;
-          color: #fff;
-          height: calc(#{$panel-height} * 0.8);
-          width: calc(55px * 2);
-          line-height: calc(#{$panel-height} * 0.8);
-          text-align: center;
-          font-family: $content-top-header-font-family;
-          font-size: $content-modellist-font-size;
-          &:hover {
-            background-color: $panel-bg-color-hover;
-            cursor: pointer;
-          }
-        }
-        #save_xml_btn_disabled {
-          color: #fff;
-          height: calc(#{$panel-height} * 0.8);
-          width: calc(55px * 2);
-          line-height: calc(#{$panel-height} * 0.8);
-          text-align: center;
-          background-color: $disabled-color;
-          font-family: $content-top-header-font-family;
-          font-size: $content-modellist-font-size;
-          cursor: not-allowed;
+          content: "";
+          height: 20px;
+          width: 20px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: 0.4s;
         }
       }
     }
-
-
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: opacity 0.5s;
+    #buttons {
+      margin: auto;
+      .filename {
+        text-align: right;
       }
-      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        opacity: 0;
+      .btn-wrp {
+        display: inline-block;
+        width: calc(55px * 2);
+      }
+      .btn-wrp > p {
+        display: inline-block;
+        margin: 0px;
+      }
+      .ok-button {
+        &:hover,
+        &-push {
+          background: #ff4949 !important;
+        }
+      }
+      .ng-button {
+        &:hover,
+        &-push {
+          background: #000 !important;
+        }
+      }
+      .ng-button,
+      .ok-button {
+        cursor: pointer;
+        background: #999;
+        padding: 10px;
+        color: #fff;
+        width: 53px;
+        font-size: 0.8rem;
+        text-align: center;
+        line-height: 5px;
       }
 
+      .img-btn {
+        height: 23px;
+        cursor: pointer;
+      }
+      .img-btn-disabled {
+        height: 23px;
+
+        &:hover {
+          cursor: not-allowed;
+          background: #999 !important;
+        }
+      }
+      #save_xml_btn {
+        background-color: $panel-bg-color;
+        color: #fff;
+        height: calc(#{$panel-height} * 0.8);
+        width: calc(55px * 2);
+        line-height: calc(#{$panel-height} * 0.8);
+        text-align: center;
+        font-family: $content-top-header-font-family;
+        font-size: $content-modellist-font-size;
+        &:hover {
+          background-color: $panel-bg-color-hover;
+          cursor: pointer;
+        }
+      }
+      #save_xml_btn_disabled {
+        color: #fff;
+        height: calc(#{$panel-height} * 0.8);
+        width: calc(55px * 2);
+        line-height: calc(#{$panel-height} * 0.8);
+        text-align: center;
+        background-color: $disabled-color;
+        font-family: $content-top-header-font-family;
+        font-size: $content-modellist-font-size;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
 }
-.all_image_mode{
-// #canvasblock
+.all_image_mode {
+  // #canvasblock
   flex-grow: 1;
   background: #2e2f30;
   height: 100%;
-  padding:15px 30px;
+  padding: 15px 30px;
 
   .clear-padding {
     padding-left: 0;
@@ -1226,14 +1223,14 @@ export default {
     flex-grow: 1;
     display: flex;
     position: relative;
-    height:100%;
+    height: 100%;
     .arrow {
       margin-top: 25%;
     }
     #canvas-wrapper {
       display: inline-block;
       width: calc(100% - 60px);
-      height:100%;
+      height: 100%;
       clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
       .pad {
