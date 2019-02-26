@@ -129,7 +129,9 @@ export default {
     state.folder = payload.folder;
     state.tagged_images = [];
   },
-
+  set_all_image_mode(state, payload){
+    state.all_image_mode = payload.all_image_mode;
+  },
   toggle_tag_filter(state, payload) {
     const idx = state.tag_filter.indexOf(payload.filter);
     if (idx === -1) {

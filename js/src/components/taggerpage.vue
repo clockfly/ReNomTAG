@@ -1,30 +1,57 @@
 <template>
   <div id="page">
-    <app-header class="row"></app-header>
-    <div id='main-container'>
-      <left-menu></left-menu>
-      <image-list class="folder-image" v-if="folder.length !== 0"/>
-      <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-      <div v-else id="no_active_image" class="filler">
-        <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
-          <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
-            {{loading_message}}
+    <div id="all-elements" v-if="this.all_image_mode === false">
+      <app-header class="row"></app-header>
+      <div id='main-container'>
+        <left-menu></left-menu>
+        <image-list class="folder-image" v-if="folder.length !== 0"/>
+        <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+        <div v-else id="no_active_image" class="filler">
+          <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
+              {{loading_message}}
+            </div>
+            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+              <div class="sk-wave">
+                <div class="sk-rect sk-rect1"></div>
+                <div class="sk-rect sk-rect2"></div>
+                <div class="sk-rect sk-rect3"></div>
+                <div class="sk-rect sk-rect4"></div>
+                <div class="sk-rect sk-rect5"></div>
+              </div>
+            </div>
           </div>
-          <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
-            <div class="sk-wave">
-              <div class="sk-rect sk-rect1"></div>
-              <div class="sk-rect sk-rect2"></div>
-              <div class="sk-rect sk-rect3"></div>
-              <div class="sk-rect sk-rect4"></div>
-              <div class="sk-rect sk-rect5"></div>
+        </div>
+        <tags></tags>
+      </div>
+      <tagged-images class="row"/>
+      <app-footer class="row" ></app-footer>
+    </div>
+
+    <transition name="fade">
+      <div id="all-image"  v-if="this.all_image_mode === true">
+        <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
+        <div v-else id="no_active_image" class="filler">
+          <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
+              {{loading_message}}
+            </div>
+            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+              <div class="sk-wave">
+                <div class="sk-rect sk-rect1"></div>
+                <div class="sk-rect sk-rect2"></div>
+                <div class="sk-rect sk-rect3"></div>
+                <div class="sk-rect sk-rect4"></div>
+                <div class="sk-rect sk-rect5"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <tags></tags>
-    </div>
-    <tagged-images class="row"/>
-    <app-footer class="row" ></app-footer>
+    </transition>
+
+
+
 
     <modal-box v-if='make_dir_message'>
       <div slot='contents' class='mkdir-msg' >
@@ -103,6 +130,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "all_image_mode",
       "folder",
       "folder_list",
       "active_image_filename",
@@ -165,7 +193,6 @@ export default {
       });
     }
   },
-
   created: function() {
     this.$store.dispatch("load_folder_list").then(() => {
       const foldername = utils.cookies.getItem("tags-foldername");
@@ -179,17 +206,34 @@ export default {
   }
 };
 </script>
+
 <style lang='scss'>
 #page {
   width: 100%;
   height: 100%;
-  background: $body-color;
+  background: #2e2f30;
 }
 
+#all-elements{
+  height: 100%;
+  background: $body-color;
+}
+#all-image{
+  height: 100%;
+  background: #2e2f30;
+}
 #main-container {
   display: flex;
-  height: calc(100% - #{$application-header-hight} - 125px - #{$footer-height});
+  height: calc(100% - #{$application-header-hight} - #{$footer-height} - 125px);
 }
+
+.fade-enter-active {
+  transition: all .4s ease-out;
+}
+.fade-leave-active {
+  transition: all .4s ease;
+}
+
 
 #no_active_image {
   -webkit-box-flex: 1;

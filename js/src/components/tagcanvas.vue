@@ -1,5 +1,5 @@
 <template>
-  <div id='canvasblock'>
+  <div id='canvasblock' :class="{all_image_mode : this.all_image_mode === true, original : this.all_image_mode === false}">
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.middle='on_down_middle'
         @mousemove='on_move_middle'
@@ -24,12 +24,15 @@
           </div>
         </div>
         <transition name="fade">
-          <div id="zoom-button" v-if="zoom_scale!=1.0 || zoom_x != 0 || zoom_y != 0">
+          <div id="zoom-button" >
             <div id="zoom-out-button" @click="on_zoom_out_button">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </div>
             <div id="zoom-reset-button" @click="on_zoom_reset_button">
               <i class="fa fa-expand" aria-hidden="true"></i>
+            </div>
+            <div id="expand-wide" @click="expand_image_mode">
+              <i class="fa fa-arrows-alt" aria-hidden="true"></i>
             </div>
             <div id="zoom-in-button" @click="on_zoom_in_button">
               <i class="fa fa-minus" aria-hidden="true"></i>
@@ -174,6 +177,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "all_image_mode",
       "is_admin",
       "active_image_filename",
       "active_image",
@@ -296,6 +300,11 @@ export default {
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
     ...mapActions(["save_annotation", "delete_xml"]),
+
+    expand_image_mode: function(){
+      let shift = !this.all_image_mode;
+      this.$store.commit("set_all_image_mode", {all_image_mode : shift});
+    },
 
     _zoom: function(x, y, scale_delt, in_out) {
       let z = 0;
@@ -458,6 +467,9 @@ export default {
 
     on_keyup: function(event) {
       if (event.target.nodeName === "BODY") {
+        if(event.ctrlKey === true && event.key === "w"){
+          this.expand_image_mode();
+        }
         if (event.key === " ") {
           if (this.can_be_saved) {
             this.apply_annotation();
@@ -485,9 +497,6 @@ export default {
     on_keydown: function(event) {
       if (event.target.nodeName === "BODY") {
         if (this.has_image && this.active_boxid !== null) {
-          if (!this.has_image) {
-            return;
-          }
 
           if (
             event.key === "ArrowUp" ||
@@ -499,6 +508,10 @@ export default {
 
             let boxid = this.active_boxid;
             let box = this.get_box(boxid);
+            box.top = parseInt(box.top);
+            box.bottom = parseInt(box.bottom);
+            box.right = parseInt(box.right);
+            box.left = parseInt(box.left);
 
             switch (event.key) {
               case "ArrowUp":
@@ -886,313 +899,422 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-#canvasblock {
+.original{
+// #canvasblock
   flex-grow: 1;
   background: #fff;
-}
-.clear-padding {
-  padding-left: 0;
-  padding-right: 0;
-}
+  padding:5px 15px;
 
-#canvaspanel {
-  flex-grow: 1;
-  display: flex;
-  position: relative;
-  height: calc(100% - 150px + calc(#{$component-margin-top}));
-  .arrow {
-    margin-top: 25%;
+  .clear-padding {
+    padding-left: 0;
+    padding-right: 0;
   }
-  #canvas-wrapper {
-    width: calc(100% - 60px);
-    height: 100%;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    #pad {
-      width: 100%;
-      height: $component-margin-top;
-    }
-    #canvas {
-      position: relative;
-      margin: auto;
-      flex-grow: 0;
-      flex-shrink: 0;
-      object-fit: contain;
-      max-width: none;
-    }
-  }
-  #zoom-button {
+  #canvaspanel {
+    flex-grow: 1;
     display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    width: 120px;
-    height: 30px;
-    top: calc(100% - 30px);
-    left: calc(50% - 60px);
-    #zoom-out-button {
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+    position: relative;
+    height: calc(100% - 150px + calc(#{$component-margin-top}));
+    .arrow {
+      margin-top: 25%;
     }
-    #zoom-in-button {
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-    }
-    div {
-      display: flex;
-      width: 33.33%;
-      i-align: center;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #00000088;
-      &:hover {
-        cursor: pointer;
-        background-color: #00000033;
+    #canvas-wrapper {
+      width: calc(100% - 60px);
+      height: 100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      #pad {
+        width: 100%;
+        height: $component-margin-top;
+      }
+      #canvas {
+        position: relative;
+        margin: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+        object-fit: contain;
+        max-width: none;
       }
     }
-  }
-
-  .box-border {
-    box-sizing: border-box;
-    position: absolute;
-
-    $BOX_MARGIN: 2px;
-
-    .taglabel {
+    #zoom-button {
+      display: flex;
+      flex-wrap: wrap;
       position: absolute;
-      right: 0;
-      top: 0;
-      color: white;
-      background-color: #73dd00;
+      width: 120px;
+      height: 30px;
+      top: calc(100% - 30px);
+      left: calc(50% - 60px);
+      #zoom-out-button {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      #zoom-in-button {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      div {
+        display: flex;
+        width: 25%;
+        i-align: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: #00000088;
+        &:hover {
+          cursor: pointer;
+          background-color: #00000033;
+        }
+      }
     }
-    .box {
+
+    .box-border {
+      box-sizing: border-box;
       position: absolute;
-      border: solid #73dd00 1px;
-      left: $BOX_MARGIN;
-      top: $BOX_MARGIN;
-      right: $BOX_MARGIN;
-      bottom: $BOX_MARGIN;
-    }
-    .box-active {
-      border-color: red;
-      background-color: rgba(255, 255, 255, 0.7);
+
+      $BOX_MARGIN: 2px;
 
       .taglabel {
-        background-color: red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white;
+        background-color: #73dd00;
+      }
+      .box {
+        position: absolute;
+        border: solid #73dd00 1px;
+        left: $BOX_MARGIN;
+        top: $BOX_MARGIN;
+        right: $BOX_MARGIN;
+        bottom: $BOX_MARGIN;
+      }
+      .box-active {
+        border-color: red;
+        background-color: rgba(255, 255, 255, 0.7);
+
+        .taglabel {
+          background-color: red;
+        }
       }
     }
-  }
 
-  #newtag {
-    box-sizing: border-box;
-    position: absolute;
-    border: solid red 1px;
-  }
-}
-
-#imageinfo {
-  display: flex;
-  color: #666;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: $component-margin-top 0 0;
-
-  .shortcut-text-title{
-    font-size:0.75rem;
-    color:#aaa;
-    margin-bottom: 0;
-  }
-  .shortcut-text-list{
-    font-size:0.6rem;
-    color:#aaa;
-    list-style-type: disc
-  }
-
-  .check-button {
-    height: $panel-height;
-    width: 38px;
-    background: #fff;
-    border-color: #000;
-  }
-  .comment-wrapper{
-    margin: 0 5px;
-    display: flex;
-    font-size: 95%;
-    position: relative;
-
-    .comment-area {
-      width: 100%;
-      padding-right: 8px;
-      padding-left: 0;
-      .form-control {
-        width: 100%;
-        height: 80px;
-        padding: 0 5px;
-        margin: 3px 0 0;
-        font-size: 90%;
-        resize: none;
-        border-radius: 0px;
-        overflow-y: scroll;
-      }
-    }
-    .active_textarea{
-      order: 2;
-      .form-control{
-        cursor: pointer;
-      }
-    }
-    .inactive_textarea{
-      order: 1;
-      .form-control{
-        // border:none;
-        background: #fff;
-      }
-      & :focus {
-        box-shadow: none;
-      }
-    }
-  }
-
-
-  .review_checked {
-    background-color: #a2c84a;
-  }
-  .align-bottom{
-    display: inline-block;
-    vertical-align: bottom;
-  }
-  .toggle-wrapper{
-    position:relative;
-    display:inline-block;
-    #toggle {
-      display: inline-block;
-      height: calc(#{$panel-height} * 0.8);
+    #newtag {
+      box-sizing: border-box;
       position: absolute;
-      bottom: 0;
-      right: 10px;
-      .switch {
+      border: solid red 1px;
+    }
+  }
+
+  #imageinfo {
+    display: flex;
+    color: #666;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: $component-margin-top 0 0;
+
+    .shortcut-text-title{
+      font-size:0.75rem;
+      color:#aaa;
+      margin-bottom: 0;
+    }
+    .shortcut-text-list{
+      font-size:0.6rem;
+      color:#aaa;
+      list-style-type: disc
+    }
+
+    .check-button {
+      height: $panel-height;
+      width: 38px;
+      background: #fff;
+      border-color: #000;
+    }
+    .comment-wrapper{
+      margin: 0 5px;
+      display: flex;
+      font-size: 95%;
+      position: relative;
+
+      .comment-area {
+        width: 100%;
+        padding-right: 8px;
+        padding-left: 0;
+        .form-control {
+          width: 100%;
+          height: 80px;
+          padding: 0 5px;
+          margin: 3px 0 0;
+          font-size: 90%;
+          resize: none;
+          border-radius: 0px;
+          overflow-y: scroll;
+        }
+      }
+      .active_textarea{
+        order: 2;
+        .form-control{
+          cursor: pointer;
+        }
+      }
+      .inactive_textarea{
+        order: 1;
+        .form-control{
+          // border:none;
+          background: #fff;
+        }
+        & :focus {
+          box-shadow: none;
+        }
+      }
+    }
+
+
+    .review_checked {
+      background-color: #a2c84a;
+    }
+    .align-bottom{
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    .toggle-wrapper{
+      position:relative;
+      display:inline-block;
+      #toggle {
+        display: inline-block;
         height: calc(#{$panel-height} * 0.8);
-        width: 55px;
-        input[type=checkbox]{
-          line-height: calc(#{$panel-height} * 0.8);
-          opacity:0;
-          width:0;
-          height:0;
-          &.checked+.slider{
-            background-color:#006ea1;
-            &:before{
-              transform: translateX(26px);
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        .switch {
+          height: calc(#{$panel-height} * 0.8);
+          width: 55px;
+          input[type=checkbox]{
+            line-height: calc(#{$panel-height} * 0.8);
+            opacity:0;
+            width:0;
+            height:0;
+            &.checked+.slider{
+              background-color:#006ea1;
+              &:before{
+                transform: translateX(26px);
+              }
             }
+          }
+
+        }
+    }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #999;
+          transition: .4s;
+
+          &:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
           }
         }
 
       }
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #999;
-        transition: .4s;
+      #buttons{
+        margin: auto;
+        .filename {
+          text-align: right;
+        }
+        .btn-wrp {
+          display: inline-block;
+          width: calc(55px * 2);
 
-        &:before {
-          position: absolute;
-          content: "";
-          height: 20px;
-          width: 20px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          transition: .4s;
+        }
+        .btn-wrp > p{
+            display: inline-block;
+            margin: 0px;
+        }
+        .ok-button {
+          &:hover,
+          &-push {
+            background: #ff4949!important
+          }
+        }
+        .ng-button {
+          &:hover,&-push {
+            background: #000!important
+          }
+        }
+        .ng-button,.ok-button{
+          cursor: pointer;
+          background: #999;
+          padding:10px;
+          color: #fff;
+          width: 53px;
+          font-size:0.8rem;
+          text-align: center;
+          line-height:5px;
+        }
+
+        .img-btn {
+          height: 23px;
+          cursor: pointer;
+        }
+        .img-btn-disabled {
+          height: 23px;
+
+          &:hover {
+            cursor: not-allowed;
+            background: #999!important;
+          }
+        }
+        #save_xml_btn {
+          background-color: $panel-bg-color;
+          color: #fff;
+          height: calc(#{$panel-height} * 0.8);
+          width: calc(55px * 2);
+          line-height: calc(#{$panel-height} * 0.8);
+          text-align: center;
+          font-family: $content-top-header-font-family;
+          font-size: $content-modellist-font-size;
+          &:hover {
+            background-color: $panel-bg-color-hover;
+            cursor: pointer;
+          }
+        }
+        #save_xml_btn_disabled {
+          color: #fff;
+          height: calc(#{$panel-height} * 0.8);
+          width: calc(55px * 2);
+          line-height: calc(#{$panel-height} * 0.8);
+          text-align: center;
+          background-color: $disabled-color;
+          font-family: $content-top-header-font-family;
+          font-size: $content-modellist-font-size;
+          cursor: not-allowed;
         }
       }
+    }
 
-    }
+
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+      }
+
+}
+.all_image_mode{
+// #canvasblock
+  flex-grow: 1;
+  background: #2e2f30;
+  height: 100%;
+  padding:15px 30px;
+
+  .clear-padding {
+    padding-left: 0;
+    padding-right: 0;
   }
-  #buttons{
-    margin: auto;
-    .filename {
-      text-align: right;
+  #canvaspanel {
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+    height:100%;
+    .arrow {
+      margin-top: 25%;
     }
-    .btn-wrp {
+    #canvas-wrapper {
       display: inline-block;
-      width: calc(55px * 2);
+      width: calc(100% - 60px);
+      height:100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 
-    }
-    .btn-wrp > p{
-        display: inline-block;
-        margin: 0px;
-    }
-    .ok-button {
-      &:hover,
-      &-push {
-        background: #ff4949!important
+      .pad {
+        width: 100%;
+        height: $component-margin-top;
+      }
+      #canvas {
+        position: relative;
+        margin: auto;
+        flex-grow: 0;
+        flex-shrink: 0;
+        object-fit: contain;
+        max-width: none;
       }
     }
-    .ng-button {
-      &:hover,&-push {
-        background: #000!important
+    #zoom-button {
+      display: flex;
+      flex-wrap: wrap;
+      position: absolute;
+      width: 120px;
+      height: 30px;
+      top: calc(100% - 30px);
+      left: calc(50% - 60px);
+      #zoom-out-button {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      #zoom-in-button {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      div {
+        display: flex;
+        width: 25%;
+        i-align: center;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: #00000088;
+        &:hover {
+          cursor: pointer;
+          background-color: #00000033;
+        }
       }
     }
-    .ng-button,.ok-button{
-      cursor: pointer;
-      background: #999;
-      padding:10px;
-      color: #fff;
-      width: 53px;
-      font-size:0.8rem;
-      text-align: center;
-      line-height:5px;
-    }
+    .box-border {
+      box-sizing: border-box;
+      position: absolute;
 
-    .img-btn {
-      height: 23px;
-      cursor: pointer;
-    }
-    .img-btn-disabled {
-      height: 23px;
+      $BOX_MARGIN: 2px;
 
-      &:hover {
-        cursor: not-allowed;
-        background: #999!important;
+      .taglabel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white;
+        background-color: #73dd00;
+      }
+      .box {
+        position: absolute;
+        border: solid #73dd00 1px;
+        left: $BOX_MARGIN;
+        top: $BOX_MARGIN;
+        right: $BOX_MARGIN;
+        bottom: $BOX_MARGIN;
+      }
+      .box-active {
+        border-color: red;
+        background-color: rgba(255, 255, 255, 0.7);
+
+        .taglabel {
+          background-color: red;
+        }
       }
     }
-    #save_xml_btn {
-      background-color: $panel-bg-color;
-      color: #fff;
-      height: calc(#{$panel-height} * 0.8);
-      width: calc(55px * 2);
-      line-height: calc(#{$panel-height} * 0.8);
-      text-align: center;
-      font-family: $content-top-header-font-family;
-      font-size: $content-modellist-font-size;
-      &:hover {
-        background-color: $panel-bg-color-hover;
-        cursor: pointer;
-      }
-    }
-    #save_xml_btn_disabled {
-      color: #fff;
-      height: calc(#{$panel-height} * 0.8);
-      width: calc(55px * 2);
-      line-height: calc(#{$panel-height} * 0.8);
-      text-align: center;
-      background-color: $disabled-color;
-      font-family: $content-top-header-font-family;
-      font-size: $content-modellist-font-size;
-      cursor: not-allowed;
-    }
 
-  }
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
+    #newtag {
+      box-sizing: border-box;
+      position: absolute;
+      border: solid red 1px;
+    }
   }
 }
 </style>
