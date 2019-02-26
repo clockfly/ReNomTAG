@@ -307,9 +307,6 @@ export default {
       boxes: context.state.active_image_tag_boxes
     });
 
-    // ctrl + b用の処理
-    context.commit("set_copy_boxes");
-
     // load next image
     let idx = 0;
     for (const file of context.state.files) {
@@ -338,10 +335,6 @@ export default {
       filename: cur_filename,
       info: ret.data.result
     });
-  },
-
-  async paste_annotation(context) {
-    context.commit("paste_copied_boxes");
   },
   
   async delete_taglist(context, payload) {

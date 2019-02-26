@@ -171,8 +171,7 @@ export default {
       "labels",
       "files",
       "tagged_images",
-      "pre_save_boxes_data",
-      "tagged_images"
+      "pre_save_boxes_data"
     ]),
     image_url: function() {
       return this.active_image;
@@ -420,6 +419,17 @@ export default {
       if (this.active_image_tag_boxes.length == 0) {
         this.delete_xml();
       } else {
+        let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
+            let {bottom, top, left, right,label} = {...box};
+            // 座標は比率で保存する
+            // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
+            let normed_bottom = bottom/this.active_image_height;
+            let normed_top = top/this.active_image_height;            
+            let normed_left = left/this.active_image_width;
+            let normed_right = right/this.active_image_width;
+            return [normed_bottom, normed_top, normed_left, normed_right,label]
+        });
+        this.$store.commit("set_copy_boxes",pre_save_boxes_data_set);
         this.save_annotation();
       }
     },
@@ -451,10 +461,20 @@ export default {
         if (event.ctrlKey) {
           switch(event.key){
             case "b":
-              if(this.pre_save_boxes_data.length == 0){
-                alert("コピー対象は無いです");
+              if(this.pre_save_boxes_data == 0){
+                alert("There is no target image to copy");
               }
-              this.paste_annotation();
+              let saved_boxes = this.pre_save_boxes_data.map((norm_box) => {
+                  let bottom,top,left,right,label;
+                  [bottom,top,left,right,label] = [...norm_box];
+                  let normed_bottom = bottom * this.active_image_height;
+                  let normed_top = top * this.active_image_height;            
+                  let normed_left = left * this.active_image_width;
+                  let normed_right = right * this.active_image_width;
+                  return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
+              });
+              let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
+              this.$store.commit("paste_copied_boxes",box_dataset);
               break;
           }
         }
