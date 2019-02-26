@@ -149,11 +149,13 @@ export default {
     }
 
     let review_result = "";
-    let review_comment = "";
+    let comment_admin = "";
+    let comment_subord = "";
 
     if (response.data.boxes) {
       review_result = response.data.boxes.annotation.source.reviewresult;
-      review_comment = response.data.boxes.annotation.source.reviewcomment;
+      comment_admin = response.data.boxes.annotation.source.comment.admin;
+      comment_subord = response.data.boxes.annotation.source.comment.subord;
     }
     context.commit("set_active_image", {
       filename: file,
@@ -162,7 +164,8 @@ export default {
       image: "data:image;base64," + response.data.img,
       boxes,
       review_result,
-      review_comment
+      comment_admin,
+      comment_subord
     });
   },
 
@@ -234,7 +237,14 @@ export default {
         context.dispatch("load_current_image", context.state.files[idx]);
       } else {
         context.commit("set_active_image", {
-          file: null
+          filename: null,
+          width: null,
+          height: null,
+          image: null,
+          boxes: null,
+          review_result: null,
+          comment_admin: null,
+          comment_subord: null
         });
       }
 
@@ -255,7 +265,8 @@ export default {
         annotation: {
           path: cur_filename,
           source: {
-            database: "Unknown"
+            database: "Unknown",
+            comment: {}
           },
           size: {
             width: context.state.active_image_width,
@@ -269,8 +280,10 @@ export default {
     }
     value.annotation.source.reviewresult =
       context.state.active_image_review_result;
-    value.annotation.source.reviewcomment =
-      context.state.active_image_review_comment;
+    value.annotation.source.comment.admin =
+      context.state.active_image_comment_admin;
+    value.annotation.source.comment.subord =
+      context.state.active_image_comment_subord;
 
     value.annotation.objects = [];
     for (let box of context.state.active_image_tag_boxes) {

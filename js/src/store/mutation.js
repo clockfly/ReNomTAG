@@ -137,7 +137,9 @@ export default {
     state.folder = payload.folder;
     state.tagged_images = [];
   },
-
+  set_all_image_mode(state, payload) {
+    state.all_image_mode = payload.all_image_mode;
+  },
   toggle_tag_filter(state, payload) {
     const idx = state.tag_filter.indexOf(payload.filter);
     if (idx === -1) {
@@ -185,7 +187,7 @@ export default {
     select_files(state);
   },
 
-  set_image_list(state, payload){
+  set_image_list(state, payload) {
     state.image_list = payload;
   },
 
@@ -210,7 +212,8 @@ export default {
     state.active_image = payload.image;
     state.active_image_tag_boxes = payload.boxes;
     state.active_image_review_result = payload.review_result;
-    state.active_image_review_comment = payload.review_comment;
+    state.active_image_comment_admin = payload.comment_admin;
+    state.active_image_comment_subord = payload.comment_subord;
 
     state.active_boxid = null;
   },
@@ -303,9 +306,13 @@ export default {
     }
   },
 
-  set_review_comment(state, payload) {
-    state.active_image_review_comment = payload.comment;
+  set_comment_admin(state, payload) {
+    state.active_image_comment_admin = payload.comment;
   },
+  set_comment_subord(state, payload) {
+    state.active_image_comment_subord = payload.comment;
+  },
+
   set_tagged_images(state, payload) {
     const imgs = payload;
     const MAX_WIDTH = 10000;
