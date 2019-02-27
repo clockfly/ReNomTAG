@@ -1298,7 +1298,6 @@ export default {
       div {
         display: flex;
         width: 25%;
-        i-align: center;
         justify-content: center;
         align-items: center;
         color: white;
