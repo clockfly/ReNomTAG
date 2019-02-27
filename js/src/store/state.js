@@ -1,5 +1,7 @@
 let state = {
   is_admin: window.location.pathname.startsWith("/admin"),
+  all_image_mode: false,
+
   // error state
   error_status: "",
   // menu state
@@ -33,8 +35,8 @@ let state = {
   // tag boxes
   active_image_tag_boxes: [],
   active_image_review_result: "",
-  active_image_review_comment: "",
-
+  active_image_comment_admin: "",
+  active_image_comment_subord: "",
   // labels
   labels: [],
 
