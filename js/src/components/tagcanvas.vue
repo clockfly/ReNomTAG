@@ -978,6 +978,7 @@ export default {
       &:hover {
         cursor: pointer;
         background-color: #00000033;
+      }  
       flex-wrap: wrap;
       position: absolute;
       width: 120px;
