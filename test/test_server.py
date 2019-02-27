@@ -107,23 +107,23 @@ def test_save_xml_from_label_dict(tmpdir):
         json = {'folder': 'folderx',
                 'value': {'annotation':
                           {'path': 'a.jpg',
-                           'source':{
-                                     'database':'Unknown',
-                                     'comment':{
-                                        'admin':'',
-                                        'subord':''
-                                     },
-                                     'reviewresult':''
-                                  },
+                           'source': {
+                               'database': 'Unknown',
+                               'comment': {
+                                   'admin': '',
+                                   'subord': ''
+                               },
+                               'reviewresult': ''
+                           },
                            'size': {'width': 500, 'height': 375, 'depth': 3},
                            'segments': 0,
                            'objects': [
                                {'object':
                                 {'name': 'asda', 'pose': 'Unspecified',
-                                   'truncated': 0, 'difficult': 0,
-                                   'bndbox':
-                                   {'xmin': 10, 'xmax': 100, 'ymin': 20, 'ymax': 200
-                                    }}}]}}}
+                                 'truncated': 0, 'difficult': 0,
+                                 'bndbox':
+                                 {'xmin': 10, 'xmax': 100, 'ymin': 20, 'ymax': 200
+                                  }}}]}}}
 
         app = testapp(server.app)
         app.post_json('/api/save_xml_from_label_dict', json)
@@ -147,7 +147,6 @@ def test_get_filename_list(tmpdir):
         imgdir.join('a-b.png').write_binary(b'')
         imgdir.join('ccc.bmp').write_binary(b'')
 
-
         xmldir = build_xml_dir(tmpdir, 'folderx')
         ex_xml = create_xml_data()
         xmldir.join('a.xml').write(ex_xml)
@@ -164,8 +163,8 @@ def test_get_filename_list(tmpdir):
         print(filename_list)
         print(undef_filename_list)
         #assert filename_list ==['ccc.bmp','a.jpeg','b.jpg']
-        assert undef_filename_list==['a-b.png']
-        assert dup_filename_list==['abc.jpeg']
+        assert undef_filename_list == ['a-b.png']
+        assert dup_filename_list == ['abc.jpeg']
 
 
 def test_save_label_candidates_dict(tmpdir):
@@ -181,8 +180,8 @@ def test_save_label_candidates_dict(tmpdir):
                                server.SAVE_JSON_FILE_PATH)
 
         saved = json.load(open(jsonfile.strpath))
-        assert saved == {'0': {'label': 'car', 'shortcut': '4'}, '1': {'label': 'dhjs', 'shortcut': 'g'}}
-
+        assert saved == {'0': {'label': 'car', 'shortcut': '4'},
+                         '1': {'label': 'dhjs', 'shortcut': 'g'}}
 
 
 def test_load_label_candidates_dict(tmpdir):
@@ -198,7 +197,8 @@ def test_load_label_candidates_dict(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
-        assert ret.json_body == [{'id':0 ,'label': 'car', 'shortcut': '4'}]
+        assert ret.json_body == [{'id': 0, 'label': 'car', 'shortcut': '4'}]
+
 
 def test_delete_xml(tmpdir):
     with tmpdir.as_cwd():
@@ -208,10 +208,10 @@ def test_delete_xml(tmpdir):
 
         app = testapp(server.app)
         ret = app.post_json('/api/delete_xml',
-                     { 'folder': 'folderx',
-                       'target_filename': 'target.png'})
+                            {'folder': 'folderx',
+                             'target_filename': 'target.png'})
 
-        assert ret.json_body == {"result":1,"message":"Box deletion successful!"}
+        assert ret.json_body == {"result": 1, "message": "Box deletion successful!"}
 
 
 def test_make_dir(tmpdir):
@@ -220,8 +220,6 @@ def test_make_dir(tmpdir):
         app = testapp(server.app)
         ret = app.post_json('/api/make_dir', {'working_dir': str(tmpdir), 'username': 'folderx'})
         assert ret.json_body == {'result': 111}
-
-
 
 
 def test_get_img_file(tmpdir):
@@ -233,7 +231,7 @@ def test_get_img_file(tmpdir):
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
         imgdir.join('aakhk.bmp').write_binary(b'')
 
-        ret_names, ret_dup_names, ret_undef_names  = server.get_img_files('folderx')
+        ret_names, ret_dup_names, ret_undef_names = server.get_img_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['a.jpeg', 'aakhk.bmp', 'aierf_y832fa.jpg']
