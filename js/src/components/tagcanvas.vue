@@ -970,6 +970,14 @@ export default {
     }
     #zoom-button {
       display: flex;
+      width: 33.33%;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      background-color: #00000088;
+      &:hover {
+        cursor: pointer;
+        background-color: #00000033;
       flex-wrap: wrap;
       position: absolute;
       width: 120px;
@@ -987,7 +995,6 @@ export default {
       div {
         display: flex;
         width: 25%;
-        i-align: center;
         justify-content: center;
         align-items: center;
         color: white;
