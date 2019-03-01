@@ -521,11 +521,11 @@ export default {
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
               this.$store.commit("paste_copied_boxes",box_dataset);
-              break;
+            break;
+            case "d":
+              this.show_selected_boxes_toggle();
+            break;
           }
-        }
-        if(event.ctrlKey === true && event.key === "d"){
-          this.show_selected_boxes_toggle();
         }
       }
     },
