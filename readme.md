@@ -23,7 +23,7 @@ The Wheel package is provided at:
 You can install the wheel package with pip3 command::
 
 ```
-$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1b0-beta-py3-none-any.whl
+$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1b0-py3-none-any.whl
 ```
 
 The Wheel package contains pre-built js files so you don't have to build manually.
