@@ -83,8 +83,10 @@ def filter_datafilenames(dir, ext):
     return names, undef_names
 
 # extract not-load files from def_files
+
+
 def filter_duplicate_filenames(filename_list, exts):
-# 1. Extract duplicate names
+    # 1. Extract duplicate names
     filenames_no_ext = []
     for name in filename_list:
         only_name = os.path.splitext(name)[0]
@@ -135,6 +137,7 @@ def filter_duplicate_filenames(filename_list, exts):
 
     return load_files, not_load_files
 
+
 def get_img_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png", "bmp"]
@@ -161,7 +164,6 @@ def get_xml_files(folder):
 
 def _get_file_name(path):
     return os.path.splitext(os.path.split(path)[1])[0]
-
 
 
 def strip_foldername(folder):
@@ -214,7 +216,7 @@ def json2xml(json_obj, line_padding=""):
         return "\n".join(result_list)
 
     if not isinstance(json_obj, (int, float, str)):
-        raise ValueError('Invalid tag value')
+        raise ValueError('Invalid tag value. {}'.format(type(json_obj)))
 
     if isinstance(json_obj, str):
         json_obj = saxutils.escape(json_obj)
@@ -268,7 +270,6 @@ def static(file_name):
     return _get_resource('static', file_name)
 
 
-
 def check_path(path, filename):
     head = os.path.abspath(path)
     if not head.endswith(('/', '\\')):
@@ -284,6 +285,7 @@ def check_path(path, filename):
 
 def get_folderpath(folder):
     return check_path(DIR_ROOT, folder)
+
 
 def get_boxes(folder, img_filename):
     filename = _get_file_name(img_filename) + '.xml'
@@ -303,7 +305,6 @@ def get_boxes(folder, img_filename):
         except KeyError:
             json_dict['annotation']['object'] = []
 
-
         # revert `object` to original name(`objects`)
         json_dict['annotation']['objects'] = json_dict['annotation']['object']
 
@@ -312,10 +313,16 @@ def get_boxes(folder, img_filename):
         # None を空文字列に変換
         if not json_dict['annotation']['source'].get('reviewresult', False):
             json_dict['annotation']['source']['reviewresult'] = ''
-        if not json_dict['annotation']['source']['comment'].get('admin', False):
-            json_dict['annotation']['source']['comment']['admin'] = ''
-        if not json_dict['annotation']['source']['comment'].get('subord', False):
-            json_dict['annotation']['source']['comment']['subord'] = ''
+
+        # Check comment
+        source = json_dict['annotation']['source']
+        old_comment = source.get('reviewcomment', None)
+        new_comment = source.get('comment', None)
+        if old_comment is not None:
+            del json_dict['annotation']['source']['reviewcomment']
+        if new_comment is None:
+            json_dict['annotation']['source']['comment'] = {'admin': '', 'subord': ''}
+
     return json_dict
 
 
@@ -401,7 +408,17 @@ def save_xml_from_label_dict():
     :return:
     """
 
+    # None check
+    def none_check(d):
+        for k, v in d.items():
+            if v is None:
+                d[k] = ''
+            elif isinstance(v, dict):
+                none_check(v)
+
     label_dict = request.json['value']
+    none_check(label_dict)
+
     ann_path = strip_path(label_dict['annotation']['path'])
     check_path(IMG_DIR, ann_path)
 
@@ -432,7 +449,7 @@ def save_xml_from_label_dict():
     return ret
 
 
-@app.route("/api/delete_xml",method=["POST"])
+@app.route("/api/delete_xml", method=["POST"])
 def delete_xml():
     filename = _get_file_name(request.json['target_filename'])
     filename = filename + ".xml"
@@ -453,13 +470,13 @@ def delete_xml():
         print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
         print('it was not deleted. Please check if the xml-file exists!')
 
-
     body = json.dumps({
         "result": result,
         "message": message
     })
     ret = set_json_body(body)
     return ret
+
 
 @app.route("/api/load_xml_tagged_images", method=["POST"])
 def load_xml_tagged_images():
@@ -599,7 +616,6 @@ def delete_label_candidates_dict():
         os.remove(jsonfile)
 
 
-
 # DIR_ROOT = 'public'
 # search inside the "bublic" ande get folderlist
 @app.route("/api/folderlist", method=["POST"])
@@ -621,14 +637,13 @@ def get_folderlist():
                 continue
 
             folders.append(d)
-        ret = set_json_body(json.dumps({'result':1,'folder_list': folders}))
+        ret = set_json_body(json.dumps({'result': 1, 'folder_list': folders}))
 
     else:
         #message = 'No folder named "public" in the current directory. \n Wanna create directories?'
         #message = 'No folder named "public" in the current directory: \n'+ str(current_dir) + '\n'
         #message = message + 'Wanna create directories?'
-        ret = set_json_body(json.dumps({'result':0,'current_dir': current_dir}))
-
+        ret = set_json_body(json.dumps({'result': 0, 'current_dir': current_dir}))
 
     return ret
 
@@ -651,10 +666,10 @@ def make_dir():
 
     else:
         # string -> join to pat
-        public = os.path.join(working_dir,DIR_ROOT)
-        user_folder = os.path.join(public,username)
-        dataset = os.path.join(user_folder,IMG_DIR)
-        label = os.path.join(user_folder,XML_DIR)
+        public = os.path.join(working_dir, DIR_ROOT)
+        user_folder = os.path.join(public, username)
+        dataset = os.path.join(user_folder, IMG_DIR)
+        label = os.path.join(user_folder, XML_DIR)
 
         os.makedirs(user_folder)
         os.mkdir(dataset)
@@ -664,7 +679,7 @@ def make_dir():
         print(message)
 
     #message = message + "load again to start."
-    ret = set_json_body(json.dumps({'result': result }))
+    ret = set_json_body(json.dumps({'result': result}))
     return ret
 
 
