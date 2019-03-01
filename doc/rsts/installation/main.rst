@@ -41,7 +41,7 @@ Install by pip
 
 .. code-block:: shell
 
-    pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1.0_beta-py3-none-any.whl
+    pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1.b0-py3-none-any.whl
 
 
 Install from source
