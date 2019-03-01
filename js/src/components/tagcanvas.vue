@@ -148,10 +148,6 @@ export default {
       org_boxrc: null,
       boxes: null,
       show_selected_boxes: false,
-      OK_BUTTON: require("../assets/images/OK_button.png"),
-      NG_BUTTON: require("../assets/images/NG_button.png"),
-      OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
-      NG_BUTTON_PUSH: require("../assets/images/NG_push.png"),
 
       zoom_x: 0, // The coordinate x the image
       zoom_y: 0,
@@ -300,6 +296,7 @@ export default {
       this.$nextTick(() => {
         this.arrange_boxes();
       });
+      console.dir(this.active_image_tag_boxes);
     }
   },
   methods: {
@@ -521,11 +518,15 @@ export default {
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
               this.$store.commit("paste_copied_boxes",box_dataset);
-              break;
+            break;
+            case "d":
+              this.show_selected_boxes_toggle();
+            break;
+            case "z":
+              // ここに必要事項を記載
+              console.log("test");
+            break;
           }
-        }
-        if(event.ctrlKey === true && event.key === "d"){
-          this.show_selected_boxes_toggle();
         }
       }
     },
