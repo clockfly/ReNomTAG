@@ -3,7 +3,7 @@
 A tagging tool for object detection.
 
 
-## Changes 1.0.2 => 1.1.b0
+## Changes 1.0.2 => 1.1b0
 - Added full-screen tagging mode
 - Added image zoom feature
 - Added feature for hiding unselected boxes during tagging
@@ -23,7 +23,7 @@ The Wheel package is provided at:
 You can install the wheel package with pip3 command::
 
 ```
-$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1.b0-beta-py3-none-any.whl
+$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1b0-beta-py3-none-any.whl
 ```
 
 The Wheel package contains pre-built js files so you don't have to build manually.
