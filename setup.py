@@ -4,6 +4,7 @@ import re
 import shutil
 import pathlib
 from setuptools import setup, find_packages
+#from setuptools.extern.packaging import version
 import distutils.command.build
 
 if sys.version_info < (3, 4):
@@ -21,7 +22,8 @@ entry_points = {
 }
 
 versionpy = os.path.join(DIR, 'renom_tag/__version__.py')
-version = re.search(r'"([\d.]+)"', open(versionpy).read()).group(1)
+#version.Version = version.LegacyVersion
+version = re.search(r'"([\d.b]+)"', open(versionpy).read()).group(1)
 
 
 class BuildNPM(distutils.command.build.build):

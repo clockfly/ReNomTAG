@@ -1,6 +1,7 @@
 How to use
 ==========
 
+
 Before starting
 ----------------
 
@@ -95,6 +96,7 @@ Then type the following URL into your web browser.
 The ``public`` directory will be loaded and following screen will be displayed.
 
 .. image:: /_static/image/how_to_use01.png
+   :align: center
 
 
 Add tags to images
@@ -106,6 +108,7 @@ Create tags (bounding boxes)
 You can create a tag (bounding box) by dragging the cursor inside the image.
 
 .. image:: /_static/image/how_to_use08.png
+   :align: center
 
 .. note::
 
@@ -119,12 +122,15 @@ To save the tag, please click the ``save`` button.
 The ``Space`` key also acts as a shortcut for saving.
 
 
-Show a tag, only the one you selected
+Hide all unselected tags
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You can choose to show only one box by selecting it then clicking the ``toggle button``.
+You can choose to hide unselected boxes by clicking the ``toggle button``.
 ``Ctrl+d`` can also be used as a shortcut for this.
 New boxes can still be added in this mode.
-Return to the normal view by clicking the toggle button again.
+Return to the normal view by clicking the toggle button or using ``Ctrl+d`` again.
+
+.. image:: /_static/image/how_to_use13.png
+   :align: center
 
 
 Set shortcut keys for class tags
@@ -132,6 +138,25 @@ Set shortcut keys for class tags
 
 You can set a shortcut key for each class tag name.
 
+
+Full-screen tagging
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Tag in full-screen mode with the ``Ctrl+w`` or clicking the third icon at the bottom of the current image.
+Return to normal mode by using the same shortcut or clicking the same icon.
+
+.. image:: /_static/image/how_to_use10.png
+   :align: center
+
+
+Expanding/shrinking images during tagging
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Expand or shrink the active image by using the trackpad or the ``+`` or ``-`` buttons in the toolbar at the bottom of the image.
+Return to the original image size by clicking the second icon on the toolbar.
+
+.. image:: /_static/image/how_to_use11.png
+   :align: center
 
 
 Filter images
@@ -146,6 +171,7 @@ You can filter the images to be shown.
 - **NG** : Show images marked as ``NG`` by admin user.
 
 .. image:: /_static/image/how_to_use07.png
+   :align: center
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -170,9 +196,10 @@ To enter admin mode, please add ``admin`` to the URL as shown below.
 The title of the page should change to ``Admin``.
 
 .. image:: /_static/image/how_to_use04.png
+   :align: center
 
 
-Add new class tag
+Add new class tags
 ~~~~~~~~~~~~~~~~~
 
 If you are in admin mode, you can add new class tags.
@@ -184,6 +211,20 @@ You can also add a shortcut key. The shortcut key can be changed
 in either admin or normal mode.
 
 .. image:: /_static/image/how_to_use05.png
+   :align: center
+
+
+Delete class tags
+~~~~~~~~~~~~~~~~~
+
+If you are in admin mode, you can also delete existing class tags.
+To do this, click the ``Delete Tag List`` button shown in red below.
+
+Next, select the individual tags you would like to delete, and click ``Delete``.
+
+.. image:: /_static/image/how_to_use12.png
+   :align: center
+
 
 Apply marks to images
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -194,6 +235,7 @@ You can mark tagged images as ``OK`` or ``NG``.
 To apply a mark, please click the OK or NG button.
 
 .. image:: /_static/image/how_to_use06.png
+   :align: center
 
 After clicking the ``save`` button, the mark will be saved.
 
@@ -219,6 +261,7 @@ You can add multiple user directories under the public folder and
 then choose which directory you would like to work on.
 
 .. image:: /_static/image/how_to_use09.png
+   :align: center
 
 The image above represents the following directory structure.
 There are 4 user directories (Alice, Bob, user1 and user2).

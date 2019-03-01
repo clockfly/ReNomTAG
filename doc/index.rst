@@ -1,5 +1,5 @@
-ReNomTAG v1.0
-==============
+ReNomTAG v1.1 beta
+==================
 
 .. toctree::
    :maxdepth: 3
