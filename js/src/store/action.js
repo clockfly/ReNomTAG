@@ -93,14 +93,27 @@ export default {
       });
     }
   },
-  async set_folder(context, folder) {
+
+  async init_client(context, payload) {
+    // "load_folder_list" loads folder_list.
     await context.dispatch("load_folder_list");
-    context.commit("set_folder", { folder: folder });
+
+    // "set_folder" raises error when folder is not in folder_list.
+    let foldername;
+    if (payload) {
+      foldername = payload;
+    } else {
+      foldername = utils.cookies.getItem("tags-foldername");
+    }
+    context.commit("set_folder", foldername);
+
     context.commit("set_file_list", { file_list: [] });
     context.commit("set_active_image", { file: null });
-    await load_imagefile_list(context);
-    await load_label_candidates_dict(context);
-    await load_tagged_images(context);
+    load_label_candidates_dict(context);
+    load_imagefile_list(context);
+    load_tagged_images(context);
+
+    utils.cookies.setItem("tags-foldername", foldername, Infinity);
   },
 
   async make_dir(context) {
