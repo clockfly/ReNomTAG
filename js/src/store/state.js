@@ -16,7 +16,10 @@ let state = {
   dup_file_message: "",
 
   working_dir: "",
-  folder: "",
+
+  // Current User Folder Name.
+  folder: undefined,
+
   folder_list: [],
   // image files
   folder_files: {},

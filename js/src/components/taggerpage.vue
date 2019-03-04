@@ -1,13 +1,13 @@
 <template>
   <div id="page">
-    <div id="all-elements" v-if="!this.is_all_image_mode">
+    <div id="all-elements" v-if="!this.isAllImageMode">
       <app-header class="row"></app-header>
       <div id='main-container'>
         <left-menu></left-menu>
-        <image-list class="folder-image" v-if="folder.length !== 0"/>
+        <image-list class="folder-image" v-if="folder"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+          <div id='loading' v-if='!folder && (this.image_list.length === 0)'>
             <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
               {{loading_message}}
             </div>
@@ -29,10 +29,10 @@
     </div>
 
     <transition name="fade">
-      <div id="all-image"  v-if="this.is_all_image_mode">
+      <div id="all-image"  v-if="this.isAllImageMode">
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='(this.folder.length != 0) && (this.image_list.length === 0)'>
+          <div id='loading' v-if='!folder && (this.image_list.length === 0)'>
             <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
               {{loading_message}}
             </div>
@@ -113,7 +113,7 @@ import Tags from "./tags.vue";
 import TaggedImages from "./taggedimages.vue";
 import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
-import { mapState, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import AppFooter from "./footer.vue";
 
 export default {
@@ -131,7 +131,6 @@ export default {
   computed: {
     ...mapState([
       "all_image_mode",
-      "folder",
       "folder_list",
       "active_image_filename",
       "error_status",
@@ -153,7 +152,7 @@ export default {
         this.$store.commit("set_username", { username: e });
       }
     },
-    is_all_image_mode: function() {
+    isAllImageMode: function() {
       return (
         ![null, undefined].includes(this.active_image_filename) &&
         this.all_image_mode
@@ -161,54 +160,49 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["set_error_status"]),
-    ...mapMutations(["set_undef_file_message"]),
-    ...mapMutations(["set_dup_file_message"]),
+    ...mapMutations([
+      "set_error_status",
+      "set_undef_file_message",
+      "set_dup_file_message",
+      "set_make_dir_message_counter"
+    ]),
+    ...mapActions(["init_client", "make_dir", "load_folder_list"]),
     messageCounter: function() {
-      var counter = this.make_dir_message_counter;
-      console.log(counter);
+      let counter = this.make_dir_message_counter;
       counter = counter + 1;
-      this.$store.commit("set_make_dir_message_counter", {
+      this.set_make_dir_message_counter({
         make_dir_message_counter: counter
       });
     },
-    makeDir: function() {
-      this.$store.commit("set_make_dir_message", {
-        make_dir_message: "message\n\ncreating directories..."
+    mkdir: function() {
+      this.set_make_dir_message({
+        make_dir_message: "Message\n\nCreating directories..."
       });
-      this.$store.dispatch("make_dir");
+      this.make_dir();
     },
     setModal: function() {
-      var counter = this.make_dir_message_counter;
+      let counter = this.make_dir_message_counter;
       if (counter === 0) {
-        this.$store.commit("set_make_dir_message", {
-          make_dir_message: "message\n\nInput your username"
+        this.set_make_dir_message({
+          make_dir_message: "Message\n\nInput your username"
         });
         this.messageCounter();
       } else if (counter === 1) {
-        this.makeDir();
+        this.mkdir();
         this.messageCounter();
       } else if (counter > 1) {
         location.reload();
       }
     },
     cancelModal: function() {
-      this.$store.commit("set_make_dir_message", { make_dir_message: "" });
-      this.$store.commit("set_make_dir_message_counter", {
+      this.set_make_dir_message({ make_dir_message: "" });
+      this.set_make_dir_message_counter({
         make_dir_message_counter: 0
       });
     }
   },
   created: function() {
-    this.$store.dispatch("load_folder_list").then(() => {
-      const foldername = utils.cookies.getItem("tags-foldername");
-
-      if (foldername) {
-        if (this.folder_list.indexOf(foldername) !== -1) {
-          this.$store.dispatch("set_folder", foldername);
-        }
-      }
-    });
+    this.init_client();
   }
 };
 </script>
