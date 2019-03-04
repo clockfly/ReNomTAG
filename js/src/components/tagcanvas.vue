@@ -187,8 +187,9 @@ export default {
       "active_image_review_result",
       "active_boxid",
       "labels",
-      "tagged_images"
-      // "selected_boxes"
+      "files",
+      "tagged_images",
+      "pre_save_boxes_data"
     ]),
     image_url: function() {
       return this.active_image;
@@ -303,7 +304,7 @@ export default {
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation", "delete_xml"]),
+    ...mapActions(["save_annotation", "delete_xml","paste_annotation"]),
 
     expand_image_mode: function() {
       let shift = !this.all_image_mode;
@@ -461,6 +462,17 @@ export default {
       if (this.active_image_tag_boxes.length == 0) {
         this.delete_xml();
       } else {
+        let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
+            let {bottom, top, left, right,label} = {...box};
+            // 座標は比率で保存する
+            // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
+            let normed_bottom = bottom/this.active_image_height;
+            let normed_top = top/this.active_image_height;            
+            let normed_left = left/this.active_image_width;
+            let normed_right = right/this.active_image_width;
+            return [normed_bottom, normed_top, normed_left, normed_right,label]
+        });
+        this.$store.commit("set_copy_boxes",pre_save_boxes_data_set);
         this.save_annotation();
       }
     },
@@ -491,8 +503,29 @@ export default {
             return false;
           }
         }
-        if (event.ctrlKey === true && event.key === "d") {
-          this.show_selected_boxes_toggle();
+        // ショートカット系のイベントの記載
+        if (event.ctrlKey) {
+          switch(event.key){
+            case "b":
+              if(this.pre_save_boxes_data == 0){
+                alert("There is no target image to copy");
+              }
+              let saved_boxes = this.pre_save_boxes_data.map((norm_box) => {
+                  let bottom,top,left,right,label;
+                  [bottom,top,left,right,label] = [...norm_box];
+                  let normed_bottom = bottom * this.active_image_height;
+                  let normed_top = top * this.active_image_height;            
+                  let normed_left = left * this.active_image_width;
+                  let normed_right = right * this.active_image_width;
+                  return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
+              });
+              let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
+              this.$store.commit("paste_copied_boxes",box_dataset);
+            break;
+            case "d":
+              this.show_selected_boxes_toggle();
+            break;
+          }
         }
       }
     },
@@ -937,6 +970,15 @@ export default {
     }
     #zoom-button {
       display: flex;
+      width: 33.33%;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      background-color: #00000088;
+      &:hover {
+        cursor: pointer;
+        background-color: #00000033;
+      }  
       flex-wrap: wrap;
       position: absolute;
       width: 120px;
@@ -954,7 +996,6 @@ export default {
       div {
         display: flex;
         width: 25%;
-        i-align: center;
         justify-content: center;
         align-items: center;
         color: white;
@@ -1265,7 +1306,6 @@ export default {
       div {
         display: flex;
         width: 25%;
-        i-align: center;
         justify-content: center;
         align-items: center;
         color: white;

@@ -90,6 +90,14 @@ export function get_reviewresult(d) {
 }
 
 export default {
+  set_copy_boxes(state,payload){
+    state.pre_save_boxes_data = [];
+    state.pre_save_boxes_data = payload;
+  },
+  paste_copied_boxes(state,payload){
+    state.active_image_tag_boxes = payload;
+  },
+
   set_error_status(state, payload) {
     state.error_status = payload.error_status;
   },
@@ -278,7 +286,7 @@ export default {
     const imgs = [payload];
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 125;
-
+    
     let width = 0;
     for (const img of state.tagged_images) {
       if (img.filename !== payload.filename) {

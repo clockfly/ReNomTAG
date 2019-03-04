@@ -259,7 +259,7 @@ export default {
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
-
+    
     if (!value) {
       value = {
         annotation: {
@@ -278,7 +278,6 @@ export default {
         }
       };
     }
-
     value.annotation.source.reviewresult =
       context.state.active_image_review_result;
     value.annotation.source.comment.admin =
@@ -303,6 +302,7 @@ export default {
         }
       };
       value.annotation.objects.push(o);
+    
     }
 
     const ret = await async_func(context, () =>
@@ -349,6 +349,7 @@ export default {
       info: ret.data.result
     });
   },
+  
   async delete_taglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];
