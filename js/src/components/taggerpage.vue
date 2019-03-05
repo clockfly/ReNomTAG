@@ -154,7 +154,8 @@ export default {
     },
     isAllImageMode: function() {
       return (
-        ![null, undefined].includes(this.active_image_filename) &&
+        // ![null, undefined].includes(this.active_image_filename) &&
+        // the line above does not make sense...
         this.all_image_mode
       );
     }
