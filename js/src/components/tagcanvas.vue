@@ -467,7 +467,7 @@ export default {
             // 座標は比率で保存する
             // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
             let normed_bottom = bottom/this.active_image_height;
-            let normed_top = top/this.active_image_height;            
+            let normed_top = top/this.active_image_height;
             let normed_left = left/this.active_image_width;
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
@@ -514,7 +514,7 @@ export default {
                   let bottom,top,left,right,label;
                   [bottom,top,left,right,label] = [...norm_box];
                   let normed_bottom = bottom * this.active_image_height;
-                  let normed_top = top * this.active_image_height;            
+                  let normed_top = top * this.active_image_height;
                   let normed_left = left * this.active_image_width;
                   let normed_right = right * this.active_image_width;
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
@@ -970,15 +970,16 @@ export default {
     }
     #zoom-button {
       display: flex;
-      width: 33.33%;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #00000088;
-      &:hover {
-        cursor: pointer;
-        background-color: #00000033;
-      }  
+      // width: 33.33%;
+      // justify-content: center;
+      // align-items: center;
+      // color: white;
+      // background-color: #00000088;
+      // &:hover {
+      //   cursor: pointer;
+      //   background-color: #00000033;
+      // }
+      // What is the purpose of this??
       flex-wrap: wrap;
       position: absolute;
       width: 120px;
