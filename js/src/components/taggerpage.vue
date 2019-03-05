@@ -7,7 +7,7 @@
         <image-list class="folder-image" v-if="folder"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder && (this.image_list.length === 0)'>
+          <div id='loading' v-if='(this.folder != (null||undefined)) && (this.image_list.length === 0)'>
             <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
               {{loading_message}}
             </div>
@@ -32,7 +32,7 @@
       <div id="all-image"  v-if="this.isAllImageMode">
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder && (this.image_list.length === 0)'>
+          <div id='loading' v-if='(this.folder != (null||undefined)) && (this.image_list.length === 0)'>
             <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
               {{loading_message}}
             </div>
