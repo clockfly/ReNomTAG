@@ -136,9 +136,6 @@ export default {
   },
 
   async load_current_image(context, file) {
-    context.commit("set_active_image", {
-      file: null
-    });
 
     let response = await async_func(context, () =>
       axios.get(
@@ -149,6 +146,7 @@ export default {
     );
 
     const boxes = [];
+
     if (response.data.boxes && response.data.boxes.annotation) {
       for (const box of response.data.boxes.annotation.objects) {
         boxes.push({
@@ -272,7 +270,7 @@ export default {
   async save_annotation(context) {
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
-    
+
     if (!value) {
       value = {
         annotation: {
@@ -315,7 +313,7 @@ export default {
         }
       };
       value.annotation.objects.push(o);
-    
+
     }
 
     const ret = await async_func(context, () =>
@@ -362,7 +360,7 @@ export default {
       info: ret.data.result
     });
   },
-  
+
   async delete_taglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];
