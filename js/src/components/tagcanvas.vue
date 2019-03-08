@@ -160,8 +160,7 @@ export default {
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
-      image_dragform_y: 0,
-      // is_long_file_name: false
+      image_dragform_y: 0
     };
   },
   created: function() {
