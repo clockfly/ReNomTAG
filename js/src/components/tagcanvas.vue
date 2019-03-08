@@ -154,7 +154,8 @@ export default {
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
-      image_dragform_y: 0
+      image_dragform_y: 0,
+      old_box_data: [], // ctrl + z 用のデータ
     };
   },
   created: function() {
@@ -292,12 +293,37 @@ export default {
     }
   },
   watch: {
-    active_image_tag_boxes: function() {
+    active_image_tag_boxes: function(new_val, old_val) {
+      this.old_box_data = old_val;
+      console.log("old_box_data");
+      console.dir(this.old_box_data);
+      console.log("old_box_data");
+      console.dir(new_val);
+
+      // console.dir(old_val ==  new_val);
+      // console.dir("old_val");
+      // console.dir(old_val);
+      // console.dir("new_val");
+      // console.dir(new_val);
+      if(old_val!== new_val){
+        console.log("change");
+      }
+      console.log(this.old_box_data == old_val);
+      
       this.$nextTick(() => {
         this.arrange_boxes();
       });
-      console.dir(this.active_image_tag_boxes);
-    }
+    },
+    // label変更も感知したかったので追記
+    // active_boxid:function(new_val, old_val){
+    //   this.old_box_data = old_val;
+    //   console.dir("old_val");
+    //   console.dir(old_val);
+    //   console.dir("new_val");
+    //   console.dir(new_val);
+    //   console.log("label_change");
+    // },
+    deep: true
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
@@ -503,6 +529,7 @@ export default {
         // ショートカット系のイベントの記載
         if (event.ctrlKey) {
           switch(event.key){
+            // 前画面でセーブしたものを貼り付けるイベント
             case "b":
               if(this.pre_save_boxes_data == 0){
                 alert("There is no target image to copy");
@@ -519,12 +546,15 @@ export default {
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
               this.$store.commit("paste_copied_boxes",box_dataset);
             break;
+            // ボックスの表示・非表示
             case "d":
               this.show_selected_boxes_toggle();
             break;
+            // 前操作取り消し
             case "z":
               // ここに必要事項を記載
-              console.log("test");
+              console.dir(this.old_box_data);
+              console.dir(this.active_image_tag_boxes);
             break;
           }
         }
