@@ -181,7 +181,7 @@ export default {
 
     errormsg: function() {
       if (this.label.length) {
-        if (!this.label.match("^[0-9a-z-A-Z]+$")) {
+        if (!this.label.match("^[0-9a-z-A-Z]+$") || this.label.match(/-/)) {
           return "Class name must be alphanumeric single-byte.";
         }
       }
