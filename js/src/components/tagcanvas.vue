@@ -74,7 +74,9 @@
           </div>
           <div class="col-md-8 clear-padding">
             <div id='buttons' class="row">
-              <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
+              <p class="img_file_name_wrapper">
+              <span class="col-md-10 text-left clear-padding" :class="{img_file_name_long_txt: is_long_file_name}" style="margin: 0px;">{{img_file_name}}</span>
+              </p>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
                   <div v-if="this.is_admin" class="btn-wrp">
                     <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
@@ -158,7 +160,8 @@ export default {
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
-      image_dragform_y: 0
+      image_dragform_y: 0,
+      // is_long_file_name: false
     };
   },
   created: function() {
@@ -293,6 +296,10 @@ export default {
         this.all_image_mode &&
         ![null, undefined].inculudes(this.active_image_filename)
       );
+    },
+    is_long_file_name:function(){ 
+      // 10なのは暫定的な数値です
+      return this.active_image_filename.length > 10 ? true:false;
     }
   },
   watch: {
@@ -1052,7 +1059,6 @@ export default {
     align-items: center;
     width: 100%;
     margin: $component-margin-top 0 0;
-
     .shortcut-text-title {
       font-size: 0.75rem;
       color: #aaa;
@@ -1165,6 +1171,7 @@ export default {
       }
     }
     #buttons {
+      width: 100%;
       margin: auto;
       .filename {
         text-align: right;
@@ -1237,6 +1244,26 @@ export default {
         font-family: $content-top-header-font-family;
         font-size: $content-modellist-font-size;
         cursor: not-allowed;
+      }
+    }
+    .img_file_name_wrapper{
+      width: 6rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding:0;
+      font-size: 95%;
+      .img_file_name_long_txt:hover{
+        display:block;
+        width: 100%;
+        padding-right: 100%;
+        overflow: show;
+        animation: scrollAnime 5s linear infinite;
+      }
+      @keyframes scrollAnime{
+        0% { transform: translateX(0)}
+        //20remは暫定的な値です
+        100% { transform: translateX(-20rem)}
       }
     }
   }
