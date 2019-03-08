@@ -220,7 +220,7 @@ export default {
       return true;
     },
     fileter_selected_boxes: function() {
-      if (this.boxes === null || this.boxes === undefined) {
+      if (!this.boxes) {
         return false;
       }
 
@@ -440,10 +440,13 @@ export default {
     },
 
     get_box: function(id) {
+      if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
+        return false;
+      }
       return this.active_image_tag_boxes[id];
     },
     get_box_label: function(id) {
-      if (!this.boxes[id]) {
+      if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
         return false;
       }
       return this.get_box(id).label;
@@ -970,16 +973,6 @@ export default {
     }
     #zoom-button {
       display: flex;
-      // width: 33.33%;
-      // justify-content: center;
-      // align-items: center;
-      // color: white;
-      // background-color: #00000088;
-      // &:hover {
-      //   cursor: pointer;
-      //   background-color: #00000033;
-      // }
-      // What is the purpose of this??
       flex-wrap: wrap;
       position: absolute;
       width: 120px;

@@ -33,9 +33,11 @@ let state = {
   // active image
   active_image_filename: null,
   active_image: {},
-  active_boxid: null,
+  active_image_width: null,
+  active_image_height: null,
 
   // tag boxes
+  active_boxid: null,
   active_image_tag_boxes: [],
   active_image_review_result: "",
   active_image_comment_admin: "",
@@ -48,7 +50,6 @@ let state = {
 
   // label colors
   label_color: [],
-  
   //全画面でコピーしたものを貼り付けるために追記
   pre_save_boxes_data: []
 };
