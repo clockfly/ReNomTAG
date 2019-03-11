@@ -1,3 +1,5 @@
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
+
 var API_SERVER = ""; // process.env.api_server || "";
 
 export function build_api_url(path) {
@@ -61,8 +63,7 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
 }
 
 export function message_load_undeffile_list(undef_filename_list) {
-  let undef_message =
-    "error\n\n The following filenames are unavailable, which could not be loaded. \n\n Please change the filename of: \n";
+  let undef_message = ERROR.UNDEF_FILE.message;
   let length = Math.min(3, undef_filename_list.length);
 
   for (let i = 0; i < length; i++) {
@@ -78,8 +79,7 @@ export function message_load_undeffile_list(undef_filename_list) {
 }
 
 export function message_load_dupfile_list(dup_filename_list) {
-  let dup_message =
-    'error\n\n The following files could not be loaded, because there are files which have the same name but different extensions.  \n\n Only one file can be loaded with the same filename base and the priority is   \n\n "jpg > jpeg > png > bmp"   \n\n Please change the filename of: \n';
+  let dup_message = ERROR.DUP_FILE.message;
   let length = Math.min(3, dup_filename_list.length);
 
   for (let i = 0; i < length; i++) {
@@ -95,26 +95,23 @@ export function message_load_dupfile_list(dup_filename_list) {
 }
 
 export function message_make_dir(result) {
-  let message = "";
+  let notice = null;
+  let error = null;
 
-  if (result === 0) {
-    message =
-      "message\n\n No folder named 'public' in the current directory.\n Would you like to create the directories?";
+  if (result == NOTICE.MAKE_DIR.INITIAL.code) {
+    notice = NOTICE.MAKE_DIR.INITIAL;
   }
-  if (result === 10) {
-    message =
-      "error\n\n The current directory is unavailable. \n Please choose another directory. \n\n Load again to start.";
+  if (result == ERROR.MAKE_DIR.NG_PATH.code) {
+    error = ERROR.MAKE_DIR.NG_PATH;
   }
-  if (result === 20) {
-    message =
-      "error\n\n The username is unavailable. \n Please use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_). \n\n Load again to start.";
+  if (result == ERROR.MAKE_DIR.NG_USERNAME.code) {
+    error = ERROR.MAKE_DIR.NG_USERNAME;
   }
-  if (result === 111) {
-    message =
-      "message\n\n Successfully created directories!\n\n Load again to start.";
+  if (result == NOTICE.MAKE_DIR.SUCCESS.code) {
+    notice = NOTICE.MAKE_DIR.SUCCESS;
   }
 
-  return message;
+  return {notice, error};
 }
 /* \
  |*|

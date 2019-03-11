@@ -1,20 +1,23 @@
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
+
 let state = {
   is_admin: window.location.pathname.startsWith("/admin"),
   all_image_mode: false,
 
   // error state
-  error_status: "",
+  error_status: {
+    code: null,
+    message: ""
+  },
+  notice_status: {
+    code: null,
+    message: ""
+  },
+  // img state: "No images found." or "Loading images..."
+  img_status: IMG_STATUS.LOADING,
+  
   // menu state
   main_menu_visible: false,
-
-  // loading_message: = "No images found." or "Loading images..."
-  loading_message: "Loading images...",
-  make_dir_message: "",
-  make_dir_message_counter: 0,
-  username: "user",
-  undef_file_message: "",
-  dup_file_message: "",
-
   working_dir: "",
 
   // Current User Folder Name.
