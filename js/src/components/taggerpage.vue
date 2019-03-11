@@ -8,10 +8,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
-              {{loading_message}}
+            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
+              {{img_status.message}}
             </div>
-            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -33,10 +33,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
-              {{loading_message}}
+            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
+              {{img_status.message}}
             </div>
-            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -73,30 +73,12 @@
       </div>
     </modal-box>
 
-    <modal-box v-if='undef_file_message'>
+    <modal-box v-if='error_status.message'>
       <div slot='contents' class='error-msg'>
-        {{undef_file_message}}
+        {{error_status.message}}
       </div>
       <div slot='footer'>
-        <button class='error-button' @click='set_undef_file_message({dundef_file_message: ""})'>close</button>
-      </div>
-    </modal-box>
-
-    <modal-box v-if='dup_file_message'>
-      <div slot='contents' class='error-msg'>
-        {{dup_file_message}}
-      </div>
-      <div slot='footer'>
-        <button class='error-button' @click='set_dup_file_message({dup_file_message: ""})'>close</button>
-      </div>
-    </modal-box>
-
-    <modal-box v-if='error_status'>
-      <div slot='contents' class='error-msg'>
-        {{error_status}}
-      </div>
-      <div slot='footer'>
-        <button class='error-button' @click='set_error_status({error_status: ""})'>close</button>
+        <button class='error-button' @click='clearErrorStatus()'>close</button>
       </div>
     </modal-box>
   </div>
@@ -115,8 +97,17 @@ import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
 import { mapActions, mapState, mapMutations } from "vuex";
 import AppFooter from "./footer.vue";
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
 export default {
+  data: function(){
+    return {
+      make_dir_message_counter: 0,
+      ERROR,
+      IMG_STATUS,
+      NOTICE
+    };
+  },
   components: {
     "modal-box": ModalBox,
     "app-header": AppHeader,
@@ -135,13 +126,10 @@ export default {
       "active_image_filename",
       "error_status",
       "make_dir_message",
-      "make_dir_message_counter",
-      "undef_file_message",
-      "dup_file_message",
       "working_dir",
       "username",
       "folder",
-      "loading_message",
+      "img_status",
       "image_list"
     ]),
     setUsername: {
@@ -162,17 +150,13 @@ export default {
   methods: {
     ...mapMutations([
       "set_error_status",
-      "set_undef_file_message",
-      "set_dup_file_message",
-      "set_make_dir_message_counter"
+      "set_make_dir_message"
     ]),
     ...mapActions(["init_client", "make_dir", "load_folder_list"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
-      this.set_make_dir_message_counter({
-        make_dir_message_counter: counter
-      });
+      this.make_dir_message_counter = counter;
     },
     mkdir: function() {
       this.set_make_dir_message({
@@ -196,9 +180,10 @@ export default {
     },
     cancelModal: function() {
       this.set_make_dir_message({ make_dir_message: "" });
-      this.set_make_dir_message_counter({
-        make_dir_message_counter: 0
-      });
+      this.make_dir_message_counter = 0;
+    },
+    clearErrorStatus: function(){
+      this.set_error_status({ code:null, message:""});
     }
   },
   created: function() {

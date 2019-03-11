@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as utils from "@/utils";
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
 // TODO
 async function async_func(context, f) {
@@ -8,7 +9,7 @@ async function async_func(context, f) {
     ret = await f();
   } catch (error) {
     context.commit("set_error_status", {
-      error_status: "Failed to connect server"
+      error_status: ERROR.SERVER_CONNECTION
     });
     console.error(error);
     throw error;
@@ -18,8 +19,8 @@ async function async_func(context, f) {
 }
 
 async function load_imagefile_list(context) {
-  context.commit("set_loading_message", {
-    loading_message: "Loading images..."
+  context.commit("set_img_status", {
+    img_status: IMG_STATUS.LOADING
   });
   let response = await async_func(context, () =>
     axios.post(utils.build_api_url("/api/get_filename_list"), {
@@ -35,8 +36,9 @@ async function load_imagefile_list(context) {
     let undef_message = utils.message_load_undeffile_list(
       response.data.undef_filename_list
     );
-    context.commit("set_undef_file_message", {
-      undef_file_message: undef_message
+    context.commit("set_error_status",{
+      code: ERROR.UNDEF_FILE.code,
+      message: undef_message
     });
   }
 
@@ -44,8 +46,9 @@ async function load_imagefile_list(context) {
     let dup_message = utils.message_load_dupfile_list(
       response.data.dup_filename_list
     );
-    context.commit("set_dup_file_message", {
-      dup_file_message: dup_message
+    context.commit("set_error_status",{
+      code: ERROR.DUP_FILE.code,
+      message: dup_message
     });
   }
 
@@ -84,7 +87,7 @@ export default {
         folder_list: response.data.folder_list
       });
     } else if (response.data.result === 0) {
-      let message = utils.message_make_dir(response.data.result);
+      let message = utils.message_make_dir(NOTICE.MAKE_DIR.INITIAL.code);
       context.commit("set_make_dir_message", {
         make_dir_message: message
       });
@@ -217,14 +220,14 @@ export default {
       })
     );
 
-    if (response.data.result === 0) {
-      console.log("result : ", response.data.message);
+    if (response.data.result == ERROR.XML_DELETION.code) {
+      console.log("result : ", ERROR.XML_DELETION.message);
       context.commit("set_error_status", {
-        error_status: response.data.message
+        error_status: ERROR.XML_DELETION
       });
     } else {
       // since deliting the xml sucessed, delete the filename from state.tagged_images
-      console.log("result : ", response.data.message);
+      console.log("result : ", ERROR.XML_DELETION.message);
       context.commit("delete_tagged_image", {
         filename: target_filename
       });

@@ -95,7 +95,6 @@ export default {
     ...mapState([
       "folder",
       "folder_list",
-      "loading_message",
       "folder_files",
       "files",
       "filename_max_display",

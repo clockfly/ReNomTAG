@@ -22,11 +22,14 @@ from io import BytesIO as IO
 import posixpath
 import PIL
 
+from renom_tag import ERROR, IMG_STATUS, NOTICE
+
 app = Bottle()
 DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
 XML_DIR = 'label'
 MAX_FOLDER_NAME = 256
+SAVE_JSON_FILE_PATH = "label_candidates.json"
 
 # for path in [IMG_DIR, XML_DIR]:
 #    if not os.path.exists(path):
@@ -461,18 +464,18 @@ def delete_xml():
     result = 100
     if os.path.exists(delete_xml_file_name):
         os.remove(delete_xml_file_name)
-        result = 1
-        message = "Box deletion successful!"
+        result = NOTICE['XML_DELETION']['SUCCESS']['code']
+        message = NOTICE['XML_DELETION']['SUCCESS']['message']
+        print(message)
         print('%s is deleted!' % (delete_xml_file_name))
     else:
-        result = 0
-        message = "Box deletion failed!"
-        print('[ERROR] Since filename:%s connot be found,' % (delete_xml_file_name))
-        print('it was not deleted. Please check if the xml-file exists!')
+        result = ERROR['XML_DELETION']['code']
+        message =  ERROR['XML_DELETION']['message']
+        print(message)
+        print('filename:%s connot be found. Please check if the xml-file exists!'% (delete_xml_file_name))
 
     body = json.dumps({
-        "result": result,
-        "message": message
+        "result": result
     })
     ret = set_json_body(body)
     return ret
@@ -545,7 +548,6 @@ def load_xml_tagged_images():
     return ret
 
 
-SAVE_JSON_FILE_PATH = "label_candidates.json"
 
 
 @app.route("/api/save_label_candidates_dict", method=['POST'])
@@ -652,16 +654,16 @@ def get_folderlist():
 def make_dir():
     working_dir = request.json['working_dir']
     username = request.json['username']
-    result = 0
+    result = NOTICE['MAKE_DIR']['INITIAL']['code']
 
     if not os.path.exists(working_dir):
-        result = 10
-        message = '[ERROR] No such a directory. chose others. ' + working_dir
+        result = ERROR['MAKE_DIR']['NG_PATH']['code']
+        message = ERROR['MAKE_DIR']['NG_PATH']['message'] + working_dir
         print(message)
 
     elif not re.match(r"^[a-zA-Z0-9._]+$", username):
-        result = 20
-        message = '[ERROR] The username is unavailable. use only halfwidth-alphanumeric (0-9, a-z, A-Z) and under-bar (_).'
+        result = ERROR['MAKE_DIR']['NG_USERNAME']['code']
+        message = ERROR['MAKE_DIR']['NG_USERNAME']['message']
         print(message)
 
     else:
@@ -674,8 +676,8 @@ def make_dir():
         os.makedirs(user_folder)
         os.mkdir(dataset)
         os.mkdir(label)
-        result = 111
-        message = 'Successfully created directories!'
+        result =  NOTICE['MAKE_DIR']['SUCCESS']['code']
+        message = NOTICE['MAKE_DIR']['SUCCESS']['message']
         print(message)
 
     #message = message + "load again to start."

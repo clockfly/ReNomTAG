@@ -1,3 +1,5 @@
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
+
 function _set_tagbox(state, payload) {
   const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
   const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
@@ -48,7 +50,7 @@ function select_files(state) {
   files.sort();
   state.files = files;
   if (!state.files || state.files.length === 0) {
-    state.loading_message = "No images found.";
+    state.img_status = IMG_STATUS.NO_IMG;
   }
 }
 
@@ -99,24 +101,21 @@ export default {
   },
 
   set_error_status(state, payload) {
-    state.error_status = payload.error_status;
+    if (payload.hasOwnProperty("code")){
+      state.error_status.code = payload.code;
+      state.error_status.message = payload.message;
+    }
+    if (payload.hasOwnProperty("error_status")){
+      state.error_status = payload.error_status;
+    }
   },
 
-  set_loading_message(state, payload) {
-    state.loading_message = payload.loading_message;
+  set_img_status(state, payload) {
+    state.img_status = payload.img_status;
   },
 
   set_make_dir_message(state, payload) {
     state.make_dir_message = payload.make_dir_message;
-  },
-  set_make_dir_message_counter(state, payload) {
-    state.make_dir_message_counter = payload.make_dir_message_counter;
-  },
-  set_undef_file_message(state, payload) {
-    state.undef_file_message = payload.undef_file_message;
-  },
-  set_dup_file_message(state, payload) {
-    state.dup_file_message = payload.dup_file_message;
   },
   set_username(state, payload) {
     state.username = payload.username;
@@ -137,7 +136,7 @@ export default {
     if (state.folder_list.includes(payload)) {
       state.folder = payload;
     } else {
-      throw Exception("Folder " + payload + " does not exist.");
+      throw new URIError("Folder " + payload + " does not exist.");
     }
   },
   set_all_image_mode(state, payload) {
@@ -173,7 +172,7 @@ export default {
     select_files(state);
 
     if (!state.files || state.files.length === 0) {
-      state.loading_message = "No images found.";
+      state.img_status = IMG_STATUS.NO_IMG;
     }
   },
 
@@ -289,7 +288,7 @@ export default {
     const imgs = [payload];
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 125;
-    
+
     let width = 0;
     for (const img of state.tagged_images) {
       if (img.filename !== payload.filename) {
