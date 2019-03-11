@@ -9,12 +9,13 @@ let state = {
     code: null,
     message: ""
   },
+  notice_status: {
+    code: null,
+    message: ""
+  },
   // img state: "No images found." or "Loading images..."
   img_status: IMG_STATUS.LOADING,
-  notice_status: "",
-  make_dir_message: "",
-
-
+  
   // menu state
   main_menu_visible: false,
   working_dir: "",

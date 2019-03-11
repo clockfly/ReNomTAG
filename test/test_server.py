@@ -10,7 +10,6 @@ from PIL import Image
 import xmltodict
 from webtest import TestApp as testapp
 from renom_tag import server
-import pytest
 
 
 def build_img_dir(tmpdir, folder):
@@ -207,11 +206,9 @@ def test_delete_xml(tmpdir):
         xmldir.join('target.xml').write(ex_xml)
 
         app = testapp(server.app)
-        ret = app.post_json('/api/delete_xml',
-                            {'folder': 'folderx',
-                             'target_filename': 'target.png'})
+        ret = app.post_json('/api/delete_xml', {'folder': 'folderx', 'target_filename': 'target.png'})
 
-        assert ret.json_body == {"result": 1, "message": "Box deletion successful!"}
+        assert ret.json_body == {'result': 121}
 
 
 def test_make_dir(tmpdir):

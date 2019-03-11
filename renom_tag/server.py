@@ -474,10 +474,9 @@ def delete_xml():
         print(message)
         print('filename:%s connot be found. Please check if the xml-file exists!'% (delete_xml_file_name))
 
-    body = json.dumps({
-        "result": result
-    })
-    ret = set_json_body(body)
+    ret = set_json_body(json.dumps({'result': result}))
+    # body = json.dumps({"result": result})
+    # ret = set_json_body(body)
     return ret
 
 

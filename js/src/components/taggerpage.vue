@@ -53,21 +53,21 @@
 
 
 
-    <modal-box v-if='make_dir_message'>
+    <modal-box v-if='notice_status.message'>
       <div slot='contents' class='mkdir-msg' >
-        {{make_dir_message}}
+        {{notice_status.message}}
         <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='setModal()' class="ok-button">
+        <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
           OK
         </button>
-        <button v-if='make_dir_message_counter > 1' @click='setModal()' class="load-button">
+        <button v-if='make_dir_message_counter > 1' @click='setNoticeStatus()' class="load-button">
           Load
         </button>
       </div>
       <div slot='cancelbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='cancelModal()' class="cancel-button">
+        <button v-if='make_dir_message_counter <= 1' @click='clearNoticeStatus()' class="cancel-button">
           Cancel
         </button>
       </div>
@@ -125,7 +125,7 @@ export default {
       "folder_list",
       "active_image_filename",
       "error_status",
-      "make_dir_message",
+      "notice_status",
       "working_dir",
       "username",
       "folder",
@@ -150,7 +150,7 @@ export default {
   methods: {
     ...mapMutations([
       "set_error_status",
-      "set_make_dir_message"
+      "set_notice_status"
     ]),
     ...mapActions(["init_client", "make_dir", "load_folder_list"]),
     messageCounter: function() {
@@ -159,31 +159,33 @@ export default {
       this.make_dir_message_counter = counter;
     },
     mkdir: function() {
-      this.set_make_dir_message({
-        make_dir_message: "Message\n\nCreating directories..."
+      this.set_notice_status({
+        code: 115,
+        message: "Message\n\nCreating directories..."
       });
       this.make_dir();
     },
-    setModal: function() {
+    setNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
-        this.set_make_dir_message({
-          make_dir_message: "Message\n\nInput your username"
+        this.set_notice_status({
+          code: 115,
+          message: "Message\n\nInput your username"
         });
         this.messageCounter();
       } else if (counter === 1) {
         this.mkdir();
         this.messageCounter();
-      } else if (counter > 1) {
+      }else if (counter > 1) {
         location.reload();
       }
     },
-    cancelModal: function() {
-      this.set_make_dir_message({ make_dir_message: "" });
+    clearNoticeStatus: function() {
+      this.set_notice_status({ code:null, message:""})
       this.make_dir_message_counter = 0;
     },
     clearErrorStatus: function(){
-      this.set_error_status({ code:null, message:""});
+      this.set_error_status({ code:null, message:"" });
     }
   },
   created: function() {

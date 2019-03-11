@@ -47,6 +47,7 @@ NOTICE = {
       'SUCCESS': {
         'code': 111,
         'message': 'Successfully created directories!'
+     }
     },
     'XML_DELETION':{
       'SUCCESS': {
@@ -55,4 +56,3 @@ NOTICE = {
       }
     }
   }
-}

@@ -87,10 +87,7 @@ export default {
         folder_list: response.data.folder_list
       });
     } else if (response.data.result === 0) {
-      let message = utils.message_make_dir(NOTICE.MAKE_DIR.INITIAL.code);
-      context.commit("set_make_dir_message", {
-        make_dir_message: message
-      });
+      context.commit("set_notice_status", { notice_status: NOTICE.MAKE_DIR.INITIAL });
       context.commit("set_working_dir", {
         working_dir: response.data.current_dir
       });
@@ -130,11 +127,14 @@ export default {
     if (response.data.result !== null) {
       console.log(response.data.result);
 
-      let message = utils.message_make_dir(response.data.result);
-      context.commit("set_make_dir_message", {
-        make_dir_message: message
-      });
-      console.log(message);
+      let {notice, error} = utils.message_make_dir(response.data.result);
+      if (notice){
+        context.commit("set_notice_status", { notice_status: notice });
+        console.log("here",notice.code)
+      }else if (error) {
+        context.commit("set_error_status", { error_status: error });
+        console.log("here",error.code)
+      }
     }
   },
 

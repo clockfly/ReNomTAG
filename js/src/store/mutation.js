@@ -99,7 +99,6 @@ export default {
   paste_copied_boxes(state,payload){
     state.active_image_tag_boxes = payload;
   },
-
   set_error_status(state, payload) {
     if (payload.hasOwnProperty("code")){
       state.error_status.code = payload.code;
@@ -109,13 +108,17 @@ export default {
       state.error_status = payload.error_status;
     }
   },
-
   set_img_status(state, payload) {
     state.img_status = payload.img_status;
   },
-
-  set_make_dir_message(state, payload) {
-    state.make_dir_message = payload.make_dir_message;
+  set_notice_status(state, payload) {
+    if (payload.hasOwnProperty("code")){
+      state.notice_status.code = payload.code;
+      state.notice_status.message = payload.message;
+    }
+    if (payload.hasOwnProperty("notice_status")){
+      state.notice_status = payload.notice_status;
+    }
   },
   set_username(state, payload) {
     state.username = payload.username;
@@ -123,15 +126,12 @@ export default {
   set_working_dir(state, payload) {
     state.working_dir = payload.working_dir;
   },
-
   set_main_menu_visible(state, payload) {
     state.main_menu_visible = payload.visible;
   },
-
   set_folder_list(state, payload) {
     state.folder_list = payload.folder_list;
   },
-
   set_folder(state, payload) {
     if (state.folder_list.includes(payload)) {
       state.folder = payload;
@@ -153,7 +153,6 @@ export default {
     }
     select_files(state);
   },
-
   toggle_review_filter(state, payload) {
     const idx = state.review_filter.indexOf(payload.filter);
     if (idx === -1) {
@@ -175,7 +174,6 @@ export default {
       state.img_status = IMG_STATUS.NO_IMG;
     }
   },
-
   update_file(state, payload) {
     if (payload.info) {
       if (payload.info == "reset") {
@@ -188,15 +186,12 @@ export default {
     }
     select_files(state);
   },
-
   set_image_list(state, payload) {
     state.image_list = payload;
   },
-
   set_filename_max_display(state, payload) {
     state.filename_max_display = payload.max_display;
   },
-
   remove_image(state, payload) {
     const files = [];
     for (const file of state.files) {
@@ -206,7 +201,6 @@ export default {
     }
     state.files = files;
   },
-
   set_active_image(state, payload) {
     state.active_image_filename = payload.filename;
     state.active_image_width = payload.width;
@@ -219,7 +213,6 @@ export default {
 
     state.active_boxid = null;
   },
-
   set_active_boxid(state, payload) {
     state.active_boxid = payload.boxid;
   },
@@ -232,11 +225,9 @@ export default {
   set_tagbox(state, payload) {
     _set_tagbox(state, payload);
   },
-
   set_tagboxes(state, payload) {
     state.active_image_tag_boxes = payload.tagboxes;
   },
-
   remove_tagbox(state, payload) {
     const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
     const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
@@ -254,7 +245,6 @@ export default {
 
     _set_tagbox(state, { boxid, box: newbox });
   },
-
   set_dragger(state, payload) {
     if (payload === null) {
       state.dragger = {};
@@ -262,15 +252,12 @@ export default {
       state.dragger = { ...state.dragger, ...payload };
     }
   },
-
   add_label(state, payload) {
     state.labels = [...state.labels, payload];
   },
-
   set_labels(state, labels) {
     state.labels = labels;
   },
-
   update_label(state, payload) {
     state.labels = payload;
   },
@@ -301,20 +288,17 @@ export default {
     }
     state.tagged_images = imgs;
   },
-
   set_review_result(state, payload) {
     if (state.is_admin) {
       state.active_image_review_result = payload.result;
     }
   },
-
   set_comment_admin(state, payload) {
     state.active_image_comment_admin = payload.comment;
   },
   set_comment_subord(state, payload) {
     state.active_image_comment_subord = payload.comment;
   },
-
   set_tagged_images(state, payload) {
     const imgs = payload;
     const MAX_WIDTH = 10000;
