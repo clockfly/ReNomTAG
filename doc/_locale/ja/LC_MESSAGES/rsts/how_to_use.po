@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: renom_tag \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-21 10:58+0900\n"
+"POT-Creation-Date: 2019-02-28 12:43+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,21 +141,21 @@ msgid ""
 "displayed."
 msgstr "``public`` ディレクトリ以下が読み込まれ, 以下の様な画面が表示されます."
 
-#: ../../rsts/how_to_use.rst:101
+#: ../../rsts/how_to_use.rst:102
 msgid "Add tags to images"
 msgstr "画像にタグを設置する"
 
-#: ../../rsts/how_to_use.rst:104
+#: ../../rsts/how_to_use.rst:105
 msgid "Create tags (bounding boxes)"
 msgstr "タグ(バウンディングボックス)を設置する"
 
-#: ../../rsts/how_to_use.rst:106
+#: ../../rsts/how_to_use.rst:107
 msgid ""
 "You can create a tag (bounding box) by dragging the cursor inside the "
 "image."
 msgstr "表示されている画像をドラッグすることで, タグ(バウンディングボックス)を設置することができます."
 
-#: ../../rsts/how_to_use.rst:112
+#: ../../rsts/how_to_use.rst:114
 msgid ""
 "For saving the tag (a pair of bounding boxes and tag name), a ``class tag"
 " name`` is required."
@@ -163,11 +163,11 @@ msgstr ""
 "画像につけたタグ(バウンディングボックスとタグ名の組)を保存するためには, バウンディングボックスに ``class tag name`` "
 "が付いている必要があります."
 
-#: ../../rsts/how_to_use.rst:116
+#: ../../rsts/how_to_use.rst:118
 msgid "Save tags"
 msgstr "タグを保存する"
 
-#: ../../rsts/how_to_use.rst:118
+#: ../../rsts/how_to_use.rst:120
 msgid ""
 "To save the tag, please click the ``save`` button. The ``Space`` key also"
 " acts as a shortcut for saving."
@@ -175,96 +175,123 @@ msgstr ""
 "タグを保存するには, ``save`` ボタンを押してください.もしくはキーボードのSpaceキーを ``save`` "
 "ボタンのショートカットとして使用することができます."
 
-#: ../../rsts/how_to_use.rst:123
-msgid "Show a tag, only the one you selected"
-msgstr ""
+#: ../../rsts/how_to_use.rst:125
+msgid "Hide all unselected tags"
+msgstr "非選択のタグを非表示にする"
 
-#: ../../rsts/how_to_use.rst:124
+#: ../../rsts/how_to_use.rst:126
 msgid ""
-"You can choose to show only one box by selecting it then clicking the "
-"``toggle button``. ``Ctrl+d`` can also be used as a shortcut for this. "
-"New boxes can still be added in this mode. Return to the normal view by "
-"clicking the toggle button again."
+"You can choose to hide unselected boxes by clicking the ``toggle "
+"button``. ``Ctrl+d`` can also be used as a shortcut for this. New boxes "
+"can still be added in this mode. Return to the normal view by clicking "
+"the toggle button or using ``Ctrl+d`` again."
 msgstr ""
 "ひとつのバウンディングボックスのみを表示したい場合、そのボックスを選択した後にトグルボタンをクリックしてください。"
-"もしくはキーボードの``Ctrl+d``をショートカットとして使用することができます。"
+"もしくはキーボードの ``Ctrl+d`` をショートカットとして使用することができます。"
 "このモード中でも通常と同じように新しいボックスを追加することができます。"
 "トグルボタンを再度クリックすると通常モードに戻り、全てのボックスが表示されます。"
 
 
-#: ../../rsts/how_to_use.rst:131
+#: ../../rsts/how_to_use.rst:136
 msgid "Set shortcut keys for class tags"
-msgstr "Class Tagに対してショートカットキーを設定する."
+msgstr "Class Tagに対してショートカットキーを設定する"
 
-#: ../../rsts/how_to_use.rst:133
+#: ../../rsts/how_to_use.rst:138
 msgid "You can set a shortcut key for each class tag name."
 msgstr "Class tag nameに対してショートカットキーを設定することができます."
 
-#: ../../rsts/how_to_use.rst:138
+#: ../../rsts/how_to_use.rst:142
+msgid "Full-screen tagging"
+msgstr "全画面モード"
+
+#: ../../rsts/how_to_use.rst:144
+msgid ""
+"Tag in full-screen mode with the ``Ctrl+w`` or clicking the third icon at"
+" the bottom of the current image. Return to normal mode by using the same"
+" shortcut or clicking the same icon."
+msgstr "``Ctrl+w`` を押すと全画面モードに入ります."
+"もう一度、 ``Ctrl+w`` を押すと通常モードに戻ります."
+"画像下部のツールバーにある左から3番目のボタンをクリックすることで同じモードの切り替えが可能です."
+
+
+#: ../../rsts/how_to_use.rst:152
+msgid "Expanding/shrinking images during tagging"
+msgstr "画像の拡大・縮小"
+
+#: ../../rsts/how_to_use.rst:154
+msgid ""
+"Expand or shrink the active image by using the trackpad or the ``+`` or "
+"``-`` buttons in the toolbar at the bottom of the image. Return to the "
+"original image size by clicking the second icon on the toolbar."
+msgstr "画像下部のツールバーの ``+`` 及び ``-`` ボタンで画像の拡大・縮小も可能です."
+"ツールバーの左から二つ目のボタンをクリックすることで本来の画像サイズに戻ります."
+
+
+#: ../../rsts/how_to_use.rst:162
 msgid "Filter images"
 msgstr "画像をフィルタリングする"
 
-#: ../../rsts/how_to_use.rst:140
+#: ../../rsts/how_to_use.rst:164
 msgid "You can filter the images to be shown."
 msgstr "リストとして表示する画像をフィルタリング可能です."
 
-#: ../../rsts/how_to_use.rst:142
+#: ../../rsts/how_to_use.rst:166
 msgid "**All** : Show all images."
 msgstr "**All** : すべての画像を表示します."
 
-#: ../../rsts/how_to_use.rst:143
+#: ../../rsts/how_to_use.rst:167
 msgid "**Need Review** : Show images marked neither OK nor NG."
 msgstr "**Need Review** : タグ付け済みで, 管理者によるレビューが必要な画像のみを表示します."
 
-#: ../../rsts/how_to_use.rst:144
+#: ../../rsts/how_to_use.rst:168
 msgid "**No Tags** : Show images with no tags."
 msgstr "**No Tags** : タグがつけられていない画像のみを表示します."
 
-#: ../../rsts/how_to_use.rst:145
+#: ../../rsts/how_to_use.rst:169
 msgid "**OK** : Show images marked as ``OK`` by admin user."
 msgstr "**OK** : 管理者によって ``OK`` マークがつけられた画像のみを表示します."
 
-#: ../../rsts/how_to_use.rst:146
+#: ../../rsts/how_to_use.rst:170
 msgid "**NG** : Show images marked as ``NG`` by admin user."
 msgstr "**OK** : 管理者によって ``OK`` マークがつけられた画像のみを表示します."
 
-#: ../../rsts/how_to_use.rst:155
+#: ../../rsts/how_to_use.rst:180
 msgid "Admin mode"
 msgstr "管理者モード"
 
-#: ../../rsts/how_to_use.rst:157
+#: ../../rsts/how_to_use.rst:182
 msgid "Admin mode has the following functions."
 msgstr "管理者モードは以下の機能を提供します."
 
-#: ../../rsts/how_to_use.rst:159
+#: ../../rsts/how_to_use.rst:184
 msgid "Create new class tags."
 msgstr "あらたなClass Tagの定義."
 
-#: ../../rsts/how_to_use.rst:160
+#: ../../rsts/how_to_use.rst:185
 msgid "Mark tagged images as ``OK`` or ``NG``."
 msgstr "タグ付け済み画像に対し, ``OK``, ``NG`` マークをつける."
 
-#: ../../rsts/how_to_use.rst:161
+#: ../../rsts/how_to_use.rst:186
 msgid "Add comments to tagged images."
 msgstr "タグ付け済み画像に対してコメントをつける."
 
-#: ../../rsts/how_to_use.rst:164
+#: ../../rsts/how_to_use.rst:189
 msgid "Enter admin mode"
 msgstr "管理者モードに入る"
 
-#: ../../rsts/how_to_use.rst:166
+#: ../../rsts/how_to_use.rst:191
 msgid "To enter admin mode, please add ``admin`` to the URL as shown below."
 msgstr "管理者モードに入るためには, ウェブブラウザのURLフォームにadminをつけたURLを入力してください."
 
-#: ../../rsts/how_to_use.rst:170
+#: ../../rsts/how_to_use.rst:195
 msgid "The title of the page should change to ``Admin``."
 msgstr "管理者モードに入った場合, 以下の様にReNomTAGのタイトルがAdminへと変わります."
 
-#: ../../rsts/how_to_use.rst:176
-msgid "Add new class tag"
+#: ../../rsts/how_to_use.rst:202
+msgid "Add new class tags"
 msgstr "新たな Class Tag を定義する"
 
-#: ../../rsts/how_to_use.rst:178
+#: ../../rsts/how_to_use.rst:204
 msgid ""
 "If you are in admin mode, you can add new class tags. To do this, type "
 "the new class tag name into the form shown below."
@@ -272,69 +299,89 @@ msgstr ""
 "管理者モードでは, 新たなClass Tagを定義することができます.そのためには, 以下の画像に示す入力フォームに, "
 "新たなタグ名を入力してください."
 
-#: ../../rsts/how_to_use.rst:181
+#: ../../rsts/how_to_use.rst:207
 msgid "Next, click the ``Add New Tag`` button."
 msgstr "そして, ``Add New Tag`` ボタンを押してください."
 
-#: ../../rsts/how_to_use.rst:183
+#: ../../rsts/how_to_use.rst:209
 msgid ""
 "You can also add a shortcut key. The shortcut key can be changed in "
 "either admin or normal mode."
 msgstr "また, Class Tagに対してショートカットキーを設定することもできます.ショートカットキーは管理者モードでなくとも変更可能です."
 
-#: ../../rsts/how_to_use.rst:189
+#: ../../rsts/how_to_use.rst:217
+msgid "Delete class tags"
+msgstr "Class Tagの削除"
+
+#: ../../rsts/how_to_use.rst:219
+msgid ""
+"If you are in admin mode, you can also delete existing class tags. To do "
+"this, click the ``Delete Tag List`` button shown in red below."
+msgstr ""
+"管理者モードでは、Class Tagを削除することができます. Tagを削除するためにまず"
+" ``Delete Tag List`` ボタンをクリックしてください."
+"そして、削除対象を個別に選択してください."
+
+#: ../../rsts/how_to_use.rst:222
+msgid ""
+"Next, select the individual tags you would like to delete, and click "
+"``Delete``."
+msgstr ""
+"選択後に、 ``Delete`` ボタンを押すとタグが削除されます."
+
+#: ../../rsts/how_to_use.rst:229
 msgid "Apply marks to images"
 msgstr "画像にタグを設置する"
 
-#: ../../rsts/how_to_use.rst:191
+#: ../../rsts/how_to_use.rst:231
 msgid ""
 "Admin mode also provides a marking function. You can mark tagged images "
 "as ``OK`` or ``NG``."
 msgstr "管理者モードでは, タグ付け済み画像に対してOK, NGマークをつけることが可能です."
 
-#: ../../rsts/how_to_use.rst:194
+#: ../../rsts/how_to_use.rst:234
 msgid "To apply a mark, please click the OK or NG button."
 msgstr "以下の画像に示すように, OK, NGボタンを選択し"
 
-#: ../../rsts/how_to_use.rst:198
+#: ../../rsts/how_to_use.rst:239
 msgid "After clicking the ``save`` button, the mark will be saved."
 msgstr "``save`` ボタンを押すことでマークをつけることができます."
 
-#: ../../rsts/how_to_use.rst:202
+#: ../../rsts/how_to_use.rst:243
 msgid "Add comments to images"
 msgstr "タグ付け済み画像に対し, コメントをつける"
 
-#: ../../rsts/how_to_use.rst:204
+#: ../../rsts/how_to_use.rst:245
 msgid ""
 "You can also add comments to images. Users in normal mode can view "
 "comments but they cannot edit or add them."
 msgstr "画像に対してコメントをつけることができます.管理者モードに入っていない時(通常モード)はコメントの編集はできませんがコメントを確認することができます."
 
-#: ../../rsts/how_to_use.rst:209
+#: ../../rsts/how_to_use.rst:250
 msgid "Return to normal mode"
 msgstr "通常モードへ戻る"
 
-#: ../../rsts/how_to_use.rst:211
+#: ../../rsts/how_to_use.rst:252
 msgid "To return to normal mode, please remove ``admin`` from the URL."
 msgstr "通常モードへ戻る場合は, URLにつけた ``admin`` という文字を削除してください.直ちに通常モードへ戻ることができます."
 
-#: ../../rsts/how_to_use.rst:216
+#: ../../rsts/how_to_use.rst:257
 msgid "Use ReNomTAG with multiple users"
 msgstr "複数人ユーザで, ReNomTAGを使う."
 
-#: ../../rsts/how_to_use.rst:218
+#: ../../rsts/how_to_use.rst:259
 msgid ""
 "You can add multiple user directories under the public folder and then "
 "choose which directory you would like to work on."
 msgstr "``public`` ディレクトリ以下にあるユーザディレクトリを選択することができます."
 
-#: ../../rsts/how_to_use.rst:223
+#: ../../rsts/how_to_use.rst:265
 msgid ""
 "The image above represents the following directory structure. There are 4"
 " user directories (Alice, Bob, user1 and user2)."
 msgstr "上の画像では, 下のようなディレクトリ構造を定義した場合のReNomTAGから選択可能なユーザデイレクトリを表示しています."
 
-#: ../../rsts/how_to_use.rst:270
+#: ../../rsts/how_to_use.rst:312
 msgid ""
 "You can access and work in any user directory. The data in each directory"
 " is not shared with other directories."
@@ -342,7 +389,7 @@ msgstr ""
 "作業者は, どのユーザディレクトリでもタグ付け作業を行うことが可能です別々のディレクトリで作業を行う場合, "
 "同じファイルに対して同時に書き込み処理が行われることはありません."
 
-#: ../../rsts/how_to_use.rst:274
+#: ../../rsts/how_to_use.rst:316
 msgid ""
 "The user-separated directories are recognised by ReNomTAG if they contain"
 " the ``dataset`` and ``label`` sub-directories."
@@ -362,3 +409,18 @@ msgstr ""
 
 #~ msgid "Apply a mark to the image"
 #~ msgstr "画像に対し, OK, NGマークをつける"
+
+#~ msgid "Show a tag, only the one you selected"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can choose to show only one"
+#~ " box by selecting it then clicking"
+#~ " the ``toggle button``. ``Ctrl+d`` can "
+#~ "also be used as a shortcut for "
+#~ "this. New boxes can still be added"
+#~ " in this mode. Return to the "
+#~ "normal view by clicking the toggle "
+#~ "button again."
+#~ msgstr "ひとつのバウンディングボックスのみを表示したい場合、そのボックスを選択した後にトグルボタンをクリックしてください。もしくはキーボードの``Ctrl+d``をショートカットとして使用することができます。このモード中でも通常と同じように新しいボックスを追加することができます。トグルボタンを再度クリックすると通常モードに戻り、全てのボックスが表示されます。"
+

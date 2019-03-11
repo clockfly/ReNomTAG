@@ -1,5 +1,5 @@
 <template>
-  <div id='left-menu'  v-bind:class='{ open: main_menu_visible || (folder.length == 0) }' @click='closeMenu'>
+  <div id='left-menu'  v-bind:class='{ open: main_menu_visible || (folder === undefined) }' @click='closeMenu'>
     <div class='left-menu-bar'>
       <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
@@ -23,22 +23,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import * as utils from "@/utils";
 
 export default {
-  computed: mapState(["main_menu_visible", "folder", "folder_list"]),
+  computed: {
+    ...mapState(["main_menu_visible", "folder", "folder_list"])
+  },
   methods: {
+    ...mapActions(["init_client"]),
     closeMenu: function() {
       this.$store.commit("set_main_menu_visible", { visible: false });
     },
     selectFolder: function(folder) {
-      this.$store.dispatch("set_folder", folder);
-      utils.cookies.setItem(
-        "tags-foldername",
-        event.target.dataset.folder,
-        Infinity
-      );
+      this.init_client(folder);
       this.closeMenu();
     }
   }

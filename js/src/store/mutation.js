@@ -134,8 +134,11 @@ export default {
   },
 
   set_folder(state, payload) {
-    state.folder = payload.folder;
-    state.tagged_images = [];
+    if (state.folder_list.includes(payload)) {
+      state.folder = payload;
+    } else {
+      throw Exception("Folder " + payload + " does not exist.");
+    }
   },
   set_all_image_mode(state, payload) {
     state.all_image_mode = payload.all_image_mode;

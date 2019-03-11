@@ -21,7 +21,7 @@ entry_points = {
 }
 
 versionpy = os.path.join(DIR, 'renom_tag/__version__.py')
-version = re.search(r'"([\d.]+)"', open(versionpy).read()).group(1)
+version = re.search(r'"([\d.b]+)"', open(versionpy).read()).group(1)
 
 
 class BuildNPM(distutils.command.build.build):

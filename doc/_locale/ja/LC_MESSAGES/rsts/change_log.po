@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReNomTAG \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-30 19:58+0900\n"
+"POT-Creation-Date: 2019-02-28 12:43+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,45 @@ msgstr ""
 "Generated-By: Babel 2.6.0\n"
 
 #: ../../rsts/change_log.rst:2
-msgid "Changes 1.0.1 => 1.0.2"
+msgid "Change Log"
 msgstr ""
 
 #: ../../rsts/change_log.rst:4
+msgid "**v1.1.0 beta**"
+msgstr ""
+
+#: ../../rsts/change_log.rst:7
+msgid "Added full-screen tagging mode"
+msgstr ""
+
+#: ../../rsts/change_log.rst:9
+msgid "Added image zoom feature"
+msgstr ""
+
+#: ../../rsts/change_log.rst:11
+msgid "Added feature for hiding unselected boxes during tagging"
+msgstr ""
+
+#: ../../rsts/change_log.rst:13
+msgid "Added tagged images count"
+msgstr ""
+
+#: ../../rsts/change_log.rst:15
+msgid "Added user comment feature"
+msgstr ""
+
+#: ../../rsts/change_log.rst:17 ../../rsts/change_log.rst:22
 msgid "Bug fixes"
 msgstr ""
 
-#: ../../rsts/change_log.rst:6
+#: ../../rsts/change_log.rst:20
+msgid "**v1.0.2**"
+msgstr ""
+
+#: ../../rsts/change_log.rst:24
 msgid "Added feature to delete individual tags from tag list"
 msgstr ""
+
+#~ msgid "Changes 1.0.1 => 1.0.2"
+#~ msgstr ""
 
