@@ -36,7 +36,7 @@ function select_files(state) {
     return false;
   }
 
-  const files = [];
+  const filtered_imagelist = [];
   for (let filename of Object.keys(state.folder_files)) {
     const fileinfo = state.folder_files[filename];
     if (!any(tag_preds, fileinfo)) {
@@ -45,12 +45,12 @@ function select_files(state) {
     if (!any(review_preds, fileinfo)) {
       continue;
     }
-    files.push(filename);
+    filtered_imagelist.push(filename);
   }
-  files.sort();
-  state.files = files;
-  if (!state.files || state.files.length === 0) {
-    state.img_status = IMG_STATUS.NO_IMG;
+  filtered_imagelist.sort();
+  state.filtered_imagelist = filtered_imagelist;
+  if (!state.filtered_imagelist || state.filtered_imagelist.length === 0) {
+    state.image_status = IMG_STATUS.NO_IMG;
   }
 }
 
@@ -108,8 +108,8 @@ export default {
       state.error_status = payload.error_status;
     }
   },
-  set_img_status(state, payload) {
-    state.img_status = payload.img_status;
+  set_image_status(state, payload) {
+    state.image_status = payload.image_status;
   },
   set_notice_status(state, payload) {
     if (payload.hasOwnProperty("code")){
@@ -142,8 +142,8 @@ export default {
   add_new_user(state, payload) {
      state.new_user = payload.new_user;
   },
-  set_all_image_mode(state, payload) {
-    state.all_image_mode = payload.all_image_mode;
+  set_full_screen_mode(state, payload) {
+    state.full_screen_mode = payload.full_screen_mode;
   },
   toggle_tag_filter(state, payload) {
     const idx = state.tag_filter.indexOf(payload.filter);
@@ -167,15 +167,11 @@ export default {
     }
     select_files(state);
   },
-  set_file_list(state, payload) {
-    state.folder_files = payload.file_list;
-    state.filename_max_display = 100;
+  set_folder_files(state, payload) {
+    state.folder_files = payload.folder_files;
+    state.image_max_display = 100;
 
     select_files(state);
-
-    if (!state.files || state.files.length === 0) {
-      state.img_status = IMG_STATUS.NO_IMG;
-    }
   },
   update_file(state, payload) {
     if (payload.info) {
@@ -189,20 +185,17 @@ export default {
     }
     select_files(state);
   },
-  set_image_list(state, payload) {
-    state.image_list = payload;
-  },
-  set_filename_max_display(state, payload) {
-    state.filename_max_display = payload.max_display;
+  set_image_max_display(state, payload) {
+    state.image_max_display = payload.max_display;
   },
   remove_image(state, payload) {
-    const files = [];
-    for (const file of state.files) {
+    const filtered_imagelist = [];
+    for (const file of state.filtered_imagelist) {
       if (payload.filename !== file) {
-        files.push(file);
+        filtered_imagelist.push(file);
       }
     }
-    state.files = files;
+    state.filtered_imagelist = filtered_imagelist;
   },
   set_active_image(state, payload) {
     state.active_image_filename = payload.filename;
@@ -303,21 +296,25 @@ export default {
     state.active_image_comment_subord = payload.comment;
   },
   set_tagged_images(state, payload) {
-    const imgs = payload;
-    const MAX_WIDTH = 10000;
-    const IMAGE_HEIGHT = 125;
+    if (payload) {
+      const imgs = payload;
+      const MAX_WIDTH = 10000;
+      const IMAGE_HEIGHT = 125;
 
-    let width = 0;
-    for (const img of state.tagged_images) {
-      if (img.filename !== payload.filename) {
-        imgs.push(img);
+      let width = 0;
+      for (const img of state.tagged_images) {
+        if (img.filename !== payload.filename) {
+          imgs.push(img);
+        }
+        width += img.width * (IMAGE_HEIGHT / img.height);
+        if (width > MAX_WIDTH) {
+          break;
+        }
       }
-      width += img.width * (IMAGE_HEIGHT / img.height);
-      if (width > MAX_WIDTH) {
-        break;
-      }
+      state.tagged_images = imgs;
+    }else{
+      state.tagged_images = [];
     }
-    state.tagged_images = imgs;
   },
   set_filter(state, payload) {
     switch (payload) {

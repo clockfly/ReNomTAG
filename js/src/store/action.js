@@ -19,22 +19,22 @@ async function async_func(context, f) {
 }
 
 async function load_imagefile_list(context) {
-  context.commit("set_img_status", {
-    img_status: IMG_STATUS.LOADING
+  context.commit("set_image_status", {
+    image_status: IMG_STATUS.LOADING
   });
   let response = await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/get_filename_list"), {
+    axios.post(utils.build_api_url("/api/get_filename_obj"), {
       username: context.state.username,
       all: false
     })
   );
-  context.commit("set_file_list", {
-    file_list: response.data.filename_list
+  context.commit("set_folder_files", {
+    folder_files: response.data.filename_obj
   });
 
-  if (response.data.undef_filename_list.length > 0) {
+  if (response.data.undef_img_list.length > 0) {
     let undef_message = utils.message_load_undeffile_list(
-      response.data.undef_filename_list
+      response.data.undef_img_list
     );
     context.commit("set_error_status",{
       code: ERROR.UNDEF_FILE.code,
@@ -42,9 +42,9 @@ async function load_imagefile_list(context) {
     });
   }
 
-  if (response.data.dup_filename_list.length > 0) {
+  if (response.data.dup_img_list.length > 0) {
     let dup_message = utils.message_load_dupfile_list(
-      response.data.dup_filename_list
+      response.data.dup_img_list
     );
     context.commit("set_error_status",{
       code: ERROR.DUP_FILE.code,
@@ -52,8 +52,8 @@ async function load_imagefile_list(context) {
     });
   }
 
-  if (context.state.files.length > 0) {
-    context.dispatch("load_current_image", context.state.files[0]);
+  if (context.state.filtered_imagelist.length > 0) {
+    context.dispatch("load_current_image", context.state.filtered_imagelist[0]);
   }
 }
 
@@ -107,8 +107,9 @@ export default {
     }
     context.commit("set_username", foldername);
 
-    context.commit("set_file_list", { file_list: [] });
     context.commit("set_active_image", { file: null });
+    context.commit("set_folder_files", { folder_files: {} });
+    context.commit("set_tagged_images", null)
     load_label_candidates_dict(context);
     load_imagefile_list(context);
     load_tagged_images(context);
@@ -234,21 +235,21 @@ export default {
 
       // load next image
       let idx = 0;
-      for (const file of context.state.files) {
+      for (const file of context.state.filtered_imagelist) {
         if (target_filename === file) {
           break;
         }
         idx += 1;
       }
 
-      if (idx < context.state.files.length - 1) {
+      if (idx < context.state.filtered_imagelist.length - 1) {
         idx += 1;
       } else {
         idx -= 1;
       }
 
       if (idx >= 0) {
-        context.dispatch("load_current_image", context.state.files[idx]);
+        context.dispatch("load_current_image", context.state.filtered_imagelist[idx]);
       } else {
         context.commit("set_active_image", {
           filename: null,
@@ -336,21 +337,21 @@ export default {
 
     // load next image
     let idx = 0;
-    for (const file of context.state.files) {
+    for (const file of context.state.filtered_imagelist) {
       if (cur_filename === file) {
         break;
       }
       idx += 1;
     }
 
-    if (idx < context.state.files.length - 1) {
+    if (idx < context.state.filtered_imagelist.length - 1) {
       idx += 1;
     } else {
       idx -= 1;
     }
 
     if (idx >= 0) {
-      context.dispatch("load_current_image", context.state.files[idx]);
+      context.dispatch("load_current_image", context.state.filtered_imagelist[idx]);
     } else {
       context.commit("set_active_image", {
         file: null

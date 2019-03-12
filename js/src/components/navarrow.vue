@@ -17,7 +17,7 @@ export default {
     window.removeEventListener("keydown", this.on_keydown);
   },
   computed: {
-    ...mapState(["files", "active_image_filename", "active_boxid"]),
+    ...mapState(["filtered_imagelist", "active_image_filename", "active_boxid"]),
     next_file: function() {
       if (this.dir === "back") {
         return this.get_back_name();
@@ -28,16 +28,16 @@ export default {
   },
   methods: {
     get_back_name() {
-      const idx = this.files.indexOf(this.active_image_filename);
+      const idx = this.filtered_imagelist.indexOf(this.active_image_filename);
       if (idx > 0) {
-        return this.files[idx - 1];
+        return this.filtered_imagelist[idx - 1];
       }
     },
 
     get_fore_name() {
-      const idx = this.files.indexOf(this.active_image_filename);
-      if (idx !== -1 && idx < this.files.length - 1) {
-        return this.files[idx + 1];
+      const idx = this.filtered_imagelist.indexOf(this.active_image_filename);
+      if (idx !== -1 && idx < this.filtered_imagelist.length - 1) {
+        return this.filtered_imagelist[idx + 1];
       }
     },
 

@@ -8,10 +8,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!username || !image_list || image_list.length === 0'>
-            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
-              {{img_status.message}}
+            <div v-if='image_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
+              {{image_status.message}}
             </div>
-            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
+            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -33,10 +33,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!username || !image_list || image_list.length === 0'>
-            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
-              {{img_status.message}}
+            <div v-if='image_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
+              {{image_status.message}}
             </div>
-            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
+            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -121,15 +121,14 @@ export default {
   },
   computed: {
     ...mapState([
-      "all_image_mode",
+      "full_screen_mode",
       "user_list",
       "active_image_filename",
       "error_status",
       "notice_status",
-      "working_dir",
       "username",
       "new_user",
-      "img_status",
+      "image_status",
       "image_list"
     ]),
     setNewUser: {
@@ -143,7 +142,7 @@ export default {
     isAllImageMode: function() {
       return (
          ![null, undefined].includes(this.active_image_filename) &&
-        this.all_image_mode
+        this.full_screen_mode
       );
     }
   },

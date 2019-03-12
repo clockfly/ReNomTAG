@@ -23,7 +23,6 @@ import posixpath
 import PIL
 
 from renom_tag import ERROR, IMG_STATUS, NOTICE
-
 app = Bottle()
 DIR_ROOT = 'public'
 IMG_DIR = 'dataset'
@@ -141,7 +140,7 @@ def filter_duplicate_filenames(filename_list, exts):
     return load_files, not_load_files
 
 
-def get_img_files(folder):
+def get_folder_files(folder):
     ensure_folder(folder)
     exts = ["jpg", "jpeg", "png", "bmp"]
     ret_def_files = []
@@ -381,24 +380,24 @@ def get_thumbnail(folder, file_name):
     return ret
 
 
-# roothing for get_filename_list
-@app.route("/api/get_filename_list", method="POST")
-def get_filename_list():
+# roothing for get_filename_obj
+@app.route("/api/get_filename_obj", method="POST")
+def get_filename_obj():
     #import pdb;pdb.set_trace()
     folder = request.json['username']
     folder = strip_foldername(folder)
-    img_paths, dup_img_path, undef_img_path = get_img_files(folder)
+    img_list, dup_img_list, undef_img_list = get_folder_files(folder)
 
     ret = {}
-    for img in img_paths:
+    for img in img_list:
         xml = get_boxes(folder, img)
-        d = {'filename': img, 'xml': xml}
+        # d = {'filename': img, 'xml': xml}
         ret[img] = xml
 
     body = json.dumps({
-        "filename_list": ret,
-        "undef_filename_list": undef_img_path,
-        "dup_filename_list": dup_img_path,
+        "filename_obj": ret,
+        "undef_img_list": undef_img_list,
+        "dup_img_list": dup_img_list
     })
     ret = set_json_body(body)
     return ret

@@ -3,7 +3,7 @@
     <div class="title">
       <div class="title-text row">
         <span class="col-md-8 text">Images</span>
-        <span v-if='username && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
+        <span v-if='username && (filtered_imagelist.length !== 0)' class="col number">{{filtered_imagelist.length}}</span>
         <span v-else class="col number">0</span>
       </div>
     </div>
@@ -95,8 +95,8 @@ export default {
     ...mapState([
       "username",
       "folder_files",
-      "files",
-      "filename_max_display",
+      "filtered_imagelist",
+      "image_max_display",
       "active_image_filename",
       "tag_filter",
       "review_filter",
@@ -104,23 +104,25 @@ export default {
     ]),
 
     file_list_top: function() {
-      if (!this.files) {
+      if (!this.filtered_imagelist) {
         return [];
       }
-      return this.files.slice(0, this.filename_max_display);
+      return this.filtered_imagelist.slice(0, this.image_max_display);
     },
 
     file_list: function() {
-      let keys = Object.keys(this.files).sort((l, r) => l - r);
+      let keys = Object.keys(this.filtered_imagelist).sort((l, r) => l - r);
       let ret = [];
-      keys.forEach(k => ret.push(this.files[k]));
-      this.$store.commit("set_image_list", ret);
+      keys.forEach(k => ret.push(this.filtered_imagelist[k]));
+
+      console.log("ret :",ret);
+      // console.log("same?",JSON.stringify(this.files) === JSON.stringify(ret));
       return ret;
     }
   },
   watch: {
     active_image_filename: function(newvalue, oldvalue) {
-      let n = this.files.indexOf(newvalue);
+      let n = this.filtered_imagelist.indexOf(newvalue);
       if (n === -1) {
         return;
       }
@@ -187,8 +189,8 @@ export default {
       }
     },
     on_scroll: function(event) {
-      if (this.filename_max_display < this.files.length) {
-        let n = this.filename_max_display - this.IMAGE_RELOAD_MARGIN;
+      if (this.image_max_display < this.filtered_imagelist.length) {
+        let n = this.image_max_display - this.IMAGE_RELOAD_MARGIN;
         if (n <= 0) {
           n = 1;
         }
@@ -201,8 +203,8 @@ export default {
           let wrapperrc = wrapper.getBoundingClientRect();
 
           if (imgrc.top <= wrapperrc.top) {
-            this.$store.commit("set_filename_max_display", {
-              max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
+            this.$store.commit("set_image_max_display", {
+              max_display: this.image_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }
         } else if (loaded_img[n] === null) {

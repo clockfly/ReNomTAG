@@ -1,5 +1,5 @@
 <template>
-  <div id='canvasblock' :class="{all_image_mode : this.all_image_mode === true, original : this.all_image_mode === false}">
+  <div id='canvasblock' :class="{full_screen_mode : full_screen_mode === true, original : full_screen_mode === false}">
     <div id="canvaspanel" ref="canvaspanel"
         @mousedown.middle='on_down_middle'
         @mousemove='on_move_middle'
@@ -54,13 +54,13 @@
         </div>
         <div class="col-md-1 row  clear-padding "></div>
         <div class="col-md-5 row  clear-padding comment-wrapper">
-          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
+          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea: !is_admin}">
             <span>admin >> </span>
-            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
+            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!is_admin"></textarea>
           </div>
-          <div class="comment-area col-md-6" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}">
+          <div class="comment-area col-md-6" :class="{active_textarea: !is_admin, inactive_textarea: is_admin}">
             <span>user >></span>
-            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
+            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="is_admin"></textarea>
           </div>
         </div>
         <div class= "col-md-3 row clear-padding">
@@ -78,13 +78,13 @@
               <span class="col-md-10 text-left clear-padding" :class="{img_file_name_long_txt: is_long_file_name}" style="margin: 0px;">{{img_file_name}}</span>
               </p>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
-                  <div v-if="this.is_admin" class="btn-wrp">
-                    <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
+                  <div v-if="is_admin" class="btn-wrp">
+                    <p v-if="can_be_saved && active_image_review_result !== 'ng'"
                           class="img-btn   float-left  ng-button"
                           @click="set_review_result({result:'ng'})">
                           NG
                     </p>
-                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ng'"
+                    <p v-else-if="can_be_saved && active_image_review_result === 'ng'"
                           class="img-btn   float-left  ng-button ng-button-push"
                           @click="set_review_result({result:'ng'})">
                       NG
@@ -92,13 +92,13 @@
                     <p v-else class="img-btn-disabled   float-left ng-button">
                       NG
                     </p>
-                    <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
+                    <p v-if="can_be_saved && active_image_review_result !== 'ok'"
                           class="img-btn   float-right ok-button"
-                          :class="{review_checked: this.active_image_review_result === 'ok'}"
+                          :class="{review_checked: active_image_review_result === 'ok'}"
                           @click="set_review_result({result:'ok'})">
                       OK
                     </p>
-                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
+                    <p v-else-if="can_be_saved && active_image_review_result === 'ok'"
                           class="img-btn   float-right ok-button ok-button-push"
                           @click="set_review_result({result:'ok'})">
                       OK
@@ -179,7 +179,7 @@ export default {
   },
   computed: {
     ...mapState([
-      "all_image_mode",
+      "full_screen_mode",
       "is_admin",
       "active_image_filename",
       "active_image",
@@ -189,7 +189,6 @@ export default {
       "active_image_review_result",
       "active_boxid",
       "labels",
-      "files",
       "tagged_images",
       "pre_save_boxes_data"
     ]),
@@ -290,13 +289,13 @@ export default {
         left: this.zoom_x + "px"
       };
     },
-    is_all_image_mode: function() {
+    is_full_screen_mode: function() {
       return (
-        this.all_image_mode &&
+        this.full_screen_mode &&
         ![null, undefined].inculudes(this.active_image_filename)
       );
     },
-    is_long_file_name:function(){ 
+    is_long_file_name:function(){
       // 10なのは暫定的な数値です
       return this.active_image_filename.length > 10 ? true:false;
     }
@@ -313,8 +312,8 @@ export default {
     ...mapActions(["save_annotation", "delete_xml","paste_annotation"]),
 
     expand_image_mode: function() {
-      let shift = !this.all_image_mode;
-      this.$store.commit("set_all_image_mode", { all_image_mode: shift });
+      let shift = !this.full_screen_mode;
+      this.$store.commit("set_full_screen_mode", { full_screen_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -1269,7 +1268,7 @@ export default {
     opacity: 0;
   }
 }
-.all_image_mode {
+.full_screen_mode {
   // #canvasblock
   flex-grow: 1;
   background: #2e2f30;

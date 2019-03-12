@@ -138,7 +138,7 @@ def test_save_xml_from_label_dict(tmpdir):
         assert ann['filename'] == 'a.jpg'
 
 
-def test_get_filename_list(tmpdir):
+def test_get_filename_obj(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
         imgdir.join('abc.jpeg').write_binary(b'')
@@ -151,7 +151,7 @@ def test_get_filename_list(tmpdir):
         xmldir.join('a.xml').write(ex_xml)
 
         app = testapp(server.app)
-        ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
+        ret = app.post_json('/api/get_filename_obj', {'folder': 'folderx', 'all': False})
         #filename_list = [*ret.json['filename_list']]
         filename_list = []
         for key in ret.json['filename_list']:
@@ -228,7 +228,7 @@ def test_get_img_file(tmpdir):
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
         imgdir.join('aakhk.bmp').write_binary(b'')
 
-        ret_names, ret_dup_names, ret_undef_names = server.get_img_files('folderx')
+        ret_names, ret_dup_names, ret_undef_names = server.get_folder_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['a.jpeg', 'aakhk.bmp', 'aierf_y832fa.jpg']
