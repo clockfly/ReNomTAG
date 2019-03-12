@@ -202,7 +202,7 @@ export default {
         data[i].shortcut = payload.dist_shortcut;
       }
     }
-    context.commit("update_label", data);
+    context.commit("set_labels", data);
     await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
         username: context.state.username,

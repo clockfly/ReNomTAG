@@ -92,13 +92,16 @@ export function get_reviewresult(d) {
 }
 
 export default {
-  set_copy_boxes(state,payload){
-    state.pre_save_boxes_data = [];
-    state.pre_save_boxes_data = payload;
+  // 1) Screen state
+  set_full_screen_mode(state, payload) {
+    state.full_screen_mode = payload.full_screen_mode;
   },
-  paste_copied_boxes(state,payload){
-    state.active_image_tag_boxes = payload;
+  set_main_menu_visible(state, payload) {
+    state.main_menu_visible = payload.visible;
   },
+
+
+  // 2) Notifications
   set_error_status(state, payload) {
     if (payload.hasOwnProperty("code")){
       state.error_status.code = payload.code;
@@ -107,9 +110,6 @@ export default {
     if (payload.hasOwnProperty("error_status")){
       state.error_status = payload.error_status;
     }
-  },
-  set_image_status(state, payload) {
-    state.image_status = payload.image_status;
   },
   set_notice_status(state, payload) {
     if (payload.hasOwnProperty("code")){
@@ -120,17 +120,14 @@ export default {
       state.notice_status = payload.notice_status;
     }
   },
-  // set_username(state, payload) {
-  //   state.username = payload.username;
-  // },
+  set_image_status(state, payload) {
+    state.image_status = payload.image_status;
+  },
+
+
+  // 3) Directories
   set_working_dir(state, payload) {
     state.working_dir = payload.working_dir;
-  },
-  set_main_menu_visible(state, payload) {
-    state.main_menu_visible = payload.visible;
-  },
-  set_user_list(state, payload) {
-    state.user_list = payload.user_list;
   },
   set_username(state, payload) {
     if (state.user_list.includes(payload)) {
@@ -142,8 +139,30 @@ export default {
   add_new_user(state, payload) {
      state.new_user = payload.new_user;
   },
-  set_full_screen_mode(state, payload) {
-    state.full_screen_mode = payload.full_screen_mode;
+  set_user_list(state, payload) {
+    state.user_list = payload.user_list;
+  },
+
+
+
+  // 4) Data in the user directory
+  set_folder_files(state, payload) {
+    state.folder_files = payload.folder_files;
+    state.imagelist_max_display = 100;
+
+    select_files(state);
+  },
+  update_file(state, payload) {
+    if (payload.info) {
+      if (payload.info == "reset") {
+        state.folder_files[payload.filename] = "";
+      } else {
+        state.folder_files[payload.filename] = payload.info;
+      }
+    } else {
+      delete state.folder_files[payload.filename];
+    }
+    select_files(state);
   },
   toggle_tag_filter(state, payload) {
     const idx = state.tag_filter.indexOf(payload.filter);
@@ -166,155 +185,6 @@ export default {
       }
     }
     select_files(state);
-  },
-  set_folder_files(state, payload) {
-    state.folder_files = payload.folder_files;
-    state.image_max_display = 100;
-
-    select_files(state);
-  },
-  update_file(state, payload) {
-    if (payload.info) {
-      if (payload.info == "reset") {
-        state.folder_files[payload.filename] = "";
-      } else {
-        state.folder_files[payload.filename] = payload.info;
-      }
-    } else {
-      delete state.folder_files[payload.filename];
-    }
-    select_files(state);
-  },
-  set_image_max_display(state, payload) {
-    state.image_max_display = payload.max_display;
-  },
-  remove_image(state, payload) {
-    const filtered_imagelist = [];
-    for (const file of state.filtered_imagelist) {
-      if (payload.filename !== file) {
-        filtered_imagelist.push(file);
-      }
-    }
-    state.filtered_imagelist = filtered_imagelist;
-  },
-  set_active_image(state, payload) {
-    state.active_image_filename = payload.filename;
-    state.active_image_width = payload.width;
-    state.active_image_height = payload.height;
-    state.active_image = payload.image;
-    state.active_image_tag_boxes = payload.boxes;
-    state.active_image_review_result = payload.review_result;
-    state.active_image_comment_admin = payload.comment_admin;
-    state.active_image_comment_subord = payload.comment_subord;
-
-    state.active_boxid = null;
-  },
-  set_active_boxid(state, payload) {
-    state.active_boxid = payload.boxid;
-  },
-  new_tagbox(state, payload) {
-    state.active_image_tag_boxes = [
-      ...state.active_image_tag_boxes,
-      payload.box
-    ];
-  },
-  set_tagbox(state, payload) {
-    _set_tagbox(state, payload);
-  },
-  set_tagboxes(state, payload) {
-    state.active_image_tag_boxes = payload.tagboxes;
-  },
-  remove_tagbox(state, payload) {
-    const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
-    const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
-
-    state.active_image_tag_boxes = [...pri, ...follow];
-    state.active_boxid = null;
-  },
-  set_activebox_label(state, payload) {
-    const boxid = state.active_boxid;
-    if (boxid === null) {
-      return;
-    }
-    const box = state.active_image_tag_boxes[boxid];
-    const newbox = Object.assign(box, { label: payload.label });
-
-    _set_tagbox(state, { boxid, box: newbox });
-  },
-  set_dragger(state, payload) {
-    if (payload === null) {
-      state.dragger = {};
-    } else {
-      state.dragger = { ...state.dragger, ...payload };
-    }
-  },
-  add_label(state, payload) {
-    state.labels = [...state.labels, payload];
-  },
-  set_labels(state, labels) {
-    state.labels = labels;
-  },
-  update_label(state, payload) {
-    state.labels = payload;
-  },
-  delete_tagged_image(state, payload) {
-    const imgs = [];
-    for (const img of state.tagged_images) {
-      // push objects except the target filename
-      if (img.filename !== payload.filename) {
-        imgs.push(img);
-      }
-    }
-    state.tagged_images = imgs;
-  },
-  add_tagged_image(state, payload) {
-    const imgs = [payload];
-    const MAX_WIDTH = 10000;
-    const IMAGE_HEIGHT = 125;
-
-    let width = 0;
-    for (const img of state.tagged_images) {
-      if (img.filename !== payload.filename) {
-        imgs.push(img);
-      }
-      width += img.width * (IMAGE_HEIGHT / img.height);
-      if (width > MAX_WIDTH) {
-        break;
-      }
-    }
-    state.tagged_images = imgs;
-  },
-  set_review_result(state, payload) {
-    if (state.is_admin) {
-      state.active_image_review_result = payload.result;
-    }
-  },
-  set_comment_admin(state, payload) {
-    state.active_image_comment_admin = payload.comment;
-  },
-  set_comment_subord(state, payload) {
-    state.active_image_comment_subord = payload.comment;
-  },
-  set_tagged_images(state, payload) {
-    if (payload) {
-      const imgs = payload;
-      const MAX_WIDTH = 10000;
-      const IMAGE_HEIGHT = 125;
-
-      let width = 0;
-      for (const img of state.tagged_images) {
-        if (img.filename !== payload.filename) {
-          imgs.push(img);
-        }
-        width += img.width * (IMAGE_HEIGHT / img.height);
-        if (width > MAX_WIDTH) {
-          break;
-        }
-      }
-      state.tagged_images = imgs;
-    }else{
-      state.tagged_images = [];
-    }
   },
   set_filter(state, payload) {
     switch (payload) {
@@ -345,5 +215,146 @@ export default {
     }
     state.filter_method = payload;
     select_files(state);
+  },
+  remove_image(state, payload) {
+    const filtered_imagelist = [];
+    for (const file of state.filtered_imagelist) {
+      if (payload.filename !== file) {
+        filtered_imagelist.push(file);
+      }
+    }
+    state.filtered_imagelist = filtered_imagelist;
+  },
+  set_imagelist_max_display(state, payload) {
+    state.imagelist_max_display = payload.max_display;
+  },
+
+
+  // 5) About the image showing now
+  set_active_image(state, payload) {
+    state.active_image_filename = payload.filename;
+    state.active_image_width = payload.width;
+    state.active_image_height = payload.height;
+    state.active_image = payload.image;
+    state.active_image_tag_boxes = payload.boxes;
+    state.active_image_review_result = payload.review_result;
+    state.active_image_comment_admin = payload.comment_admin;
+    state.active_image_comment_subord = payload.comment_subord;
+
+    state.active_boxid = null;
+  },
+
+
+
+  // 6) The information of annotation boxes in a certain active_image
+  set_active_boxid(state, payload) {
+    state.active_boxid = payload.boxid;
+  },
+  set_tagboxes(state, payload) {
+    state.active_image_tag_boxes = payload.tagboxes;
+  },
+  set_tagbox(state, payload) {
+    _set_tagbox(state, payload);
+  },
+  set_activebox_label(state, payload) {
+    const boxid = state.active_boxid;
+    if (boxid === null) {
+      return;
+    }
+    const box = state.active_image_tag_boxes[boxid];
+    const newbox = Object.assign(box, { label: payload.label });
+
+    _set_tagbox(state, { boxid, box: newbox });
+  },
+  add_new_tagbox(state, payload) {
+    state.active_image_tag_boxes = [
+      ...state.active_image_tag_boxes,
+      payload.box
+    ];
+  },
+  remove_tagbox(state, payload) {
+    const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
+    const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
+
+    state.active_image_tag_boxes = [...pri, ...follow];
+    state.active_boxid = null;
+  },
+  set_review_result(state, payload) {
+    if (state.is_admin) {
+      state.active_image_review_result = payload.result;
+    }
+  },
+  set_comment_admin(state, payload) {
+    state.active_image_comment_admin = payload.comment;
+  },
+  set_comment_subord(state, payload) {
+    state.active_image_comment_subord = payload.comment;
+  },
+
+
+  // Others)
+  set_labels(state, payload) {
+    state.labels = payload;
+  },
+  add_label(state, payload) {
+    state.labels = [...state.labels, payload];
+  },
+
+  set_tagged_images(state, payload) {
+    if (payload) {
+      const imgs = payload;
+      const MAX_WIDTH = 10000;
+      const IMAGE_HEIGHT = 125;
+
+      let width = 0;
+      for (const img of state.tagged_images) {
+        if (img.filename !== payload.filename) {
+          imgs.push(img);
+        }
+        width += img.width * (IMAGE_HEIGHT / img.height);
+        if (width > MAX_WIDTH) {
+          break;
+        }
+      }
+      state.tagged_images = imgs;
+    }else{
+      state.tagged_images = [];
+    }
+  },
+  add_tagged_image(state, payload) {
+    const imgs = [payload];
+    const MAX_WIDTH = 10000;
+    const IMAGE_HEIGHT = 125;
+
+    let width = 0;
+    for (const img of state.tagged_images) {
+      if (img.filename !== payload.filename) {
+        imgs.push(img);
+      }
+      width += img.width * (IMAGE_HEIGHT / img.height);
+      if (width > MAX_WIDTH) {
+        break;
+      }
+    }
+    state.tagged_images = imgs;
+  },
+  delete_tagged_image(state, payload) {
+    const imgs = [];
+    for (const img of state.tagged_images) {
+      // push objects except the target filename
+      if (img.filename !== payload.filename) {
+        imgs.push(img);
+      }
+    }
+    state.tagged_images = imgs;
+  },
+
+
+  set_copy_boxes(state,payload){
+    state.pre_save_boxes_data = [];
+    state.pre_save_boxes_data = payload;
+  },
+  paste_copied_boxes(state,payload){
+    state.active_image_tag_boxes = payload;
   }
 };

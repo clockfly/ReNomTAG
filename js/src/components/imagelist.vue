@@ -96,7 +96,7 @@ export default {
       "username",
       "folder_files",
       "filtered_imagelist",
-      "image_max_display",
+      "imagelist_max_display",
       "active_image_filename",
       "tag_filter",
       "review_filter",
@@ -107,7 +107,7 @@ export default {
       if (!this.filtered_imagelist) {
         return [];
       }
-      return this.filtered_imagelist.slice(0, this.image_max_display);
+      return this.filtered_imagelist.slice(0, this.imagelist_max_display);
     },
 
     file_list: function() {
@@ -189,8 +189,8 @@ export default {
       }
     },
     on_scroll: function(event) {
-      if (this.image_max_display < this.filtered_imagelist.length) {
-        let n = this.image_max_display - this.IMAGE_RELOAD_MARGIN;
+      if (this.imagelist_max_display < this.filtered_imagelist.length) {
+        let n = this.imagelist_max_display - this.IMAGE_RELOAD_MARGIN;
         if (n <= 0) {
           n = 1;
         }
@@ -203,8 +203,8 @@ export default {
           let wrapperrc = wrapper.getBoundingClientRect();
 
           if (imgrc.top <= wrapperrc.top) {
-            this.$store.commit("set_image_max_display", {
-              max_display: this.image_max_display + this.IMAGE_RELOAD_AMOUNT
+            this.$store.commit("set_imagelist_max_display", {
+              max_display: this.imagelist_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }
         } else if (loaded_img[n] === null) {

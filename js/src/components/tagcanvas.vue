@@ -910,7 +910,7 @@ export default {
       if (this.status === "new") {
         const box = this.client_to_box(this.newbox_rect);
         if (box.left !== box.right && box.top !== box.bottom) {
-          this.$store.commit("new_tagbox", { box });
+          this.$store.commit("add_new_tagbox", { box });
           this.set_active_boxid({
             boxid: this.active_image_tag_boxes.length - 1
           });

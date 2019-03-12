@@ -6,7 +6,7 @@ function _update_store(s) {
   s.actions.load_imagefile_list = (context)=>null;
   s.state.files = ['0', '1', '2', '3', '4', '5', '6', '7', '8', ];
   s.state.active_image_filename = '0';
-  s.state.image_max_display = 3;
+  s.state.imagelist_max_display = 3;
 }
 
 describe('imagelist.vue', () => {
@@ -37,6 +37,6 @@ describe('imagelist.vue', () => {
     const l = wrapper.find('#imagelist');
     l.trigger('scroll');
 
-    expect(store.store.state.image_max_display).toBe(303)
+    expect(store.store.state.imagelist_max_display).toBe(303)
   })
 })
