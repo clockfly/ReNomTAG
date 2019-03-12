@@ -1,5 +1,5 @@
 <template>
-  <div id='left-menu'  v-bind:class='{ open: main_menu_visible || (folder === undefined) }' @click='closeMenu'>
+  <div id='left-menu'  v-bind:class='{ open: main_menu_visible || (username === undefined) }' @click='closeMenu'>
     <div class='left-menu-bar'>
       <button class='bar-button'>
         <i class="fa fa-object-group fa-fw" aria-hidden="true"></i>
@@ -7,12 +7,12 @@
       </button>
 
       <hr>
-      <button v-for="name in folder_list" :key="name"
+      <button v-for="name in user_list" :key="name"
         class='bar-button'
-        :data-folder='name'
-        @click='selectFolder(name)'>
-        <i v-if="folder === name" class="fa fa-folder-open" aria-hidden="true"></i>
-        <i v-if="folder !== name" class="fa fa-folder" aria-hidden="true"></i>
+        :data-username='name'
+        @click='selectUser(name)'>
+        <i v-if="username === name" class="fa fa-folder-open" aria-hidden="true"></i>
+        <i v-if="username !== name" class="fa fa-folder" aria-hidden="true"></i>
         <span class='menu-text'>{{name}}</span>
 
       </button>
@@ -28,15 +28,15 @@ import * as utils from "@/utils";
 
 export default {
   computed: {
-    ...mapState(["main_menu_visible", "folder", "folder_list"])
+    ...mapState(["main_menu_visible", "username", "user_list"])
   },
   methods: {
     ...mapActions(["init_client"]),
     closeMenu: function() {
       this.$store.commit("set_main_menu_visible", { visible: false });
     },
-    selectFolder: function(folder) {
-      this.init_client(folder);
+    selectUser: function(username) {
+      this.init_client(username);
       this.closeMenu();
     }
   }

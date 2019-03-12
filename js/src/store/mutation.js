@@ -120,24 +120,27 @@ export default {
       state.notice_status = payload.notice_status;
     }
   },
-  set_username(state, payload) {
-    state.username = payload.username;
-  },
+  // set_username(state, payload) {
+  //   state.username = payload.username;
+  // },
   set_working_dir(state, payload) {
     state.working_dir = payload.working_dir;
   },
   set_main_menu_visible(state, payload) {
     state.main_menu_visible = payload.visible;
   },
-  set_folder_list(state, payload) {
-    state.folder_list = payload.folder_list;
+  set_user_list(state, payload) {
+    state.user_list = payload.user_list;
   },
-  set_folder(state, payload) {
-    if (state.folder_list.includes(payload)) {
-      state.folder = payload;
+  set_username(state, payload) {
+    if (state.user_list.includes(payload)) {
+      state.username = payload;
     } else {
-      throw new URIError("Folder " + payload + " does not exist.");
+      throw new URIError("Username " + payload + " does not exist.");
     }
+  },
+  add_new_user(state, payload) {
+     state.new_user = payload.new_user;
   },
   set_all_image_mode(state, payload) {
     state.all_image_mode = payload.all_image_mode;

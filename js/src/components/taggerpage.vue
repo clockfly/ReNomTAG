@@ -4,10 +4,10 @@
       <app-header class="row"></app-header>
       <div id='main-container'>
         <left-menu></left-menu>
-        <image-list class="folder-image" v-if="folder"/>
+        <image-list class="folder-image" v-if="username"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
+          <div id='loading' v-if='!username || !image_list || image_list.length === 0'>
             <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
               {{img_status.message}}
             </div>
@@ -32,7 +32,7 @@
       <div id="all-image"  v-if="this.isAllImageMode">
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
+          <div id='loading' v-if='!username || !image_list || image_list.length === 0'>
             <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
               {{img_status.message}}
             </div>
@@ -56,7 +56,7 @@
     <modal-box v-if='notice_status.message'>
       <div slot='contents' class='mkdir-msg' >
         {{notice_status.message}}
-        <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
+        <input v-model="setNewUser" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
         <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
@@ -122,22 +122,22 @@ export default {
   computed: {
     ...mapState([
       "all_image_mode",
-      "folder_list",
+      "user_list",
       "active_image_filename",
       "error_status",
       "notice_status",
       "working_dir",
       "username",
-      "folder",
+      "new_user",
       "img_status",
       "image_list"
     ]),
-    setUsername: {
+    setNewUser: {
       get() {
-        return this.$store.state.username;
+        return this.new_user;
       },
       set(e) {
-        this.$store.commit("set_username", { username: e });
+        this.add_new_user({ new_user: e })
       }
     },
     isAllImageMode: function() {
@@ -150,9 +150,10 @@ export default {
   methods: {
     ...mapMutations([
       "set_error_status",
-      "set_notice_status"
+      "set_notice_status",
+      "add_new_user"
     ]),
-    ...mapActions(["init_client", "make_dir", "load_folder_list"]),
+    ...mapActions(["init_client", "make_dir", "load_user_list"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;

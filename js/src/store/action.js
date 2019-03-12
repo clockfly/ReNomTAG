@@ -24,7 +24,7 @@ async function load_imagefile_list(context) {
   });
   let response = await async_func(context, () =>
     axios.post(utils.build_api_url("/api/get_filename_list"), {
-      folder: context.state.folder,
+      username: context.state.username,
       all: false
     })
   );
@@ -60,7 +60,7 @@ async function load_imagefile_list(context) {
 async function load_label_candidates_dict(context) {
   let response = await async_func(context, () =>
     axios.post(utils.build_api_url("/api/load_label_candidates_dict"), {
-      folder: context.state.folder
+      username: context.state.username
     })
   );
   context.commit("set_labels", response.data);
@@ -69,22 +69,22 @@ async function load_label_candidates_dict(context) {
 async function load_tagged_images(context) {
   let response = await async_func(context, () =>
     axios.post(utils.build_api_url("/api/load_xml_tagged_images"), {
-      folder: context.state.folder
+      username: context.state.username
     })
   );
   context.commit("set_tagged_images", response.data.result);
 }
 
 export default {
-  async load_folder_list(context) {
+  async load_user_list(context) {
     let response = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/folderlist"), {
-        folder: context.state.folder
+      axios.post(utils.build_api_url("/api/userlist"), {
+        username: context.state.username
       })
     );
     if (response.data.result === 1) {
-      context.commit("set_folder_list", {
-        folder_list: response.data.folder_list
+      context.commit("set_user_list", {
+        user_list: response.data.user_list
       });
     } else if (response.data.result === 0) {
       context.commit("set_notice_status", { notice_status: NOTICE.MAKE_DIR.INITIAL });
@@ -95,17 +95,17 @@ export default {
   },
 
   async init_client(context, payload) {
-    // "load_folder_list" loads folder_list.
-    await context.dispatch("load_folder_list");
+    // "load_user_list" loads user_list.
+    await context.dispatch("load_user_list");
 
-    // "set_folder" raises error when folder is not in folder_list.
+    // "set_folder" raises error when folder is not in user_list.
     let foldername;
     if (payload) {
       foldername = payload;
     } else {
       foldername = utils.cookies.getItem("tags-foldername");
     }
-    context.commit("set_folder", foldername);
+    context.commit("set_username", foldername);
 
     context.commit("set_file_list", { file_list: [] });
     context.commit("set_active_image", { file: null });
@@ -120,7 +120,7 @@ export default {
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/make_dir"), {
         working_dir: context.state.working_dir,
-        username: context.state.username
+        username: context.state.new_user
       })
     );
 
@@ -143,7 +143,7 @@ export default {
     let response = await async_func(context, () =>
       axios.get(
         utils.build_api_url(
-          "/api/get_raw_img/" + context.state.folder + "/" + file
+          "/api/get_raw_img/" + context.state.username + "/" + file
         )
       )
     );
@@ -187,7 +187,7 @@ export default {
     context.commit("add_label", payload);
     await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+        username: context.state.username,
         labels: context.state.labels
       })
     );
@@ -204,7 +204,7 @@ export default {
     context.commit("update_label", data);
     await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+        username: context.state.username,
         labels: context.state.labels
       })
     );
@@ -215,7 +215,7 @@ export default {
     let target_filename = context.state.active_image_filename;
     let response = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/delete_xml"), {
-        folder: context.state.folder,
+        username: context.state.username,
         target_filename: target_filename
       })
     );
@@ -321,7 +321,7 @@ export default {
 
     const ret = await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
-        folder: context.state.folder,
+        username: context.state.username,
         value
       })
     );
@@ -377,7 +377,7 @@ export default {
     context.commit("set_labels", filtered_labels);
     await async_func(context, () =>
       axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+        username: context.state.username,
         labels: context.state.labels
       })
     );

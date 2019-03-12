@@ -15,15 +15,17 @@ let state = {
   },
   // img state: "No images found." or "Loading images..."
   img_status: IMG_STATUS.LOADING,
-  
+
   // menu state
   main_menu_visible: false,
   working_dir: "",
 
   // Current User Folder Name.
-  folder: undefined,
-
-  folder_list: [],
+  // folder: undefined,
+  username: undefined,
+  new_user: "user",
+  user_list: [],
+  
   // image files
   folder_files: {},
   tag_filter: ["notags"],

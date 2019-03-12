@@ -3,7 +3,7 @@
     <div class="title">
       <div class="title-text row">
         <span class="col-md-8 text">Images</span>
-        <span v-if='folder && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
+        <span v-if='username && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
         <span v-else class="col number">0</span>
       </div>
     </div>
@@ -93,8 +93,7 @@ export default {
   },
   computed: {
     ...mapState([
-      "folder",
-      "folder_list",
+      "username",
       "folder_files",
       "files",
       "filename_max_display",
@@ -177,7 +176,7 @@ export default {
       return review;
     },
     get_image_url(file) {
-      return utils.build_api_url("/t/" + this.folder + "/" + file);
+      return utils.build_api_url("/t/" + this.username + "/" + file);
     },
     is_selected(filename) {
       return filename === this.active_image_filename;

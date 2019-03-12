@@ -385,7 +385,7 @@ def get_thumbnail(folder, file_name):
 @app.route("/api/get_filename_list", method="POST")
 def get_filename_list():
     #import pdb;pdb.set_trace()
-    folder = request.json['folder']
+    folder = request.json['username']
     folder = strip_foldername(folder)
     img_paths, dup_img_path, undef_img_path = get_img_files(folder)
 
@@ -431,7 +431,7 @@ def save_xml_from_label_dict():
     label_dict['annotation']['folder'] = folder
     label_dict['annotation']['filename'] = file_name
 
-    folderpath = os.path.join(get_folderpath(request.json['folder']), XML_DIR)
+    folderpath = os.path.join(get_folderpath(request.json['username']), XML_DIR)
     save_xml_file_name = check_path(folderpath, _get_file_name(file_name)) + '.xml'
 
     # convert dict to xml
@@ -447,7 +447,7 @@ def save_xml_from_label_dict():
 
     print('%s is saved' % (save_xml_file_name))
 
-    xml = get_boxes(request.json['folder'], file_name)
+    xml = get_boxes(request.json['username'], file_name)
     ret = set_json_body({'result': xml})
     return ret
 
@@ -456,7 +456,7 @@ def save_xml_from_label_dict():
 def delete_xml():
     filename = _get_file_name(request.json['target_filename'])
     filename = filename + ".xml"
-    folder = request.json['folder']
+    folder = request.json['username']
 
     xmldir = os.path.join(get_folderpath(folder), XML_DIR)
     delete_xml_file_name = check_path(xmldir, filename)
@@ -484,7 +484,7 @@ def delete_xml():
 def load_xml_tagged_images():
     label_dict = request.json
 
-    folder = pathlib.Path(label_dict['folder'])
+    folder = pathlib.Path(label_dict['username'])
 
     targetdir = (DIR_ROOT / folder / pathlib.Path(XML_DIR))
     searchdir = (DIR_ROOT / folder / pathlib.Path(IMG_DIR))
@@ -577,7 +577,7 @@ def save_label_candidates_dict():
             labels[n] = {'label': label, 'shortcut': shortcut}
 
     json_data = json.dumps(labels)
-    folderpath = get_folderpath(label_dict['folder'])
+    folderpath = get_folderpath(label_dict['username'])
     jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
 
     with open(jsonfile, 'w') as ftpr:
@@ -589,7 +589,7 @@ def load_label_candidates_dict():
     label_dict = request.json
     ret = []
 
-    folderpath = get_folderpath(label_dict['folder'])
+    folderpath = get_folderpath(label_dict['username'])
     jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
 
     if os.path.exists(jsonfile):
@@ -610,7 +610,7 @@ def load_label_candidates_dict():
 def delete_label_candidates_dict():
     label_dict = request.json
 
-    folderpath = get_folderpath(label_dict['folder'])
+    folderpath = get_folderpath(label_dict['username'])
     jsonfile = os.path.join(folderpath, SAVE_JSON_FILE_PATH)
 
     if os.path.exists(jsonfile):
@@ -618,15 +618,15 @@ def delete_label_candidates_dict():
 
 
 # DIR_ROOT = 'public'
-# search inside the "bublic" ande get folderlist
-@app.route("/api/folderlist", method=["POST"])
-def get_folderlist():
-    # folders = the list of user-folder
+# search inside the "bublic" ande get userlist
+@app.route("/api/userlist", method=["POST"])
+def get_userlist():
+    # users = the list of user-folder
     current_dir = os.getcwd()
     public = os.path.join(current_dir, DIR_ROOT)
 
     if os.path.exists(public) and os.path.isdir(public):
-        folders = []
+        users = []
         for d in sorted(os.listdir(DIR_ROOT)):
             if not re.match(r"^[a-zA-Z0-9._]+$", d):
                 continue
@@ -637,8 +637,8 @@ def get_folderlist():
             if not os.path.exists(os.path.join(DIR_ROOT, d, IMG_DIR)):
                 continue
 
-            folders.append(d)
-        ret = set_json_body(json.dumps({'result': 1, 'folder_list': folders}))
+            users.append(d)
+        ret = set_json_body(json.dumps({'result': 1, 'user_list': users}))
 
     else:
         #message = 'No folder named "public" in the current directory. \n Wanna create directories?'
