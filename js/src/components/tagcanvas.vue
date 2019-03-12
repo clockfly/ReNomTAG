@@ -74,7 +74,9 @@
           </div>
           <div class="col-md-8 clear-padding">
             <div id='buttons' class="row">
-              <span class="col-md-10 text-left clear-padding" style="margin: 0px;"> {{img_file_name}} </span>
+              <p class="img_file_name_wrapper">
+              <span class="col-md-10 text-left clear-padding" :class="{img_file_name_long_txt: is_long_file_name}" style="margin: 0px;">{{img_file_name}}</span>
+              </p>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
                   <div v-if="this.is_admin" class="btn-wrp">
                     <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
@@ -217,7 +219,7 @@ export default {
       return true;
     },
     fileter_selected_boxes: function() {
-      if (this.boxes === null || this.boxes === undefined) {
+      if (!this.boxes) {
         return false;
       }
 
@@ -290,6 +292,10 @@ export default {
         this.all_image_mode &&
         ![null, undefined].inculudes(this.active_image_filename)
       );
+    },
+    is_long_file_name:function(){ 
+      // 10なのは暫定的な数値です
+      return this.active_image_filename.length > 10 ? true:false;
     }
   },
   watch: {
@@ -463,10 +469,13 @@ export default {
     },
 
     get_box: function(id) {
+      if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
+        return false;
+      }
       return this.active_image_tag_boxes[id];
     },
     get_box_label: function(id) {
-      if (!this.boxes[id]) {
+      if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
         return false;
       }
       return this.get_box(id).label;
@@ -490,7 +499,7 @@ export default {
             // 座標は比率で保存する
             // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
             let normed_bottom = bottom/this.active_image_height;
-            let normed_top = top/this.active_image_height;            
+            let normed_top = top/this.active_image_height;
             let normed_left = left/this.active_image_width;
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
@@ -538,7 +547,7 @@ export default {
                   let bottom,top,left,right,label;
                   [bottom,top,left,right,label] = [...norm_box];
                   let normed_bottom = bottom * this.active_image_height;
-                  let normed_top = top * this.active_image_height;            
+                  let normed_top = top * this.active_image_height;
                   let normed_left = left * this.active_image_width;
                   let normed_right = right * this.active_image_width;
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
@@ -1001,15 +1010,6 @@ export default {
     }
     #zoom-button {
       display: flex;
-      width: 33.33%;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #00000088;
-      &:hover {
-        cursor: pointer;
-        background-color: #00000033;
-      }  
       flex-wrap: wrap;
       position: absolute;
       width: 120px;
@@ -1083,7 +1083,6 @@ export default {
     align-items: center;
     width: 100%;
     margin: $component-margin-top 0 0;
-
     .shortcut-text-title {
       font-size: 0.75rem;
       color: #aaa;
@@ -1196,6 +1195,7 @@ export default {
       }
     }
     #buttons {
+      width: 100%;
       margin: auto;
       .filename {
         text-align: right;
@@ -1268,6 +1268,26 @@ export default {
         font-family: $content-top-header-font-family;
         font-size: $content-modellist-font-size;
         cursor: not-allowed;
+      }
+    }
+    .img_file_name_wrapper{
+      width: 6rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding:0;
+      font-size: 95%;
+      .img_file_name_long_txt:hover{
+        display:block;
+        width: 100%;
+        padding-right: 100%;
+        overflow: show;
+        animation: scrollAnime 5s linear infinite;
+      }
+      @keyframes scrollAnime{
+        0% { transform: translateX(0)}
+        //20remは暫定的な値です
+        100% { transform: translateX(-20rem)}
       }
     }
   }
