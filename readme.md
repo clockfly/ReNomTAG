@@ -32,7 +32,7 @@ The Wheel package contains pre-built js files so you don't have to build manuall
 ## Install from source
 To install ReNomTAG from source, download this repository.
 ```
-git clone https://github.com/grid-devs/ReNomTAG.git
+git clone https://github.com/ReNom-dev-team/ReNomTAG.git
 ```
 
 
