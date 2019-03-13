@@ -150,14 +150,13 @@ export default {
       org_boxrc: null,
       boxes: null,
       show_selected_boxes: false,
-
       zoom_x: 0, // The coordinate x the image
       zoom_y: 0,
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
       image_dragform_y: 0,
-      old_box_data: [], // ctrl + z 用のデータ
+      pre_box_data:[]
     };
   },
   created: function() {
@@ -299,37 +298,11 @@ export default {
     }
   },
   watch: {
-    active_image_tag_boxes: function(new_val, old_val) {
-      this.old_box_data = old_val;
-      console.log("old_box_data");
-      console.dir(this.old_box_data);
-      console.log("old_box_data");
-      console.dir(new_val);
-
-      // console.dir(old_val ==  new_val);
-      // console.dir("old_val");
-      // console.dir(old_val);
-      // console.dir("new_val");
-      // console.dir(new_val);
-      if(old_val!== new_val){
-        console.log("change");
-      }
-      console.log(this.old_box_data == old_val);
-      
+    active_image_tag_boxes: function() {
       this.$nextTick(() => {
         this.arrange_boxes();
       });
-    },
-    // label変更も感知したかったので追記
-    // active_boxid:function(new_val, old_val){
-    //   this.old_box_data = old_val;
-    //   console.dir("old_val");
-    //   console.dir(old_val);
-    //   console.dir("new_val");
-    //   console.dir(new_val);
-    //   console.log("label_change");
-    // },
-    deep: true
+    }
   },
   methods: {
     ...mapMutations(["set_active_boxid", "set_review_result"]),
@@ -538,7 +511,6 @@ export default {
         // ショートカット系のイベントの記載
         if (event.ctrlKey) {
           switch(event.key){
-            // 前画面でセーブしたものを貼り付けるイベント
             case "b":
               if(this.pre_save_boxes_data == 0){
                 alert("There is no target image to copy");
@@ -553,17 +525,13 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("paste_copied_boxes",box_dataset);
+              this.$store.commit("update_boxes",box_dataset);
             break;
-            // ボックスの表示・非表示
             case "d":
               this.show_selected_boxes_toggle();
             break;
-            // 前操作取り消し
             case "z":
-              // ここに必要事項を記載
-              console.dir(this.old_box_data);
-              console.dir(this.active_image_tag_boxes);
+              this.$store.commit("update_boxes",this.pre_box_data);
             break;
           }
         }
@@ -713,14 +681,16 @@ export default {
       }
     },
     _clean_boxes: function() {
+
       const tagboxes = [];
       for (const [i, box] of this.active_image_tag_boxes.entries()) {
         if (box.label) {
           tagboxes.push(box);
         } else {
           this._clean_boxes_in_selected_mode(i);
-        }
+        }      
       }
+  
       this.$store.commit("set_tagboxes", { tagboxes });
     },
     on_down_middle: function(e) {
@@ -823,6 +793,9 @@ export default {
       return "";
     },
     on_boxclick: function(event) {
+      // ctrl+z用のための処理
+      this.pre_box_data = this.active_image_tag_boxes;
+
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
         this._clean_boxes();
@@ -891,14 +864,13 @@ export default {
         let [l, t] = this.newbox_rect;
         this.newbox_rect = [l, t, x, y];
       } else if (this.status) {
+
         const rc = this.org_boxrc.slice();
 
         let diff_x = x - this.dragfrom_x;
         let diff_y = y - this.dragfrom_y;
-
         if (this.status === "dragging") {
           // move box
-
           // check if the box going out of bounds
           if (rc[0] - imgrc[0] + diff_x < 0) {
             diff_x = (rc[0] - imgrc[0]) * -1;

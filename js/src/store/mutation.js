@@ -94,7 +94,8 @@ export default {
     state.pre_save_boxes_data = [];
     state.pre_save_boxes_data = payload;
   },
-  paste_copied_boxes(state,payload){
+
+  update_boxes(state,payload){
     state.active_image_tag_boxes = payload;
   },
 
