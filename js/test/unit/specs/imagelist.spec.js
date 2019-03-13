@@ -3,7 +3,7 @@ import { setup_store } from './utils'
 import ImageList from '@/components/imagelist'
 
 function _update_store(s) {
-  s.actions.load_imagefile_list = (context)=>null;
+  s.actions.loadImagefileList = (context)=>null;
   s.state.filtered_imagelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', ];
   s.state.active_image_filename = '0';
   s.state.imagelist_max_display = 3;
@@ -14,7 +14,7 @@ describe('imagelist.vue', () => {
     const selected = []
     const store = setup_store(s=>{
       _update_store(s)
-      s.actions.load_current_image = (context, file)=>selected.push(file);
+      s.actions.loadCurrentImage = (context, file)=>selected.push(file);
     })
     const wrapper = shallow(ImageList, store)
     expect(wrapper.contains('img[data-file="0"]')).toBe(true)

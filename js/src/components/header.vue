@@ -24,11 +24,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["set_main_menu_visible"]),
+    ...mapMutations(["setMainMenuVisible"]),
 
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;
-      this.set_main_menu_visible({ visible: !cur });
+      this.setMainMenuVisible({ visible: !cur });
     }
   }
 };

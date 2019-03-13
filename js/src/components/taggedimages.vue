@@ -45,7 +45,7 @@ export default {
     },
     on_click: function(event) {
       const filename = event.currentTarget.dataset.filename;
-      this.$store.dispatch("load_current_image", filename);
+      this.$store.dispatch("loadCurrentImage", filename);
     }
   }
 };

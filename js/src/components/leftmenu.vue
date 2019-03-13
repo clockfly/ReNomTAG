@@ -31,12 +31,12 @@ export default {
     ...mapState(["main_menu_visible", "username", "user_list"])
   },
   methods: {
-    ...mapActions(["init_client"]),
+    ...mapActions(["initClient"]),
     closeMenu: function() {
-      this.$store.commit("set_main_menu_visible", { visible: false });
+      this.$store.commit("setMainMenuVisible", { visible: false });
     },
     selectUser: function(username) {
-      this.init_client(username);
+      this.initClient(username);
       this.closeMenu();
     }
   }

@@ -74,7 +74,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import * as utils from "@/utils";
-import { has_bndbox, get_reviewresult } from "@/store/mutation";
+import { hasBndbox, getReviewResult } from "@/store/mutation";
 export default {
   data: function() {
     return {
@@ -145,7 +145,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["set_main_menu_visible"]),
+    ...mapMutations(["setMainMenuVisible"]),
     is_selected_filter: function(filter_name) {
       if (this.filter_method === filter_name) {
         return true;
@@ -153,12 +153,12 @@ export default {
       return false;
     },
     set_filter: function(filter_name) {
-      this.$store.commit("set_active_image", { file: null });
-      this.$store.commit("set_filter", filter_name);
+      this.$store.commit("setActiveImage", { file: null });
+      this.$store.commit("setFilter", filter_name);
     },
     is_review_result_ok(file) {
       const info = this.folder_files[file];
-      const review = get_reviewresult(info);
+      const review = getReviewResult(info);
       if (review === "ng") {
         return false;
       }
@@ -166,7 +166,7 @@ export default {
     },
     is_need_review: function(file) {
       const info = this.folder_files[file];
-      const review = get_reviewresult(info);
+      const review = getReviewResult(info);
       if (review === "notreviewed") {
         return true;
       }
@@ -174,18 +174,18 @@ export default {
     },
     is_notags(file) {
       const info = this.folder_files[file];
-      const review = has_bndbox(info);
+      const review = hasBndbox(info);
       return review;
     },
     get_image_url(file) {
-      return utils.build_api_url("/t/" + this.username + "/" + file);
+      return utils.buildApiUrl("/t/" + this.username + "/" + file);
     },
     is_selected(filename) {
       return filename === this.active_image_filename;
     },
     select_image(event) {
       if (event.target.dataset.file !== this.active_image_filename) {
-        this.$store.dispatch("load_current_image", event.target.dataset.file);
+        this.$store.dispatch("loadCurrentImage", event.target.dataset.file);
       }
     },
     on_scroll: function(event) {
@@ -203,7 +203,7 @@ export default {
           let wrapperrc = wrapper.getBoundingClientRect();
 
           if (imgrc.top <= wrapperrc.top) {
-            this.$store.commit("set_imagelist_max_display", {
+            this.$store.commit("setImagelistMaxDisplay", {
               max_display: this.imagelist_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }

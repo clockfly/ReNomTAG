@@ -81,12 +81,12 @@
                   <div v-if="is_admin" class="btn-wrp">
                     <p v-if="can_be_saved && active_image_review_result !== 'ng'"
                           class="img-btn   float-left  ng-button"
-                          @click="set_review_result({result:'ng'})">
+                          @click="setReviewResult({result:'ng'})">
                           NG
                     </p>
                     <p v-else-if="can_be_saved && active_image_review_result === 'ng'"
                           class="img-btn   float-left  ng-button ng-button-push"
-                          @click="set_review_result({result:'ng'})">
+                          @click="setReviewResult({result:'ng'})">
                       NG
                     </p>
                     <p v-else class="img-btn-disabled   float-left ng-button">
@@ -95,12 +95,12 @@
                     <p v-if="can_be_saved && active_image_review_result !== 'ok'"
                           class="img-btn   float-right ok-button"
                           :class="{review_checked: active_image_review_result === 'ok'}"
-                          @click="set_review_result({result:'ok'})">
+                          @click="setReviewResult({result:'ok'})">
                       OK
                     </p>
                     <p v-else-if="can_be_saved && active_image_review_result === 'ok'"
                           class="img-btn   float-right ok-button ok-button-push"
-                          @click="set_review_result({result:'ok'})">
+                          @click="setReviewResult({result:'ok'})">
                       OK
                     </p>
                     <p v-else class="img-btn-disabled   float-right ok-button">
@@ -254,9 +254,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("set_comment_admin", { comment: value });
+          this.$store.commit("setCommentAdmin", { comment: value });
         } else {
-          this.$store.commit("set_comment_admin", { comment: "" });
+          this.$store.commit("setCommentAdmin", { comment: "" });
         }
       }
     },
@@ -266,9 +266,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("set_comment_subord", { comment: value });
+          this.$store.commit("setCommentSubord", { comment: value });
         } else {
-          this.$store.commit("set_comment_subord", { comment: "" });
+          this.$store.commit("setCommentSubord", { comment: "" });
         }
       }
     },
@@ -308,12 +308,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation", "delete_xml","paste_annotation"]),
+    ...mapMutations(["setActiveBoxid", "setReviewResult"]),
+    ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
 
     expand_image_mode: function() {
       let shift = !this.full_screen_mode;
-      this.$store.commit("set_full_screen_mode", { full_screen_mode: shift });
+      this.$store.commit("setFullScreenMode", { full_screen_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -458,9 +458,9 @@ export default {
     },
 
     to_canvas_rect: function(rc) {
-      let [l, t, r, b] = utils.normalize_rect(rc);
+      let [l, t, r, b] = utils.normalizeRect(rc);
 
-      [[l, t], [r, b]] = utils.client_to_node(this.$refs.canvaspanel, [
+      [[l, t], [r, b]] = utils.clientToNode(this.$refs.canvaspanel, [
         [l, t],
         [r, b]
       ]);
@@ -468,7 +468,7 @@ export default {
     },
     apply_annotation: function() {
       if (this.active_image_tag_boxes.length == 0) {
-        this.delete_xml();
+        this.deleteXml();
       } else {
         let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
             let {bottom, top, left, right,label} = {...box};
@@ -480,8 +480,8 @@ export default {
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
         });
-        this.$store.commit("set_copy_boxes",pre_save_boxes_data_set);
-        this.save_annotation();
+        this.$store.commit("setCopyBoxes",pre_save_boxes_data_set);
+        this.saveAnnotation();
       }
     },
     on_resize: function() {
@@ -505,7 +505,7 @@ export default {
           if (event.key === "Delete" || event.key === "Backspace") {
             this.delete_boxes_in_selected_mode(this.active_boxid);
 
-            this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
+            this.$store.commit("removeTagbox", { boxid: this.active_boxid });
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -528,7 +528,7 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("paste_copied_boxes",box_dataset);
+              this.$store.commit("pasteCopiedBoxes",box_dataset);
             break;
             case "d":
               this.show_selected_boxes_toggle();
@@ -584,14 +584,14 @@ export default {
               default:
                 return;
             }
-            this.$store.commit("set_tagbox", {
+            this.$store.commit("updateTagbox", {
               boxid: boxid,
               box: box
             });
           } else {
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
-                this.$store.commit("set_activebox_label", label);
+                this.$store.commit("setActiveboxLabel", label);
                 event.preventDefault();
                 event.stopPropagation();
                 return false;
@@ -638,7 +638,7 @@ export default {
       return [l, t, r, b];
     },
     client_to_box: function(rect) {
-      let [left, top, right, bottom] = utils.normalize_rect(rect);
+      let [left, top, right, bottom] = utils.normalizeRect(rect);
       let [ratio, imgrc] = this.calc_image_rect();
       left = Math.floor((left - imgrc[0]) / ratio);
       top = Math.floor((top - imgrc[1]) / ratio);
@@ -689,7 +689,7 @@ export default {
           this._clean_boxes_in_selected_mode(i);
         }
       }
-      this.$store.commit("set_tagboxes", { tagboxes });
+      this.$store.commit("setTagboxes", { tagboxes });
     },
     on_down_middle: function(e) {
       this.image_drag_status = true;
@@ -739,13 +739,13 @@ export default {
 
       const [, rc] = this.calc_image_rect();
       rc[2] = rc[2] - 1;
-      if (!utils.pt_in_rect(rc, event.clientX, event.clientY)) {
+      if (!utils.ptInRect(rc, event.clientX, event.clientY)) {
         return;
       }
       this._clean_boxes();
 
       if (this.active_boxid != null) {
-        this.set_active_boxid({
+        this.setActiveBoxid({
           boxid: null
         });
       }
@@ -809,7 +809,7 @@ export default {
       } else {
         this.status = resize;
       }
-      this.set_active_boxid({ boxid: parseInt(boxid) });
+      this.setActiveBoxid({ boxid: parseInt(boxid) });
       const box = this.get_box(this.active_boxid);
       this.org_boxrc = this.box_to_client(box);
       [this.dragfrom_x, this.dragfrom_y] = [event.clientX, event.clientY];
@@ -858,6 +858,7 @@ export default {
         // resize newly created box
         let [l, t] = this.newbox_rect;
         this.newbox_rect = [l, t, x, y];
+
       } else if (this.status) {
         const rc = this.org_boxrc.slice();
 
@@ -884,6 +885,7 @@ export default {
           rc[2] += diff_x;
           rc[1] += diff_y;
           rc[3] += diff_y;
+
         } else {
           if (this.status.indexOf("n") !== -1) {
             rc[1] = utils.min(utils.max(imgrc[1], rc[1] + diff_y), rc[3] - 1);
@@ -900,7 +902,7 @@ export default {
         }
         const curbox = this.get_box(this.active_boxid);
         const newbox = { ...curbox, ...this.client_to_box(rc) };
-        this.$store.commit("set_tagbox", {
+        this.$store.commit("updateTagbox", {
           boxid: this.active_boxid,
           box: newbox
         });
@@ -910,12 +912,12 @@ export default {
       if (this.status === "new") {
         const box = this.client_to_box(this.newbox_rect);
         if (box.left !== box.right && box.top !== box.bottom) {
-          this.$store.commit("add_new_tagbox", { box });
-          this.set_active_boxid({
+          this.$store.commit("addNewTagbox", { box });
+          this.setActiveBoxid({
             boxid: this.active_image_tag_boxes.length - 1
           });
         } else {
-          this.set_active_boxid({
+          this.setActiveBoxid({
             boxid: null
           });
         }

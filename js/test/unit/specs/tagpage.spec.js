@@ -7,14 +7,14 @@ describe('taggerpage.vue', () => {
   it('show image canvas', () => {
 
     const store = setup_store(s=>{
-      s.actions.load_user_list = (context)=>null;
+      s.actions.loadUserList = (context)=>null;
       s.state.active_image_filename = 'test';
     })
     const wrapper = shallow(Page, store)
     expect(wrapper.contains('.filler')).toBe(false)
 
     const store2 = setup_store(s=>{
-      s.actions.load_user_list = (context)=>null;
+      s.actions.loadUserList = (context)=>null;
       s.state.active_image_filename = null
     })
     const wrapper2 = shallow(Page, store2)

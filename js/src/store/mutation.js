@@ -1,30 +1,30 @@
 import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
-function _set_tagbox(state, payload) {
+function _updateTagbox(state, payload) {
   const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
   const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
 
   state.active_image_tag_boxes = [...pri, payload.box, ...follow];
 }
 
-function select_files(state) {
+function selectFiles(state) {
   let tag_preds = [];
   if (state.tag_filter.indexOf("hastags") !== -1) {
-    tag_preds.push(x => has_bndbox(x));
+    tag_preds.push(x => hasBndbox(x));
   }
   if (state.tag_filter.indexOf("notags") !== -1) {
-    tag_preds.push(x => !has_bndbox(x));
+    tag_preds.push(x => !hasBndbox(x));
   }
 
   let review_preds = [];
   if (state.review_filter.indexOf("ok") !== -1) {
-    review_preds.push(x => get_reviewresult(x) == "ok");
+    review_preds.push(x => getReviewResult(x) == "ok");
   }
   if (state.review_filter.indexOf("ng") !== -1) {
-    review_preds.push(x => get_reviewresult(x) == "ng");
+    review_preds.push(x => getReviewResult(x) == "ng");
   }
   if (state.review_filter.indexOf("notreviewed") !== -1) {
-    review_preds.push(x => get_reviewresult(x) == "notreviewed");
+    review_preds.push(x => getReviewResult(x) == "notreviewed");
   }
 
   function any(preds, f) {
@@ -54,7 +54,7 @@ function select_files(state) {
   }
 }
 
-export function has_bndbox(d) {
+export function hasBndbox(d) {
   if (!d) {
     return false;
   }
@@ -72,7 +72,7 @@ export function has_bndbox(d) {
   return true;
 }
 
-export function get_reviewresult(d) {
+export function getReviewResult(d) {
   if (!d) {
     return "notreviewed";
   }
@@ -93,16 +93,16 @@ export function get_reviewresult(d) {
 
 export default {
   // 1) Screen state
-  set_full_screen_mode(state, payload) {
+  setFullScreenMode(state, payload) {
     state.full_screen_mode = payload.full_screen_mode;
   },
-  set_main_menu_visible(state, payload) {
+  setMainMenuVisible(state, payload) {
     state.main_menu_visible = payload.visible;
   },
 
 
   // 2) Notifications
-  set_error_status(state, payload) {
+  setErrorStatus(state, payload) {
     if (payload.hasOwnProperty("code")){
       state.error_status.code = payload.code;
       state.error_status.message = payload.message;
@@ -111,7 +111,7 @@ export default {
       state.error_status = payload.error_status;
     }
   },
-  set_notice_status(state, payload) {
+  setNoticeStatus(state, payload) {
     if (payload.hasOwnProperty("code")){
       state.notice_status.code = payload.code;
       state.notice_status.message = payload.message;
@@ -120,39 +120,39 @@ export default {
       state.notice_status = payload.notice_status;
     }
   },
-  set_image_status(state, payload) {
+  setImageStatus(state, payload) {
     state.image_status = payload.image_status;
   },
 
 
   // 3) Directories
-  set_working_dir(state, payload) {
+  setWorkingDir(state, payload) {
     state.working_dir = payload.working_dir;
   },
-  set_username(state, payload) {
+  setUsername(state, payload) {
     if (state.user_list.includes(payload)) {
       state.username = payload;
     } else {
       throw new URIError("Username " + payload + " does not exist.");
     }
   },
-  add_new_user(state, payload) {
+  addNewUser(state, payload) {
      state.new_user = payload.new_user;
   },
-  set_user_list(state, payload) {
+  setUserList(state, payload) {
     state.user_list = payload.user_list;
   },
 
 
 
   // 4) Data in the user directory
-  set_folder_files(state, payload) {
+  setFolderFiles(state, payload) {
     state.folder_files = payload.folder_files;
     state.imagelist_max_display = 100;
 
-    select_files(state);
+    selectFiles(state);
   },
-  update_file(state, payload) {
+  updateFolderFile(state, payload) {
     if (payload.info) {
       if (payload.info == "reset") {
         state.folder_files[payload.filename] = "";
@@ -162,31 +162,9 @@ export default {
     } else {
       delete state.folder_files[payload.filename];
     }
-    select_files(state);
+    selectFiles(state);
   },
-  toggle_tag_filter(state, payload) {
-    const idx = state.tag_filter.indexOf(payload.filter);
-    if (idx === -1) {
-      state.tag_filter.push(payload.filter);
-    } else {
-      if (state.tag_filter.length > 1) {
-        state.tag_filter.splice(idx, 1);
-      }
-    }
-    select_files(state);
-  },
-  toggle_review_filter(state, payload) {
-    const idx = state.review_filter.indexOf(payload.filter);
-    if (idx === -1) {
-      state.review_filter.push(payload.filter);
-    } else {
-      if (state.review_filter.length > 1) {
-        state.review_filter.splice(idx, 1);
-      }
-    }
-    select_files(state);
-  },
-  set_filter(state, payload) {
+  setFilter(state, payload) {
     switch (payload) {
       case "All":
         state.tag_filter = ["hastags", "notags"];
@@ -214,24 +192,15 @@ export default {
         break;
     }
     state.filter_method = payload;
-    select_files(state);
+    selectFiles(state);
   },
-  remove_image(state, payload) {
-    const filtered_imagelist = [];
-    for (const file of state.filtered_imagelist) {
-      if (payload.filename !== file) {
-        filtered_imagelist.push(file);
-      }
-    }
-    state.filtered_imagelist = filtered_imagelist;
-  },
-  set_imagelist_max_display(state, payload) {
+  setImagelistMaxDisplay(state, payload) {
     state.imagelist_max_display = payload.max_display;
   },
 
 
   // 5) About the image showing now
-  set_active_image(state, payload) {
+  setActiveImage(state, payload) {
     state.active_image_filename = payload.filename;
     state.active_image_width = payload.width;
     state.active_image_height = payload.height;
@@ -247,16 +216,16 @@ export default {
 
 
   // 6) The information of annotation boxes in a certain active_image
-  set_active_boxid(state, payload) {
+  setActiveBoxid(state, payload) {
     state.active_boxid = payload.boxid;
   },
-  set_tagboxes(state, payload) {
+  setTagboxes(state, payload) {
     state.active_image_tag_boxes = payload.tagboxes;
   },
-  set_tagbox(state, payload) {
-    _set_tagbox(state, payload);
+  updateTagbox(state, payload) {
+    _updateTagbox(state, payload);
   },
-  set_activebox_label(state, payload) {
+  setActiveboxLabel(state, payload) {
     const boxid = state.active_boxid;
     if (boxid === null) {
       return;
@@ -264,43 +233,43 @@ export default {
     const box = state.active_image_tag_boxes[boxid];
     const newbox = Object.assign(box, { label: payload.label });
 
-    _set_tagbox(state, { boxid, box: newbox });
+    _updateTagbox(state, { boxid, box: newbox });
   },
-  add_new_tagbox(state, payload) {
+  addNewTagbox(state, payload) {
     state.active_image_tag_boxes = [
       ...state.active_image_tag_boxes,
       payload.box
     ];
   },
-  remove_tagbox(state, payload) {
+  removeTagbox(state, payload) {
     const pri = state.active_image_tag_boxes.slice(0, payload.boxid);
     const follow = state.active_image_tag_boxes.slice(payload.boxid + 1);
 
     state.active_image_tag_boxes = [...pri, ...follow];
     state.active_boxid = null;
   },
-  set_review_result(state, payload) {
+  setReviewResult(state, payload) {
     if (state.is_admin) {
       state.active_image_review_result = payload.result;
     }
   },
-  set_comment_admin(state, payload) {
+  setCommentAdmin(state, payload) {
     state.active_image_comment_admin = payload.comment;
   },
-  set_comment_subord(state, payload) {
+  setCommentSubord(state, payload) {
     state.active_image_comment_subord = payload.comment;
   },
 
 
   // Others)
-  set_labels(state, payload) {
+  setLabels(state, payload) {
     state.labels = payload;
   },
-  add_label(state, payload) {
+  addLabel(state, payload) {
     state.labels = [...state.labels, payload];
   },
 
-  set_tagged_images(state, payload) {
+  setTaggedImages(state, payload) {
     if (payload) {
       const imgs = payload;
       const MAX_WIDTH = 10000;
@@ -321,7 +290,7 @@ export default {
       state.tagged_images = [];
     }
   },
-  add_tagged_image(state, payload) {
+  addTaggedImage(state, payload) {
     const imgs = [payload];
     const MAX_WIDTH = 10000;
     const IMAGE_HEIGHT = 125;
@@ -338,7 +307,7 @@ export default {
     }
     state.tagged_images = imgs;
   },
-  delete_tagged_image(state, payload) {
+  deleteTaggedImage(state, payload) {
     const imgs = [];
     for (const img of state.tagged_images) {
       // push objects except the target filename
@@ -350,11 +319,45 @@ export default {
   },
 
 
-  set_copy_boxes(state,payload){
+  setCopyBoxes(state,payload){
     state.pre_save_boxes_data = [];
     state.pre_save_boxes_data = payload;
   },
-  paste_copied_boxes(state,payload){
+  pasteCopiedBoxes(state,payload){
     state.active_image_tag_boxes = payload;
   }
+
+  // 0) Not useing currently but maight use sometime
+  //
+  // toggleTagFilter(state, payload) {
+  //   const idx = state.tag_filter.indexOf(payload.filter);
+  //   if (idx === -1) {
+  //     state.tag_filter.push(payload.filter);
+  //   } else {
+  //     if (state.tag_filter.length > 1) {
+  //       state.tag_filter.splice(idx, 1);
+  //     }
+  //   }
+  //   selectFiles(state);
+  // },
+  // toggleReviewFilter(state, payload) {
+  //   const idx = state.review_filter.indexOf(payload.filter);
+  //   if (idx === -1) {
+  //     state.review_filter.push(payload.filter);
+  //   } else {
+  //     if (state.review_filter.length > 1) {
+  //       state.review_filter.splice(idx, 1);
+  //     }
+  //   }
+  //   selectFiles(state);
+  // },
+  // removeImage(state, payload) {
+  //   const filtered_imagelist = [];
+  //   for (const file of state.filtered_imagelist) {
+  //     if (payload.filename !== file) {
+  //       filtered_imagelist.push(file);
+  //     }
+  //   }
+  //   state.filtered_imagelist = filtered_imagelist;
+  // },
 };

@@ -44,7 +44,7 @@ export default {
     on_click: function(event) {
       const next = this.next_file;
       if (next) {
-        this.$store.dispatch("load_current_image", next);
+        this.$store.dispatch("loadCurrentImage", next);
       }
     },
     on_keydown: function(event) {
@@ -53,13 +53,13 @@ export default {
           case "ArrowLeft":
             const back = this.get_back_name();
             if (back) {
-              this.$store.dispatch("load_current_image", back);
+              this.$store.dispatch("loadCurrentImage", back);
             }
             break;
           case "ArrowRight":
             const fore = this.get_fore_name();
             if (fore) {
-              this.$store.dispatch("load_current_image", fore);
+              this.$store.dispatch("loadCurrentImage", fore);
             }
             break;
         }

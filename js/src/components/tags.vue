@@ -1,5 +1,5 @@
 <template>
-<div id="tags"> 
+<div id="tags">
   <form v-if="this.is_admin" id="add-new-label-form">
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <div class="add-new-label-input-area">
@@ -49,7 +49,7 @@
             v-model="edit_label"
             placeholder="label name..."
             :readonly="!is_admin"
-            @keyup="update_label"
+            @keyup="updateLabel"
           >
             <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
           <input
@@ -57,7 +57,7 @@
             type="text"
             class="label-shortcut-update"
             v-model="edit_shortcut"
-            @keydown.stop.prevent.self="update_label"
+            @keydown.stop.prevent.self="updateLabel"
             @keyup.stop.prevent.self="updateShortcutKey"
             placeholder="key..."
           >
@@ -73,7 +73,7 @@
           <div v-else>
             <img
               v-if="edit_target[0] === data.label && edit_mode === true"
-              @click="update_label('edit_off')"
+              @click="updateLabel('edit_off')"
               @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
               class="tag_list_icon"
               :src="tag_list_icon"
@@ -106,7 +106,7 @@
         >
         Delete
       </button>
-        
+
         <button class="button" @click="is_delete_mode=false">Cancel</button>
       </div>
     </div>
@@ -233,7 +233,7 @@ export default {
 
   methods: {
     addNewLabel: function() {
-      this.$store.dispatch("add_label", {
+      this.$store.dispatch("addLabel", {
         label: this.label,
         shortcut: this.shortcut
       });
@@ -285,7 +285,7 @@ export default {
 
     on_click(event) {
       const label = event.currentTarget.dataset.label;
-      this.$store.commit("set_activebox_label", { label });
+      this.$store.commit("setActiveboxLabel", { label });
     },
     edit_toggle() {
       this.edit_mode = !this.edit_mode;
@@ -300,13 +300,13 @@ export default {
       this.edit_target = target;
     },
 
-    update_label(event) {
+    updateLabel(event) {
       if (event.keyCode === 13 || event == "edit_off") {
         if (this.update_errormsg === "") {
           if (this.edit_label === "") {
             this.edit_label = this.edit_target[0];
           }
-          this.$store.dispatch("update_label", {
+          this.$store.dispatch("updateLabel", {
             labels: this.labels,
             src: this.edit_target,
             dist_label: this.edit_label,

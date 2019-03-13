@@ -7,7 +7,7 @@
         <image-list class="folder-image" v-if="username"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!username || !image_list || image_list.length === 0'>
+          <div id='loading' v-if='!username || !filtered_imagelist || filtered_imagelist.length === 0'>
             <div v-if='image_status.code == IMG_STATUS.NO_IMG.code' class="msg_no_image">
               {{image_status.message}}
             </div>
@@ -110,14 +110,14 @@ export default {
       "username",
       "new_user",
       "image_status",
-      "image_list"
+      "filtered_imagelist"
     ]),
     setNewUser: {
       get() {
         return this.new_user;
       },
       set(e) {
-        this.add_new_user({ new_user: e })
+        this.addNewUser({ new_user: e })
       }
     },
     isAllImageMode: function() {
@@ -129,27 +129,27 @@ export default {
   },
   methods: {
     ...mapMutations([
-      "set_error_status",
-      "set_notice_status",
-      "add_new_user"
+      "setErrorStatus",
+      "setNoticeStatus",
+      "addNewUser"
     ]),
-    ...mapActions(["init_client", "make_dir", "load_user_list"]),
+    ...mapActions(["initClient", "makeDir", "loadUserList"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
       this.make_dir_message_counter = counter;
     },
     mkdir: function() {
-      this.set_notice_status({
+      this.setNoticeStatus({
         code: 115,
         message: "Message\n\nCreating directories..."
       });
-      this.make_dir();
+      this.makeDir();
     },
     setNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
-        this.set_notice_status({
+        this.setNoticeStatus({
           code: 115,
           message: "Message\n\nInput your username"
         });
@@ -162,15 +162,15 @@ export default {
       }
     },
     clearNoticeStatus: function() {
-      this.set_notice_status({ code:null, message:""})
+      this.setNoticeStatus({ code:null, message:""})
       this.make_dir_message_counter = 0;
     },
     clearErrorStatus: function(){
-      this.set_error_status({ code:null, message:"" });
+      this.setErrorStatus({ code:null, message:"" });
     }
   },
   created: function() {
-    this.init_client();
+    this.initClient();
   }
 };
 </script>
