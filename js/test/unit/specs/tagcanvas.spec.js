@@ -37,7 +37,7 @@ describe('tagcanvas.vue', () => {
     set_image_rect(wrapper);
 
     wrapper.setData({ status : 'new',  newbox_rect: [10, 10, 20, 20]});
-    wrapper.vm.end_drag()
+    wrapper.vm.endDrag()
     expect(wrapper.vm.status).toEqual("");
     const rc = store.state.active_image_tag_boxes[1];
     expect([rc.left, rc.top, rc.right, rc.bottom]).toEqual([0, 5, 5, 10]);
@@ -62,7 +62,7 @@ describe('tagcanvas.vue', () => {
     wrapper.setData({ status : 'dragging',  org_boxrc: [10, 10, 20, 30]});
     set_image_rect(wrapper);
 
-  
+
     const panel = wrapper.find('#canvaspanel');
     panel.trigger('mousemove.left', {clientX:20, clientY:10});
 
@@ -70,17 +70,17 @@ describe('tagcanvas.vue', () => {
     expect([rc.left, rc.top, rc.right, rc.bottom]).toEqual([10, 10, 15, 20]);
   })
 
-  
+
   it('resize on_mousemove', () => {
     function do_resize(status) {
       const {store, localVue} = update_store()
       const wrapper = shallow(TagCanvas, {store, localVue})
       wrapper.setData({ status,  org_boxrc: [10, 10, 20, 30]});
       set_image_rect(wrapper);
-    
+
       const panel = wrapper.find('#canvaspanel');
       panel.trigger('mousemove.left', {clientX:20, clientY:10});
-  
+
       return store.state.active_image_tag_boxes[0];
     }
 
@@ -97,8 +97,8 @@ describe('tagcanvas.vue', () => {
   it('click on box', () => {
     const {store, localVue} = update_store()
     const wrapper = shallow(TagCanvas, {store, localVue})
-    wrapper.vm.arrange_boxes()
-    
+    wrapper.vm.arrangeBoxes()
+
     return Vue.nextTick()
     .then(function () {
       const box = wrapper.find('[data-boxid="0"]');
@@ -110,8 +110,8 @@ describe('tagcanvas.vue', () => {
   it('mousemove on box', () => {
     const {store, localVue} = update_store()
     const wrapper = shallow(TagCanvas, {store, localVue})
-    wrapper.vm.arrange_boxes()
-    
+    wrapper.vm.arrangeBoxes()
+
     return Vue.nextTick()
     .then(function () {
       const box = wrapper.find('[data-boxid="0"]');

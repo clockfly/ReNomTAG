@@ -10,7 +10,6 @@ from PIL import Image
 import xmltodict
 from webtest import TestApp as testapp
 from renom_tag import server
-import pytest
 
 
 def build_img_dir(tmpdir, folder):
@@ -104,7 +103,7 @@ def test_save_xml_from_label_dict(tmpdir):
     with tmpdir.as_cwd():
         xmldir = build_xml_dir(tmpdir, 'folderx')
 
-        json = {'folder': 'folderx',
+        json = {'username': 'folderx',
                 'value': {'annotation':
                           {'path': 'a.jpg',
                            'source': {
@@ -139,7 +138,7 @@ def test_save_xml_from_label_dict(tmpdir):
         assert ann['filename'] == 'a.jpg'
 
 
-def test_get_filename_list(tmpdir):
+def test_get_filename_obj(tmpdir):
     with tmpdir.as_cwd():
         imgdir = build_img_dir(tmpdir, 'folderx')
         imgdir.join('abc.jpeg').write_binary(b'')
@@ -152,19 +151,19 @@ def test_get_filename_list(tmpdir):
         xmldir.join('a.xml').write(ex_xml)
 
         app = testapp(server.app)
-        ret = app.post_json('/api/get_filename_list', {'folder': 'folderx', 'all': False})
+        ret = app.post_json('/api/get_filename_obj', {'username': 'folderx', 'all': False})
         #filename_list = [*ret.json['filename_list']]
-        filename_list = []
-        for key in ret.json['filename_list']:
-            filename_list.append(key)
+        filename_obj = []
+        for key in ret.json['filename_obj']:
+            filename_obj.append(key)
 
-        undef_filename_list = ret.json['undef_filename_list']
-        dup_filename_list = ret.json['dup_filename_list']
-        print(filename_list)
-        print(undef_filename_list)
+        undef_img_list = ret.json['undef_img_list']
+        dup_img_list = ret.json['dup_img_list']
+        print(filename_obj)
+        print(undef_img_list)
         #assert filename_list ==['ccc.bmp','a.jpeg','b.jpg']
-        assert undef_filename_list == ['a-b.png']
-        assert dup_filename_list == ['abc.jpeg']
+        assert undef_img_list == ['a-b.png']
+        assert dup_img_list == ['abc.jpeg']
 
 
 def test_save_label_candidates_dict(tmpdir):
@@ -173,7 +172,7 @@ def test_save_label_candidates_dict(tmpdir):
 
         app = testapp(server.app)
         app.post_json('/api/save_label_candidates_dict',
-                      {'folder': 'folderx',
+                      {'username': 'folderx',
                        'labels': [{'id': 0, 'label': 'car', 'shortcut': '4'}, {'id': 1, 'label': 'dhjs', 'shortcut': 'g'}]})
 
         jsonfile = tmpdir.join(server.DIR_ROOT, 'folderx',
@@ -196,7 +195,7 @@ def test_load_label_candidates_dict(tmpdir):
             f.write(json.dumps(d))
 
         app = testapp(server.app)
-        ret = app.post_json('/api/load_label_candidates_dict', {'folder': 'folderx'})
+        ret = app.post_json('/api/load_label_candidates_dict', {'username': 'folderx'})
         assert ret.json_body == [{'id': 0, 'label': 'car', 'shortcut': '4'}]
 
 
@@ -207,11 +206,9 @@ def test_delete_xml(tmpdir):
         xmldir.join('target.xml').write(ex_xml)
 
         app = testapp(server.app)
-        ret = app.post_json('/api/delete_xml',
-                            {'folder': 'folderx',
-                             'target_filename': 'target.png'})
+        ret = app.post_json('/api/delete_xml', {'username': 'folderx', 'target_filename': 'target.png'})
 
-        assert ret.json_body == {"result": 1, "message": "Box deletion successful!"}
+        assert ret.json_body == {'result': 121}
 
 
 def test_make_dir(tmpdir):
@@ -231,7 +228,7 @@ def test_get_img_file(tmpdir):
         imgdir.join('37oiahfw*.jpeg').write_binary(b'')
         imgdir.join('aakhk.bmp').write_binary(b'')
 
-        ret_names, ret_dup_names, ret_undef_names = server.get_img_files('folderx')
+        ret_names, ret_dup_names, ret_undef_names = server.get_folder_files('folderx')
         print("acceptable filename: {}".format(ret_names))
         print("illegal filename: {}".format(ret_undef_names))
         assert ret_names == ['a.jpeg', 'aakhk.bmp', 'aierf_y832fa.jpg']

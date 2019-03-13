@@ -4,11 +4,11 @@
       <div class="label_text">Images<br />+Tags<br />{{tagged_images.length}}</div>
     </div>
     <div v-for="image in tagged_images" :key="image.filename" class='tagged-image'
-      :style="{'background-image': 'url('+image.image+')', width:imagewidth(image)+'px'}"
+      :style="{'background-image': 'url('+image.image+')', width:imageWidth(image)+'px'}"
       :data-filename='image.filename'
-      @click.stop.prevent='on_click'>
+      @click.stop.prevent='onClick'>
       <div v-for="(box, idx) in image.boxes" class='image-box' :key='idx'
-          :style='boxstyles(image, box)'>
+          :style='boxStyles(image, box)'>
         <div class='taglabel'>{{box.label}}</div>
       </div>
     </div>
@@ -30,11 +30,11 @@ export default {
       return BLOCK_HEIGHT / image.height;
     },
 
-    imagewidth: function(image) {
+    imageWidth: function(image) {
       const ratio = this.ratio(image);
       return image.width * ratio;
     },
-    boxstyles: function(image, box) {
+    boxStyles: function(image, box) {
       const ratio = this.ratio(image);
       return {
         left: `${box.left * ratio}px`,
@@ -43,9 +43,9 @@ export default {
         height: `${(box.bottom - box.top) * ratio}px`
       };
     },
-    on_click: function(event) {
+    onClick: function(event) {
       const filename = event.currentTarget.dataset.filename;
-      this.$store.dispatch("load_current_image", filename);
+      this.$store.dispatch("loadCurrentImage", filename);
     }
   }
 };

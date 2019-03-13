@@ -3,68 +3,68 @@
     <div class="title">
       <div class="title-text row">
         <span class="col-md-8 text">Images</span>
-        <span v-if='folder && (file_list.length !== 0)' class="col number">{{$store.state.files.length}}</span>
+        <span v-if='username && (filtered_imagelist.length !== 0)' class="col number">{{filtered_imagelist.length}}</span>
         <span v-else class="col number">0</span>
       </div>
     </div>
     <div class="content">
       <div class="row clear-margin first-row">
         <div class="col-md-4 fillter-button left">
-          <div :class='[{"image_pred_tagbutton_active" : is_selected_filter("All")} ,
-            {"off" : !is_selected_filter("All")}]'
-              @click='set_filter("All")'>
+          <div :class='[{"image_pred_tagbutton_active" : isSelectedFilter("All")} ,
+            {"off" : !isSelectedFilter("All")}]'
+              @click='setFilter("All")'>
               ALL
           </div>
         </div>
         <div class="col-md-8 fillter-button right">
-          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("NeedReview")},
-            { "off" : !is_selected_filter("NeedReview")}]' @click='set_filter("NeedReview")'>
-            <img v-if='is_selected_filter("NeedReview")' class="button-icon" :src="NO_REVIEW">
+          <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("NeedReview")},
+            { "off" : !isSelectedFilter("NeedReview")}]' @click='setFilter("NeedReview")'>
+            <img v-if='isSelectedFilter("NeedReview")' class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
           </div>
         </div>
       </div>
       <div class="row clear-margin first-row">
         <div class="col fillter-button Notags-fillter">
-          <div :class='[{"image_pred_tagbutton_active" : is_selected_filter("NoTags")} ,
-            { "off" : !is_selected_filter("NoTags")}]'
-              @click='set_filter("NoTags")'>
+          <div :class='[{"image_pred_tagbutton_active" : isSelectedFilter("NoTags")} ,
+            { "off" : !isSelectedFilter("NoTags")}]'
+              @click='setFilter("NoTags")'>
               No Tags
           </div>
         </div>
         <div class="col fillter-button OK-fillter">
-          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("CHECK_OK") },
-            { "off" : !is_selected_filter("CHECK_OK")}]'
-            @click='set_filter("CHECK_OK")'>
-            <img v-if="is_selected_filter('CHECK_OK')" class="button-icon" :src="CHECK_OK">
+          <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("CHECK_OK") },
+            { "off" : !isSelectedFilter("CHECK_OK")}]'
+            @click='setFilter("CHECK_OK")'>
+            <img v-if="isSelectedFilter('CHECK_OK')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
           </div>
         </div>
         <div class="col fillter-button NG-fillter">
-          <div :class='[{"image_pred_tagbutton_active": is_selected_filter("CHECK_NG")},
-            { "off" : !is_selected_filter("CHECK_NG")}]'
-            @click='set_filter("CHECK_NG")'>
-            <img v-if="is_selected_filter('CHECK_NG')" class="ng-button-icon" :src="CHECK_NG">
+          <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("CHECK_NG")},
+            { "off" : !isSelectedFilter("CHECK_NG")}]'
+            @click='setFilter("CHECK_NG")'>
+            <img v-if="isSelectedFilter('CHECK_NG')" class="ng-button-icon" :src="CHECK_NG">
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
           </div>
         </div>
       </div>
     </div>
-    <div id="imagelist" @scroll="on_scroll">
-      <div v-for="file in file_list_top" :key="file">
+    <div id="imagelist" @scroll="onScroll">
+      <div v-for="file in fileListTop" :key="file">
         <div style="position:relative">
           <span class="img-status-wrapper">
-            <img v-if="!is_notags(file)">
-            <img v-else-if="is_need_review(file)" class="img-status" :src="STATUS_NEED_REVIEW">
-            <img v-else-if="is_review_result_ok(file) === true" class="img-status" :src="STATUS_CHECK_OK">
-            <img v-else-if="is_review_result_ok(file) === false" class="img-status" :src="STATUS_CHECK_NG">
+            <img v-if="!isNotags(file)">
+            <img v-else-if="isNeedReview(file)" class="img-status" :src="STATUS_NEED_REVIEW">
+            <img v-else-if="isReviewResultOk(file) === true" class="img-status" :src="STATUS_CHECK_OK">
+            <img v-else-if="isReviewResultOk(file) === false" class="img-status" :src="STATUS_CHECK_NG">
           </span>
           <img
             class="thumbnail"
-           :src='get_image_url(file)'
+           :src='getImageUrl(file)'
            :data-file='file'
-           :class='{selected: is_selected(file)}'
-           @click.stop.prevent="select_image">
+           :class='{selected: isSelected(file)}'
+           @click.stop.prevent="selectImage">
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import * as utils from "@/utils";
-import { has_bndbox, get_reviewresult } from "@/store/mutation";
+import { hasBndbox, getReviewResult } from "@/store/mutation";
 export default {
   data: function() {
     return {
@@ -93,36 +93,35 @@ export default {
   },
   computed: {
     ...mapState([
-      "folder",
-      "folder_list",
-      "loading_message",
+      "username",
       "folder_files",
-      "files",
-      "filename_max_display",
+      "filtered_imagelist",
+      "imagelist_max_display",
       "active_image_filename",
       "tag_filter",
       "review_filter",
       "filter_method"
     ]),
-
-    file_list_top: function() {
-      if (!this.files) {
+    fileListTop: function() {
+      if (!this.filtered_imagelist) {
         return [];
       }
-      return this.files.slice(0, this.filename_max_display);
-    },
-
-    file_list: function() {
-      let keys = Object.keys(this.files).sort((l, r) => l - r);
-      let ret = [];
-      keys.forEach(k => ret.push(this.files[k]));
-      this.$store.commit("set_image_list", ret);
-      return ret;
+      return this.filtered_imagelist.slice(0, this.imagelist_max_display);
     }
+    // 0) Not useing currently but maight use sometime
+    //
+    // fileList: function() {
+    //   let keys = Object.keys(this.filtered_imagelist).sort((l, r) => l - r);
+    //   let ret = [];
+    //   keys.forEach(k => ret.push(this.filtered_imagelist[k]));
+    //
+    //   console.log("ret :",ret);
+    //   return ret;
+    // }
   },
   watch: {
     active_image_filename: function(newvalue, oldvalue) {
-      let n = this.files.indexOf(newvalue);
+      let n = this.filtered_imagelist.indexOf(newvalue);
       if (n === -1) {
         return;
       }
@@ -145,52 +144,52 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["set_main_menu_visible"]),
-    is_selected_filter: function(filter_name) {
+    ...mapMutations(["setMainMenuVisible"]),
+    isSelectedFilter: function(filter_name) {
       if (this.filter_method === filter_name) {
         return true;
       }
       return false;
     },
-    set_filter: function(filter_name) {
-      this.$store.commit("set_active_image", { file: null });
-      this.$store.commit("set_filter", filter_name);
+    setFilter: function(filter_name) {
+      this.$store.commit("setActiveImage", { file: null });
+      this.$store.commit("setFilter", filter_name);
     },
-    is_review_result_ok(file) {
+    isReviewResultOk(file) {
       const info = this.folder_files[file];
-      const review = get_reviewresult(info);
+      const review = getReviewResult(info);
       if (review === "ng") {
         return false;
       }
       return true;
     },
-    is_need_review: function(file) {
+    isNeedReview: function(file) {
       const info = this.folder_files[file];
-      const review = get_reviewresult(info);
+      const review = getReviewResult(info);
       if (review === "notreviewed") {
         return true;
       }
       return false;
     },
-    is_notags(file) {
+    isNotags(file) {
       const info = this.folder_files[file];
-      const review = has_bndbox(info);
+      const review = hasBndbox(info);
       return review;
     },
-    get_image_url(file) {
-      return utils.build_api_url("/t/" + this.folder + "/" + file);
+    getImageUrl(file) {
+      return utils.buildApiUrl("/t/" + this.username + "/" + file);
     },
-    is_selected(filename) {
+    isSelected(filename) {
       return filename === this.active_image_filename;
     },
-    select_image(event) {
+    selectImage(event) {
       if (event.target.dataset.file !== this.active_image_filename) {
-        this.$store.dispatch("load_current_image", event.target.dataset.file);
+        this.$store.dispatch("loadCurrentImage", event.target.dataset.file);
       }
     },
-    on_scroll: function(event) {
-      if (this.filename_max_display < this.files.length) {
-        let n = this.filename_max_display - this.IMAGE_RELOAD_MARGIN;
+    onScroll: function(event) {
+      if (this.imagelist_max_display < this.filtered_imagelist.length) {
+        let n = this.imagelist_max_display - this.IMAGE_RELOAD_MARGIN;
         if (n <= 0) {
           n = 1;
         }
@@ -203,8 +202,8 @@ export default {
           let wrapperrc = wrapper.getBoundingClientRect();
 
           if (imgrc.top <= wrapperrc.top) {
-            this.$store.commit("set_filename_max_display", {
-              max_display: this.filename_max_display + this.IMAGE_RELOAD_AMOUNT
+            this.$store.commit("setImagelistMaxDisplay", {
+              max_display: this.imagelist_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }
         } else if (loaded_img[n] === null) {

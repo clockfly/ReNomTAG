@@ -1,17 +1,17 @@
 <template>
   <div id="page">
-    <div id="all-elements" v-if="!this.isAllImageMode">
+    <div id="all-elements" v-if="!isAllImageMode">
       <app-header class="row"></app-header>
       <div id='main-container'>
         <left-menu></left-menu>
-        <image-list class="folder-image" v-if="folder"/>
+        <image-list class="folder-image" v-if="username"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
-              {{loading_message}}
+          <div id='loading' v-if='!username || !filtered_imagelist || filtered_imagelist.length === 0'>
+            <div v-if='image_status.code == IMG_STATUS.NO_IMG.code' class="msg_no_image">
+              {{image_status.message}}
             </div>
-            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
+            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -29,74 +29,37 @@
     </div>
 
     <transition name="fade">
-      <div id="all-image"  v-if="this.isAllImageMode">
-        <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-        <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='this.loading_message!= "Loading images..."' class="msg_no_image">
-              {{loading_message}}
-            </div>
-            <div v-else-if='this.loading_message==="Loading images..."' class="msg_no_image">
-              <div class="sk-wave">
-                <div class="sk-rect sk-rect1"></div>
-                <div class="sk-rect sk-rect2"></div>
-                <div class="sk-rect sk-rect3"></div>
-                <div class="sk-rect sk-rect4"></div>
-                <div class="sk-rect sk-rect5"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id="all-image"  v-if="isAllImageMode">
+        <tagcanvas></tagcanvas>
       </div>
     </transition>
 
-
-
-
-    <modal-box v-if='make_dir_message'>
+    <modal-box v-if='notice_status.message'>
       <div slot='contents' class='mkdir-msg' >
-        {{make_dir_message}}
-        <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
+        {{notice_status.message}}
+        <input v-model="setNewUser" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='setModal()' class="ok-button">
+        <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
           OK
         </button>
-        <button v-if='make_dir_message_counter > 1' @click='setModal()' class="load-button">
+        <button v-if='make_dir_message_counter > 1' @click='setNoticeStatus()' class="load-button">
           Load
         </button>
       </div>
       <div slot='cancelbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='cancelModal()' class="cancel-button">
+        <button v-if='make_dir_message_counter <= 1' @click='clearNoticeStatus()' class="cancel-button">
           Cancel
         </button>
       </div>
     </modal-box>
 
-    <modal-box v-if='undef_file_message'>
+    <modal-box v-if='error_status.message'>
       <div slot='contents' class='error-msg'>
-        {{undef_file_message}}
+        {{error_status.message}}
       </div>
       <div slot='footer'>
-        <button class='error-button' @click='set_undef_file_message({dundef_file_message: ""})'>close</button>
-      </div>
-    </modal-box>
-
-    <modal-box v-if='dup_file_message'>
-      <div slot='contents' class='error-msg'>
-        {{dup_file_message}}
-      </div>
-      <div slot='footer'>
-        <button class='error-button' @click='set_dup_file_message({dup_file_message: ""})'>close</button>
-      </div>
-    </modal-box>
-
-    <modal-box v-if='error_status'>
-      <div slot='contents' class='error-msg'>
-        {{error_status}}
-      </div>
-      <div slot='footer'>
-        <button class='error-button' @click='set_error_status({error_status: ""})'>close</button>
+        <button class='error-button' @click='clearErrorStatus()'>close</button>
       </div>
     </modal-box>
   </div>
@@ -115,8 +78,17 @@ import ModalBox from "@/components/modalbox";
 import * as utils from "@/utils";
 import { mapActions, mapState, mapMutations } from "vuex";
 import AppFooter from "./footer.vue";
+import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
 export default {
+  data: function(){
+    return {
+      make_dir_message_counter: 0,
+      ERROR,
+      IMG_STATUS,
+      NOTICE
+    };
+  },
   components: {
     "modal-box": ModalBox,
     "app-header": AppHeader,
@@ -130,79 +102,75 @@ export default {
   },
   computed: {
     ...mapState([
-      "all_image_mode",
-      "folder_list",
+      "full_screen_mode",
+      "user_list",
       "active_image_filename",
       "error_status",
-      "make_dir_message",
-      "make_dir_message_counter",
-      "undef_file_message",
-      "dup_file_message",
-      "working_dir",
+      "notice_status",
       "username",
-      "folder",
-      "loading_message",
-      "image_list"
+      "new_user",
+      "image_status",
+      "filtered_imagelist"
     ]),
-    setUsername: {
+    setNewUser: {
       get() {
-        return this.$store.state.username;
+        return this.new_user;
       },
       set(e) {
-        this.$store.commit("set_username", { username: e });
+        this.addNewUser({ new_user: e })
       }
     },
     isAllImageMode: function() {
       return (
          ![null, undefined].includes(this.active_image_filename) &&
-        this.all_image_mode
+        this.full_screen_mode
       );
     }
   },
   methods: {
     ...mapMutations([
-      "set_error_status",
-      "set_undef_file_message",
-      "set_dup_file_message",
-      "set_make_dir_message_counter"
+      "setErrorStatus",
+      "setNoticeStatus",
+      "addNewUser"
     ]),
-    ...mapActions(["init_client", "make_dir", "load_folder_list"]),
+    ...mapActions(["initClient", "makeDir", "loadUserList"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
-      this.set_make_dir_message_counter({
-        make_dir_message_counter: counter
-      });
+      this.make_dir_message_counter = counter;
     },
     mkdir: function() {
-      this.set_make_dir_message({
-        make_dir_message: "Message\n\nCreating directories..."
+      this.setNoticeStatus({
+        code: 115,
+        message: "Message\n\nCreating directories..."
       });
-      this.make_dir();
+      this.makeDir();
     },
-    setModal: function() {
+    setNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
-        this.set_make_dir_message({
-          make_dir_message: "Message\n\nInput your username"
+        this.setNoticeStatus({
+          code: 115,
+          message: "Message\n\nInput your username"
         });
         this.messageCounter();
       } else if (counter === 1) {
         this.mkdir();
         this.messageCounter();
-      } else if (counter > 1) {
+      }else if (counter > 1) {
         location.reload();
       }
     },
-    cancelModal: function() {
-      this.set_make_dir_message({ make_dir_message: "" });
-      this.set_make_dir_message_counter({
-        make_dir_message_counter: 0
-      });
+    clearNoticeStatus: function() {
+      this.setNoticeStatus({ code:null, message:""})
+      this.make_dir_message_counter = 0;
+    },
+    clearErrorStatus: function(){
+      this.setErrorStatus({ code:null, message:"" });
     }
   },
   created: function() {
-    this.init_client();
+    this.initClient();
   }
 };
 </script>
