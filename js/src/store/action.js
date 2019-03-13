@@ -2,13 +2,12 @@ import axios from "axios";
 import * as utils from "@/utils";
 import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
-// TODO
-async function async_func(context, f) {
+async function asyncFunc(context, f) {
   let ret;
   try {
     ret = await f();
   } catch (error) {
-    context.commit("set_error_status", {
+    context.commit("setErrorStatus", {
       error_status: ERROR.SERVER_CONNECTION
     });
     console.error(error);
@@ -18,132 +17,133 @@ async function async_func(context, f) {
   return ret;
 }
 
-async function load_imagefile_list(context) {
-  context.commit("set_img_status", {
-    img_status: IMG_STATUS.LOADING
+async function loadImagefileList(context) {
+  context.commit("setImageStatus", {
+    image_status: IMG_STATUS.LOADING
   });
-  let response = await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/get_filename_list"), {
-      folder: context.state.folder,
+  let response = await asyncFunc(context, () =>
+    axios.post(utils.buildApiUrl("/api/get_filename_obj"), {
+      username: context.state.username,
       all: false
     })
   );
-  context.commit("set_file_list", {
-    file_list: response.data.filename_list
+  context.commit("setFolderFiles", {
+    folder_files: response.data.filename_obj
   });
 
-  if (response.data.undef_filename_list.length > 0) {
-    let undef_message = utils.message_load_undeffile_list(
-      response.data.undef_filename_list
+  if (response.data.undef_img_list.length > 0) {
+    let undef_message = utils.makeMessageUndefImgList(
+      response.data.undef_img_list
     );
-    context.commit("set_error_status",{
+    context.commit("setErrorStatus",{
       code: ERROR.UNDEF_FILE.code,
       message: undef_message
     });
   }
 
-  if (response.data.dup_filename_list.length > 0) {
-    let dup_message = utils.message_load_dupfile_list(
-      response.data.dup_filename_list
+  if (response.data.dup_img_list.length > 0) {
+    let dup_message = utils.makeMessageDupImgList(
+      response.data.dup_img_list
     );
-    context.commit("set_error_status",{
+    context.commit("setErrorStatus",{
       code: ERROR.DUP_FILE.code,
       message: dup_message
     });
   }
 
-  if (context.state.files.length > 0) {
-    context.dispatch("load_current_image", context.state.files[0]);
+  if (context.state.filtered_imagelist.length > 0) {
+    context.dispatch("loadCurrentImage", context.state.filtered_imagelist[0]);
   }
 }
 
-async function load_label_candidates_dict(context) {
-  let response = await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/load_label_candidates_dict"), {
-      folder: context.state.folder
+async function loadLabelCandidatesDict(context) {
+  let response = await asyncFunc(context, () =>
+    axios.post(utils.buildApiUrl("/api/load_label_candidates_dict"), {
+      username: context.state.username
     })
   );
-  context.commit("set_labels", response.data);
+  context.commit("setLabels", response.data);
 }
 
-async function load_tagged_images(context) {
-  let response = await async_func(context, () =>
-    axios.post(utils.build_api_url("/api/load_xml_tagged_images"), {
-      folder: context.state.folder
+async function loadTaggedImages(context) {
+  let response = await asyncFunc(context, () =>
+    axios.post(utils.buildApiUrl("/api/load_xml_tagged_images"), {
+      username: context.state.username
     })
   );
-  context.commit("set_tagged_images", response.data.result);
+  context.commit("setTaggedImages", response.data.result);
 }
 
 export default {
-  async load_folder_list(context) {
-    let response = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/folderlist"), {
-        folder: context.state.folder
+  async loadUserList(context) {
+    let response = await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/userlist"), {
+        username: context.state.username
       })
     );
     if (response.data.result === 1) {
-      context.commit("set_folder_list", {
-        folder_list: response.data.folder_list
+      context.commit("setUserList", {
+        user_list: response.data.user_list
       });
     } else if (response.data.result === 0) {
-      context.commit("set_notice_status", { notice_status: NOTICE.MAKE_DIR.INITIAL });
-      context.commit("set_working_dir", {
+      context.commit("setNoticeStatus", { notice_status: NOTICE.MAKE_DIR.INITIAL });
+      context.commit("setWorkingDir", {
         working_dir: response.data.current_dir
       });
     }
   },
 
-  async init_client(context, payload) {
-    // "load_folder_list" loads folder_list.
-    await context.dispatch("load_folder_list");
+  async initClient(context, payload) {
+    // "loadUserList" loads user_list.
+    await context.dispatch("loadUserList");
 
-    // "set_folder" raises error when folder is not in folder_list.
+    // "set_folder" raises error when folder is not in user_list.
     let foldername;
     if (payload) {
       foldername = payload;
     } else {
       foldername = utils.cookies.getItem("tags-foldername");
     }
-    context.commit("set_folder", foldername);
+    context.commit("setUsername", foldername);
 
-    context.commit("set_file_list", { file_list: [] });
-    context.commit("set_active_image", { file: null });
-    load_label_candidates_dict(context);
-    load_imagefile_list(context);
-    load_tagged_images(context);
+    context.commit("setActiveImage", { file: null });
+    context.commit("setFolderFiles", { folder_files: {} });
+    context.commit("setTaggedImages", null)
+    loadLabelCandidatesDict(context);
+    loadImagefileList(context);
+    loadTaggedImages(context);
 
     utils.cookies.setItem("tags-foldername", foldername, Infinity);
   },
 
-  async make_dir(context) {
-    let response = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/make_dir"), {
+  async makeDir(context) {
+    let response = await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/make_dir"), {
         working_dir: context.state.working_dir,
-        username: context.state.username
+        username: context.state.new_user
       })
     );
 
     if (response.data.result !== null) {
       console.log(response.data.result);
 
-      let {notice, error} = utils.message_make_dir(response.data.result);
+      let {notice, error} = utils.selectMessageMakeDir(response.data.result);
       if (notice){
-        context.commit("set_notice_status", { notice_status: notice });
+        context.commit("setNoticeStatus", { notice_status: notice });
         console.log("here",notice.code)
       }else if (error) {
-        context.commit("set_error_status", { error_status: error });
+        context.commit("setErrorStatus", { error_status: error });
         console.log("here",error.code)
       }
     }
   },
 
-  async load_current_image(context, file) {
+  async loadCurrentImage(context, file) {
 
-    let response = await async_func(context, () =>
+    let response = await asyncFunc(context, () =>
       axios.get(
-        utils.build_api_url(
-          "/api/get_raw_img/" + context.state.folder + "/" + file
+        utils.buildApiUrl(
+          "/api/get_raw_img/" + context.state.username + "/" + file
         )
       )
     );
@@ -171,7 +171,7 @@ export default {
       comment_admin = response.data.boxes.annotation.source.comment.admin;
       comment_subord = response.data.boxes.annotation.source.comment.subord;
     }
-    context.commit("set_active_image", {
+    context.commit("setActiveImage", {
       filename: file,
       width: response.data.width,
       height: response.data.height,
@@ -183,17 +183,17 @@ export default {
     });
   },
 
-  async add_label(context, payload) {
-    context.commit("add_label", payload);
-    await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+  async addLabel(context, payload) {
+    context.commit("addLabel", payload);
+    await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/save_label_candidates_dict"), {
+        username: context.state.username,
         labels: context.state.labels
       })
     );
   },
 
-  async update_label(context, payload) {
+  async updateLabel(context, payload) {
     let data = payload.labels;
     for (let i = 0; i < data.length; i++) {
       if (data[i].label === payload.src[0]) {
@@ -201,56 +201,55 @@ export default {
         data[i].shortcut = payload.dist_shortcut;
       }
     }
-    context.commit("update_label", data);
-    await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+    context.commit("setLabels", data);
+    await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/save_label_candidates_dict"), {
+        username: context.state.username,
         labels: context.state.labels
       })
     );
   },
 
-  // TODO
-  async delete_xml(context) {
+  async deleteXml(context) {
     let target_filename = context.state.active_image_filename;
-    let response = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/delete_xml"), {
-        folder: context.state.folder,
+    let response = await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/delete_xml"), {
+        username: context.state.username,
         target_filename: target_filename
       })
     );
 
     if (response.data.result == ERROR.XML_DELETION.code) {
       console.log("result : ", ERROR.XML_DELETION.message);
-      context.commit("set_error_status", {
+      context.commit("setErrorStatus", {
         error_status: ERROR.XML_DELETION
       });
     } else {
       // since deliting the xml sucessed, delete the filename from state.tagged_images
       console.log("result : ", ERROR.XML_DELETION.message);
-      context.commit("delete_tagged_image", {
+      context.commit("deleteTaggedImage", {
         filename: target_filename
       });
 
       // load next image
       let idx = 0;
-      for (const file of context.state.files) {
+      for (const file of context.state.filtered_imagelist) {
         if (target_filename === file) {
           break;
         }
         idx += 1;
       }
 
-      if (idx < context.state.files.length - 1) {
+      if (idx < context.state.filtered_imagelist.length - 1) {
         idx += 1;
       } else {
         idx -= 1;
       }
 
       if (idx >= 0) {
-        context.dispatch("load_current_image", context.state.files[idx]);
+        context.dispatch("loadCurrentImage", context.state.filtered_imagelist[idx]);
       } else {
-        context.commit("set_active_image", {
+        context.commit("setActiveImage", {
           filename: null,
           width: null,
           height: null,
@@ -263,14 +262,14 @@ export default {
       }
 
       // update image data
-      context.commit("update_file", {
+      context.commit("updateFolderFile", {
         filename: target_filename,
         info: "reset"
       });
     }
   },
 
-  async save_annotation(context) {
+  async saveAnnotation(context) {
     const cur_filename = context.state.active_image_filename;
     let value = context.state.folder_files[cur_filename];
 
@@ -319,14 +318,14 @@ export default {
 
     }
 
-    const ret = await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_xml_from_label_dict"), {
-        folder: context.state.folder,
+    const ret = await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/save_xml_from_label_dict"), {
+        username: context.state.username,
         value
       })
     );
 
-    context.commit("add_tagged_image", {
+    context.commit("addTaggedImage", {
       filename: cur_filename,
       width: context.state.active_image_width,
       height: context.state.active_image_height,
@@ -336,35 +335,35 @@ export default {
 
     // load next image
     let idx = 0;
-    for (const file of context.state.files) {
+    for (const file of context.state.filtered_imagelist) {
       if (cur_filename === file) {
         break;
       }
       idx += 1;
     }
 
-    if (idx < context.state.files.length - 1) {
+    if (idx < context.state.filtered_imagelist.length - 1) {
       idx += 1;
     } else {
       idx -= 1;
     }
 
     if (idx >= 0) {
-      context.dispatch("load_current_image", context.state.files[idx]);
+      context.dispatch("loadCurrentImage", context.state.filtered_imagelist[idx]);
     } else {
-      context.commit("set_active_image", {
+      context.commit("setActiveImage", {
         file: null
       });
     }
 
     // update image data
-    context.commit("update_file", {
+    context.commit("updateFolderFile", {
       filename: cur_filename,
       info: ret.data.result
     });
   },
 
-  async delete_taglist(context, payload) {
+  async deleteTaglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];
     for (let i in payload) {
@@ -374,10 +373,10 @@ export default {
       return !(x === "");
     });
 
-    context.commit("set_labels", filtered_labels);
-    await async_func(context, () =>
-      axios.post(utils.build_api_url("/api/save_label_candidates_dict"), {
-        folder: context.state.folder,
+    context.commit("setLabels", filtered_labels);
+    await asyncFunc(context, () =>
+      axios.post(utils.buildApiUrl("/api/save_label_candidates_dict"), {
+        username: context.state.username,
         labels: context.state.labels
       })
     );

@@ -1,5 +1,5 @@
 <template>
-<div id="tags"> 
+<div id="tags">
   <form v-if="this.is_admin" id="add-new-label-form">
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <div class="add-new-label-input-area">
@@ -20,7 +20,7 @@
       <button
         @click.prevent.stop="addNewLabel"
         class="add-new-label-btn"
-        :disabled="!is_valid_label"
+        :disabled="!isValidLabel"
       >
       Add New Tag
       </button>
@@ -38,7 +38,7 @@
           v-for="(data, index) in labels"
           :key="data.id"
           class="tag-list-item"
-          @click="on_click"
+          @click="onClick"
           :data-label="data.label"
         >
           <div class="label-color" :style="{ background: color_list[index % 10]}"></div>
@@ -49,15 +49,15 @@
             v-model="edit_label"
             placeholder="label name..."
             :readonly="!is_admin"
-            @keyup="update_label"
+            @keyup="updateLabel"
           >
-            <div v-else class="label-text">{{get_tag_name(data.label)}}</div>
+            <div v-else class="label-text">{{getTagName(data.label)}}</div>
           <input
             v-if="edit_target[0] === data.label && edit_mode === true"
             type="text"
             class="label-shortcut-update"
             v-model="edit_shortcut"
-            @keydown.stop.prevent.self="update_label"
+            @keydown.stop.prevent.self="updateLabel"
             @keyup.stop.prevent.self="updateShortcutKey"
             placeholder="key..."
           >
@@ -73,20 +73,20 @@
           <div v-else>
             <img
               v-if="edit_target[0] === data.label && edit_mode === true"
-              @click="update_label('edit_off')"
-              @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+              @click="updateLabel('edit_off')"
+              @click.stop.prevent="editMode(index, data.label, data.shortcut), editToggle()"
               class="tag_list_icon"
               :src="tag_list_icon"
             >
             <img
               v-else
-              @click.stop.prevent="to_edit_mode(index, data.label, data.shortcut), edit_toggle()"
+              @click.stop.prevent="editMode(index, data.label, data.shortcut), editToggle()"
               class="tag_list_icon"
               :src="tag_list_icon"
             >
           </div>
         </li>
-        <div v-if="update_errormsg" class="label_errormsg">{{update_errormsg}}</div>
+        <div v-if="updateErrormsg" class="label_errormsg">{{updateErrormsg}}</div>
       </ul>
     </div>
 
@@ -106,14 +106,14 @@
         >
         Delete
       </button>
-        
+
         <button class="button" @click="is_delete_mode=false">Cancel</button>
       </div>
     </div>
 
     <modal-box
       v-if="show_delete_dialog"
-      @ok="delete_tags(delete_item_list)"
+      @ok="deleteTags(delete_item_list)"
       @cancel="show_delete_dialog=false"
     >
       <div class="modal-title" slot="contents">
@@ -127,7 +127,7 @@
           id="delete_labels_button"
           class="modal-default-button"
           @click="
-        delete_tags(delete_item_list)"
+        deleteTags(delete_item_list)"
         >
         <fa-icon icon="fas fa-trash-alt" />
         Delete
@@ -196,14 +196,14 @@ export default {
       return "";
     },
 
-    is_valid_label: function() {
+    isValidLabel: function() {
       if (!this.label.length) {
         return false;
       }
       return this.errormsg === "";
     },
 
-    update_errormsg: function() {
+    updateErrormsg: function() {
       if (this.edit_label.length) {
         if (!this.edit_label.match("^[0-9a-z-A-Z]+$")) {
           return "Class name must be alphanumeric single-byte.";
@@ -233,14 +233,14 @@ export default {
 
   methods: {
     addNewLabel: function() {
-      this.$store.dispatch("add_label", {
+      this.$store.dispatch("addLabel", {
         label: this.label,
         shortcut: this.shortcut
       });
       this.label = this.shortcut = "";
       document.body.focus();
     },
-    is_control_key(k) {
+    isControlKey(k) {
       const keys = [
         13, // Enter(ten key)
         32, // Space
@@ -266,7 +266,7 @@ export default {
         event.preventDefault();
         return;
       }
-      if (!this.is_control_key(event.keyCode)) {
+      if (!this.isControlKey(event.keyCode)) {
         event.preventDefault();
       }
       if (event.keyCode === 13) {
@@ -277,20 +277,20 @@ export default {
     },
 
     setShortcutKey(event) {
-      if (this.is_control_key(event.keyCode)) {
+      if (this.isControlKey(event.keyCode)) {
         return;
       }
       this.shortcut = event.key;
     },
 
-    on_click(event) {
+    onClick(event) {
       const label = event.currentTarget.dataset.label;
-      this.$store.commit("set_activebox_label", { label });
+      this.$store.commit("setActiveboxLabel", { label });
     },
-    edit_toggle() {
+    editToggle() {
       this.edit_mode = !this.edit_mode;
     },
-    to_edit_mode(index, tag, tag_shortcut) {
+    editMode(index, tag, tag_shortcut) {
       let label = tag;
       let shortcut = tag_shortcut;
       let target = [label, shortcut, true];
@@ -300,13 +300,13 @@ export default {
       this.edit_target = target;
     },
 
-    update_label(event) {
+    updateLabel(event) {
       if (event.keyCode === 13 || event == "edit_off") {
-        if (this.update_errormsg === "") {
+        if (this.updateErrormsg === "") {
           if (this.edit_label === "") {
             this.edit_label = this.edit_target[0];
           }
-          this.$store.dispatch("update_label", {
+          this.$store.dispatch("updateLabel", {
             labels: this.labels,
             src: this.edit_target,
             dist_label: this.edit_label,
@@ -325,23 +325,23 @@ export default {
         this.edit_shortcut = "";
         event.preventDefault();
         return;
-      } else if (this.is_control_key(event.keyCode)) {
+      } else if (this.isControlKey(event.keyCode)) {
         return;
       }
       this.edit_shortcut = event.key;
     },
 
-    delete_tags(delete_item_list) {
+    deleteTags(delete_item_list) {
       let delete_item_list_index = [];
       delete_item_list.filter(element => {
         delete_item_list_index.push(element.index);
       });
-      this.$store.dispatch("delete_taglist", delete_item_list_index);
+      this.$store.dispatch("deleteTaglist", delete_item_list_index);
       this.delete_item_list = [];
       this.show_delete_dialog = false;
       this.is_delete_mode = false;
     },
-    get_tag_name: function(tag_name) {
+    getTagName: function(tag_name) {
       let name_length = 12;
       if (tag_name.length > name_length) {
         return tag_name.slice(0, name_length) + "...";

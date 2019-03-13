@@ -1,40 +1,40 @@
 <template>
-  <div id='canvasblock' :class="{all_image_mode : this.all_image_mode === true, original : this.all_image_mode === false}">
+  <div id='canvasblock' :class="{full_screen_mode : full_screen_mode === true, original : full_screen_mode === false}">
     <div id="canvaspanel" ref="canvaspanel"
-        @mousedown.middle='on_down_middle'
-        @mousemove='on_move_middle'
-        @mouseup.middle='on_up_middle'
-        @mousedown.left.stop='on_click'
-        @mousemove.left.stop.prevent='on_mousemove'>
+        @mousedown.middle='onDownMiddle'
+        @mousemove='onMoveMiddle'
+        @mouseup.middle='onUpMiddle'
+        @mousedown.left.stop='onClick'
+        @mousemove.left.stop.prevent='onMousemove'>
 
       <navarrow class="arrow" dir="back"/>
-        <div id="canvas-wrapper" @wheel.ctrl.prevent="zoom_image" ref="wrapper">
+        <div id="canvas-wrapper" @wheel.ctrl.prevent="zoomImage" ref="wrapper">
           <div id="pad"/>
-          <img v-if="has_image" id="canvas" ref="canvas" :src="image_url" :style="canvas_style"
-           @dragstart.left.stop.prevent="on_drag_start">
-          <div v-if="is_creating()" id="newtag" :style="newtag_style()" />
-          <div v-for="(tagstyle, idx) in fileter_selected_boxes" :key="idx"
+          <img v-if="hasImage" id="canvas" ref="canvas" :src="imageUrl" :style="canvasStyle"
+           @dragstart.left.stop.prevent="onDragStart">
+          <div v-if="isCreatingNewbox()" id="newtag" :style="newtagStyle()" />
+          <div v-for="(tagstyle, idx) in fileterSelectedBoxes" :key="idx"
               :style='tagstyle'
               class='box-border'
-              :data-boxid='idx' @mousedown.left.stop.prevent='on_boxclick'
-              @mousemove.left='on_boxmousemove'>
-            <div v-if="tagstyle!=null" :class="['box', is_active_box(idx) ? 'box-active':'']">
-              <div  class='taglabel'>{{get_box_label(idx)}}</div>
+              :data-boxid='idx' @mousedown.left.stop.prevent='onBoxClick'
+              @mousemove.left='onBoxMousemove'>
+            <div v-if="tagstyle!=null" :class="['box', isActivebox(idx) ? 'box-active':'']">
+              <div  class='taglabel'>{{getBoxLabel(idx)}}</div>
             </div>
           </div>
         </div>
         <transition name="fade">
           <div id="zoom-button" >
-            <div id="zoom-out-button" @click="on_zoom_out_button">
+            <div id="zoom-out-button" @click="onZoomOutButton">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </div>
-            <div id="zoom-reset-button" @click="on_zoom_reset_button">
+            <div id="zoom-reset-button" @click="onZoomResetButton">
               <i class="fa fa-expand" aria-hidden="true"></i>
             </div>
-            <div id="expand-wide" @click="expand_image_mode">
+            <div id="expand-wide" @click="toFullScreenMode">
               <i class="fa fa-arrows-alt" aria-hidden="true"></i>
             </div>
-            <div id="zoom-in-button" @click="on_zoom_in_button">
+            <div id="zoom-in-button" @click="onZoomInButton">
               <i class="fa fa-minus" aria-hidden="true"></i>
             </div>
           </div>
@@ -54,13 +54,13 @@
         </div>
         <div class="col-md-1 row  clear-padding "></div>
         <div class="col-md-5 row  clear-padding comment-wrapper">
-          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea:!is_admin}">
+          <div class="comment-area col-md-6" :class="{active_textarea: is_admin, inactive_textarea: !is_admin}">
             <span>admin >> </span>
-            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!this.is_admin"></textarea>
+            <textarea class="form-control"  v-model="active_image_comment_admin" :readonly="!is_admin"></textarea>
           </div>
-          <div class="comment-area col-md-6" :class="{active_textarea:!is_admin, inactive_textarea: is_admin}">
+          <div class="comment-area col-md-6" :class="{active_textarea: !is_admin, inactive_textarea: is_admin}">
             <span>user >></span>
-            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="this.is_admin"></textarea>
+            <textarea class="form-control" v-model="active_image_comment_subord" :readonly="is_admin"></textarea>
           </div>
         </div>
         <div class= "col-md-3 row clear-padding">
@@ -68,39 +68,39 @@
             <div id='toggle' >
               <label class="switch ">
                 <input type="checkbox" :class="{checked : show_selected_boxes}">
-                <span class="slider" v-on:click="show_selected_boxes_toggle"></span>
+                <span class="slider" v-on:click="toShowSelectedBoxes"></span>
               </label>
             </div>
           </div>
           <div class="col-md-8 clear-padding">
             <div id='buttons' class="row">
-              <p class="img_file_name_wrapper">
-              <span class="col-md-10 text-left clear-padding" :class="{img_file_name_long_txt: is_long_file_name}" style="margin: 0px;">{{img_file_name}}</span>
+              <p class="imgFilename_wrapper">
+              <span class="col-md-10 text-left clear-padding" :class="{imgFilename_long_txt: isLongFileName}" style="margin: 0px;">{{imgFilename}}</span>
               </p>
               <div class="col-md-10 clear-padding" style="margin:10px 0px 0px;">
-                  <div v-if="this.is_admin" class="btn-wrp">
-                    <p v-if="can_be_saved && this.active_image_review_result !== 'ng'"
+                  <div v-if="is_admin" class="btn-wrp">
+                    <p v-if="canBeSaved && active_image_review_result !== 'ng'"
                           class="img-btn   float-left  ng-button"
-                          @click="set_review_result({result:'ng'})">
+                          @click="setReviewResult({result:'ng'})">
                           NG
                     </p>
-                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ng'"
+                    <p v-else-if="canBeSaved && active_image_review_result === 'ng'"
                           class="img-btn   float-left  ng-button ng-button-push"
-                          @click="set_review_result({result:'ng'})">
+                          @click="setReviewResult({result:'ng'})">
                       NG
                     </p>
                     <p v-else class="img-btn-disabled   float-left ng-button">
                       NG
                     </p>
-                    <p v-if="can_be_saved && this.active_image_review_result !== 'ok'"
+                    <p v-if="canBeSaved && active_image_review_result !== 'ok'"
                           class="img-btn   float-right ok-button"
-                          :class="{review_checked: this.active_image_review_result === 'ok'}"
-                          @click="set_review_result({result:'ok'})">
+                          :class="{review_checked: active_image_review_result === 'ok'}"
+                          @click="setReviewResult({result:'ok'})">
                       OK
                     </p>
-                    <p v-else-if="can_be_saved && this.active_image_review_result === 'ok'"
+                    <p v-else-if="canBeSaved && active_image_review_result === 'ok'"
                           class="img-btn   float-right ok-button ok-button-push"
-                          @click="set_review_result({result:'ok'})">
+                          @click="setReviewResult({result:'ok'})">
                       OK
                     </p>
                     <p v-else class="img-btn-disabled   float-right ok-button">
@@ -109,9 +109,9 @@
                   </div>
               </div>
               <div class="col-md-10 clear-padding" style="margin:3px 0px 0px;">
-                <div v-if="can_be_saved" id="save_xml_btn"
+                <div v-if="canBeSaved" id="save_xml_btn"
                   class="float-left"
-                  @click='apply_annotation'>
+                  @click='applyAnnotation'>
                   Save
                 </div>
                 <div v-else id="save_xml_btn_disabled"
@@ -164,22 +164,22 @@ export default {
     };
   },
   created: function() {
-    window.addEventListener("resize", this.on_resize);
-    window.addEventListener("keyup", this.on_keyup);
-    window.addEventListener("keydown", this.on_keydown);
+    window.addEventListener("resize", this.onResize);
+    window.addEventListener("keyup", this.onKeyup);
+    window.addEventListener("keydown", this.onKeydown);
   },
 
   beforeDestroy: function() {
-    window.removeEventListener("resize", this.on_resize);
-    window.removeEventListener("keyup", this.on_keyup);
-    window.removeEventListener("keydown", this.on_keydown);
+    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("keyup", this.onKeyup);
+    window.removeEventListener("keydown", this.onKeydown);
   },
   mounted: function() {
-    setTimeout(this.arrange_boxes, 10);
+    setTimeout(this.arrangeBoxes, 10);
   },
   computed: {
     ...mapState([
-      "all_image_mode",
+      "full_screen_mode",
       "is_admin",
       "active_image_filename",
       "active_image",
@@ -189,21 +189,20 @@ export default {
       "active_image_review_result",
       "active_boxid",
       "labels",
-      "files",
       "tagged_images",
       "pre_save_boxes_data"
     ]),
-    image_url: function() {
+    imageUrl: function() {
       return this.active_image;
     },
-    has_image: function() {
+    hasImage: function() {
       return Boolean(this.active_image_filename);
     },
-    img_file_name: function() {
+    imgFilename: function() {
       let idx = this.active_image_filename.search(/[/\\]/);
       return this.active_image_filename.slice(idx + 1);
     },
-    can_be_saved: function() {
+    canBeSaved: function() {
       let has_tag = false;
       for (let tag of this.tagged_images) {
         if (tag.filename == this.active_image_filename) {
@@ -221,7 +220,7 @@ export default {
       }
       return true;
     },
-    fileter_selected_boxes: function() {
+    fileterSelectedBoxes: function() {
       if (!this.boxes) {
         return false;
       }
@@ -255,9 +254,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("set_comment_admin", { comment: value });
+          this.$store.commit("setCommentAdmin", { comment: value });
         } else {
-          this.$store.commit("set_comment_admin", { comment: "" });
+          this.$store.commit("setCommentAdmin", { comment: "" });
         }
       }
     },
@@ -267,13 +266,13 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("set_comment_subord", { comment: value });
+          this.$store.commit("setCommentSubord", { comment: value });
         } else {
-          this.$store.commit("set_comment_subord", { comment: "" });
+          this.$store.commit("setCommentSubord", { comment: "" });
         }
       }
     },
-    canvas_style: function() {
+    canvasStyle: function() {
       const imgrc = this.$refs.wrapper;
       let parent_top = 0;
       let parent_left = 0;
@@ -290,13 +289,13 @@ export default {
         left: this.zoom_x + "px"
       };
     },
-    is_all_image_mode: function() {
+    isFullScreenMode: function() {
       return (
-        this.all_image_mode &&
+        this.full_screen_mode &&
         ![null, undefined].inculudes(this.active_image_filename)
       );
     },
-    is_long_file_name:function(){ 
+    isLongFileName:function(){
       // 10なのは暫定的な数値です
       return this.active_image_filename.length > 10 ? true:false;
     }
@@ -304,17 +303,17 @@ export default {
   watch: {
     active_image_tag_boxes: function() {
       this.$nextTick(() => {
-        this.arrange_boxes();
+        this.arrangeBoxes();
       });
     }
   },
   methods: {
-    ...mapMutations(["set_active_boxid", "set_review_result"]),
-    ...mapActions(["save_annotation", "delete_xml","paste_annotation"]),
+    ...mapMutations(["setActiveBoxid", "setReviewResult"]),
+    ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
 
-    expand_image_mode: function() {
-      let shift = !this.all_image_mode;
-      this.$store.commit("set_all_image_mode", { all_image_mode: shift });
+    toFullScreenMode: function() {
+      let shift = !this.full_screen_mode;
+      this.$store.commit("setFullScreenMode", { full_screen_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -336,7 +335,7 @@ export default {
       }
       let candidate_x = this.zoom_x;
       let candidate_y = this.zoom_y;
-      const [_, rect] = this.calc_image_rect();
+      const [_, rect] = this.calcImageRect();
       const imgrc = this.$refs.canvas.getBoundingClientRect();
       const wrapper = this.$refs.wrapper.getBoundingClientRect();
 
@@ -354,72 +353,75 @@ export default {
       this.zoom_x = candidate_x;
 
       this.$nextTick(() => {
-        this.arrange_boxes();
+        this.arrangeBoxes();
       });
     },
 
-    on_zoom_out_button: function() {
+    onZoomOutButton: function() {
       const rect = this.$refs.canvaspanel.getBoundingClientRect();
       this._zoom(rect.right / 2, rect.bottom / 2, 0.05, false);
     },
 
-    on_zoom_reset_button: function() {
+    onZoomResetButton: function() {
       this.zoom_y = 0;
       this.zoom_x = 0;
       this.zoom_scale = 1.0;
       this.$nextTick(() => {
-        this.arrange_boxes();
+        this.arrangeBoxes();
       });
     },
 
-    on_zoom_in_button: function() {
+    onZoomInButton: function() {
       const rect = this.$refs.canvaspanel.getBoundingClientRect();
       this._zoom(rect.right / 2, rect.bottom / 2, 0.05, true);
     },
 
-    newtag_style: function() {
-      let ret = this.to_canvas_rect(this.newbox_rect);
-      return this.size_style(ret).size_style;
+    zoomImage: function(e) {
+      this._zoom(e.clientX, e.clientY, 0.05, e.deltaY > 0);
     },
 
-    on_drag_start: function(idx) {
+    newtagStyle: function() {
+      let ret = this.toCanvasRect(this.newbox_rect);
+      return this.sizeStyle(ret).size_style;
+    },
+
+    onDragStart: function(idx) {
       // does nothing
       return false;
     },
 
-    is_creating: function() {
+    isCreatingNewbox: function() {
       return this.status === "new";
     },
 
-    is_active_box: function(idx) {
+    isActivebox: function(idx) {
       return this.active_boxid === idx;
     },
 
-    show_selected_boxes_toggle: function() {
+    toShowSelectedBoxes: function() {
       this.show_selected_boxes = !this.show_selected_boxes;
       this.$nextTick(() => {
-        this.arrange_boxes();
+        this.arrangeBoxes();
       });
     },
-    set_selected_flag: function(boxes) {
+    initSelectedFlag: function(boxes) {
       for (let box of boxes) {
         box.selected = false;
       }
       return boxes;
     },
-    _clean_boxes_in_selected_mode: function(nolabel_idx) {
+    _cleanBoxesInSelectedMode: function(nolabel_idx) {
       let pri = this.boxes.slice(0, nolabel_idx);
       let follow = this.boxes.slice(nolabel_idx + 1);
       this.boxes = [...pri, ...follow];
     },
-    // delete box : modify this.boxes when key.event happen ( in on_keyup: )
-    delete_boxes_in_selected_mode: function(active_boxid) {
+    _deleteBoxesInSelectedMode: function(active_boxid) {
       let pri = this.boxes.slice(0, active_boxid);
       let follow = this.boxes.slice(active_boxid + 1);
       this.boxes = [...pri, ...follow];
     },
     // when(selected-mode) once the box became "active" store the id sothat fefer as "selected : true"
-    select_flag_when_selected_mode: function(active_boxid, boxes) {
+    _setFlagInSelectedMode: function(active_boxid, boxes) {
       // new box
       if (active_boxid != null) {
         if (active_boxid === this.boxes.length) {
@@ -433,7 +435,7 @@ export default {
       return boxes;
     },
     // when(original-mode to selected-mode) toggle is one to chatch thi function.
-    select_flag_from_original: function(active_boxid, boxes) {
+    _setFlagInOriginalMode: function(active_boxid, boxes) {
       if (boxes[active_boxid]) {
         for (let box of boxes) {
           box.selected = false;
@@ -444,32 +446,31 @@ export default {
       }
       return boxes;
     },
-
-    get_box: function(id) {
+    getBoxObj: function(id) {
       if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
         return false;
       }
       return this.active_image_tag_boxes[id];
     },
-    get_box_label: function(id) {
+    getBoxLabel: function(id) {
       if (!this.active_image_tag_boxes[id] || !this.boxes[id]) {
         return false;
       }
-      return this.get_box(id).label;
+      return this.getBoxObj(id).label;
     },
 
-    to_canvas_rect: function(rc) {
-      let [l, t, r, b] = utils.normalize_rect(rc);
+    toCanvasRect: function(rc) {
+      let [l, t, r, b] = utils.normalizeRect(rc);
 
-      [[l, t], [r, b]] = utils.client_to_node(this.$refs.canvaspanel, [
+      [[l, t], [r, b]] = utils.clientToNode(this.$refs.canvaspanel, [
         [l, t],
         [r, b]
       ]);
       return [l, t, r, b];
     },
-    apply_annotation: function() {
+    applyAnnotation: function() {
       if (this.active_image_tag_boxes.length == 0) {
-        this.delete_xml();
+        this.deleteXml();
       } else {
         let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
             let {bottom, top, left, right,label} = {...box};
@@ -481,32 +482,32 @@ export default {
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
         });
-        this.$store.commit("set_copy_boxes",pre_save_boxes_data_set);
-        this.save_annotation();
+        this.$store.commit("setCopyBoxes",pre_save_boxes_data_set);
+        this.saveAnnotation();
       }
     },
-    on_resize: function() {
-      setTimeout(this.arrange_boxes, 10);
+    onResize: function() {
+      setTimeout(this.arrangeBoxes, 10);
     },
 
-    on_keyup: function(event) {
+    onKeyup: function(event) {
       if (event.target.nodeName === "BODY") {
         if (event.ctrlKey === true && event.key === "w") {
-          this.expand_image_mode();
+          this.toFullScreenMode();
         }
         if (event.key === " ") {
-          if (this.can_be_saved) {
-            this.apply_annotation();
+          if (this.canBeSaved) {
+            this.applyAnnotation();
             event.preventDefault();
             event.stopPropagation();
           }
           return false;
         }
-        if (this.has_image && this.active_boxid !== null) {
+        if (this.hasImage && this.active_boxid !== null) {
           if (event.key === "Delete" || event.key === "Backspace") {
-            this.delete_boxes_in_selected_mode(this.active_boxid);
+            this._deleteBoxesInSelectedMode(this.active_boxid);
 
-            this.$store.commit("remove_tagbox", { boxid: this.active_boxid });
+            this.$store.commit("removeTagbox", { boxid: this.active_boxid });
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -529,29 +530,29 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("paste_copied_boxes",box_dataset);
+              this.$store.commit("pasteCopiedBoxes",box_dataset);
             break;
             case "d":
-              this.show_selected_boxes_toggle();
+              this.toShowSelectedBoxes();
             break;
           }
         }
       }
     },
 
-    on_keydown: function(event) {
+    onKeydown: function(event) {
       if (event.target.nodeName === "BODY") {
-        if (this.has_image && this.active_boxid !== null) {
+        if (this.hasImage && this.active_boxid !== null) {
           if (
             event.key === "ArrowUp" ||
             event.key === "ArrowDown" ||
             event.key === "ArrowLeft" ||
             event.key === "ArrowRight"
           ) {
-            let [ratio, imgrc] = this.calc_image_rect();
+            let [ratio, imgrc] = this.calcImageRect();
 
             let boxid = this.active_boxid;
-            let box = this.get_box(boxid);
+            let box = this.getBoxObj(boxid);
             box.top = parseInt(box.top);
             box.bottom = parseInt(box.bottom);
             box.right = parseInt(box.right);
@@ -585,14 +586,14 @@ export default {
               default:
                 return;
             }
-            this.$store.commit("set_tagbox", {
+            this.$store.commit("updateTagbox", {
               boxid: boxid,
               box: box
             });
           } else {
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
-                this.$store.commit("set_activebox_label", label);
+                this.$store.commit("setActiveboxLabel", label);
                 event.preventDefault();
                 event.stopPropagation();
                 return false;
@@ -603,7 +604,7 @@ export default {
       }
     },
 
-    size_style: function(rc) {
+    sizeStyle: function(rc) {
       const size_style = {};
       size_style.left = `${rc[0]}px`;
       size_style.top = `${rc[1]}px`;
@@ -612,7 +613,7 @@ export default {
       return { size_style };
     },
 
-    calc_image_rect: function() {
+    calcImageRect: function() {
       const imgrc = this.$refs.canvas.getBoundingClientRect();
       const orgwidth = this.active_image_width;
       const orgheight = this.active_image_height;
@@ -630,17 +631,17 @@ export default {
       return [ratio, [left, top, right, bottom]];
     },
 
-    box_to_client: function(box) {
-      let [ratio, imgrc] = this.calc_image_rect();
+    boxToClient: function(box) {
+      let [ratio, imgrc] = this.calcImageRect();
       const l = Math.floor(box.left * ratio + imgrc[0]);
       const t = Math.floor(box.top * ratio + imgrc[1]);
       const r = Math.floor(box.right * ratio + imgrc[0]);
       const b = Math.floor(box.bottom * ratio + imgrc[1]);
       return [l, t, r, b];
     },
-    client_to_box: function(rect) {
-      let [left, top, right, bottom] = utils.normalize_rect(rect);
-      let [ratio, imgrc] = this.calc_image_rect();
+    clientToBox: function(rect) {
+      let [left, top, right, bottom] = utils.normalizeRect(rect);
+      let [ratio, imgrc] = this.calcImageRect();
       left = Math.floor((left - imgrc[0]) / ratio);
       top = Math.floor((top - imgrc[1]) / ratio);
       right = Math.floor((right - imgrc[0]) / ratio);
@@ -648,15 +649,15 @@ export default {
 
       return { left, top, right, bottom };
     },
-    arrange_boxes: function() {
+    arrangeBoxes: function() {
       let boxes = [];
       if (!this.$refs.canvas || !this.active_image_tag_boxes) {
         return;
       }
       for (let box of this.active_image_tag_boxes) {
-        const rc = this.to_canvas_rect(this.box_to_client(box));
+        const rc = this.toCanvasRect(this.boxToClient(box));
         boxes.push(
-          this.size_style([
+          this.sizeStyle([
             rc[0] - this.BOX_MARGIN,
             rc[1] - this.BOX_MARGIN,
             rc[2] + this.BOX_MARGIN,
@@ -665,41 +666,41 @@ export default {
         );
       }
       if (this.boxes === null) {
-        boxes = this.set_selected_flag(boxes);
+        boxes = this.initSelectedFlag(boxes);
         this.boxes = boxes;
       } else {
         if (this.show_selected_boxes === true) {
-          boxes = this.select_flag_when_selected_mode(this.active_boxid, boxes);
+          boxes = this._setFlagInSelectedMode(this.active_boxid, boxes);
           this.boxes = boxes;
         } else {
           if (this.active_boxid != null) {
-            boxes = this.select_flag_from_original(this.active_boxid, boxes);
+            boxes = this._setFlagInOriginalMode(this.active_boxid, boxes);
           } else {
-            boxes = this.set_selected_flag(boxes);
+            boxes = this.initSelectedFlag(boxes);
           }
           this.boxes = boxes;
         }
       }
     },
-    _clean_boxes: function() {
+    _cleanBoxes: function() {
       const tagboxes = [];
       for (const [i, box] of this.active_image_tag_boxes.entries()) {
         if (box.label) {
           tagboxes.push(box);
         } else {
-          this._clean_boxes_in_selected_mode(i);
+          this._cleanBoxesInSelectedMode(i);
         }
       }
-      this.$store.commit("set_tagboxes", { tagboxes });
+      this.$store.commit("setTagboxes", { tagboxes });
     },
-    on_down_middle: function(e) {
+    onDownMiddle: function(e) {
       this.image_drag_status = true;
       this.image_dragform_x = e.clientX;
       this.image_dragform_y = e.clientY;
     },
-    on_move_middle: function(e) {
+    onMoveMiddle: function(e) {
       if (this.image_drag_status) {
-        const [ratio, rect] = this.calc_image_rect();
+        const [ratio, rect] = this.calcImageRect();
         const imgrc = this.$refs.canvas.getBoundingClientRect();
         const wrapper = this.$refs.wrapper.getBoundingClientRect();
         const candidate_x = this.zoom_x + (e.clientX - this.image_dragform_x);
@@ -725,28 +726,28 @@ export default {
           this.zoom_x = candidate_x;
         }
         this.$nextTick(() => {
-          this.arrange_boxes();
+          this.arrangeBoxes();
         });
       }
     },
-    on_up_middle: function(e) {
+    onUpMiddle: function(e) {
       this.image_drag_status = false;
     },
 
-    on_click: function(event) {
-      if (!this.has_image) {
+    onClick: function(event) {
+      if (!this.hasImage) {
         return;
       }
 
-      const [, rc] = this.calc_image_rect();
+      const [, rc] = this.calcImageRect();
       rc[2] = rc[2] - 1;
-      if (!utils.pt_in_rect(rc, event.clientX, event.clientY)) {
+      if (!utils.ptInRect(rc, event.clientX, event.clientY)) {
         return;
       }
-      this._clean_boxes();
+      this._cleanBoxes();
 
       if (this.active_boxid != null) {
-        this.set_active_boxid({
+        this.setActiveBoxid({
           boxid: null
         });
       }
@@ -760,10 +761,10 @@ export default {
         this.dragfrom_x,
         this.dragfrom_y
       ];
-      utils.addEventListenerOnce(document, "mouseup", this.end_drag, true);
+      utils.addEventListenerOnce(document, "mouseup", this.endDrag, true);
     },
 
-    box_getcursor_type: function(box_border, x, y) {
+    boxGetCursorType: function(box_border, x, y) {
       const rect = box_border.getBoundingClientRect();
       const margin = this.BOX_MARGIN * 2 + this.BOX_BORDER;
       if (x - rect.left <= margin) {
@@ -791,16 +792,16 @@ export default {
       }
       return "";
     },
-    on_boxclick: function(event) {
+    onBoxClick: function(event) {
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
-        this._clean_boxes();
+        this._cleanBoxes();
       }
-      const tag = this.get_box(boxid);
+      const tag = this.getBoxObj(boxid);
       if (!tag) {
         return;
       }
-      const resize = this.box_getcursor_type(
+      const resize = this.boxGetCursorType(
         event.currentTarget,
         event.clientX,
         event.clientY
@@ -810,15 +811,15 @@ export default {
       } else {
         this.status = resize;
       }
-      this.set_active_boxid({ boxid: parseInt(boxid) });
-      const box = this.get_box(this.active_boxid);
-      this.org_boxrc = this.box_to_client(box);
+      this.setActiveBoxid({ boxid: parseInt(boxid) });
+      const box = this.getBoxObj(this.active_boxid);
+      this.org_boxrc = this.boxToClient(box);
       [this.dragfrom_x, this.dragfrom_y] = [event.clientX, event.clientY];
 
-      utils.addEventListenerOnce(document, "mouseup", this.end_drag, true);
+      utils.addEventListenerOnce(document, "mouseup", this.endDrag, true);
     },
 
-    dir_to_cursor(dir) {
+    dirToCursor(dir) {
       const cursor_map = {
         n: "ns-resize",
         nw: "nwse-resize",
@@ -832,26 +833,26 @@ export default {
       return cursor_map[dir];
     },
 
-    on_boxmousemove: function(event) {
+    onBoxMousemove: function(event) {
       let status = this.status;
       if (!status) {
-        status = this.box_getcursor_type(
+        status = this.boxGetCursorType(
           event.currentTarget,
           event.clientX,
           event.clientY
         );
       }
-      let cursor = this.dir_to_cursor(status);
+      let cursor = this.dirToCursor(status);
       if (!cursor) {
         cursor = "move";
       }
       event.target.style.cursor = cursor;
     },
-    on_mousemove: function(event) {
-      if (!this.has_image) {
+    onMousemove: function(event) {
+      if (!this.hasImage) {
         return;
       }
-      let [, imgrc] = this.calc_image_rect();
+      let [, imgrc] = this.calcImageRect();
       let x = utils.min(utils.max(imgrc[0], event.clientX), imgrc[2]);
       let y = utils.min(utils.max(imgrc[1], event.clientY), imgrc[3]);
 
@@ -859,6 +860,7 @@ export default {
         // resize newly created box
         let [l, t] = this.newbox_rect;
         this.newbox_rect = [l, t, x, y];
+
       } else if (this.status) {
         const rc = this.org_boxrc.slice();
 
@@ -885,6 +887,7 @@ export default {
           rc[2] += diff_x;
           rc[1] += diff_y;
           rc[3] += diff_y;
+
         } else {
           if (this.status.indexOf("n") !== -1) {
             rc[1] = utils.min(utils.max(imgrc[1], rc[1] + diff_y), rc[3] - 1);
@@ -899,44 +902,43 @@ export default {
             rc[2] = utils.min(utils.max(rc[0], rc[2] + diff_x), imgrc[2] - 1);
           }
         }
-        const curbox = this.get_box(this.active_boxid);
-        const newbox = { ...curbox, ...this.client_to_box(rc) };
-        this.$store.commit("set_tagbox", {
+        const curbox = this.getBoxObj(this.active_boxid);
+        const newbox = { ...curbox, ...this.clientToBox(rc) };
+        this.$store.commit("updateTagbox", {
           boxid: this.active_boxid,
           box: newbox
         });
       }
     },
-    end_drag: function() {
+    endDrag: function() {
       if (this.status === "new") {
-        const box = this.client_to_box(this.newbox_rect);
+        const box = this.clientToBox(this.newbox_rect);
         if (box.left !== box.right && box.top !== box.bottom) {
-          this.$store.commit("new_tagbox", { box });
-          this.set_active_boxid({
+          this.$store.commit("addNewTagbox", { box });
+          this.setActiveBoxid({
             boxid: this.active_image_tag_boxes.length - 1
           });
         } else {
-          this.set_active_boxid({
+          this.setActiveBoxid({
             boxid: null
           });
         }
       }
 
       this.status = "";
-    },
-
-    get_reviewstatus: function() {
-      const prior_scale = this.zoom_scale;
-      if (this.active_image_review_result === "ok") {
-        return "reviewok";
-      } else if (this.active_image_review_result === "nh") {
-        return "reviewng";
-      }
-      return "notreviewed";
-    },
-    zoom_image: function(e) {
-      this._zoom(e.clientX, e.clientY, 0.05, e.deltaY > 0);
     }
+
+    // 0) Not useing currently but maight use sometime
+    // 
+    // getReviewStatus: function() {
+    //   const prior_scale = this.zoom_scale;
+    //   if (this.active_image_review_result === "ok") {
+    //     return "reviewok";
+    //   } else if (this.active_image_review_result === "nh") {
+    //     return "reviewng";
+    //   }
+    //   return "notreviewed";
+    // }
   }
 };
 </script>
@@ -1239,14 +1241,14 @@ export default {
         cursor: not-allowed;
       }
     }
-    .img_file_name_wrapper{
+    .imgFilename_wrapper{
       width: 6rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       padding:0;
       font-size: 95%;
-      .img_file_name_long_txt:hover{
+      .imgFilename_long_txt:hover{
         display:block;
         width: 100%;
         padding-right: 100%;
@@ -1269,7 +1271,7 @@ export default {
     opacity: 0;
   }
 }
-.all_image_mode {
+.full_screen_mode {
   // #canvasblock
   flex-grow: 1;
   background: #2e2f30;

@@ -2,7 +2,7 @@ import {ERROR, IMG_STATUS, NOTICE} from '@/const.js'
 
 var API_SERVER = ""; // process.env.api_server || "";
 
-export function build_api_url(path) {
+export function buildApiUrl(path) {
   if (API_SERVER.length) {
     return API_SERVER + path;
   } else {
@@ -18,7 +18,7 @@ export function max(a, b) {
   return a > b ? a : b;
 }
 
-export function client_to_node(node, points) {
+export function clientToNode(node, points) {
   const rc = node.getBoundingClientRect();
   const ret = [];
   for (let [x, y] of points) {
@@ -27,29 +27,14 @@ export function client_to_node(node, points) {
   return ret;
 }
 
-export function node_to_client(node, points) {
-  const rc = node.getBoundingClientRect();
-  const ret = [];
-  for (let [x, y] of points) {
-    ret.push([x + rc.left - node.scrollLeft, y + rc.top - node.scrollTop]);
-  }
-  return ret;
-}
-
-export function client_to_node_rect(node, rect) {
-  const [l, t, r, b] = rect;
-  let [[nl, nt], [nr, nb]] = client_to_node(node, [[l, t], [r, b]]);
-  return [nl, nt, nr, nb];
-}
-
-export function normalize_rect(rect) {
+export function normalizeRect(rect) {
   let [l, t, r, b] = rect;
   let ret = [min(l, r), min(t, b), max(l, r), max(t, b)];
   return ret;
 }
 
-export function pt_in_rect(rect, x, y) {
-  const [l, t, r, b] = normalize_rect(rect);
+export function ptInRect(rect, x, y) {
+  const [l, t, r, b] = normalizeRect(rect);
   return x >= l && x < r && y >= t && y < b;
 }
 
@@ -62,7 +47,7 @@ export function addEventListenerOnce(target, type, listener, useCapture) {
   target.addEventListener(type, fn, useCapture);
 }
 
-export function message_load_undeffile_list(undef_filename_list) {
+export function makeMessageUndefImgList(undef_filename_list) {
   let undef_message = ERROR.UNDEF_FILE.message;
   let length = Math.min(3, undef_filename_list.length);
 
@@ -78,7 +63,7 @@ export function message_load_undeffile_list(undef_filename_list) {
   return undef_message;
 }
 
-export function message_load_dupfile_list(dup_filename_list) {
+export function makeMessageDupImgList(dup_filename_list) {
   let dup_message = ERROR.DUP_FILE.message;
   let length = Math.min(3, dup_filename_list.length);
 
@@ -94,7 +79,7 @@ export function message_load_dupfile_list(dup_filename_list) {
   return dup_message;
 }
 
-export function message_make_dir(result) {
+export function selectMessageMakeDir(result) {
   let notice = null;
   let error = null;
 
@@ -172,3 +157,19 @@ export const cookies = {
     return aKeys;
   }
 };
+
+// 0) Not useing currently but maight use sometime
+// 
+// export function nodeToClient(node, points) {
+//   const rc = node.getBoundingClientRect();
+//   const ret = [];
+//   for (let [x, y] of points) {
+//     ret.push([x + rc.left - node.scrollLeft, y + rc.top - node.scrollTop]);
+//   }
+//   return ret;
+// }
+// export function clientToNodeRect(node, rect) {
+//   const [l, t, r, b] = rect;
+//   let [[nl, nt], [nr, nb]] = clientToNode(node, [[l, t], [r, b]]);
+//   return [nl, nt, nr, nb];
+// }

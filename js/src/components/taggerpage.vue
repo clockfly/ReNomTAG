@@ -1,17 +1,17 @@
 <template>
   <div id="page">
-    <div id="all-elements" v-if="!this.isAllImageMode">
+    <div id="all-elements" v-if="!isAllImageMode">
       <app-header class="row"></app-header>
       <div id='main-container'>
         <left-menu></left-menu>
-        <image-list class="folder-image" v-if="folder"/>
+        <image-list class="folder-image" v-if="username"/>
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
-              {{img_status.message}}
+          <div id='loading' v-if='!username || !filtered_imagelist || filtered_imagelist.length === 0'>
+            <div v-if='image_status.code == IMG_STATUS.NO_IMG.code' class="msg_no_image">
+              {{image_status.message}}
             </div>
-            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
+            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -29,34 +29,15 @@
     </div>
 
     <transition name="fade">
-      <div id="all-image"  v-if="this.isAllImageMode">
-        <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
-        <div v-else id="no_active_image" class="filler">
-          <div id='loading' v-if='!folder || !image_list || image_list.length === 0'>
-            <div v-if='img_status.code!= IMG_STATUS.LOADING.code' class="msg_no_image">
-              {{img_status.message}}
-            </div>
-            <div v-else-if='img_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
-              <div class="sk-wave">
-                <div class="sk-rect sk-rect1"></div>
-                <div class="sk-rect sk-rect2"></div>
-                <div class="sk-rect sk-rect3"></div>
-                <div class="sk-rect sk-rect4"></div>
-                <div class="sk-rect sk-rect5"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id="all-image"  v-if="isAllImageMode">
+        <tagcanvas></tagcanvas>
       </div>
     </transition>
-
-
-
 
     <modal-box v-if='notice_status.message'>
       <div slot='contents' class='mkdir-msg' >
         {{notice_status.message}}
-        <input v-model="setUsername" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
+        <input v-model="setNewUser" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
         <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
@@ -121,54 +102,54 @@ export default {
   },
   computed: {
     ...mapState([
-      "all_image_mode",
-      "folder_list",
+      "full_screen_mode",
+      "user_list",
       "active_image_filename",
       "error_status",
       "notice_status",
-      "working_dir",
       "username",
-      "folder",
-      "img_status",
-      "image_list"
+      "new_user",
+      "image_status",
+      "filtered_imagelist"
     ]),
-    setUsername: {
+    setNewUser: {
       get() {
-        return this.$store.state.username;
+        return this.new_user;
       },
       set(e) {
-        this.$store.commit("set_username", { username: e });
+        this.addNewUser({ new_user: e })
       }
     },
     isAllImageMode: function() {
       return (
          ![null, undefined].includes(this.active_image_filename) &&
-        this.all_image_mode
+        this.full_screen_mode
       );
     }
   },
   methods: {
     ...mapMutations([
-      "set_error_status",
-      "set_notice_status"
+      "setErrorStatus",
+      "setNoticeStatus",
+      "addNewUser"
     ]),
-    ...mapActions(["init_client", "make_dir", "load_folder_list"]),
+    ...mapActions(["initClient", "makeDir", "loadUserList"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
       this.make_dir_message_counter = counter;
     },
     mkdir: function() {
-      this.set_notice_status({
+      this.setNoticeStatus({
         code: 115,
         message: "Message\n\nCreating directories..."
       });
-      this.make_dir();
+      this.makeDir();
     },
     setNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
-        this.set_notice_status({
+        this.setNoticeStatus({
           code: 115,
           message: "Message\n\nInput your username"
         });
@@ -181,15 +162,15 @@ export default {
       }
     },
     clearNoticeStatus: function() {
-      this.set_notice_status({ code:null, message:""})
+      this.setNoticeStatus({ code:null, message:""})
       this.make_dir_message_counter = 0;
     },
     clearErrorStatus: function(){
-      this.set_error_status({ code:null, message:"" });
+      this.setErrorStatus({ code:null, message:"" });
     }
   },
   created: function() {
-    this.init_client();
+    this.initClient();
   }
 };
 </script>

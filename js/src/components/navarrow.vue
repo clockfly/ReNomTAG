@@ -1,6 +1,6 @@
 <template>
-<div class='navarrow' @click="on_click">
-  <div v-if='next_file' :class="['arrow', dir+'_arrow']"></div>
+<div class='navarrow' @click="onClick">
+  <div v-if='nextFile' :class="['arrow', dir+'_arrow']"></div>
   </div>
 </template>
 
@@ -11,55 +11,55 @@ export default {
   name: "NavArrow",
   props: ["dir"],
   created() {
-    window.addEventListener("keydown", this.on_keydown);
+    window.addEventListener("keydown", this.onKeydown);
   },
   beforeDestroy() {
-    window.removeEventListener("keydown", this.on_keydown);
+    window.removeEventListener("keydown", this.onKeydown);
   },
   computed: {
-    ...mapState(["files", "active_image_filename", "active_boxid"]),
-    next_file: function() {
+    ...mapState(["filtered_imagelist", "active_image_filename", "active_boxid"]),
+    nextFile: function() {
       if (this.dir === "back") {
-        return this.get_back_name();
+        return this.getBackName();
       } else {
-        return this.get_fore_name();
+        return this.getForeName();
       }
     }
   },
   methods: {
-    get_back_name() {
-      const idx = this.files.indexOf(this.active_image_filename);
+    getBackName() {
+      const idx = this.filtered_imagelist.indexOf(this.active_image_filename);
       if (idx > 0) {
-        return this.files[idx - 1];
+        return this.filtered_imagelist[idx - 1];
       }
     },
 
-    get_fore_name() {
-      const idx = this.files.indexOf(this.active_image_filename);
-      if (idx !== -1 && idx < this.files.length - 1) {
-        return this.files[idx + 1];
+    getForeName() {
+      const idx = this.filtered_imagelist.indexOf(this.active_image_filename);
+      if (idx !== -1 && idx < this.filtered_imagelist.length - 1) {
+        return this.filtered_imagelist[idx + 1];
       }
     },
 
-    on_click: function(event) {
-      const next = this.next_file;
+    onClick: function(event) {
+      const next = this.nextFile;
       if (next) {
-        this.$store.dispatch("load_current_image", next);
+        this.$store.dispatch("loadCurrentImage", next);
       }
     },
-    on_keydown: function(event) {
+    onKeydown: function(event) {
       if (this.active_boxid === null) {
         switch (event.key) {
           case "ArrowLeft":
-            const back = this.get_back_name();
+            const back = this.getBackName();
             if (back) {
-              this.$store.dispatch("load_current_image", back);
+              this.$store.dispatch("loadCurrentImage", back);
             }
             break;
           case "ArrowRight":
-            const fore = this.get_fore_name();
+            const fore = this.getForeame();
             if (fore) {
-              this.$store.dispatch("load_current_image", fore);
+              this.$store.dispatch("loadCurrentImage", fore);
             }
             break;
         }

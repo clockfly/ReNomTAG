@@ -3,8 +3,8 @@
     <img class="hanburger-menu" :src="Menu" @click='toggleMenuVisible' aria-hidden='true'>
     <div class="tool-name">
       <span class="renom">ReNom</span>
-      <span v-if="this.is_admin" class="current-page">TAG &gt; {{folder}} &gt; Admin</span>
-      <span v-else class="current-page">TAG &gt; {{folder}} &gt; Main</span>
+      <span v-if="this.is_admin" class="current-page">TAG &gt; {{username}} &gt; Admin</span>
+      <span v-else class="current-page">TAG &gt; {{username}} &gt; Main</span>
     </div>
   </header>
 </template>
@@ -20,15 +20,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(["tag_filter", "is_admin", "folder"])
+    ...mapState(["tag_filter", "is_admin", "username"])
   },
 
   methods: {
-    ...mapMutations(["set_main_menu_visible"]),
+    ...mapMutations(["setMainMenuVisible"]),
 
     toggleMenuVisible: function() {
       let cur = this.$store.state.main_menu_visible;
-      this.set_main_menu_visible({ visible: !cur });
+      this.setMainMenuVisible({ visible: !cur });
     }
   }
 };

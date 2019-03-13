@@ -5,8 +5,8 @@ import NavArrow from '@/components/navarrow'
 
 function update_store(fn) {
   return setup_store(s=>{
-    s.actions.load_current_image = fn;
-    s.state.files = ['0', '1', '2'];
+    s.actions.loadCurrentImage = fn;
+    s.state.filtered_imagelist = ['0', '1', '2'];
     s.state.active_image_filename = '1';
   })
 }
