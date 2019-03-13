@@ -325,6 +325,9 @@ export default {
   },
   pasteCopiedBoxes(state,payload){
     state.active_image_tag_boxes = payload;
+  },
+  updateBoxes(state,payload){
+    state.active_image_tag_boxes = payload;
   }
 
   // 0) Not useing currently but maight use sometime
