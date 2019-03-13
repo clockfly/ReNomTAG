@@ -363,7 +363,7 @@ export default {
     });
   },
 
-  async delete_taglist(context, payload) {
+  async deleteTaglist(context, payload) {
     let labels = context.state.labels;
     let filtered_labels = [];
     for (let i in payload) {
