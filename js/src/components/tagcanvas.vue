@@ -156,7 +156,7 @@ export default {
       image_drag_status: false,
       image_dragform_x: 0,
       image_dragform_y: 0,
-      pre_box_data:[]
+      pre_boxes_state:[]
     };
   },
   created: function() {
@@ -186,7 +186,7 @@ export default {
       "active_boxid",
       "labels",
       "tagged_images",
-      "pre_save_boxes_data"
+      "saved_pre_tag_boxes"
     ]),
     imageUrl: function() {
       return this.active_image;
@@ -314,7 +314,9 @@ export default {
       "updateTagbox",
       "setActiveboxLabel",
       "setTagboxes",
-      "addNewTagbox"
+      "addNewTagbox",
+      "setCopyBoxes",
+      "applyPreBoxes"
     ]),
     ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
 
@@ -479,7 +481,7 @@ export default {
       if (this.active_image_tag_boxes.length == 0) {
         this.deleteXml();
       } else {
-        let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
+        let saved_pre_tag_boxes_set = this.active_image_tag_boxes.map((box) => {
             let {bottom, top, left, right,label} = {...box};
             // 座標は比率で保存する
             // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
@@ -489,7 +491,7 @@ export default {
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
         });
-        this.$store.commit("setCopyBoxes",pre_save_boxes_data_set);
+        this.setCopyBoxes(saved_pre_tag_boxes_set);
         this.saveAnnotation();
       }
     },
@@ -524,10 +526,10 @@ export default {
         if (event.ctrlKey) {
           switch(event.key){
             case "b":
-              if(this.pre_save_boxes_data == 0){
+              if(this.saved_pre_tag_boxes == 0){
                 alert("There is no target image to copy");
               }
-              let saved_boxes = this.pre_save_boxes_data.map((norm_box) => {
+              let saved_boxes = this.saved_pre_tag_boxes.map((norm_box) => {
                   let bottom,top,left,right,label;
                   [bottom,top,left,right,label] = [...norm_box];
                   let normed_bottom = bottom * this.active_image_height;
@@ -537,13 +539,13 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("updateBoxes",box_dataset);
+              this.applyPreBoxes(box_dataset);
             break;
             case "d":
               this.toShowSelectedBoxes();
             break;
             case "z":
-              this.$store.commit("updateBoxes",this.pre_box_data);
+              this.applyPreBoxes(this.pre_boxes_state);
             break;
           }
         }
@@ -804,7 +806,7 @@ export default {
     },
     onBoxClick: function(event) {
       // ctrl+z用のための処理
-      this.pre_box_data = this.active_image_tag_boxes;
+      this.pre_boxes_state = this.active_image_tag_boxes;
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
         this._cleanBoxes();

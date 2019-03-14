@@ -320,13 +320,11 @@ export default {
 
 
   setCopyBoxes(state,payload){
-    state.pre_save_boxes_data = [];
-    state.pre_save_boxes_data = payload;
+    state.saved_pre_tag_boxes = [];
+    state.saved_pre_tag_boxes = payload;
   },
-  pasteCopiedBoxes(state,payload){
-    state.active_image_tag_boxes = payload;
-  },
-  updateBoxes(state,payload){
+  // applyPreBoxes
+  applyPreBoxes(state,payload){
     state.active_image_tag_boxes = payload;
   }
 

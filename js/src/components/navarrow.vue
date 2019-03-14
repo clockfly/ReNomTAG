@@ -18,7 +18,6 @@ export default {
   },
   computed: {
     ...mapState(["filtered_imagelist", "active_image_filename", "active_boxid"]),
-    ...mapActions(["loadCurrentImage"]),
     nextFile: function() {
       if (this.dir === "back") {
         return this.getBackName();
@@ -28,6 +27,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["loadCurrentImage"]),
     getBackName() {
       const idx = this.filtered_imagelist.indexOf(this.active_image_filename);
       if (idx > 0) {
