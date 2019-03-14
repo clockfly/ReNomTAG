@@ -150,17 +150,13 @@ export default {
       org_boxrc: null,
       boxes: null,
       show_selected_boxes: false,
-      OK_BUTTON: require("../assets/images/OK_button.png"),
-      NG_BUTTON: require("../assets/images/NG_button.png"),
-      OK_BUTTON_PUSH: require("../assets/images/OK_push.png"),
-      NG_BUTTON_PUSH: require("../assets/images/NG_push.png"),
-
       zoom_x: 0, // The coordinate x the image
       zoom_y: 0,
       zoom_scale: 1.0,
       image_drag_status: false,
       image_dragform_x: 0,
-      image_dragform_y: 0
+      image_dragform_y: 0,
+      pre_box_data:[]
     };
   },
   created: function() {
@@ -541,10 +537,13 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("pasteCopiedBoxes",box_dataset);
+              this.$store.commit("updateBoxes",box_dataset);
             break;
             case "d":
               this.toShowSelectedBoxes();
+            break;
+            case "z":
+              this.$store.commit("updateBoxes",this.pre_box_data);
             break;
           }
         }
@@ -804,6 +803,8 @@ export default {
       return "";
     },
     onBoxClick: function(event) {
+      // ctrl+z用のための処理
+      this.pre_box_data = this.active_image_tag_boxes;
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
         this._cleanBoxes();
@@ -873,14 +874,13 @@ export default {
         this.newbox_rect = [l, t, x, y];
 
       } else if (this.status) {
+
         const rc = this.org_boxrc.slice();
 
         let diff_x = x - this.dragfrom_x;
         let diff_y = y - this.dragfrom_y;
-
         if (this.status === "dragging") {
           // move box
-
           // check if the box going out of bounds
           if (rc[0] - imgrc[0] + diff_x < 0) {
             diff_x = (rc[0] - imgrc[0]) * -1;
