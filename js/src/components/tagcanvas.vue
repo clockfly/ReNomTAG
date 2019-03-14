@@ -318,7 +318,7 @@ export default {
       "setCopyBoxes",
       "applyPreBoxes"
     ]),
-    ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
+    ...mapActions(["saveAnnotation", "deleteXml"]),
 
     toFullScreenMode: function() {
       let shift = !this.full_screen_mode;

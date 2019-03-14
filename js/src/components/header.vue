@@ -20,7 +20,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["tag_filter", "is_admin", "username"])
+    ...mapState(["is_admin", "username"])
   },
 
   methods: {

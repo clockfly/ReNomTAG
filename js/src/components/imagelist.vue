@@ -98,8 +98,6 @@ export default {
       "filtered_imagelist",
       "imagelist_max_display",
       "active_image_filename",
-      "tag_filter",
-      "review_filter",
       "filter_method"
     ]),
     fileListTop: function() {

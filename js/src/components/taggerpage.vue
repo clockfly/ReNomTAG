@@ -103,7 +103,6 @@ export default {
   computed: {
     ...mapState([
       "full_screen_mode",
-      "user_list",
       "active_image_filename",
       "error_status",
       "notice_status",
@@ -133,7 +132,7 @@ export default {
       "setNoticeStatus",
       "addNewUser"
     ]),
-    ...mapActions(["initClient", "makeDir", "loadUserList"]),
+    ...mapActions(["initClient", "makeDir"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
