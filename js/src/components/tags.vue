@@ -1,6 +1,6 @@
 <template>
 <div id="tags">
-  <form v-if="this.is_admin" id="add-new-label-form">
+  <form v-if="is_admin" id="add-new-label-form">
     <div v-if='errormsg' class='label_errormsg'>{{errormsg}}</div>
     <div class="add-new-label-input-area">
       <input  type="text"
@@ -26,7 +26,7 @@
       </button>
     </div>
   </form>
-  <div class="title" :class="{ 'top' : !this.is_admin}">
+  <div class="title" :class="{ 'top' : !is_admin}">
       <div class="title-text">
         Tag List
         <span v-if="is_delete_mode">【delete mode】</span>
@@ -90,7 +90,7 @@
       </ul>
     </div>
 
-    <div v-if="this.is_admin">
+    <div v-if="is_admin">
       <div v-if="!is_delete_mode">
         <button
           id="modify-mode-button"
@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import ModalBox from "@/components/modalbox";
 
 export default {
@@ -178,7 +178,6 @@ export default {
 
   computed: {
     ...mapState(["labels", "is_admin"]),
-
     errormsg: function() {
       if (this.label.length) {
         if (!this.label.match("^[0-9a-z-A-Z]+$") || this.label.match(/-/)) {
@@ -232,8 +231,10 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["setActiveboxLabel"]),
+    ...mapActions(["addLabel","deleteTaglist","updateLabel"]),
     addNewLabel: function() {
-      this.$store.dispatch("addLabel", {
+      this.addLabel({
         label: this.label,
         shortcut: this.shortcut
       });
@@ -285,7 +286,7 @@ export default {
 
     onClick(event) {
       const label = event.currentTarget.dataset.label;
-      this.$store.commit("setActiveboxLabel", { label });
+      this.setActiveboxLabel({ label });
     },
     editToggle() {
       this.edit_mode = !this.edit_mode;
@@ -306,7 +307,7 @@ export default {
           if (this.edit_label === "") {
             this.edit_label = this.edit_target[0];
           }
-          this.$store.dispatch("updateLabel", {
+          this.updateLabel({
             labels: this.labels,
             src: this.edit_target,
             dist_label: this.edit_label,
@@ -336,7 +337,7 @@ export default {
       delete_item_list.filter(element => {
         delete_item_list_index.push(element.index);
       });
-      this.$store.dispatch("deleteTaglist", delete_item_list_index);
+      this.deleteTaglist(delete_item_list_index);
       this.delete_item_list = [];
       this.show_delete_dialog = false;
       this.is_delete_mode = false;

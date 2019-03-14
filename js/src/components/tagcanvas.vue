@@ -254,9 +254,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("setCommentAdmin", { comment: value });
+          this.setCommentAdmin({ comment: value });
         } else {
-          this.$store.commit("setCommentAdmin", { comment: "" });
+          this.setCommentAdmin({ comment: value });
         }
       }
     },
@@ -266,9 +266,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("setCommentSubord", { comment: value });
+          this.setCommentSubord( { comment: value });
         } else {
-          this.$store.commit("setCommentSubord", { comment: "" });
+          this.setCommentSubord( { comment: value });
         }
       }
     },
@@ -308,12 +308,23 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setActiveBoxid", "setReviewResult"]),
+    ...mapMutations([
+      "setActiveBoxid",
+      "setReviewResult",
+      "setCommentAdmin",
+      "setCommentSubord",
+      "setFullScreenMode",
+      "removeTagbox",
+      "updateTagbox",
+      "setActiveboxLabel",
+      "setTagboxes",
+      "addNewTagbox"
+    ]),
     ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
 
     toFullScreenMode: function() {
       let shift = !this.full_screen_mode;
-      this.$store.commit("setFullScreenMode", { full_screen_mode: shift });
+      this.setFullScreenMode({ full_screen_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -507,7 +518,7 @@ export default {
           if (event.key === "Delete" || event.key === "Backspace") {
             this._deleteBoxesInSelectedMode(this.active_boxid);
 
-            this.$store.commit("removeTagbox", { boxid: this.active_boxid });
+            this.removeTagbox({ boxid: this.active_boxid });
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -586,14 +597,14 @@ export default {
               default:
                 return;
             }
-            this.$store.commit("updateTagbox", {
+            this.updateTagbox({
               boxid: boxid,
               box: box
             });
           } else {
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
-                this.$store.commit("setActiveboxLabel", label);
+                this.setActiveboxLabel(label);
                 event.preventDefault();
                 event.stopPropagation();
                 return false;
@@ -691,7 +702,7 @@ export default {
           this._cleanBoxesInSelectedMode(i);
         }
       }
-      this.$store.commit("setTagboxes", { tagboxes });
+      this.setTagboxes({ tagboxes });
     },
     onDownMiddle: function(e) {
       this.image_drag_status = true;
@@ -904,7 +915,7 @@ export default {
         }
         const curbox = this.getBoxObj(this.active_boxid);
         const newbox = { ...curbox, ...this.clientToBox(rc) };
-        this.$store.commit("updateTagbox", {
+        this.updateTagbox( {
           boxid: this.active_boxid,
           box: newbox
         });
@@ -914,7 +925,7 @@ export default {
       if (this.status === "new") {
         const box = this.clientToBox(this.newbox_rect);
         if (box.left !== box.right && box.top !== box.bottom) {
-          this.$store.commit("addNewTagbox", { box });
+          this.addNewTagbox({ box });
           this.setActiveBoxid({
             boxid: this.active_image_tag_boxes.length - 1
           });
@@ -929,7 +940,7 @@ export default {
     }
 
     // 0) Not useing currently but maight use sometime
-    // 
+    //
     // getReviewStatus: function() {
     //   const prior_scale = this.zoom_scale;
     //   if (this.active_image_review_result === "ok") {

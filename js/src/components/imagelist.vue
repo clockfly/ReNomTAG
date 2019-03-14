@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapActions } from "vuex";
 import * as utils from "@/utils";
 import { hasBndbox, getReviewResult } from "@/store/mutation";
 export default {
@@ -144,7 +144,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setMainMenuVisible"]),
+    ...mapMutations([
+      "setActiveImage",
+      "setFilter",
+      "setImagelistMaxDisplay"
+    ]),
+    ...mapActions(["loadCurrentImage"]),
     isSelectedFilter: function(filter_name) {
       if (this.filter_method === filter_name) {
         return true;
@@ -152,8 +157,8 @@ export default {
       return false;
     },
     setFilter: function(filter_name) {
-      this.$store.commit("setActiveImage", { file: null });
-      this.$store.commit("setFilter", filter_name);
+      this.setActiveImage({ file: null });
+      this.setFilter(filter_name);
     },
     isReviewResultOk(file) {
       const info = this.folder_files[file];
@@ -184,7 +189,7 @@ export default {
     },
     selectImage(event) {
       if (event.target.dataset.file !== this.active_image_filename) {
-        this.$store.dispatch("loadCurrentImage", event.target.dataset.file);
+        this.loadCurrentImage(event.target.dataset.file);
       }
     },
     onScroll: function(event) {
@@ -202,8 +207,8 @@ export default {
           let wrapperrc = wrapper.getBoundingClientRect();
 
           if (imgrc.top <= wrapperrc.top) {
-            this.$store.commit("setImagelistMaxDisplay", {
-              max_display: this.imagelist_max_display + this.IMAGE_RELOAD_AMOUNT
+            this.setImagelistMaxDisplay({
+                max_display: this.imagelist_max_display + this.IMAGE_RELOAD_AMOUNT
             });
           }
         } else if (loaded_img[n] === null) {

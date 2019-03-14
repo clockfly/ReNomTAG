@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "NavArrow",
@@ -18,6 +18,7 @@ export default {
   },
   computed: {
     ...mapState(["filtered_imagelist", "active_image_filename", "active_boxid"]),
+    ...mapActions(["loadCurrentImage"]),
     nextFile: function() {
       if (this.dir === "back") {
         return this.getBackName();
@@ -44,7 +45,7 @@ export default {
     onClick: function(event) {
       const next = this.nextFile;
       if (next) {
-        this.$store.dispatch("loadCurrentImage", next);
+        this.loadCurrentImage(next);
       }
     },
     onKeydown: function(event) {
@@ -53,13 +54,13 @@ export default {
           case "ArrowLeft":
             const back = this.getBackName();
             if (back) {
-              this.$store.dispatch("loadCurrentImage", back);
+              this.loadCurrentImage(back);
             }
             break;
           case "ArrowRight":
             const fore = this.getForeame();
             if (fore) {
-              this.$store.dispatch("loadCurrentImage", fore);
+              this.loadCurrentImage(fore);
             }
             break;
         }

@@ -8,10 +8,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!username || !filtered_imagelist || filtered_imagelist.length === 0'>
-            <div v-if='image_status.code == IMG_STATUS.NO_IMG.code' class="msg_no_image">
+            <div v-if='image_status == IMG_STATUS.NO_IMG' class="msg_no_image">
               {{image_status.message}}
             </div>
-            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
+            <div v-else-if='image_status == IMG_STATUS.LOADING' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
