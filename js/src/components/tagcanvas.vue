@@ -156,8 +156,8 @@ export default {
       image_drag_status: false,
       image_dragform_x: 0,
       image_dragform_y: 0,
-      pre_box_data:[],
-      copy_target_box: null,
+      pre_boxes_state:[],
+      copy_target_box: null
     };
   },
   created: function() {
@@ -187,7 +187,7 @@ export default {
       "active_boxid",
       "labels",
       "tagged_images",
-      "pre_save_boxes_data"
+      "saved_pre_tag_boxes"
     ]),
     imageUrl: function() {
       return this.active_image;
@@ -251,9 +251,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("setCommentAdmin", { comment: value });
+          this.setCommentAdmin({ comment: value });
         } else {
-          this.$store.commit("setCommentAdmin", { comment: "" });
+          this.setCommentAdmin({ comment: value });
         }
       }
     },
@@ -263,9 +263,9 @@ export default {
       },
       set(value) {
         if (value) {
-          this.$store.commit("setCommentSubord", { comment: value });
+          this.setCommentSubord( { comment: value });
         } else {
-          this.$store.commit("setCommentSubord", { comment: "" });
+          this.setCommentSubord( { comment: value });
         }
       }
     },
@@ -305,12 +305,25 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setActiveBoxid", "setReviewResult"]),
-    ...mapActions(["saveAnnotation", "deleteXml","paste_annotation"]),
+    ...mapMutations([
+      "setActiveBoxid",
+      "setReviewResult",
+      "setCommentAdmin",
+      "setCommentSubord",
+      "setFullScreenMode",
+      "removeTagbox",
+      "updateTagbox",
+      "setActiveboxLabel",
+      "setTagboxes",
+      "addNewTagbox",
+      "setCopyBoxes",
+      "applyPreBoxes"
+    ]),
+    ...mapActions(["saveAnnotation", "deleteXml"]),
 
     toFullScreenMode: function() {
       let shift = !this.full_screen_mode;
-      this.$store.commit("setFullScreenMode", { full_screen_mode: shift });
+      this.setFullScreenMode({ full_screen_mode: shift });
     },
 
     _zoom: function(x, y, scale_delt, in_out) {
@@ -469,7 +482,7 @@ export default {
       if (this.active_image_tag_boxes.length == 0) {
         this.deleteXml();
       } else {
-        let pre_save_boxes_data_set = this.active_image_tag_boxes.map((box) => {
+        let saved_pre_tag_boxes_set = this.active_image_tag_boxes.map((box) => {
             let {bottom, top, left, right,label} = {...box};
             // 座標は比率で保存する
             // (100,200,100,50) => (0.4, 0.1, 0.4, 0.8)という風に
@@ -479,7 +492,7 @@ export default {
             let normed_right = right/this.active_image_width;
             return [normed_bottom, normed_top, normed_left, normed_right,label]
         });
-        this.$store.commit("setCopyBoxes",pre_save_boxes_data_set);
+        this.setCopyBoxes(saved_pre_tag_boxes_set);
         this.saveAnnotation();
       }
     },
@@ -504,7 +517,7 @@ export default {
           if (event.key === "Delete" || event.key === "Backspace") {
             this._deleteBoxesInSelectedMode(this.active_boxid);
 
-            this.$store.commit("removeTagbox", { boxid: this.active_boxid });
+            this.removeTagbox({ boxid: this.active_boxid });
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -514,10 +527,10 @@ export default {
         if (event.ctrlKey) {
           switch(event.key){
             case "b":
-              if(this.pre_save_boxes_data == 0){
+              if(this.saved_pre_tag_boxes == 0){
                 alert("There is no target image to copy");
               }
-              let saved_boxes = this.pre_save_boxes_data.map((norm_box) => {
+              let saved_boxes = this.saved_pre_tag_boxes.map((norm_box) => {
                   let bottom,top,left,right,label;
                   [bottom,top,left,right,label] = [...norm_box];
                   let normed_bottom = bottom * this.active_image_height;
@@ -527,13 +540,13 @@ export default {
                   return {bottom:normed_bottom, top:normed_top, left:normed_left, right:normed_right,label:label}
               });
               let box_dataset = [...this.active_image_tag_boxes, ...saved_boxes]
-              this.$store.commit("updateBoxes",box_dataset);
+              this.applyPreBoxes(box_dataset);
             break;
             case "d":
               this.toShowSelectedBoxes();
             break;
             case "z":
-              this.$store.commit("updateBoxes",this.pre_box_data);
+              this.applyPreBoxes(this.pre_boxes_state);
             break;
             case "c":
             const boxid = this.active_boxid;
@@ -542,7 +555,7 @@ export default {
             case "v":
               //　0.02なのは感覚的なものです、深い意味はないです
               let height_diff = this.active_image_height * 0.02;
-              let width_diff = 
+              let width_diff =
               // 左端ではみ出しそうならば、右側にずらす処理のための三項演算子
               (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
                - this.active_image_width * 0.02:
@@ -610,14 +623,14 @@ export default {
               default:
                 return;
             }
-            this.$store.commit("updateTagbox", {
+            this.updateTagbox({
               boxid: boxid,
               box: box
             });
           } else {
             for (let label of this.labels) {
               if (label.shortcut === event.key) {
-                this.$store.commit("setActiveboxLabel", label);
+                this.setActiveboxLabel(label);
                 event.preventDefault();
                 event.stopPropagation();
                 return false;
@@ -715,7 +728,7 @@ export default {
           this._cleanBoxesInSelectedMode(i);
         }
       }
-      this.$store.commit("setTagboxes", { tagboxes });
+      this.setTagboxes({ tagboxes });
     },
     onDownMiddle: function(e) {
       this.image_drag_status = true;
@@ -817,8 +830,8 @@ export default {
       return "";
     },
     onBoxClick: function(event) {
-      // ctrl+z用、コピペのための処理
-      this.pre_box_data = this.active_image_tag_boxes;
+      // ctrl+z用のための処理
+      this.pre_boxes_state = this.active_image_tag_boxes;
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
         this._cleanBoxes();
@@ -931,7 +944,7 @@ export default {
         const newbox = { ...curbox, ...this.clientToBox(rc) };
         // ctrl+z用、コピペのための処理
         this.pre_box_data = this.active_image_tag_boxes;
-        this.$store.commit("updateTagbox", {
+        this.updateTagbox( {
           boxid: this.active_boxid,
           box: newbox
         });
@@ -941,7 +954,7 @@ export default {
       if (this.status === "new") {
         const box = this.clientToBox(this.newbox_rect);
         if (box.left !== box.right && box.top !== box.bottom) {
-          this.$store.commit("addNewTagbox", { box });
+          this.addNewTagbox({ box });
           this.setActiveBoxid({
             boxid: this.active_image_tag_boxes.length - 1
           });

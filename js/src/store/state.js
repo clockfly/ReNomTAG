@@ -6,7 +6,7 @@ let state = {
   full_screen_mode: false,
   // menu state
   main_menu_visible: false,
-  
+
 
   // 2) Notifications
   // error_status: use to imform errors with modal
@@ -69,7 +69,7 @@ let state = {
   tagged_images: [],
 
   // store saved-boxes from privious tagcanvas
-  pre_save_boxes_data: []
+  saved_pre_tag_boxes: []
 };
 
 export default state;

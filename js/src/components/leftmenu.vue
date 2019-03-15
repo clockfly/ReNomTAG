@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations  } from "vuex";
 import * as utils from "@/utils";
 
 export default {
@@ -31,9 +31,10 @@ export default {
     ...mapState(["main_menu_visible", "username", "user_list"])
   },
   methods: {
+    ...mapMutations(["setMainMenuVisible"]),
     ...mapActions(["initClient"]),
     closeMenu: function() {
-      this.$store.commit("setMainMenuVisible", { visible: false });
+      this.setMainMenuVisible({ visible: false });
     },
     selectUser: function(username) {
       this.initClient(username);
