@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export const BLOCK_HEIGHT = 125;
 
@@ -26,6 +26,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(["loadCurrentImage"]),
     ratio: function(image) {
       return BLOCK_HEIGHT / image.height;
     },
@@ -45,7 +46,7 @@ export default {
     },
     onClick: function(event) {
       const filename = event.currentTarget.dataset.filename;
-      this.$store.dispatch("loadCurrentImage", filename);
+      this.loadCurrentImage(filename);
     }
   }
 };

@@ -8,10 +8,10 @@
         <tagcanvas v-if="active_image_filename != null" ></tagcanvas>
         <div v-else id="no_active_image" class="filler">
           <div id='loading' v-if='!username || !filtered_imagelist || filtered_imagelist.length === 0'>
-            <div v-if='image_status.code == IMG_STATUS.NO_IMG.code' class="msg_no_image">
+            <div v-if='image_status == IMG_STATUS.NO_IMG' class="msg_no_image">
               {{image_status.message}}
             </div>
-            <div v-else-if='image_status.code == IMG_STATUS.LOADING.code' class="msg_no_image">
+            <div v-else-if='image_status == IMG_STATUS.LOADING' class="msg_no_image">
               <div class="sk-wave">
                 <div class="sk-rect sk-rect1"></div>
                 <div class="sk-rect sk-rect2"></div>
@@ -40,10 +40,10 @@
         <input v-model="setNewUser" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
+        <button v-if='make_dir_message_counter <= 1' @click='updateNoticeStatus()' class="ok-button">
           OK
         </button>
-        <button v-if='make_dir_message_counter > 1' @click='setNoticeStatus()' class="load-button">
+        <button v-if='make_dir_message_counter > 1' @click='updateNoticeStatus()' class="load-button">
           Load
         </button>
       </div>
@@ -103,7 +103,6 @@ export default {
   computed: {
     ...mapState([
       "full_screen_mode",
-      "user_list",
       "active_image_filename",
       "error_status",
       "notice_status",
@@ -133,7 +132,7 @@ export default {
       "setNoticeStatus",
       "addNewUser"
     ]),
-    ...mapActions(["initClient", "makeDir", "loadUserList"]),
+    ...mapActions(["initClient", "makeDir"]),
     messageCounter: function() {
       let counter = this.make_dir_message_counter;
       counter = counter + 1;
@@ -146,7 +145,7 @@ export default {
       });
       this.makeDir();
     },
-    setNoticeStatus: function() {
+    updateNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
         this.setNoticeStatus({
