@@ -553,16 +553,38 @@ export default {
             this.copy_target_box = this.pre_box_data[boxid];
             break;
             case "v":
-              //　0.02なのは感覚的なものです、深い意味はないです
+              //　それぞれの数字0.02なのは感覚的なものです、深い意味はないです
               let height_diff = 
+              // 上ではみ出しそうならば、逆にずらす処理
               this.copy_target_box.top > 0?
               this.active_image_height * 0.02:
               this.active_image_height * -0.02;
               let width_diff =
-              // 左端ではみ出しそうならば、右側にずらす処理のための三項演算子
+              // 左ではみ出しそうならば、逆にずらす処理
               (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
                - this.active_image_width * 0.02:
               this.active_image_width * 0.02;
+              
+              console.dir(this.active_image_width);
+
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける
+              // 上下での処理
+              let target_box_height = this.copy_target_box.bottom 
+                                      - this.copy_target_box.top 
+                                      + this.active_image_height * 0.02;
+              if(target_box_height > this.active_image_height){
+                height_diff = 0;
+              };
+              
+              // 左右での処理
+              let target_box_width = this.copy_target_box.right 
+                                      - this.copy_target_box.left 
+                                      + this.active_image_width * 0.02;
+              if(target_box_width > this.active_image_width){
+                width_diff = 0;
+              }
+
+
               let box　= {
                 label: this.copy_target_box.label,
                 bottom: this.copy_target_box.bottom - height_diff,
