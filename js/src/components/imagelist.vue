@@ -12,13 +12,13 @@
         <div class="col-md-4 fillter-button left">
           <div :class='[{"image_pred_tagbutton_active" : isSelectedFilter("All")} ,
             {"off" : !isSelectedFilter("All")}]'
-              @click='setFilter("All")'>
+              @click='updateFilter("All")'>
               ALL
           </div>
         </div>
         <div class="col-md-8 fillter-button right">
           <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("NeedReview")},
-            { "off" : !isSelectedFilter("NeedReview")}]' @click='setFilter("NeedReview")'>
+            { "off" : !isSelectedFilter("NeedReview")}]' @click='updateFilter("NeedReview")'>
             <img v-if='isSelectedFilter("NeedReview")' class="button-icon" :src="NO_REVIEW">
             <img v-else class="button-icon" :src="NO_REVIEW_OFF"> Need Review
           </div>
@@ -28,14 +28,14 @@
         <div class="col fillter-button Notags-fillter">
           <div :class='[{"image_pred_tagbutton_active" : isSelectedFilter("NoTags")} ,
             { "off" : !isSelectedFilter("NoTags")}]'
-              @click='setFilter("NoTags")'>
+              @click='updateFilter("NoTags")'>
               No Tags
           </div>
         </div>
         <div class="col fillter-button OK-fillter">
           <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("CHECK_OK") },
             { "off" : !isSelectedFilter("CHECK_OK")}]'
-            @click='setFilter("CHECK_OK")'>
+            @click='updateFilter("CHECK_OK")'>
             <img v-if="isSelectedFilter('CHECK_OK')" class="button-icon" :src="CHECK_OK">
             <img v-else class="button-icon" :src="CHECK_OK_OFF"> OK
           </div>
@@ -43,7 +43,7 @@
         <div class="col fillter-button NG-fillter">
           <div :class='[{"image_pred_tagbutton_active": isSelectedFilter("CHECK_NG")},
             { "off" : !isSelectedFilter("CHECK_NG")}]'
-            @click='setFilter("CHECK_NG")'>
+            @click='updateFilter("CHECK_NG")'>
             <img v-if="isSelectedFilter('CHECK_NG')" class="ng-button-icon" :src="CHECK_NG">
             <img v-else class="ng-button-icon" :src="CHECK_NG_OFF"> NG
           </div>
@@ -154,7 +154,7 @@ export default {
       }
       return false;
     },
-    setFilter: function(filter_name) {
+    updateFilter: function(filter_name) {
       this.setActiveImage({ file: null });
       this.setFilter(filter_name);
     },

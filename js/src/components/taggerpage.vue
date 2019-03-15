@@ -40,10 +40,10 @@
         <input v-model="setNewUser" v-if='make_dir_message_counter===1' class="modal__contents__input" type="text">
       </div>
       <div slot='okbutton'>
-        <button v-if='make_dir_message_counter <= 1' @click='setNoticeStatus()' class="ok-button">
+        <button v-if='make_dir_message_counter <= 1' @click='updateNoticeStatus()' class="ok-button">
           OK
         </button>
-        <button v-if='make_dir_message_counter > 1' @click='setNoticeStatus()' class="load-button">
+        <button v-if='make_dir_message_counter > 1' @click='updateNoticeStatus()' class="load-button">
           Load
         </button>
       </div>
@@ -145,7 +145,7 @@ export default {
       });
       this.makeDir();
     },
-    setNoticeStatus: function() {
+    updateNoticeStatus: function() {
       let counter = this.make_dir_message_counter;
       if (counter === 0) {
         this.setNoticeStatus({

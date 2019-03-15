@@ -49,7 +49,7 @@
             v-model="edit_label"
             placeholder="label name..."
             :readonly="!is_admin"
-            @keyup="updateLabel"
+            @keyup="sendToUpdateLabel"
           >
             <div v-else class="label-text">{{getTagName(data.label)}}</div>
           <input
@@ -57,7 +57,7 @@
             type="text"
             class="label-shortcut-update"
             v-model="edit_shortcut"
-            @keydown.stop.prevent.self="updateLabel"
+            @keydown.stop.prevent.self="sendToUpdateLabel"
             @keyup.stop.prevent.self="updateShortcutKey"
             placeholder="key..."
           >
@@ -73,7 +73,7 @@
           <div v-else>
             <img
               v-if="edit_target[0] === data.label && edit_mode === true"
-              @click="updateLabel('edit_off')"
+              @click="sendToUpdateLabel('edit_off')"
               @click.stop.prevent="editMode(index, data.label, data.shortcut), editToggle()"
               class="tag_list_icon"
               :src="tag_list_icon"
@@ -301,7 +301,7 @@ export default {
       this.edit_target = target;
     },
 
-    updateLabel(event) {
+    sendToUpdateLabel(event) {
       if (event.keyCode === 13 || event == "edit_off") {
         if (this.updateErrormsg === "") {
           if (this.edit_label === "") {
