@@ -156,7 +156,8 @@ export default {
       image_drag_status: false,
       image_dragform_x: 0,
       image_dragform_y: 0,
-      pre_box_data:[]
+      pre_box_data:[],
+      copy_target_box: null,
     };
   },
   created: function() {
@@ -534,6 +535,30 @@ export default {
             case "z":
               this.$store.commit("updateBoxes",this.pre_box_data);
             break;
+            case "c":
+            const boxid = this.active_boxid;
+            this.copy_target_box = this.pre_box_data[boxid];
+            break;
+            case "v":
+              //　0.02なのは感覚的なものです、深い意味はないです
+              let height_diff = this.active_image_height * 0.02;
+              let width_diff = 
+              // 左端ではみ出しそうならば、右側にずらす処理のための三項演算子
+              (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
+               - this.active_image_width * 0.02:
+              this.active_image_width * 0.02;
+
+              let box　= {
+                label: this.copy_target_box.label,
+                bottom: this.copy_target_box.bottom - height_diff,
+                left: this.copy_target_box.left - width_diff,
+                right: this.copy_target_box.right - width_diff,
+                top: this.copy_target_box.top - height_diff
+              }
+              if(box){
+                this.$store.commit("addNewTagbox", {box} );
+              }
+            break;
           }
         }
       }
@@ -792,7 +817,7 @@ export default {
       return "";
     },
     onBoxClick: function(event) {
-      // ctrl+z用のための処理
+      // ctrl+z用、コピペのための処理
       this.pre_box_data = this.active_image_tag_boxes;
       const boxid = event.currentTarget.dataset.boxid;
       if (boxid !== this.active_boxid) {
@@ -904,6 +929,8 @@ export default {
         }
         const curbox = this.getBoxObj(this.active_boxid);
         const newbox = { ...curbox, ...this.clientToBox(rc) };
+        // ctrl+z用、コピペのための処理
+        this.pre_box_data = this.active_image_tag_boxes;
         this.$store.commit("updateTagbox", {
           boxid: this.active_boxid,
           box: newbox
