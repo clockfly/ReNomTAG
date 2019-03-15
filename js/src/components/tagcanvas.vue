@@ -554,13 +554,15 @@ export default {
             break;
             case "v":
               //　0.02なのは感覚的なものです、深い意味はないです
-              let height_diff = this.active_image_height * 0.02;
+              let height_diff = 
+              this.copy_target_box.top > 0?
+              this.active_image_height * 0.02:
+              this.active_image_height * -0.02;
               let width_diff =
               // 左端ではみ出しそうならば、右側にずらす処理のための三項演算子
               (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
                - this.active_image_width * 0.02:
               this.active_image_width * 0.02;
-
               let box　= {
                 label: this.copy_target_box.label,
                 bottom: this.copy_target_box.bottom - height_diff,
