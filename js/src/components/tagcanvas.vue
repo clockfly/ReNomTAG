@@ -156,7 +156,8 @@ export default {
       image_drag_status: false,
       image_dragform_x: 0,
       image_dragform_y: 0,
-      pre_boxes_state:[]
+      pre_boxes_state:[],
+      copy_target_box: null
     };
   },
   created: function() {
@@ -301,6 +302,17 @@ export default {
       this.$nextTick(() => {
         this.arrangeBoxes();
       });
+    },
+    boxes: function(){
+      // コピペショートカットキー用の処理
+      if(this.active_image_tag_boxes){ 
+        // this.active_image_tag_boxesの一番最後の値がコピー対象
+        let target = this.active_image_tag_boxes[this.active_image_tag_boxes.length-1];
+        // labelをつけた場合だけデータを保存する
+        if(target.label){
+        this.copy_target_box = target;
+        }
+      }
     }
   },
   methods: {
@@ -546,6 +558,53 @@ export default {
             break;
             case "z":
               this.applyPreBoxes(this.pre_boxes_state);
+            break;
+            case "c":
+            if(this.active_boxid){
+              const boxid = this.active_boxid;
+              this.copy_target_box = this.pre_box_data[boxid];
+            }
+            break;
+            case "v":
+              //　それぞれの数字0.02なのは感覚的なものです、深い意味はないです
+              let height_diff = 
+              // 上ではみ出しそうならば、逆にずらす処理
+              this.copy_target_box.top > 0?
+              this.active_image_height * 0.02:
+              this.active_image_height * -0.02;
+              let width_diff =
+              // 左ではみ出しそうならば、逆にずらす処理
+              (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
+               - this.active_image_width * 0.02:
+              this.active_image_width * 0.02;
+
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける上下での処理
+              let target_box_height = this.copy_target_box.bottom 
+                                      - this.copy_target_box.top 
+                                      + this.active_image_height * 0.02;
+              if(target_box_height > this.active_image_height){
+                height_diff = 0;
+              };
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける左右での処理
+              let target_box_width = this.copy_target_box.right 
+                                      - this.copy_target_box.left 
+                                      + this.active_image_width * 0.02;
+              if(target_box_width > this.active_image_width){
+                width_diff = 0;
+              }
+
+
+              let box　= {
+                label: this.copy_target_box.label,
+                bottom: this.copy_target_box.bottom - height_diff,
+                left: this.copy_target_box.left - width_diff,
+                right: this.copy_target_box.right - width_diff,
+                top: this.copy_target_box.top - height_diff
+              }
+              if(box){
+                this.$store.commit("addNewTagbox", {box} );
+              }
             break;
           }
         }
@@ -917,6 +976,8 @@ export default {
         }
         const curbox = this.getBoxObj(this.active_boxid);
         const newbox = { ...curbox, ...this.clientToBox(rc) };
+        // ctrl+z用、コピペのための処理
+        this.pre_box_data = this.active_image_tag_boxes;
         this.updateTagbox( {
           boxid: this.active_boxid,
           box: newbox
