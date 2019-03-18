@@ -302,6 +302,17 @@ export default {
       this.$nextTick(() => {
         this.arrangeBoxes();
       });
+    },
+    boxes: function(){
+      // コピペショートカットキー用の処理
+      if(this.active_image_tag_boxes){ 
+        // this.active_image_tag_boxesの一番最後の値がコピー対象
+        let target = this.active_image_tag_boxes[this.active_image_tag_boxes.length-1];
+        // labelをつけた場合だけデータを保存する
+        if(target.label){
+        this.copy_target_box = target;
+        }
+      }
     }
   },
   methods: {
@@ -549,8 +560,10 @@ export default {
               this.applyPreBoxes(this.pre_boxes_state);
             break;
             case "c":
-            const boxid = this.active_boxid;
-            this.copy_target_box = this.pre_box_data[boxid];
+            if(this.active_boxid){
+              const boxid = this.active_boxid;
+              this.copy_target_box = this.pre_box_data[boxid];
+            }
             break;
             case "v":
               //　それぞれの数字0.02なのは感覚的なものです、深い意味はないです
@@ -564,19 +577,16 @@ export default {
               (this.copy_target_box.left - this.active_image_width * 0.02) < 0 ?
                - this.active_image_width * 0.02:
               this.active_image_width * 0.02;
-              
-              console.dir(this.active_image_width);
 
               // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける
-              // 上下での処理
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける上下での処理
               let target_box_height = this.copy_target_box.bottom 
                                       - this.copy_target_box.top 
                                       + this.active_image_height * 0.02;
               if(target_box_height > this.active_image_height){
                 height_diff = 0;
               };
-              
-              // 左右での処理
+              // 選択ボックスの幅が大きく画面からはみ出す場合ずらさずに貼り付ける左右での処理
               let target_box_width = this.copy_target_box.right 
                                       - this.copy_target_box.left 
                                       + this.active_image_width * 0.02;
