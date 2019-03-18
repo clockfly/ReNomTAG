@@ -1060,7 +1060,7 @@ export default {
       position: absolute;
       width: 120px;
       height: 30px;
-      top: calc(100% - 45px);
+      top: calc(95% - 20px);
       left: calc(50% - 60px);
       #zoom-out-button {
         border-top-left-radius: 5px;
