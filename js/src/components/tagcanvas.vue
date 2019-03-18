@@ -9,7 +9,7 @@
 
       <navarrow class="arrow" dir="back"/>
         <div id="canvas-wrapper" @wheel.ctrl.prevent="zoomImage" ref="wrapper">
-          <div id="pad"/>
+          <div class="pad"/>
           <img v-if="hasImage" id="canvas" ref="canvas" :src="imageUrl" :style="canvasStyle"
            @dragstart.left.stop.prevent="onDragStart">
           <div v-if="isCreatingNewbox()" id="newtag" :style="newtagStyle()" />
@@ -22,6 +22,7 @@
               <div  class='taglabel'>{{getBoxLabel(idx)}}</div>
             </div>
           </div>
+          <div class="pad"/>
         </div>
         <transition name="fade">
           <div id="zoom-button" >
@@ -281,7 +282,7 @@ export default {
       const z = this.zoom_scale;
       return {
         width: 100.0 * z + "%",
-        height: 100.0 * z + "%",
+        height: 95.0 * z + "%",
         top: this.zoom_y + "px",
         left: this.zoom_x + "px"
       };
@@ -1040,9 +1041,9 @@ export default {
       width: calc(100% - 60px);
       height: 100%;
       clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-      #pad {
+      .pad {
         width: 100%;
-        height: $component-margin-top;
+        height: $component-margin-top*0.5;
       }
       #canvas {
         position: relative;
