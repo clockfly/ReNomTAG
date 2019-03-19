@@ -158,7 +158,8 @@ export default {
       image_dragform_x: 0,
       image_dragform_y: 0,
       pre_boxes_state:[],
-      copy_target_box: null
+      copy_target_box: null,
+      is_Press_Control: false
     };
   },
   created: function() {
@@ -513,6 +514,10 @@ export default {
     },
 
     onKeyup: function(event) {
+      // コピペのショートカットとタグ付けのショートカットが被らないように真偽値を追加
+      if(event.key === "Control"){
+        this.is_Press_Control = false;
+      }
       if (event.target.nodeName === "BODY") {
         if (event.ctrlKey === true && event.key === "w") {
           this.toFullScreenMode();
@@ -613,6 +618,10 @@ export default {
     },
 
     onKeydown: function(event) {
+      // コピペのショートカットとタグ付けのショートカットが被らないように真偽値を追加
+      if(event.key === "Control"){
+        this.is_Press_Control = true;
+      }
       if (event.target.nodeName === "BODY") {
         if (this.hasImage && this.active_boxid !== null) {
           if (
@@ -664,7 +673,7 @@ export default {
             });
           } else {
             for (let label of this.labels) {
-              if (label.shortcut === event.key) {
+              if ((label.shortcut === event.key) && !(this.is_Press_Control)){
                 this.setActiveboxLabel(label);
                 event.preventDefault();
                 event.stopPropagation();
