@@ -328,9 +328,13 @@ export default {
       if(this.active_image_tag_boxes){ 
         // this.active_image_tag_boxesの一番最後の値がコピー対象
         let target = this.active_image_tag_boxes[this.active_image_tag_boxes.length-1];
+        // タグ付けしていない画像だとエラーが発生したので、そのための処理
+        if(target===undefined){
+          return false;
+        }
         // labelをつけた場合だけデータを保存する
         if(target.label){
-        this.copy_target_box = target;
+          this.copy_target_box = target;
         }
       }
     }
@@ -1030,17 +1034,20 @@ export default {
       this.status = "";
     },
     labelIdx: function(idx){
-        let labelName= this.getBoxLabel(idx);
-        if(labelName === undefined){
-          return false;
-        }
-        else{
-          return this.labels.find((label) =>
-            {return label.label === labelName}
-          )
+      let labelName= this.getBoxLabel(idx);
+      if(labelName === undefined){
+        return false;
+      } else {
+        return this.labels.find((label) =>
+          {return label.label === labelName}
+        )
       }
      },
     boxColorListNum: function(idx){
+      let labelName= this.getBoxLabel(idx);
+        if(labelName === undefined){
+          return false;
+      }
       let labelNum = this.labelIdx(idx).id-1;
       return this.color_list[this.labelIdx(idx).id-1];
     }
