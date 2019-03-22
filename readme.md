@@ -10,7 +10,7 @@ Tagging tool for object detection.
 
 The Wheel package is provided at:
 
-    https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renom_tag-VERSION-py3-none-any.whl
+    https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-VERSION-py3-none-any.whl
 
 (`VERSION` is stands for actual version number e.g. 0.0.1)
 
@@ -26,7 +26,7 @@ The Wheel package contains pre-build js files so you don't have to build manuall
 ## Install from source
 To install ReNomTAG from source, download this repository.
 ```
-git clone https://gitlab.com/grid-devs/ReNomTAG.git
+git clone https://github.com/ReNom-dev-team/ReNomTAG.git 
 ```
 
 
