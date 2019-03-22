@@ -18,8 +18,13 @@
               class='box-border'
               :data-boxid='idx' @mousedown.left.stop.prevent='onBoxClick'
               @mousemove.left='onBoxMousemove'>
-            <div v-if="tagstyle!=null" :class="['box', isActivebox(idx) ? 'box-active':'']">
-              <div  class='taglabel'>{{getBoxLabel(idx)}}</div>
+            <div v-if="tagstyle!=null" 
+            :class="['box', isActivebox(idx) ? 'box-active':'']"
+            :style="{'border-color':boxColorListNum(idx)}">
+              <div class='taglabel'
+              :style="{'background-color':boxColorListNum(idx)}">
+                {{getBoxLabel(idx)}}
+              </div>
             </div>
           </div>
           <div class="pad"/>
@@ -159,7 +164,20 @@ export default {
       image_dragform_y: 0,
       pre_boxes_state:[],
       copy_target_box: null,
-      is_Press_Control: false
+      is_Press_Control: false,      is_Press_Control: false,
+      color_list: [
+        // tag list colors
+        "#E7009A",
+        "#9F14C1",
+        "#582396",
+        "#0A20C4",
+        "#3E9AAF",
+        "#13894B",
+        "#8BAA1A",
+        "#FFCC33",
+        "#EF8200",
+        "#E94C33"
+      ],
     };
   },
   created: function() {
@@ -1010,8 +1028,22 @@ export default {
       }
 
       this.status = "";
+    },
+    labelIdx: function(idx){
+        let labelName= this.getBoxLabel(idx);
+        if(labelName === undefined){
+          return false;
+        }
+        else{
+          return this.labels.find((label) =>
+            {return label.label === labelName}
+          )
+      }
+     },
+    boxColorListNum: function(idx){
+      let labelNum = this.labelIdx(idx).id-1;
+      return this.color_list[this.labelIdx(idx).id-1];
     }
-
     // 0) Not useing currently but maight use sometime
     //
     // getReviewStatus: function() {
