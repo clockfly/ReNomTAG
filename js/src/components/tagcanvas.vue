@@ -18,8 +18,13 @@
               class='box-border'
               :data-boxid='idx' @mousedown.left.stop.prevent='onBoxClick'
               @mousemove.left='onBoxMousemove'>
-            <div v-if="tagstyle!=null" :class="['box', isActivebox(idx) ? 'box-active':'']">
-              <div  class='taglabel'>{{getBoxLabel(idx)}}</div>
+            <div v-if="tagstyle!=null" 
+            :class="['box', isActivebox(idx) ? 'box-active':'']"
+            :style="{'border-color':boxColorListNum(idx)}">
+              <div class='taglabel'
+              :style="{'background-color':boxColorListNum(idx)}">
+                {{getBoxLabel(idx)}}
+              </div>
             </div>
           </div>
           <div class="pad"/>
@@ -159,13 +164,32 @@ export default {
       image_dragform_y: 0,
       pre_boxes_state:[],
       copy_target_box: null,
-      is_Press_Control: false
+      is_Press_Control: false,      is_Press_Control: false,
+      color_list: [
+        // tag list colors
+        "#E7009A",
+        "#9F14C1",
+        "#582396",
+        "#0A20C4",
+        "#3E9AAF",
+        "#13894B",
+        "#8BAA1A",
+        "#FFCC33",
+        "#EF8200",
+        "#E94C33"
+      ],
+      label_names: []
     };
   },
   created: function() {
     window.addEventListener("resize", this.onResize);
     window.addEventListener("keyup", this.onKeyup);
     window.addEventListener("keydown", this.onKeydown);
+    // box色とlabelの色を紐付けるための処理
+    this.labels.forEach(
+        (label) => 
+        {this.label_names.push(label.label)}
+    );
   },
 
   beforeDestroy: function() {
@@ -310,11 +334,24 @@ export default {
       if(this.active_image_tag_boxes){ 
         // this.active_image_tag_boxesの一番最後の値がコピー対象
         let target = this.active_image_tag_boxes[this.active_image_tag_boxes.length-1];
+        // タグ付けしていない画像だとエラーが発生したので、そのための処理
+        if(target===undefined){
+          return false;
+        }
         // labelをつけた場合だけデータを保存する
         if(target.label){
-        this.copy_target_box = target;
+          this.copy_target_box = target;
         }
       }
+    },
+    // labelの内容が変わっても、tag色とlabelが紐づくように監視
+    labels: function(){
+      // 初期化
+      this.label_names =[];
+      this.labels.forEach(
+        (label) => 
+        {this.label_names.push(label.label)}
+      );
     }
   },
   methods: {
@@ -1010,8 +1047,23 @@ export default {
       }
 
       this.status = "";
+    },
+    labelIdx: function(idx){
+      let labelName= this.getBoxLabel(idx);
+      if(labelName === undefined){
+        return false;
+      } else {
+        return this.label_names.indexOf(labelName);
+      }
+    },
+    boxColorListNum: function(idx){
+      let labelName= this.getBoxLabel(idx);
+      if(labelName === undefined){
+          return false;
+      }    
+      let labelNum = this.labelIdx(idx);
+      return this.color_list[this.labelIdx(idx)];
     }
-
     // 0) Not useing currently but maight use sometime
     //
     // getReviewStatus: function() {
