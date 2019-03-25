@@ -178,12 +178,18 @@ export default {
         "#EF8200",
         "#E94C33"
       ],
+      label_names: []
     };
   },
   created: function() {
     window.addEventListener("resize", this.onResize);
     window.addEventListener("keyup", this.onKeyup);
     window.addEventListener("keydown", this.onKeydown);
+    // box色とlabelの色を紐付けるための処理
+    this.labels.forEach(
+        (label) => 
+        {this.label_names.push(label.label)}
+    );
   },
 
   beforeDestroy: function() {
@@ -337,6 +343,15 @@ export default {
           this.copy_target_box = target;
         }
       }
+    },
+    // labelの内容が変わっても、tag色とlabelが紐づくように監視
+    labels: function(){
+      // 初期化
+      this.label_names =[];
+      this.labels.forEach(
+        (label) => 
+        {this.label_names.push(label.label)}
+      );
     }
   },
   methods: {
@@ -1038,18 +1053,16 @@ export default {
       if(labelName === undefined){
         return false;
       } else {
-        return this.labels.find((label) =>
-          {return label.label === labelName}
-        )
+        return this.label_names.indexOf(labelName);
       }
-     },
+    },
     boxColorListNum: function(idx){
       let labelName= this.getBoxLabel(idx);
-        if(labelName === undefined){
+      if(labelName === undefined){
           return false;
-      }
-      let labelNum = this.labelIdx(idx).id-1;
-      return this.color_list[this.labelIdx(idx).id-1];
+      }    
+      let labelNum = this.labelIdx(idx);
+      return this.color_list[this.labelIdx(idx)];
     }
     // 0) Not useing currently but maight use sometime
     //
