@@ -1253,6 +1253,7 @@ export default {
       .switch-explain-text{
         position: absolute;
         bottom:0;
+        right: 0;
         margin-bottom:0;
         font-size: 0.6rem;
         color: #aaa;
