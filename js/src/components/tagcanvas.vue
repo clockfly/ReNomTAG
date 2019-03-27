@@ -71,12 +71,13 @@
         </div>
         <div class= "col-md-3 row clear-padding">
           <div class="col-md-4 clear-padding toggle-wrapper">
-            <div id='toggle' >
-              <label class="switch ">
+            <div id='toggle'>
+              <label class="switch">
                 <input type="checkbox" :class="{checked : show_selected_boxes}">
                 <span class="slider" v-on:click="toShowSelectedBoxes"></span>
               </label>
             </div>
+            <p class="switch-explain-text">Hide boxes</p>
           </div>
           <div class="col-md-8 clear-padding">
             <div id='buttons' class="row">
@@ -1260,7 +1261,8 @@ export default {
         display: inline-block;
         height: calc(#{$panel-height} * 0.8);
         position: absolute;
-        bottom: 0;
+        // 「Hide boxes」の大きさが0.6remなので、少し余白を開ける意味で0.8rem
+        bottom: 0.8rem;
         right: 5px;
         .switch {
           height: calc(#{$panel-height} * 0.8);
@@ -1299,6 +1301,14 @@ export default {
           background-color: white;
           transition: 0.4s;
         }
+      }
+      .switch-explain-text{
+        position: absolute;
+        bottom:0;
+        right: 0;
+        margin-bottom:0;
+        font-size: 0.6rem;
+        color: #aaa;
       }
     }
     #buttons {
