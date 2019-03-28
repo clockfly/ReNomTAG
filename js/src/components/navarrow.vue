@@ -58,7 +58,7 @@ export default {
             }
             break;
           case "ArrowRight":
-            const fore = this.getForeame();
+            const fore = this.getForeName();
             if (fore) {
               this.loadCurrentImage(fore);
             }
