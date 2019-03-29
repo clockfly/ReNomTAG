@@ -340,7 +340,7 @@ export default {
           return false;
         }
         // labelをつけた場合だけデータを保存する
-        if(target.label){          
+        if(target.label){
           this.copy_target_box = target;
         }
       }
