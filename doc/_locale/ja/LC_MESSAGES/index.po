@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: renom_tag \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-01 14:13+0900\n"
+"POT-Creation-Date: 2019-03-28 11:35+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,12 +18,15 @@ msgstr ""
 "Generated-By: Babel 2.6.0\n"
 
 #: ../../index.rst:2
-msgid "ReNomTAG v1.1 beta"
+msgid "ReNomTAG v1.2 beta"
 msgstr ""
 
 #~ msgid "ReNomTAG v1.0"
 #~ msgstr ""
 
 #~ msgid "ReNomTAG v1.1"
+#~ msgstr ""
+
+#~ msgid "ReNomTAG v1.1 beta"
 #~ msgstr ""
 

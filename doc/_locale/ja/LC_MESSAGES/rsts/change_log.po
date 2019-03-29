@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ReNomTAG \n"
+"Project-Id-Version: renom_tag\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-28 12:43+0900\n"
+"POT-Creation-Date: 2019-03-28 11:35+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,39 +21,60 @@ msgstr ""
 msgid "Change Log"
 msgstr ""
 
-#: ../../rsts/change_log.rst:4
-msgid "**v1.1.0 beta**"
+#: ../../rsts/change_log.rst:5
+msgid "**v1.2.0 beta**"
 msgstr ""
 
-#: ../../rsts/change_log.rst:7
-msgid "Added full-screen tagging mode"
+#: ../../rsts/change_log.rst:8
+msgid "Added matching colors for boxes and class names"
 msgstr ""
 
-#: ../../rsts/change_log.rst:9
-msgid "Added image zoom feature"
+#: ../../rsts/change_log.rst:10
+msgid "Added shortcut keys for copying and pasting boxes"
 msgstr ""
 
-#: ../../rsts/change_log.rst:11
-msgid "Added feature for hiding unselected boxes during tagging"
+#: ../../rsts/change_log.rst:12
+msgid "Added shortcut keys for undoing box changes"
 msgstr ""
 
-#: ../../rsts/change_log.rst:13
-msgid "Added tagged images count"
+#: ../../rsts/change_log.rst:14
+msgid "Added explanatory text for \"Hide boxes\" toggle"
 msgstr ""
 
-#: ../../rsts/change_log.rst:15
-msgid "Added user comment feature"
-msgstr ""
-
-#: ../../rsts/change_log.rst:17 ../../rsts/change_log.rst:22
+#: ../../rsts/change_log.rst:16 ../../rsts/change_log.rst:32
+#: ../../rsts/change_log.rst:37
 msgid "Bug fixes"
 msgstr ""
 
-#: ../../rsts/change_log.rst:20
-msgid "**v1.0.2**"
+#: ../../rsts/change_log.rst:19
+msgid "**v1.1.0 beta**"
+msgstr ""
+
+#: ../../rsts/change_log.rst:22
+msgid "Added full-screen tagging mode"
 msgstr ""
 
 #: ../../rsts/change_log.rst:24
+msgid "Added image zoom feature"
+msgstr ""
+
+#: ../../rsts/change_log.rst:26
+msgid "Added feature for hiding unselected boxes during tagging"
+msgstr ""
+
+#: ../../rsts/change_log.rst:28
+msgid "Added tagged images count"
+msgstr ""
+
+#: ../../rsts/change_log.rst:30
+msgid "Added user comment feature"
+msgstr ""
+
+#: ../../rsts/change_log.rst:35
+msgid "**v1.0.2**"
+msgstr ""
+
+#: ../../rsts/change_log.rst:39
 msgid "Added feature to delete individual tags from tag list"
 msgstr ""
 

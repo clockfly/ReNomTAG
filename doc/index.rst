@@ -1,4 +1,4 @@
-ReNomTAG v1.1 beta
+ReNomTAG v1.2 beta
 ==================
 
 .. toctree::

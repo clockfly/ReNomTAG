@@ -1,6 +1,21 @@
 Change Log 
 ===================
 
+
+**v1.2.0 beta**
+
+
+- Added matching colors for boxes and class names
+
+- Added shortcut keys for copying and pasting boxes
+
+- Added shortcut keys for undoing box changes
+
+- Added explanatory text for "Hide boxes" toggle
+
+- Bug fixes
+
+
 **v1.1.0 beta**
 
 
