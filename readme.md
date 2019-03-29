@@ -1,14 +1,13 @@
-# ReNomTAG v1.1.0 beta
+# ReNomTAG v1.2.0 beta
 
 A tagging tool for object detection.
 
 
-## Changes 1.0.2 => 1.1b0
-- Added full-screen tagging mode
-- Added image zoom feature
-- Added feature for hiding unselected boxes during tagging
-- Added tagged images count
-- Added user comment feature 
+## Changes 1.1b0 => 1.2b0
+- Added matching colors for boxes and class names
+- Added shortcut keys for copying and pasting boxes
+- Added shortcut keys for undoing box changes
+- Added explanatory text for "Hide boxes" toggle
 - Bug fixes
 
 
@@ -16,14 +15,14 @@ A tagging tool for object detection.
 
 The Wheel package is provided at:
 
-    https://grid-devs.gitlab.io/ReNomTAG2nd/bin/renom_tag-VERSION-py3-none-any.whl
+    https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-VERSION-py3-none-any.whl
 
 (`VERSION` is stands for actual version number e.g. 0.0.1)
 
 You can install the wheel package with pip3 command::
 
 ```
-$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.1b0-py3-none-any.whl
+$ pip3 install https://grid-devs.gitlab.io/ReNomTAG/bin/renom_tag-1.2b0-py3-none-any.whl
 ```
 
 The Wheel package contains pre-built js files so you don't have to build manually.

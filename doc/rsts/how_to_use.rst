@@ -11,15 +11,15 @@ Directory structure
 Before starting ReNomTAG, we will introduce the
 directory structure.
 
-Assuming that you run ReNomTAG in ``working_directory``, image datasets need to be
+Assuming that you run ReNomTAG from ``working_directory``, image datasets must be
 aligned according to the following directory structure.
 
-Do not change the directory name of ``public``, ``dataset`` or ``label``.
+The directory names for the ``public``, ``dataset`` and ``label`` directories must not be changed.
 
 The role of each directory is described below.
 
 - public
-    This is the root directory for datasets. The directory name ``public`` must not be changed.
+    This is the root directory for datasets. The directory name ``public``  must not be changed.
 
 - user1, user2...
     These directories contain image data and user-created label data for each user.
@@ -65,11 +65,11 @@ Provide image data
 ~~~~~~~~~~~~~~~
 Please place the image data into the ``dataset`` directory.
 
-In addition, please note that ReNomTAG is only able to load file names with halfwidth-alphanumeric
-
+ReNomTAG is only able to load file names with halfwidth-alphanumeric
 (0-9, a-z, A-Z) and under-bar (_) characters. Filenames with, for example, hyphen (-), asterisk(*), etc
+cannot be loaded.
 
-cannot be loaded. For file extensions, you are allowed to use ".jpeg", ".jpg", ".png", and ".bmp".
+ReNomTAG supports images with ".jpeg", ".jpg", ".png", or ".bmp" file extensions.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -137,6 +137,16 @@ Set shortcut keys for class tags
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can set a shortcut key for each class tag name.
+
+
+Default shortcut keys for faster tagging
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ReNomTAG provides the following default shortcuts for faster tagging.
+
+- ``Ctrl+b`` : Copy all boxes from previous image and paste on current image.
+- ``Ctrl+c, Ctrl+v`` : Copy currently selected box and paste on current image.
+- ``Ctrl+z`` :  Undo previous change to box (shape, position, or class tag).
 
 
 Full-screen tagging
@@ -316,3 +326,11 @@ The data in each directory is not shared with other directories.
 .. note::
     The user-separated directories are recognised by ReNomTAG if
     they contain the ``dataset`` and ``label`` sub-directories.
+
+
+Supported Browsers
+-------------------------------
+
+ReNomTAG currently supports Google Chrome.
+In some instances, default shortcut keys for Google Chrome may conflict with ReNomTAG shortcut keys.
+Please disable the browser shortcut key in order to use the corresponding shortcut in ReNomTAG.
