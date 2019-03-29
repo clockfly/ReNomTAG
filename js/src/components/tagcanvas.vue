@@ -165,7 +165,7 @@ export default {
       image_dragform_y: 0,
       pre_boxes_state:[],
       copy_target_box: null,
-      is_Press_Control: false,      is_Press_Control: false,
+      is_Press_Control: false,
       color_list: [
         // tag list colors
         "#E7009A",
@@ -333,14 +333,14 @@ export default {
     boxes: function(){
       // コピペショートカットキー用の処理
       if(this.active_image_tag_boxes){ 
-        // this.active_image_tag_boxesの一番最後の値がコピー対象
-        let target = this.active_image_tag_boxes[this.active_image_tag_boxes.length-1];
+        let target_boxid = this.active_boxid;
+        let target = this.active_image_tag_boxes[target_boxid];
         // タグ付けしていない画像だとエラーが発生したので、そのための処理
         if(target===undefined){
           return false;
         }
         // labelをつけた場合だけデータを保存する
-        if(target.label){
+        if(target.label){          
           this.copy_target_box = target;
         }
       }
@@ -605,10 +605,9 @@ export default {
             break;
             case "c":
             if(this.active_boxid){
-              const boxid = this.active_boxid;
-              this.copy_target_box = this.pre_box_data[boxid];
-            }
-            break;
+                const boxid = this.active_boxid;
+                }
+                break;
             case "v":
               //　それぞれの数字0.02なのは感覚的なものです、深い意味はないです
               let height_diff = 
