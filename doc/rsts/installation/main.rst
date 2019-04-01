@@ -4,6 +4,8 @@ Installation
 Requirements
 ------------
 
+- Browser: Google Chrome
+- Python 3.6
 
 **Python modules**
 
@@ -37,7 +39,7 @@ Requirements
 Install by pip
 --------------
 
-- Linux(Ubuntu) OS: You can install ReNomTAG via the pip command.
+- Linux(Ubuntu) OS: You can install ReNomTAG via the following pip3 command.
 
 .. code-block:: shell
 
