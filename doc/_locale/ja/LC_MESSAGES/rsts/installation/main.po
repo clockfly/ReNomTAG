@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ReNomTAG \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-28 12:43+0900\n"
+"POT-Creation-Date: 2019-04-01 15:02+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,107 +25,115 @@ msgstr "インストール方法"
 msgid "Requirements"
 msgstr ""
 
+#: ../../rsts/installation/main.rst:7
+msgid "Browser: Google Chrome"
+msgstr ""
+
 #: ../../rsts/installation/main.rst:8
-msgid "**Python modules**"
+msgid "Python 3.6"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:10
-msgid "argh==0.26.2"
-msgstr ""
-
-#: ../../rsts/installation/main.rst:11
-msgid "attrs==18.2.0"
+msgid "**Python modules**"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:12
-msgid "beautifulsoup4==4.7.1"
+msgid "argh==0.26.2"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:13
-msgid "bottle==0.12.13"
+msgid "attrs==18.2.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:14
-msgid "glob2==0.6"
+msgid "beautifulsoup4==4.7.1"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:15
-msgid "lxml==4.3.1"
+msgid "bottle==0.12.13"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:16
-msgid "more-itertools==6.0.0"
+msgid "glob2==0.6"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:17
-msgid "pathtools==0.1.2"
+msgid "lxml==4.3.1"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:18
-msgid "Pillow==5.4.1"
+msgid "more-itertools==6.0.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:19
-msgid "pluggy==0.6.0"
+msgid "pathtools==0.1.2"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:20
-msgid "py==1.7.0"
+msgid "Pillow==5.4.1"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:21
-msgid "pytest==3.5.0"
+msgid "pluggy==0.6.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:22
-msgid "PyYAML==3.12"
+msgid "py==1.7.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:23
-msgid "six==1.12.0"
+msgid "pytest==3.5.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:24
-msgid "soupsieve==1.7.3"
+msgid "PyYAML==3.12"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:25
-msgid "waitress==1.2.1"
+msgid "six==1.12.0"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:26
-msgid "watchdog==0.8.3"
+msgid "soupsieve==1.7.3"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:27
-msgid "WebOb==1.8.5"
+msgid "waitress==1.2.1"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:28
-msgid "WebTest==2.0.29"
+msgid "watchdog==0.8.3"
 msgstr ""
 
 #: ../../rsts/installation/main.rst:29
+msgid "WebOb==1.8.5"
+msgstr ""
+
+#: ../../rsts/installation/main.rst:30
+msgid "WebTest==2.0.29"
+msgstr ""
+
+#: ../../rsts/installation/main.rst:31
 msgid "xmltodict==0.11.0"
 msgstr ""
 
-#: ../../rsts/installation/main.rst:32
+#: ../../rsts/installation/main.rst:34
 msgid "**For building the web app**"
 msgstr ""
 
-#: ../../rsts/installation/main.rst:34
+#: ../../rsts/installation/main.rst:36
 msgid "Node.js >= 10.6.0"
 msgstr ""
 
-#: ../../rsts/installation/main.rst:38
+#: ../../rsts/installation/main.rst:40
 msgid "Install by pip"
 msgstr ""
 
-#: ../../rsts/installation/main.rst:40
-msgid "Linux(Ubuntu) OS: You can install ReNomTAG via the pip command."
-msgstr "Linux(Ubuntu) OS: 以下のpipコマンドでインストールすることが可能です."
+#: ../../rsts/installation/main.rst:42
+msgid "Linux(Ubuntu) OS: You can install ReNomTAG via the following pip3 command."
+msgstr "Linux(Ubuntu) OS: 以下のpip3コマンドでインストールすることが可能です."
 
-#: ../../rsts/installation/main.rst:48
+#: ../../rsts/installation/main.rst:50
 msgid "Install from source"
 msgstr "ソースからインストールする場合"
 

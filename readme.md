@@ -11,6 +11,10 @@ A tagging tool for object detection.
 - Bug fixes
 
 
+## Environment Requirements
+- Browser: Google Chrome
+- Python 3.6
+
 ## Install ReNomTAG package
 
 The Wheel package is provided at:
@@ -35,17 +39,13 @@ git clone https://github.com/ReNom-dev-team/ReNomTAG.git
 ```
 
 
+Move to the ReNomTAG/js/ directory and use the following command to install the node packages.
 ```
-which python
-```
-
-Go to ReNomTAG/js and use the following command to install the node packages.
-```
-cd js/
+cd ReNomTAG/js/
 npm install
 ```
 
-Check which python env you are using to install renom_tag.
+Python version 3.6 is required to install ReNomTAG with the commands below.
 Go to the ReNomTAG root directory and install ReNomTAG and its requirements.
 ```
 cd ../
@@ -102,7 +102,6 @@ mkdir public/user1/dataset
 ## How to run the app
 
 Once installed, you can run ReNomTAG as follows.
-Note that you first need to activate the python env in which you installed renom_tag.
 
 ```
 $ python -m renom_tag
